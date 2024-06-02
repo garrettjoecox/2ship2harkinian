@@ -1,11 +1,15 @@
 #include "GameInteractor.h"
 #include "spdlog/spdlog.h"
+#include <libultraship/bridge.h>
 
 extern "C" {
-#include "z64actor.h"
+#include "z64.h"
+#include "macros.h"
+#include "functions.h"
+extern PlayState* gPlayState;
+extern GetItemEntry sGetItemTable[GI_MAX - 1];
+void func_800A6A40(EnItem00* thisx, PlayState* play);
 }
-
-#include <libultraship/bridge.h>
 
 void GameInteractor_ExecuteOnGameStateMainFinish() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGameStateMainFinish>();
@@ -252,4 +256,71 @@ uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo) {
     }
 
     return result;
+}
+
+void EnItem00_DrawCustomForOverHead(Actor* thisx, PlayState* play) {
+    EnItem00* enItem00 = (EnItem00*)thisx;
+    thisx->shape.rot.y += 0x3C0;
+    Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+    Matrix_Translate(0.0f, -50.0f, 0.0f, MTXMODE_APPLY);
+    GetItem_Draw(play, enItem00->shipDrawId);
+}
+
+void GameInteractor_ItemGiveQueue_Process(Actor* actor) {
+    Player* player = GET_PLAYER(gPlayState);
+    // If we're already giving an item, stop
+    if (GameInteractor::Instance->currentlyQueuedItem != GI_NONE) {
+        return;
+    }
+
+    // If there are no items to give, stop
+    if (GameInteractor::Instance->giveItemQueue.empty()) {
+        return;
+    }
+
+    // If the player is in a blocking cutscene, stop
+    if (Player_InBlockingCsMode(gPlayState, player)) {
+        return;
+    }
+
+    auto nextGiveItemQueueItem = GameInteractor::Instance->giveItemQueue.front();
+    GameInteractor::Instance->currentlyQueuedItem = nextGiveItemQueueItem.getItemId;
+    GameInteractor::Instance->giveItemQueue.erase(GameInteractor::Instance->giveItemQueue.begin());
+
+    if (nextGiveItemQueueItem.showGetItemCutscene) {
+        EnItem00* enItem00 = (EnItem00*)Item_DropCollectible(gPlayState, &actor->world.pos, ITEM00_NOTHING);
+        enItem00->getItemId = GameInteractor::Instance->currentlyQueuedItem;
+        enItem00->actionFunc = func_800A6A40;
+        Actor_OfferGetItem(&enItem00->actor, gPlayState, GameInteractor::Instance->currentlyQueuedItem, 50.0f, 20.0f);
+        enItem00->actionFunc(enItem00, gPlayState);
+    } else {
+        EnItem00* enItem00 = (EnItem00*)Item_DropCollectible(gPlayState, &actor->world.pos, ITEM00_NOTHING | 0x8000);
+        enItem00->shipDrawId = ABS(sGetItemTable[GameInteractor::Instance->currentlyQueuedItem - 1].gid) - 1;
+        Audio_PlaySfx(NA_SE_SY_GET_ITEM);
+        Item_Give(gPlayState, sGetItemTable[GameInteractor::Instance->currentlyQueuedItem - 1].itemId);
+        enItem00->actor.draw = EnItem00_DrawCustomForOverHead;
+    }
+}
+
+void GameInteractor_ItemGiveQueue_Push(GetItemId getItemId, bool showGetItemCutscene) {
+    GameInteractor::Instance->giveItemQueue.push_back({getItemId, showGetItemCutscene});
+}
+
+void GameInteractor::Init() {
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER, GameInteractor_ItemGiveQueue_Process);
+
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(GI_VB_GIVE_ITEM_FROM_ITEM00, [](GIVanillaBehavior _, bool* should, void* opt) {
+        EnItem00* item00 = static_cast<EnItem00*>(opt);
+        if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
+            *should = false;
+        }
+    });
+
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnItemGive>([] (u8 item) {
+        if (GameInteractor::Instance->currentlyQueuedItem != GI_NONE) {
+            if (item == sGetItemTable[GameInteractor::Instance->currentlyQueuedItem - 1].itemId) {
+                GameInteractor::Instance->currentlyQueuedItem = GI_NONE;
+            }
+        }
+    });
 }

@@ -258,6 +258,9 @@ typedef struct EnItem00 {
     /* 0x154 */ f32 unk154;
     /* 0x158 */ ColliderCylinder collider;
     /* 0x1A4 */ s8 unk1A4;
+    // #region 2S2H
+                s8 shipDrawId; // Caching draw id for custom item give queue
+    // #endregion
 } EnItem00; // size = 0x1A8
 
 struct EnAObj;

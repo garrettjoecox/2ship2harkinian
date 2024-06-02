@@ -472,6 +472,7 @@ extern "C" void InitOTR() {
 
     OTRGlobals::Instance = new OTRGlobals();
     GameInteractor::Instance = new GameInteractor();
+    GameInteractor::Instance->Init();
     BenGui::SetupGuiElements();
     InitEnhancements();
     InitDeveloperTools();

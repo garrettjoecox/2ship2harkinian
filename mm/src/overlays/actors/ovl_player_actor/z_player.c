@@ -490,13 +490,7 @@ typedef struct {
     /* 0xC */ s16 zFar;
 } PlayerEnvLighting; // size = 0xE
 
-typedef struct GetItemEntry {
-    /* 0x0 */ u8 itemId;
-    /* 0x1 */ u8 field; // various bit-packed data
-    /* 0x2 */ s8 gid;   // defines the draw id and chest opening animation
-    /* 0x3 */ u8 textId;
-    /* 0x4 */ u16 objectId;
-} GetItemEntry; // size = 0x6
+// 2S2H [Enhancements] GetItemEntry struct was moved from here to z64player.h
 
 typedef struct struct_8085D200 {
     /* 0x0 */ PlayerAnimationHeader* unk_0;

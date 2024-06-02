@@ -10,6 +10,7 @@ void RegisterSkipTatlInterrupts();
 
 // StoryCutscenes
 void RegisterSkipClockTowerOpen();
+void RegisterSkipLearningSongOfTime();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();
