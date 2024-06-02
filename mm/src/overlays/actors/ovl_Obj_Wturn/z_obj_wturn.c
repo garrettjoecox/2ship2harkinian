@@ -38,6 +38,9 @@ void ObjWturn_Init(Actor* thisx, PlayState* play) {
     ObjWturn* this = THIS;
 
     func_808A7954(this);
+    if (play->sceneId != SCENE_F40 && play->sceneId != SCENE_F41) {
+        func_808A7A24(this);
+    }
 }
 
 void func_808A7954(ObjWturn* this) {
@@ -119,15 +122,27 @@ void func_808A7C78(ObjWturn* this, PlayState* play) {
     player->actor.world.pos.y = this->actor.world.pos.y + this->unk_14A * 4.0f;
     Play_SetCameraAtEyeUp(play, this->subCamId, &player->actor.focus.pos, &subCam->eye, &sSubCamUp);
     if (this->unk_14A == 1) {
-        play->transitionType = TRANS_TYPE_64;
-        gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
-        gSaveContext.nextCutsceneIndex = 0;
-        if (play->sceneId == SCENE_F40) {
-            play->nextEntrance = ENTRANCE(STONE_TOWER_INVERTED, 0);
+        if (play->sceneId != SCENE_F40 && play->sceneId != SCENE_F41) {
+            Vec3f pos = player->actor.world.pos;
+            pos.y *= -1;
+            pos.y += -50.0f;
+            u32 entrance = gPlayState->sceneId == SCENE_INISIE_R ? ENTRANCE(STONE_TOWER_TEMPLE, 0)
+                                                                 : ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0);
+            Play_SetRespawnData(&gPlayState->state, RESPAWN_MODE_DOWN, entrance, gPlayState->roomCtx.curRoom.num,
+                                PLAYER_PARAMS(0xFF, PLAYER_INITMODE_D), &pos, player->actor.shape.rot.y);
+            func_80169EFC(&gPlayState->state);
+            gSaveContext.respawnFlag = -8;
         } else {
-            play->nextEntrance = ENTRANCE(STONE_TOWER, 1);
+            play->transitionType = TRANS_TYPE_64;
+            gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
+            gSaveContext.nextCutsceneIndex = 0;
+            if (play->sceneId == SCENE_F40) {
+                play->nextEntrance = ENTRANCE(STONE_TOWER_INVERTED, 0);
+            } else {
+                play->nextEntrance = ENTRANCE(STONE_TOWER, 1);
+            }
+            play->transitionTrigger = TRANS_TRIGGER_START;
         }
-        play->transitionTrigger = TRANS_TRIGGER_START;
     }
 }
 
