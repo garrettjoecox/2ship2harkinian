@@ -13,6 +13,7 @@ void RegisterSkipClockTowerOpen();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();
+void RegisterSkipGetItemCutscene();
 void RegisterSkipIntroSequence();
 
 #endif // CUTSCENES_H

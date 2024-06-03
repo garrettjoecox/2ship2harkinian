@@ -1309,6 +1309,15 @@ typedef struct Player {
     /* 0xD6B */ u8 unk_D6B;
     /* 0xD6C */ Vec3f unk_D6C; // previous body part 0 position
 } Player; // size = 0xD78
+
+typedef struct GetItemEntry {
+    /* 0x0 */ u8 itemId;
+    /* 0x1 */ u8 field; // various bit-packed data
+    /* 0x2 */ s8 gid;   // defines the draw id and chest opening animation
+    /* 0x3 */ u8 textId;
+    /* 0x4 */ u16 objectId;
+} GetItemEntry; // size = 0x6
+
 #ifdef __cplusplus
 }
 #undef this

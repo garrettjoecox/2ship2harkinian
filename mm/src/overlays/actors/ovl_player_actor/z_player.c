@@ -490,13 +490,13 @@ typedef struct {
     /* 0xC */ s16 zFar;
 } PlayerEnvLighting; // size = 0xE
 
-typedef struct GetItemEntry {
-    /* 0x0 */ u8 itemId;
-    /* 0x1 */ u8 field; // various bit-packed data
-    /* 0x2 */ s8 gid;   // defines the draw id and chest opening animation
-    /* 0x3 */ u8 textId;
-    /* 0x4 */ u16 objectId;
-} GetItemEntry; // size = 0x6
+// typedef struct GetItemEntry {
+//     /* 0x0 */ u8 itemId;
+//     /* 0x1 */ u8 field; // various bit-packed data
+//     /* 0x2 */ s8 gid;   // defines the draw id and chest opening animation
+//     /* 0x3 */ u8 textId;
+//     /* 0x4 */ u16 objectId;
+// } GetItemEntry; // size = 0x6
 
 typedef struct struct_8085D200 {
     /* 0x0 */ PlayerAnimationHeader* unk_0;
@@ -9218,7 +9218,10 @@ s32 Player_ActionChange_2(Player* this, PlayState* play) {
                                 giEntry = &sGetItemTable[-this->getItemId - 1];
                             }
 
-                            func_80832558(play, this, func_80837C78);
+                            if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_CHEST, true, chest)) {
+                                // This inverts the sign of the getItemId and sets the player's action to GetItem (Player_Action_65)
+                                func_80832558(play, this, func_80837C78);
+                            }
                             this->stateFlags1 |= (PLAYER_STATE1_400 | PLAYER_STATE1_800 | PLAYER_STATE1_20000000);
                             func_80838830(this, giEntry->objectId);
 

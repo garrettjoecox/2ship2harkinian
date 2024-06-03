@@ -1,4 +1,5 @@
 #include "global.h"
+#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
 
 #define MSCRIPT_CONTINUE 0
 #define MSCRIPT_STOP 1
@@ -145,7 +146,7 @@ s32 MsgEvent_Cmd06(Actor* actor, PlayState* play, u8** scriptPtr, MsgEventCallba
     f32 yRange = fabsf(actor->playerHeightRel) + 1.0f;
     s16 skip = MSCRIPT_GET_16(script, 3);
 
-    if (Actor_HasParent(actor, play)) {
+    if (Actor_HasParent(actor, play) || !GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SCRIPT, true, &getItemId)) {
         *scriptPtr += skip;
     } else {
         Actor_OfferGetItem(actor, play, getItemId, xzRange, yRange);
