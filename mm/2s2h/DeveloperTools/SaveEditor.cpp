@@ -967,11 +967,13 @@ void SetDungeonItems(uint32_t dungeonItem, uint32_t dungeonId) {
     }
 }
 
+const char* dungeonNames[4] = { "Woodfall Temple", "Snowhead Temple", "Great Bay Temple", "Stone Tower Temple" };
+uint32_t smallKeyCounts[4] = { 1, 3, 1, 4 };
+const char* fairyIcons[] = {
+    gDungeonStrayFairyWoodfallIconTex, gDungeonStrayFairySnowheadIconTex,
+    gDungeonStrayFairyGreatBayIconTex, gDungeonStrayFairyStoneTowerIconTex 
+};
 void DrawDungeonItemTab() {
-    const char* dungeonNames[4] = { "Woodfall Temple", "Snowhead Temple", "Great Bay Temple", "Stone Tower Temple" };
-    uint32_t smallKeyCounts[4] = { 1, 3, 1, 4 };
-    const char* fairyIcons[] = { gDungeonStrayFairyWoodfallIconTex, gDungeonStrayFairySnowheadIconTex,
-                                 gDungeonStrayFairyGreatBayIconTex, gDungeonStrayFairyStoneTowerIconTex };
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
@@ -1832,6 +1834,17 @@ void SaveEditorWindow::DrawElement() {
     ImGui::End();
 }
 
+const char* textureLoad[8] = { 
+    gDungeonStrayFairyWoodfallIconTex,
+    gDungeonStrayFairySnowheadIconTex,
+    gDungeonStrayFairyGreatBayIconTex,
+    gDungeonStrayFairyStoneTowerIconTex,
+    gQuestIconDungeonMapTex,
+    gQuestIconCompassTex,
+    gQuestIconSmallKeyTex,
+    gQuestIconBossKeyTex 
+};
+
 void SaveEditorWindow::InitElement() {
     initSafeItemsForInventorySlot();
 
@@ -1839,14 +1852,6 @@ void SaveEditorWindow::InitElement() {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
-    const char* textureLoad[8] = { gDungeonStrayFairyWoodfallIconTex,
-                                   gDungeonStrayFairySnowheadIconTex,
-                                   gDungeonStrayFairyGreatBayIconTex,
-                                   gDungeonStrayFairyStoneTowerIconTex,
-                                   gQuestIconDungeonMapTex,
-                                   gQuestIconCompassTex,
-                                   gQuestIconSmallKeyTex,
-                                   gQuestIconBossKeyTex };
     for (int i = 0; i <= 7; i++) {
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(textureLoad[i], textureLoad[i],
                                                                             ImVec4(1, 1, 1, 1));
