@@ -12995,51 +12995,88 @@ void Player_Destroy(Actor* thisx, PlayState* play) {
 
 s32 Ship_HandleFirstPersonAiming(PlayState* play, Player* this, s32 arg2) {
     s16 var_s0;
-    s32 stickX = sPlayerControlInput->rel.stick_x; // -60 to 60
-    s32 stickY = sPlayerControlInput->rel.stick_y; // -60 to 60
 
-    stickX *= GameInteractor_InvertControl(GI_INVERT_FIRST_PERSON_AIM_X);
-    stickY *= -GameInteractor_InvertControl(GI_INVERT_FIRST_PERSON_AIM_Y);
+    // Store the left and right stick values in structs so they can be easily swapped.
+    typedef struct  {s16 x,y} Stick;
+    Stick leftStick = {sPlayerControlInput->rel.stick_x, sPlayerControlInput->rel.stick_y};
+    Stick rightStick = {sPlayerControlInput->cur.right_stick_x, sPlayerControlInput->cur.right_stick_y};
 
-    stickX *= CVarGetFloat("gEnhancements.Camera.FirstPerson.SensitivityX", 1.0f);
-    stickY *= CVarGetFloat("gEnhancements.Camera.FirstPerson.SensitivityY", 1.0f);
-
-    if (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroEnabled", 0)) {
-        float gyroX = -sPlayerControlInput->cur.gyro_y; // -40 to 40, avg -4 to 4
-        float gyroY = sPlayerControlInput->cur.gyro_x;  // -20 to 20, avg -2 to 2
-
-        gyroX *= CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertX", 0) ? 1 : -1;
-        gyroY *= CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertY", 0) ? 1 : -1;
-
-        stickX += gyroX * 60.0f * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityX", 1.0f);
-        stickY += gyroY * 60.0f * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityY", 1.0f);
-    }
-
+    // Default: the left stick moves the camera in first-person mode, and the right stick applies the tilt.
+    Stick *moveStick = &leftStick;
+    Stick *tiltStick = &rightStick;
     if (CVarGetInteger("gEnhancements.Camera.FirstPerson.RightStickEnabled", 0)) {
-        s32 rightStickX = sPlayerControlInput->cur.right_stick_x; // -40 to 40, avg -4 to 4
-        s32 rightStickY = sPlayerControlInput->cur.right_stick_y; // -20 to 20, avg -2 to 2
-
-        rightStickX *= -(CVarGetInteger("gEnhancements.Camera.FirstPerson.RightStickInvertX", 0) ? 1 : -1);
-        rightStickY *= (CVarGetInteger("gEnhancements.Camera.FirstPerson.RightStickInvertY", 1) ? 1 : -1);
-
-        stickX += rightStickX * CVarGetFloat("gEnhancements.Camera.FirstPerson.RightStickSensitivityX", 1.0f);
-        stickY += rightStickY * CVarGetFloat("gEnhancements.Camera.FirstPerson.RightStickSensitivityY", 1.0f);
+        // If configured, swap the right and left sticks so that right moves and left tilts.
+        moveStick = &rightStick;
+        tiltStick = &leftStick;
     }
 
-    stickX = CLAMP(stickX, -60, 60);
-    stickY = CLAMP(stickY, -60, 60);
+    // Begin calculation of the movement amounts.
+    s32 moveX = moveStick->x;
+    s32 moveY = moveStick->y;
 
+    moveX *= GameInteractor_InvertControl(GI_INVERT_FIRST_PERSON_AIM_X);
+    moveY *= -GameInteractor_InvertControl(GI_INVERT_FIRST_PERSON_AIM_Y);
+
+    moveX *= CVarGetFloat("gEnhancements.Camera.FirstPerson.SensitivityX", 1.0f);
+    moveY *= CVarGetFloat("gEnhancements.Camera.FirstPerson.SensitivityY", 1.0f);
+    
+    // The movement amount gets limited to the range -60 to 60
+    moveX = CLAMP(moveX, -60, 60);
+    moveY = CLAMP(moveY, -60, 60);
+
+    // Tilt values do not continuously move the camera, but instead shift the camera direction a fixed amount which is undone when the tilt is reset.
+    float tiltOffsetX = 0;
+    float tiltOffsetY = 0;
+
+    // Static variables are needed to track the previous tilt amounts between invocations of this function.
+    static float tiltX = 0; // -1 to 1
+    static float tiltY = 0; // -1 to 1
+
+    if (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroEnabled", 0)){
+        // TODO: Set the tiltOffset values and store static tilt states appropriate for the gyro controls.
+        // Note: This doesn't necessarily have to constrain the tilt values to the range -1 to 1 for gyros.
+
+        // float currentTiltX = ??
+        // float currentTiltY = ??
+
+        // tiltOffsetX = currentTiltX - tiltX;
+        // tiltOffsetY = currentTiltY - tiltY;
+
+        // tiltX = currentTiltX;
+        // tiltY = currentTiltY;
+    }
+    else
+    {
+        // The stick amounts range from -84 to 84, so here they are standardized into a -1 to 1 range.
+        float currentTiltX = -(((float) tiltStick->x) / 84.0); // -1 to 1
+        float currentTiltY = -(((float) tiltStick->y) / 84.0); // -1 to 1
+
+        // The difference between the previous stick's position and the current position determines the amount of new movement. If it is unchanged, don't move the camera any more for the tilt value.
+        tiltOffsetX = currentTiltX - tiltX;
+        tiltOffsetY = currentTiltY - tiltY;
+
+        // Set the state of the tilt values to be used in the next invocation of this function.
+        tiltX = currentTiltX;
+        tiltY = currentTiltY;
+        
+        // Multiply the tilt offset values to get an actual usable value instead of -1 to 1.
+        // This also determines the range of the tilt.
+        tiltOffsetY *= 15 * 0xF0 * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityY", 1.0f);
+        tiltOffsetX *= 20 * 0xF0 * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityX", 1.0f);
+    }
+
+    // Calculate the movement of the camera without the tilt, as usual.
     if (!func_800B7128(this) && !func_8082EF20(this) && !arg2) { // First person without weapon
-        var_s0 = stickY * 0xF0;
+        var_s0 = moveY * 0xF0;
         Math_SmoothStepToS(&this->actor.focus.rot.x, var_s0, 0xE, 0xFA0, 0x1E);
 
-        var_s0 = stickX * -0x10;
+        var_s0 = moveX * -0x10;
         var_s0 = CLAMP(var_s0, -0xBB8, 0xBB8);
         this->actor.focus.rot.y += var_s0;
     } else { // First person with weapon
         s16 temp3;
 
-        temp3 = ((stickY >= 0) ? 1 : -1) * (s32)((1.0f - Math_CosS(stickY * 0xC8)) * 1500.0f);
+        temp3 = ((moveY >= 0) ? 1 : -1) * (s32)((1.0f - Math_CosS(moveY * 0xC8)) * 1500.0f);
         this->actor.focus.rot.x += temp3;
 
         if (this->stateFlags1 & PLAYER_STATE1_800000) {
@@ -13049,11 +13086,15 @@ s32 Ship_HandleFirstPersonAiming(PlayState* play, Player* this, s32 arg2) {
         }
 
         var_s0 = this->actor.focus.rot.y - this->actor.shape.rot.y;
-        temp3 = ((stickX >= 0) ? 1 : -1) * (s32)((1.0f - Math_CosS(stickX * 0xC8)) * -1500.0f);
+        temp3 = ((moveX >= 0) ? 1 : -1) * (s32)((1.0f - Math_CosS(moveX * 0xC8)) * -1500.0f);
         var_s0 += temp3;
 
         this->actor.focus.rot.y = CLAMP(var_s0, -0x4AAA, 0x4AAA) + this->actor.shape.rot.y;
     }
+
+    // Add the tilt offsets to the rotation tweak the camera direction separately from the regular movement.
+    this->actor.focus.rot.x += tiltOffsetY;
+    this->actor.focus.rot.y += tiltOffsetX;
 
     this->unk_AA6 |= 2;
 
