@@ -13028,27 +13028,26 @@ s32 Ship_HandleFirstPersonAiming(PlayState* play, Player* this, s32 arg2) {
     float tiltOffsetX = 0;
     float tiltOffsetY = 0;
 
-    // Static variables are needed to track the previous tilt amounts between invocations of this function.
-    static float tiltX = 0; // -1 to 1
-    static float tiltY = 0; // -1 to 1
 
     if (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroEnabled", 0)){
-        // TODO: Set the tiltOffset values and store static tilt states appropriate for the gyro controls.
-        // Note: This doesn't necessarily have to constrain the tilt values to the range -1 to 1 for gyros.
+        // Gyro tilts manage their own state and don't need static tracking variables.
 
         float currentTiltX = sPlayerControlInput->cur.gyro_y;
         float currentTiltY = sPlayerControlInput->cur.gyro_x;
 
+        // Scale the tilt amount and apply it.
         tiltOffsetX = currentTiltX * 1400
             * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityX", 1.0f)
             * (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertX", 0) ? -1 : 1);
         tiltOffsetY = currentTiltY * -800
             * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityY", 1.0f)
             * (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertY", 0) ? -1 : 1);
-
     }
     else
     {
+        // Static variables are needed to track the previous tilt amounts between invocations of this function.
+        static float tiltX = 0; // -1 to 1
+        static float tiltY = 0; // -1 to 1
         // The stick amounts range from -84 to 84, so here they are standardized into a -1 to 1 range.
         float currentTiltX = -(((float) tiltStick->x) / 84.0); // -1 to 1
         float currentTiltY = -(((float) tiltStick->y) / 84.0); // -1 to 1
@@ -13094,7 +13093,7 @@ s32 Ship_HandleFirstPersonAiming(PlayState* play, Player* this, s32 arg2) {
         this->actor.focus.rot.y = CLAMP(var_s0, -0x4AAA, 0x4AAA) + this->actor.shape.rot.y;
     }
 
-    // Add the tilt offsets to the rotation tweak the camera direction separately from the regular movement.
+    // Add the tilt offsets to the rotation without applying smoothing.
     this->actor.focus.rot.x += tiltOffsetY;
     this->actor.focus.rot.y += tiltOffsetX;
 
