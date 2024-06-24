@@ -1,0 +1,871 @@
+{
+    "CVars": {
+        "gCheats": {
+            "InfiniteConsumables": 1,
+            "InfiniteHealth": 1,
+            "InfiniteMagic": 1,
+            "InfiniteRupees": 1,
+            "MoonJumpOnL": 0,
+            "NoClip": 0,
+            "UnbreakableRazorSword": 1,
+            "UnrestrictedItems": 1
+        },
+        "gDeveloperTools": {
+            "WarpPoint": {
+                "Entrance": 55296,
+                "Room": 0,
+                "Rotation": -4115.0,
+                "Saved": 1,
+                "X": -307.19012451171875,
+                "Y": 0.0,
+                "Z": -624.2359619140625
+            }
+        },
+        "gEnhancements": {
+            "Camera": {
+                "FirstPerson": {
+                    "GyroEnabled": 0,
+                    "GyroSensitivityX": 1.0,
+                    "GyroSensitivityY": 1.0,
+                    "RightStickEnabled": 1,
+                    "RightStickSensitivityX": 1.0
+                },
+                "FreeLook": {
+                    "Enable": 1,
+                    "MaxPitch": 72.0,
+                    "MinPitch": -49.0
+                }
+            },
+            "Cutscenes": {
+                "HideTitleCards": 1,
+                "SkipEntranceCutscenes": 1,
+                "SkipIntroSequence": 1,
+                "SkipMiscInteractions": 1,
+                "SkipStoryCutscenes": 1,
+                "SkipToFileSelect": 1
+            },
+            "Graphics": {
+                "BowReticle": 1
+            },
+            "Playback": {
+                "DpadOcarina": 1
+            },
+            "Saving": {
+                "PauseSave": 1
+            }
+        },
+        "gHudEditor": {
+            "CDown": {
+                "Mode": 3,
+                "Position": {
+                    "X": 72,
+                    "Y": 0
+                }
+            }
+        },
+        "gInterpolationFPS": 60,
+        "gMatchRefreshRate": 0,
+        "gOpenWindows": {
+            "ControllerConfiguration": 1
+        },
+        "gSettings": {
+            "Controllers": {
+                "AxisDirectionMappings": {
+                    "P0-S0-D0-LUSI0-SDLA0-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 0,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 0,
+                        "Stick": 0
+                    },
+                    "P0-S0-D0-LUSI1-SDLA0-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 0,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 1,
+                        "Stick": 0
+                    },
+                    "P0-S0-D0-LUSI2-SDLA0-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 0,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 2,
+                        "Stick": 0
+                    },
+                    "P0-S0-D1-LUSI0-SDLA0-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 1,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 0,
+                        "Stick": 0
+                    },
+                    "P0-S0-D1-LUSI1-SDLA0-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 1,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 1,
+                        "Stick": 0
+                    },
+                    "P0-S0-D1-LUSI2-SDLA0-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 1,
+                        "SDLControllerAxis": 0,
+                        "ShipDeviceIndex": 2,
+                        "Stick": 0
+                    },
+                    "P0-S0-D2-LUSI0-SDLA1-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 2,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 0,
+                        "Stick": 0
+                    },
+                    "P0-S0-D2-LUSI1-SDLA1-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 2,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 1,
+                        "Stick": 0
+                    },
+                    "P0-S0-D2-LUSI2-SDLA1-ADN": {
+                        "AxisDirection": -1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 2,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 2,
+                        "Stick": 0
+                    },
+                    "P0-S0-D3-LUSI0-SDLA1-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 3,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 0,
+                        "Stick": 0
+                    },
+                    "P0-S0-D3-LUSI1-SDLA1-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 3,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 1,
+                        "Stick": 0
+                    },
+                    "P0-S0-D3-LUSI2-SDLA1-ADP": {
+                        "AxisDirection": 1,
+                        "AxisDirectionMappingClass": "SDLAxisDirectionToAxisDirectionMapping",
+                        "Direction": 3,
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 2,
+                        "Stick": 0
+                    }
+                },
+                "ButtonMappings": {
+                    "P0-B0-KB20": {
+                        "SpecialButtonId": 3
+                    },
+                    "P0-B0-KB33": {
+                        "SpecialButtonId": 1
+                    },
+                    "P0-B0-KB36": {
+                        "SpecialButtonId": 1
+                    },
+                    "P0-B0-KB57": {
+                        "SpecialButtonId": 2
+                    },
+                    "P0-B0-LUSI0-SDLA1-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 1,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-LUSI0-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-LUSI0-SDLB1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-LUSI0-SDLB5": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 5,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S1-LUSI0-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 1
+                    },
+                    "P0-B0-S1-LUSI0-SDLB1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S1-LUSI0-SDLB3": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 3,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S1-LUSI0-SDLB5": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 5,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S1-LUSI1-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 1
+                    },
+                    "P0-B0-S1-LUSI2-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 1
+                    },
+                    "P0-B0-S2-LUSI0-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 2
+                    },
+                    "P0-B0-S2-LUSI0-SDLB5": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 5,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S2-LUSI0-SDLB8": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 8,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B0-S2-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 2
+                    },
+                    "P0-B0-S2-LUSI2-SDLB0": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 2
+                    },
+                    "P0-B0-S3-LUSI0-SDLB8": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 8,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 3
+                    },
+                    "P0-B0-S3-LUSI1-SDLB17": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 17,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 3
+                    },
+                    "P0-B0-S3-LUSI2-SDLB8": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 8,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 3
+                    },
+                    "P0-B0-S4-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 4
+                    },
+                    "P0-B0-S4-LUSI2-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 4
+                    },
+                    "P0-B0-S5-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 5
+                    },
+                    "P0-B0-S5-LUSI2-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 5
+                    },
+                    "P0-B0-S6-LUSI0-SDLB14": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 14,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 6
+                    },
+                    "P0-B0-S6-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 6
+                    },
+                    "P0-B0-S6-LUSI2-SDLB13": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 13,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 6
+                    },
+                    "P0-B0-S7-LUSI0-SDLB13": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 13,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 7
+                    },
+                    "P0-B0-S7-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 7
+                    },
+                    "P0-B0-S7-LUSI2-SDLB14": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 14,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 7
+                    },
+                    "P0-B0-S8-LUSI0-SDLB10": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 10,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 8
+                    },
+                    "P0-B0-S8-LUSI1-SDLB-1": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": -1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 8
+                    },
+                    "P0-B0-S8-LUSI2-SDLB10": {
+                        "Bitmask": 0,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 10,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 8
+                    },
+                    "P0-B1-LUSI1-SDLA2-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 1,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 2,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B1-LUSI2-SDLA2-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 1,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 2,
+                        "ShipDeviceIndex": 2
+                    },
+                    "P0-B1-S0-LUSI0-SDLB3": {
+                        "Bitmask": 1,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 3,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B1024-S0-LUSI0-SDLB12": {
+                        "Bitmask": 1024,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 12,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B1024-S0-LUSI1-SDLB12": {
+                        "Bitmask": 1024,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 12,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B1024-S0-LUSI2-SDLB12": {
+                        "Bitmask": 1024,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 12,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B16-LUSI0-SDLA5-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 16,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 5,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B16-LUSI0-SDLB10": {
+                        "Bitmask": 16,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 10,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B16-LUSI1-SDLA5-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 16,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 5,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B16-LUSI2-SDLA5-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 16,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 5,
+                        "ShipDeviceIndex": 2
+                    },
+                    "P0-B16384-LUSI0-SDLB1": {
+                        "Bitmask": 16384,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B16384-S0-LUSI0-SDLB1": {
+                        "Bitmask": 16384,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B16384-S0-LUSI1-SDLB1": {
+                        "Bitmask": 16384,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B16384-S0-LUSI2-SDLB1": {
+                        "Bitmask": 16384,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 1,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B2-LUSI1-SDLA2-ADN": {
+                        "AxisDirection": -1,
+                        "Bitmask": 2,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 2,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B2-LUSI2-SDLA2-ADN": {
+                        "AxisDirection": -1,
+                        "Bitmask": 2,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 2,
+                        "ShipDeviceIndex": 2
+                    },
+                    "P0-B2-S0-LUSI0-SDLB9": {
+                        "Bitmask": 2,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 9,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B2048-S0-LUSI0-SDLB11": {
+                        "Bitmask": 2048,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 11,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B2048-S0-LUSI1-SDLB11": {
+                        "Bitmask": 2048,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 11,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B2048-S0-LUSI2-SDLB11": {
+                        "Bitmask": 2048,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 11,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B256-S0-LUSI0-SDLB14": {
+                        "Bitmask": 256,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 14,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B256-S0-LUSI1-SDLB14": {
+                        "Bitmask": 256,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 14,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B256-S0-LUSI2-SDLB14": {
+                        "Bitmask": 256,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 14,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32-LUSI0-SDLB9": {
+                        "Bitmask": 32,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 9,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B32-S0-LUSI0-SDLB9": {
+                        "Bitmask": 32,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 9,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32-S0-LUSI1-SDLB9": {
+                        "Bitmask": 32,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 9,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32-S0-LUSI2-SDLB9": {
+                        "Bitmask": 32,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 9,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32768-KB20": {
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32768-LUSI0-SDLB0": {
+                        "Bitmask": 32768,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B32768-S0-LUSI0-SDLB0": {
+                        "Bitmask": 32768,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32768-S0-LUSI1-SDLB0": {
+                        "Bitmask": 32768,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B32768-S0-LUSI2-SDLB0": {
+                        "Bitmask": 32768,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 0,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4-LUSI1-SDLA3-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 4,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 3,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B4-LUSI2-SDLA3-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 4,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 3,
+                        "ShipDeviceIndex": 2
+                    },
+                    "P0-B4-S0-LUSI0-SDLB2": {
+                        "Bitmask": 4,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 2,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4096-KB28": {
+                        "Bitmask": 4096,
+                        "ButtonMappingClass": "KeyboardKeyToButtonMapping",
+                        "KeyboardScancode": 28,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4096-KB57": {
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4096-LUSI0-SDLB6": {
+                        "Bitmask": 4096,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 6,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B4096-S0-LUSI0-SDLB6": {
+                        "Bitmask": 4096,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 6,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4096-S0-LUSI1-SDLB6": {
+                        "Bitmask": 4096,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 6,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B4096-S0-LUSI2-SDLB6": {
+                        "Bitmask": 4096,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 6,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B512-S0-LUSI0-SDLB13": {
+                        "Bitmask": 512,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 13,
+                        "ShipDeviceIndex": 0,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B512-S0-LUSI1-SDLB13": {
+                        "Bitmask": 512,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 13,
+                        "ShipDeviceIndex": 1,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B512-S0-LUSI2-SDLB13": {
+                        "Bitmask": 512,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 13,
+                        "ShipDeviceIndex": 2,
+                        "SpecialButtonId": 0
+                    },
+                    "P0-B8-LUSI1-SDLA3-ADN": {
+                        "AxisDirection": -1,
+                        "Bitmask": 8,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 3,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B8-LUSI2-SDLA3-ADN": {
+                        "AxisDirection": -1,
+                        "Bitmask": 8,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 3,
+                        "ShipDeviceIndex": 2
+                    },
+                    "P0-B8-S0-LUSI0-SDLB5": {
+                        "Bitmask": 8,
+                        "ButtonMappingClass": "SDLButtonToButtonMapping",
+                        "SDLControllerButton": 5,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B8192-LUSI0-SDLA4-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 8192,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 4,
+                        "ShipDeviceIndex": 0
+                    },
+                    "P0-B8192-LUSI1-SDLA4-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 8192,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 4,
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-B8192-LUSI2-SDLA4-ADP": {
+                        "AxisDirection": 1,
+                        "Bitmask": 8192,
+                        "ButtonMappingClass": "SDLAxisDirectionToButtonMapping",
+                        "SDLControllerAxis": 4,
+                        "ShipDeviceIndex": 2
+                    }
+                },
+                "DeviceMappingIds": "Blue,Orange,Red,",
+                "DeviceMappings": {
+                    "Blue": {
+                        "DeviceMappingClass": "ShipDeviceIndexToSDLDeviceIndexMapping",
+                        "SDLControllerName": "Logitech Cordless RumblePad 2",
+                        "SDLDeviceIndex": 0,
+                        "SDLJoystickGUID": "05005d8eac0500000400000065706d04",
+                        "ShipDeviceIndex": 0,
+                        "StickAxisThresholdPercentage": 25,
+                        "TriggerAxisThresholdPercentage": 25
+                    },
+                    "Orange": {
+                        "DeviceMappingClass": "ShipDeviceIndexToSDLDeviceIndexMapping",
+                        "SDLControllerName": "Nintendo Switch Joy-Con (L/R)",
+                        "SDLDeviceIndex": 0,
+                        "SDLJoystickGUID": "0300460f7e0500000820000000006800",
+                        "ShipDeviceIndex": 2,
+                        "StickAxisThresholdPercentage": 25,
+                        "TriggerAxisThresholdPercentage": 25
+                    },
+                    "Red": {
+                        "DeviceMappingClass": "ShipDeviceIndexToSDLDeviceIndexMapping",
+                        "SDLControllerName": "Nintendo Switch Joy-Con (L)",
+                        "SDLDeviceIndex": 0,
+                        "SDLJoystickGUID": "030067007e0500000620000001006801",
+                        "ShipDeviceIndex": 1,
+                        "StickAxisThresholdPercentage": 25,
+                        "TriggerAxisThresholdPercentage": 25
+                    }
+                },
+                "GyroMappings": {
+                    "P0-LUSI2": {
+                        "GyroMappingClass": "SDLGyroMapping",
+                        "NeutralPitch": 0.0,
+                        "NeutralRoll": 0.0,
+                        "NeutralYaw": 0.0,
+                        "Sensitivity": 1.0,
+                        "ShipDeviceIndex": 2
+                    }
+                },
+                "Port1": {
+                    "Buttons": {
+                        "0ButtonMappingIds": "P0-B0-S3-LUSI0-SDLB8,",
+                        "1SpecialButtonMappingIds": "P0-B0-S1-LUSI0-SDLB0,",
+                        "2SpecialButtonMappingIds": "P0-B0-S2-LUSI0-SDLB2,",
+                        "3SpecialButtonMappingIds": "P0-B0-S3-LUSI0-SDLB8,",
+                        "AButtonMappingIds": "P0-B32768-S0-LUSI2-SDLB0,P0-B32768-S0-LUSI0-SDLB0,P0-B32768-S0-LUSI1-SDLB0,",
+                        "BButtonMappingIds": "P0-B16384-S0-LUSI2-SDLB1,P0-B16384-S0-LUSI0-SDLB1,P0-B16384-S0-LUSI1-SDLB1,",
+                        "CDownButtonMappingIds": "P0-B4-LUSI2-SDLA3-ADP,P0-B4-S0-LUSI0-SDLB2,P0-B4-LUSI1-SDLA3-ADP,",
+                        "CLeftButtonMappingIds": "P0-B2-LUSI2-SDLA2-ADN,P0-B2-S0-LUSI0-SDLB9,P0-B2-LUSI1-SDLA2-ADN,",
+                        "CRightButtonMappingIds": "P0-B1-LUSI2-SDLA2-ADP,P0-B1-S0-LUSI0-SDLB3,P0-B1-LUSI1-SDLA2-ADP,",
+                        "CUpButtonMappingIds": "P0-B8-LUSI2-SDLA3-ADN,P0-B8-LUSI1-SDLA3-ADN,",
+                        "DDownButtonMappingIds": "P0-B1024-S0-LUSI2-SDLB12,P0-B1024-S0-LUSI0-SDLB12,P0-B1024-S0-LUSI1-SDLB12,",
+                        "DLeftButtonMappingIds": "P0-B512-S0-LUSI2-SDLB13,P0-B512-S0-LUSI0-SDLB13,P0-B512-S0-LUSI1-SDLB13,",
+                        "DRightButtonMappingIds": "P0-B256-S0-LUSI0-SDLB14,P0-B256-S0-LUSI2-SDLB14,P0-B256-S0-LUSI1-SDLB14,",
+                        "DUpButtonMappingIds": "P0-B2048-S0-LUSI2-SDLB11,P0-B2048-S0-LUSI0-SDLB11,P0-B2048-S0-LUSI1-SDLB11,",
+                        "Draw BowButtonMappingIds": "P0-B0-S4-LUSI0-SDLB7,",
+                        "Fire BowButtonMappingIds": "P0-B0-S4-LUSI2-SDLB-1,",
+                        "Fire HookshotButtonMappingIds": "P0-B0-S5-LUSI2-SDLB-1,",
+                        "JumpButtonMappingIds": "P0-B0-S2-LUSI2-SDLB0,P0-B0-S2-LUSI0-SDLB0,",
+                        "LButtonMappingIds": "P0-B32-S0-LUSI2-SDLB9,P0-B32-S0-LUSI0-SDLB9,P0-B32-S0-LUSI1-SDLB9,",
+                        "RButtonMappingIds": "P0-B16-LUSI2-SDLA5-ADP,P0-B16-LUSI0-SDLA5-ADP,P0-B16-LUSI1-SDLA5-ADP,",
+                        "Release BowButtonMappingIds": "P0-B0-S5-LUSI0-SDLB8,",
+                        "RollButtonMappingIds": "P0-B0-S1-LUSI0-SDLB0,P0-B0-S1-LUSI2-SDLB0,P0-B0-S1-LUSI1-SDLB0,",
+                        "StartButtonMappingIds": "P0-B4096-S0-LUSI0-SDLB6,P0-B4096-KB28,P0-B4096-S0-LUSI2-SDLB6,P0-B4096-S0-LUSI1-SDLB6,",
+                        "Swap Item LeftButtonMappingIds": "P0-B0-S7-LUSI2-SDLB14,P0-B0-S7-LUSI0-SDLB13,",
+                        "Swap Item RightButtonMappingIds": "P0-B0-S6-LUSI2-SDLB13,P0-B0-S6-LUSI0-SDLB14,",
+                        "TalkButtonMappingIds": "P0-B0-S3-LUSI0-SDLB8,P0-B0-S3-LUSI2-SDLB8,P0-B0-S3-LUSI1-SDLB17,",
+                        "Use ItemButtonMappingIds": "P0-B0-S8-LUSI2-SDLB10,P0-B0-S8-LUSI0-SDLB10,",
+                        "ZButtonMappingIds": "P0-B8192-LUSI2-SDLA4-ADP,P0-B8192-LUSI0-SDLA4-ADP,P0-B8192-LUSI1-SDLA4-ADP,"
+                    },
+                    "Gyro": {
+                        "GyroMappingId": "P0-LUSI2"
+                    },
+                    "HasConfig": 1,
+                    "LEDMappingIds": "",
+                    "LeftStick": {
+                        "DeadzonePercentage": 20,
+                        "DownAxisDirectionMappingIds": "P0-S0-D3-LUSI0-SDLA1-ADP,P0-S0-D3-LUSI1-SDLA1-ADP,P0-S0-D3-LUSI2-SDLA1-ADP,",
+                        "LeftAxisDirectionMappingIds": "P0-S0-D0-LUSI0-SDLA0-ADN,P0-S0-D0-LUSI1-SDLA0-ADN,P0-S0-D0-LUSI2-SDLA0-ADN,",
+                        "NotchSnapAngle": 0,
+                        "RightAxisDirectionMappingIds": "P0-S0-D1-LUSI0-SDLA0-ADP,P0-S0-D1-LUSI1-SDLA0-ADP,P0-S0-D1-LUSI2-SDLA0-ADP,",
+                        "SensitivityPercentage": 100,
+                        "UpAxisDirectionMappingIds": "P0-S0-D2-LUSI0-SDLA1-ADN,P0-S0-D2-LUSI1-SDLA1-ADN,P0-S0-D2-LUSI2-SDLA1-ADN,"
+                    },
+                    "RightStick": {
+                        "DeadzonePercentage": 20,
+                        "DownAxisDirectionMappingIds": "P0-S1-D3-LUSI0-SDLA3-ADP,",
+                        "LeftAxisDirectionMappingIds": "P0-S1-D0-LUSI0-SDLA2-ADN,",
+                        "NotchSnapAngle": 0,
+                        "RightAxisDirectionMappingIds": "P0-S1-D1-LUSI0-SDLA2-ADP,",
+                        "SensitivityPercentage": 100,
+                        "UpAxisDirectionMappingIds": "P0-S1-D2-LUSI0-SDLA3-ADN,"
+                    },
+                    "RumbleMappingIds": "P0-LUSI2,P0-LUSI1,"
+                },
+                "Port2": {
+                    "HasConfig": 1,
+                    "LeftStick": {
+                        "DeadzonePercentage": 20,
+                        "NotchSnapAngle": 0,
+                        "SensitivityPercentage": 100
+                    },
+                    "RightStick": {
+                        "DeadzonePercentage": 20,
+                        "NotchSnapAngle": 0,
+                        "SensitivityPercentage": 100
+                    }
+                },
+                "RumbleMappings": {
+                    "P0-LUSI1": {
+                        "HighFrequencyIntensity": 100,
+                        "LowFrequencyIntensity": 100,
+                        "RumbleMappingClass": "SDLRumbleMapping",
+                        "ShipDeviceIndex": 1
+                    },
+                    "P0-LUSI2": {
+                        "HighFrequencyIntensity": 100,
+                        "LowFrequencyIntensity": 100,
+                        "RumbleMappingClass": "SDLRumbleMapping",
+                        "ShipDeviceIndex": 2
+                    }
+                }
+            },
+            "OpenMenuBar": 1,
+            "OverlayFont": "Press Start 2P"
+        }
+    },
+    "Window": {
+        "AudioBackend": "sdl",
+        "Backend": {
+            "Id": 4,
+            "Name": "Metal"
+        },
+        "Fullscreen": {
+            "Enabled": false
+        },
+        "Height": 1524,
+        "PositionX": 0,
+        "PositionY": 53,
+        "Width": 2880
+    }
+}
