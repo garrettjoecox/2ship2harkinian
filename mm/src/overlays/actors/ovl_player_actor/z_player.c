@@ -13036,14 +13036,16 @@ s32 Ship_HandleFirstPersonAiming(PlayState* play, Player* this, s32 arg2) {
         // TODO: Set the tiltOffset values and store static tilt states appropriate for the gyro controls.
         // Note: This doesn't necessarily have to constrain the tilt values to the range -1 to 1 for gyros.
 
-        // float currentTiltX = ??
-        // float currentTiltY = ??
+        float currentTiltX = sPlayerControlInput->cur.gyro_y;
+        float currentTiltY = sPlayerControlInput->cur.gyro_x;
 
-        // tiltOffsetX = currentTiltX - tiltX;
-        // tiltOffsetY = currentTiltY - tiltY;
+        tiltOffsetX = currentTiltX * 1400
+            * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityX", 1.0f)
+            * (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertX", 0) ? -1 : 1);
+        tiltOffsetY = currentTiltY * -800
+            * CVarGetFloat("gEnhancements.Camera.FirstPerson.GyroSensitivityY", 1.0f)
+            * (CVarGetInteger("gEnhancements.Camera.FirstPerson.GyroInvertY", 0) ? -1 : 1);
 
-        // tiltX = currentTiltX;
-        // tiltY = currentTiltY;
     }
     else
     {
