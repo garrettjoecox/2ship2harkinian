@@ -26,7 +26,7 @@ std::unordered_map<RandoItemId, RandoStaticItem> Items = {
     { RI_RUPEE_RED,               { "Red Rupee",               ITEM_RUPEE_RED,         GI_RUPEE_RED,         GID_RUPEE_RED } },
     { RI_RUPEE_SILVER,            { "Silver Rupee",            ITEM_RUPEE_SILVER,      GI_RUPEE_SILVER,      GID_RUPEE_SILVER } },
     { RI_SNOWHEAD_STRAY_FAIRY,    { "Snowhead Stray Fairy",    ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
-    { RI_SNOWHEAD_SMALL_KEY,      { "Snowhead Samll Key",      ITEM_KEY_SMALL,         GI_KEY_SMALL,         GID_KEY_SMALL } },
+    { RI_SNOWHEAD_SMALL_KEY,      { "Snowhead Small Key",      ITEM_KEY_SMALL,         GI_KEY_SMALL,         GID_KEY_SMALL } },
     { RI_SNOWHEAD_BOSS_KEY,       { "Snowhead Boss Key",       ITEM_KEY_BOSS,          GI_KEY_BOSS,          GID_KEY_BOSS } },
     { RI_SNOWHEAD_MAP,            { "Snowhead Map",            ITEM_DUNGEON_MAP,       GI_MAP,               GID_DUNGEON_MAP } },
     { RI_SNOWHEAD_COMPASS,        { "Snowhead Compass",        ITEM_COMPASS,           GI_COMPASS,           GID_COMPASS } },
