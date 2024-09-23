@@ -40,6 +40,7 @@ void Rando::GiveItem(RandoItem item) {
                 gSaveContext.save.saveInfo.playerData.magicLevel = 0;
             }
             break;
+        // probably case here for dungeon items map/compass/keys
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[item].itemId);
             break;
