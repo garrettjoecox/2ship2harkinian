@@ -14,27 +14,27 @@ namespace Rando {
 
 namespace StaticData {
 
-struct RandoCheckData {
-    RandoCheck check;
-    RandoCheckType type;
-    SceneId scene;
+struct RandoStaticCheck {
+    RandoCheckId randoCheckId;
+    RandoCheckType randoCheckType;
+    SceneId sceneId;
     FlagType flagType;
     s32 flag;
-    RandoItem item;
+    RandoItemId randoItemId;
 };
 
-extern std::unordered_map<RandoCheck, RandoCheckData> Checks;
+extern std::unordered_map<RandoCheckId, RandoStaticCheck> Checks;
 
-struct RandoItemData {
+struct RandoStaticItem {
     const char* name;
     ItemId itemId;
     GetItemId getItemId;
     GetItemDrawId drawId;
 };
 
-extern std::unordered_map<RandoItem, RandoItemData> Items;
+extern std::unordered_map<RandoItemId, RandoStaticItem> Items;
 
-RandoCheckData GetCheckFromFlag(FlagType flagType, s32 flag, s16 scene = SCENE_MAX);
+RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId = SCENE_MAX);
 
 } // namespace StaticData
 

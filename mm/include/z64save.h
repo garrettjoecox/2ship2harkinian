@@ -331,15 +331,15 @@ typedef enum {
     SAVETYPE_RANDO,
 } SaveType;
 
-typedef struct RandoSaveInfoCheck {
-    RandoItem item;
+typedef struct RandoSaveCheck {
+    RandoItemId randoItemId;
     bool eligible;
     bool obtained;
-} RandoSaveInfoCheck;
+} RandoSaveCheck;
 
 typedef struct RandoSaveInfo {
     u16 randoInf[(RANDO_INF_MAX + 15) / 16];
-    RandoSaveInfoCheck checks[RC_MAX];
+    RandoSaveCheck randoSaveChecks[RC_MAX];
 } RandoSaveInfo;
 
 // These are values added by 2S2H that we need to be persisted to the save file

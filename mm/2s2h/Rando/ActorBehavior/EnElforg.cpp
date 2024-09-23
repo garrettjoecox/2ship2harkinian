@@ -12,32 +12,32 @@ void EnElforg_SpawnSparkles(EnElforg* thisx, PlayState* play, s32 life);
 void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
     EnElforg* enElforg = (EnElforg*)thisx;
     Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
-    RandoCheck check = RC_UNKNOWN;
+    RandoCheckId randoCheckId = RC_UNKNOWN;
 
     if (STRAY_FAIRY_TYPE(thisx) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
-        check = RC_CLOCK_TOWN_STRAY_FAIRY;
+        randoCheckId = RC_CLOCK_TOWN_STRAY_FAIRY;
     } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_COLLECTIBLE) {
-        auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
-                                                             STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
-        check = checkData.check;
+        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
+            FLAG_CYCL_SCENE_COLLECTIBLE, STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
+        randoCheckId = randoStaticCheck.randoCheckId;
     } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING ||
                STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_ENEMY ||
                STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_BUBBLE) {
-        auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_SWITCH,
-                                                             STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
-        check = checkData.check;
+        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
+            FLAG_CYCL_SCENE_SWITCH, STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
+        randoCheckId = randoStaticCheck.randoCheckId;
     }
 
-    if (check == RC_UNKNOWN) {
+    if (randoCheckId == RC_UNKNOWN) {
         return;
     }
 
-    auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[check];
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
     EnElforg_SpawnSparkles(enElforg, play, 16);
     thisx->shape.rot.y = thisx->shape.rot.y + 960;
 
-    Rando::DrawItem(checkSaveData.item);
+    Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
 void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
@@ -62,32 +62,32 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
     onActorInitHookId =
         GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_EN_ELFORG, [](Actor* actor) {
             EnElforg* enElforg = (EnElforg*)actor;
-            RandoCheck check = RC_UNKNOWN;
+            RandoCheckId randoCheckId = RC_UNKNOWN;
 
             if (STRAY_FAIRY_TYPE(actor) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
-                check = RC_CLOCK_TOWN_STRAY_FAIRY;
+                randoCheckId = RC_CLOCK_TOWN_STRAY_FAIRY;
             } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_COLLECTIBLE) {
-                auto checkData = Rando::StaticData::GetCheckFromFlag(
+                auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
                     FLAG_CYCL_SCENE_COLLECTIBLE, STRAY_FAIRY_GET_FLAG(&enElforg->actor), gPlayState->sceneId);
-                check = checkData.check;
+                randoCheckId = randoStaticCheck.randoCheckId;
             } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING ||
                        STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_BUBBLE) {
-                auto checkData = Rando::StaticData::GetCheckFromFlag(
+                auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
                     FLAG_CYCL_SCENE_SWITCH, STRAY_FAIRY_GET_FLAG(&enElforg->actor), gPlayState->sceneId);
-                check = checkData.check;
+                randoCheckId = randoStaticCheck.randoCheckId;
             }
 
-            if (check == RC_UNKNOWN) {
+            if (randoCheckId == RC_UNKNOWN) {
                 return;
             }
 
-            auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[check];
+            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
             // Set up custom draw function
             enElforg->actor.draw = EnElforg_DrawCustom;
 
             // Override area, as it's used in the sparkle effect
-            switch (checkSaveData.item) {
+            switch (randoSaveCheck.randoItemId) {
                 case RI_WOODFALL_STRAY_FAIRY:
                     enElforg->area = STRAY_FAIRY_AREA_WOODFALL;
                     break;
@@ -123,25 +123,25 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
 
         Actor* actor = (Actor*)opt;
         EnElforg* enElforg = (EnElforg*)actor;
-        RandoCheck check = RC_UNKNOWN;
+        RandoCheckId randoCheckId = RC_UNKNOWN;
 
         if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_ENEMY) {
-            auto checkData = Rando::StaticData::GetCheckFromFlag(
+            auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
                 FLAG_CYCL_SCENE_SWITCH, STRAY_FAIRY_GET_FLAG(&enElforg->actor), gPlayState->sceneId);
-            check = checkData.check;
+            randoCheckId = randoStaticCheck.randoCheckId;
         }
 
-        if (check == RC_UNKNOWN) {
+        if (randoCheckId == RC_UNKNOWN) {
             return;
         }
 
-        auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[check];
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         // Set up custom draw function
         enElforg->actor.draw = EnElforg_DrawCustom;
 
         // Override area, as it's used in the sparkle effect
-        switch (checkSaveData.item) {
+        switch (randoSaveCheck.randoItemId) {
             case RI_WOODFALL_STRAY_FAIRY:
                 enElforg->area = STRAY_FAIRY_AREA_WOODFALL;
                 break;

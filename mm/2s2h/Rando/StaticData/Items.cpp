@@ -5,7 +5,7 @@ namespace Rando {
 namespace StaticData {
 
 // clang-format off
-std::unordered_map<RandoItem, RandoItemData> Items = {
+std::unordered_map<RandoItemId, RandoStaticItem> Items = {
     { RI_UNKNOWN,                 { "Unknown",                 ITEM_NONE,              GI_NONE,              GID_NONE } },
     { RI_CLOCK_TOWN_STRAY_FAIRY,  { "Clock Town Stray Fairy",  ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
     { RI_DOUBLE_DEFENSE,          { "Double Defense",          ITEM_NONE,              GI_NONE,              GID_HEART_CONTAINER } },

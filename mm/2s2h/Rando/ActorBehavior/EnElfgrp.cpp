@@ -11,11 +11,14 @@ extern "C" {
 void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
     static uint32_t shouldHook1Id = 0;
     static uint32_t shouldHook2Id = 0;
+    static uint32_t shouldHook3Id = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook1Id);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook2Id);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook3Id);
 
     shouldHook1Id = 0;
     shouldHook2Id = 0;
+    shouldHook3Id = 0;
 
     if (!isRando) {
         return;
@@ -62,4 +65,5 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
     });
 
     shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY, { *should = false; });
+    shouldHook3Id = REGISTER_VB_SHOULD(GI_VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS, { *should = false; });
 }

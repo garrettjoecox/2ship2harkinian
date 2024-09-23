@@ -6,8 +6,8 @@ extern "C" {
 #include "functions.h"
 }
 
-void Rando::GiveItem(RandoItem item) {
-    switch (item) {
+void Rando::GiveItem(RandoItemId randoItemId) {
+    switch (randoItemId) {
         case RI_CLOCK_TOWN_STRAY_FAIRY:
             SET_WEEKEVENTREG(WEEKEVENTREG_08_80);
             break;
@@ -91,7 +91,7 @@ void Rando::GiveItem(RandoItem item) {
             }
             break;
         default:
-            Item_Give(gPlayState, Rando::StaticData::Items[item].itemId);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
     }
 }

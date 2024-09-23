@@ -281,7 +281,7 @@ typedef enum {
     RC_ZORA_CAPE_WATERFALL_HP,
     RC_ZORA_HALL_SCRUB_HP,
     RC_MAX,
-} RandoCheck;
+} RandoCheckId;
 
 typedef enum {
     RI_UNKNOWN,
@@ -343,7 +343,7 @@ typedef enum {
     RI_WOODFALL_SMALL_KEY,
     RI_WOODFALL_STRAY_FAIRY,
     RI_MAX,
-} RandoItem;
+} RandoItemId;
 
 typedef enum {
     RANDO_INF_CLOCK_TOWN_STRAY_FAIRY_COLLECTED,

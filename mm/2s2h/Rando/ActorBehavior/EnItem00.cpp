@@ -10,15 +10,15 @@ void EnItem00_DrawCustomForFreestanding(Actor* thisx, PlayState* play) {
     EnItem00* enItem00 = (EnItem00*)thisx;
     Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
 
-    auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, enItem00->collectibleFlag,
-                                                         gPlayState->sceneId);
-    if (checkData.check == RC_UNKNOWN) {
+    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, enItem00->collectibleFlag,
+                                                                gPlayState->sceneId);
+    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
         return;
     }
 
-    auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[checkData.check];
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-    Rando::DrawItem(checkSaveData.item);
+    Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
 void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
@@ -43,15 +43,15 @@ void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
                 return;
             }
 
-            auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, item00->collectibleFlag,
-                                                                 gPlayState->sceneId);
-            if (checkData.check == RC_UNKNOWN) {
+            auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
+                                                                        item00->collectibleFlag, gPlayState->sceneId);
+            if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
                 return;
             }
 
-            auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[checkData.check];
+            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-            if (checkSaveData.obtained) {
+            if (randoSaveCheck.obtained) {
                 Actor_Kill(&item00->actor);
                 return;
             }

@@ -12,12 +12,12 @@ extern "C" {
 
 // I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
 // render properly, and we don't really have the systems in place to mock that.
-void DrawStrayFairy(RandoItem item) {
+void DrawStrayFairy(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
     Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
 
-    switch (item) {
+    switch (randoItemId) {
         case RI_WOODFALL_STRAY_FAIRY:
             AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairyWoodfallTexAnim);
             break;
@@ -88,14 +88,14 @@ void DrawStrayFairy(RandoItem item) {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
-void DrawSong(RandoItem item) {
+void DrawSong(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
     Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
 
     gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    switch (item) {
+    switch (randoItemId) {
         case RI_SUNS_SONG:
             gDPSetEnvColor(POLY_XLU_DISP++, 237, 231, 62, 255);
             break;
@@ -124,23 +124,23 @@ void DrawDoubleDefense() {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
-void Rando::DrawItem(RandoItem item) {
-    switch (item) {
+void Rando::DrawItem(RandoItemId randoItemId) {
+    switch (randoItemId) {
         case RI_SUNS_SONG:
-            DrawSong(item);
+            DrawSong(randoItemId);
             break;
         case RI_CLOCK_TOWN_STRAY_FAIRY:
         case RI_WOODFALL_STRAY_FAIRY:
         case RI_SNOWHEAD_STRAY_FAIRY:
         case RI_GREAT_BAY_STRAY_FAIRY:
         case RI_STONE_TOWER_STRAY_FAIRY:
-            DrawStrayFairy(item);
+            DrawStrayFairy(randoItemId);
             break;
         case RI_DOUBLE_DEFENSE:
             DrawDoubleDefense();
             break;
         default:
-            GetItem_Draw(gPlayState, Rando::StaticData::Items[item].drawId);
+            GetItem_Draw(gPlayState, Rando::StaticData::Items[randoItemId].drawId);
             break;
     }
 }

@@ -20,28 +20,28 @@ void from_json(const json& j, DpadSaveInfo& dpadEquips) {
     }
 }
 
-void to_json(json& j, const RandoSaveInfoCheck& check) {
+void to_json(json& j, const RandoSaveCheck& randoSaveCheck) {
     j = json{
-        { "item", check.item },
-        { "eligible", check.eligible },
-        { "obtained", check.obtained },
+        { "randoItemId", randoSaveCheck.randoItemId },
+        { "eligible", randoSaveCheck.eligible },
+        { "obtained", randoSaveCheck.obtained },
     };
 }
 
-void from_json(const json& j, RandoSaveInfoCheck& check) {
-    j.at("item").get_to(check.item);
-    j.at("eligible").get_to(check.eligible);
-    j.at("obtained").get_to(check.obtained);
+void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
+    j.at("randoItemId").get_to(randoSaveCheck.randoItemId);
+    j.at("eligible").get_to(randoSaveCheck.eligible);
+    j.at("obtained").get_to(randoSaveCheck.obtained);
 }
 
 void to_json(json& j, const RandoSaveInfo& rando) {
     j = json{
-        { "checks", rando.checks },
+        { "randoSaveChecks", rando.randoSaveChecks },
     };
 }
 
 void from_json(const json& j, RandoSaveInfo& rando) {
-    j.at("checks").get_to(rando.checks);
+    j.at("randoSaveChecks").get_to(rando.randoSaveChecks);
 }
 
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {

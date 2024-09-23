@@ -5,7 +5,7 @@ namespace Rando {
 namespace StaticData {
 
 // clang-format off
-std::unordered_map<RandoCheck, RandoCheckData> Checks = {
+std::unordered_map<RandoCheckId, RandoStaticCheck> Checks = {
     { RC_UNKNOWN,                                         { RC_UNKNOWN,                                         RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN } },
 
     // Verified as working & name decided, no more iteration necessary
@@ -282,9 +282,9 @@ std::unordered_map<RandoCheck, RandoCheckData> Checks = {
 };
 // clang-format on
 
-RandoCheckData GetCheckFromFlag(FlagType flagType, s32 flag, s16 scene) {
+RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (scene == SCENE_MAX || data.scene == scene)) {
+        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
             return data;
         }
     }

@@ -9,42 +9,37 @@ extern "C" {
 #include "functions.h"
 }
 
-void RandomizerQueueCheck(RandoCheck check) {
-    auto checkData = Rando::StaticData::Checks[check];
-    if (checkData.check == RC_UNKNOWN) {
-        return;
-    }
+void RandomizerQueueCheck(RandoCheckId randoCheckId) {
+    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-    auto& checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[check];
-
-    checkSaveData.eligible = true;
+    randoSaveCheck.eligible = true;
     GameInteractor::Instance->events.emplace_back(
         GIEventGiveItem{ .showGetItemCutscene = true,
-                         .getItemText = Rando::StaticData::Items[checkSaveData.item].name,
-                         .drawItem = [checkSaveData]() { Rando::DrawItem(checkSaveData.item); },
+                         .getItemText = Rando::StaticData::Items[randoSaveCheck.randoItemId].name,
+                         .drawItem = [randoSaveCheck]() { Rando::DrawItem(randoSaveCheck.randoItemId); },
                          .giveItem =
-                             [&checkSaveData]() {
-                                 Rando::GiveItem(checkSaveData.item);
-                                 checkSaveData.obtained = true;
+                             [&randoSaveCheck]() {
+                                 Rando::GiveItem(randoSaveCheck.randoItemId);
+                                 randoSaveCheck.obtained = true;
                              } });
 }
 
 void RandomizerOnFlagSetHandler(FlagType flagType, u32 flag) {
-    auto checkData = Rando::StaticData::GetCheckFromFlag(flagType, flag);
-    if (checkData.check == RC_UNKNOWN) {
+    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(flagType, flag);
+    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
         return;
     }
 
-    RandomizerQueueCheck(checkData.check);
+    RandomizerQueueCheck(randoStaticCheck.randoCheckId);
 }
 
 void RandomizerOnSceneFlagSetHandler(s16 sceneId, FlagType flagType, u32 flag) {
-    auto checkData = Rando::StaticData::GetCheckFromFlag(flagType, flag, sceneId);
-    if (checkData.check == RC_UNKNOWN) {
+    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(flagType, flag, sceneId);
+    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
         return;
     }
 
-    RandomizerQueueCheck(checkData.check);
+    RandomizerQueueCheck(randoStaticCheck.randoCheckId);
 }
 
 void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
@@ -62,18 +57,18 @@ void OnSaveInitHandler(s16 fileNum) {
     if (CVarGetInteger("gRando.Enabled", 0)) {
         gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
 
-        std::vector<RandoItem> itemPool;
-        for (auto& [check, checkData] : Rando::StaticData::Checks) {
-            if (checkData.check != RC_UNKNOWN) {
-                itemPool.push_back(checkData.item);
+        std::vector<RandoItemId> itemPool;
+        for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+            if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                itemPool.push_back(randoStaticCheck.randoItemId);
             }
         }
 
         std::shuffle(itemPool.begin(), itemPool.end(), std::mt19937(std::random_device()()));
 
-        for (auto& [check, checkData] : Rando::StaticData::Checks) {
-            if (checkData.check != RC_UNKNOWN) {
-                gSaveContext.save.shipSaveInfo.rando.checks[check].item = itemPool.back();
+        for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+            if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                RANDO_SAVE_CHECKS[randoCheckId].randoItemId = itemPool.back();
                 itemPool.pop_back();
             }
         }

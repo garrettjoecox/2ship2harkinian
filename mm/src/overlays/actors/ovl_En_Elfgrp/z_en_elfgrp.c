@@ -483,20 +483,23 @@ void func_80A3A398(EnElfgrp* this, PlayState* play) {
         this->actionFunc = func_80A3A274;
         Flags_UnsetSwitch(play, ENELFGRP_GET_SWITCH_FLAG_PARAMS(&this->actor));
 
-        if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
-            if (this->stateFlags & ELFGRP_STATE_1) {
-                Item_Give(play, ITEM_MASK_GREAT_FAIRY);
-            }
-
-            if (this->stateFlags & ELFGRP_STATE_2) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
-            }
-
-            if (this->stateFlags & ELFGRP_STATE_4) {
-                Item_Give(play, ITEM_SWORD_GREAT_FAIRY);
-            }
+        if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
+            goto skipGiveItem;
         }
 
+        if (this->stateFlags & ELFGRP_STATE_1) {
+            Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+        }
+
+        if (this->stateFlags & ELFGRP_STATE_2) {
+            SET_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
+        }
+
+        if (this->stateFlags & ELFGRP_STATE_4) {
+            Item_Give(play, ITEM_SWORD_GREAT_FAIRY);
+        }
+
+    skipGiveItem: // #2S2H
         this->stateFlags &= ~ELFGRP_STATE_3;
     } else if (GameInteractor_Should(GI_VB_START_GREAT_FAIRY_CUTSCENE, this->actor.xzDistToPlayer < 350.0f, this)) {
         CutsceneManager_Queue(this->actor.csId);

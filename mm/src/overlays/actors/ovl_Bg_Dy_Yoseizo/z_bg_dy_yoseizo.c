@@ -320,43 +320,42 @@ void func_80A0B35C(BgDyYoseizo* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
 
     if (this->timer == 60) {
-        if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY, true, this)) {
-            if (!Flags_GetSwitch(play, GREAT_FAIRY_GET_SWITCHFLAG(&this->actor))) {
-                switch (GREAT_FAIRY_GET_TYPE(&this->actor)) {
-                    case GREAT_FAIRY_TYPE_MAGIC:
-                        if (gSaveContext.save.saveInfo.playerData.isMagicAcquired != true) {
-                            gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
-                            gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
-                        }
-                        break;
+        if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY,
+                                  !Flags_GetSwitch(play, GREAT_FAIRY_GET_SWITCHFLAG(&this->actor)), this)) {
+            switch (GREAT_FAIRY_GET_TYPE(&this->actor)) {
+                case GREAT_FAIRY_TYPE_MAGIC:
+                    if (gSaveContext.save.saveInfo.playerData.isMagicAcquired != true) {
+                        gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
+                        gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
+                    }
+                    break;
 
-                    case GREAT_FAIRY_TYPE_WISDOM:
-                        if (gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired != true) {
-                            gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
-                            gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
-                            gSaveContext.save.saveInfo.playerData.magicLevel = 0;
-                        }
-                        break;
+                case GREAT_FAIRY_TYPE_WISDOM:
+                    if (gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired != true) {
+                        gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
+                        gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
+                        gSaveContext.save.saveInfo.playerData.magicLevel = 0;
+                    }
+                    break;
 
-                    case GREAT_FAIRY_TYPE_COURAGE:
-                        if (gSaveContext.save.saveInfo.playerData.doubleDefense != true) {
-                            gSaveContext.save.saveInfo.playerData.doubleDefense = true;
-                        }
-                        break;
+                case GREAT_FAIRY_TYPE_COURAGE:
+                    if (gSaveContext.save.saveInfo.playerData.doubleDefense != true) {
+                        gSaveContext.save.saveInfo.playerData.doubleDefense = true;
+                    }
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
         Interface_SetHudVisibility(9);
     }
 
-    if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY, true, this)) {
-        if ((this->timer < 50) && (GREAT_FAIRY_GET_TYPE(&this->actor) == GREAT_FAIRY_TYPE_COURAGE)) {
-            if (gSaveContext.save.saveInfo.inventory.defenseHearts < 20) {
-                gSaveContext.save.saveInfo.inventory.defenseHearts++;
-            }
+    if (GameInteractor_Should(GI_VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
+                              (this->timer < 50) && (GREAT_FAIRY_GET_TYPE(&this->actor) == GREAT_FAIRY_TYPE_COURAGE),
+                              this)) {
+        if (gSaveContext.save.saveInfo.inventory.defenseHearts < 20) {
+            gSaveContext.save.saveInfo.inventory.defenseHearts++;
         }
     }
 
