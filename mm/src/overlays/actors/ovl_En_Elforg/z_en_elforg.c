@@ -553,7 +553,9 @@ void EnElforg_TrappedByEnemy(EnElforg* this, PlayState* play) {
     if (this->enemy->update == NULL) {
         EnElforg_InitializeParams(this);
         this->actionFunc = EnElforg_FreeFloating;
-        this->actor.draw = EnElforg_Draw;
+        if (GameInteractor_Should(GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, true, this)) {
+            this->actor.draw = EnElforg_Draw;
+        }
         Actor_PlaySfx(&this->actor, NA_SE_EV_CHIBI_FAIRY_SAVED);
     } else {
         // The enemy is still alive, so have the Stray Fairy
