@@ -28,8 +28,6 @@ std::unordered_map<RandoCheck, RandoCheckData> Checks = {
     { RC_STOCK_POT_INN_ROOM_KEY,                          { RC_STOCK_POT_INN_ROOM_KEY,                          RCTYPE_NPC,              SCENE_YADOYA,                   FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_RECEIVED_ROOM_KEY,                                      RI_ROOM_KEY } },
     { RC_STOCK_POT_INN_STAFF_ROOM_CHEST,                  { RC_STOCK_POT_INN_STAFF_ROOM_CHEST,                  RCTYPE_CHEST,            SCENE_YADOYA,                   FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_RUPEE_SILVER } },
     { RC_WOODFALL_GREAT_FAIRY,                            { RC_WOODFALL_GREAT_FAIRY,                            RCTYPE_NPC,              SCENE_YOUSEI_IZUMI,             FLAG_RANDO_INF,              RANDO_INF_WOODFALL_GREAT_FAIRY,                                      RI_GREAT_SPIN_ATTACK } },
-
-    // Sort of working, more iteration and/or name needed
     { RC_SNOWHEAD_TEMPLE_BLOCK_ROOM_LEDGE_CHEST,          { RC_SNOWHEAD_TEMPLE_BLOCK_ROOM_LEDGE_CHEST,          RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x15,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
     { RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_ALCOVE_CHEST,       { RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_ALCOVE_CHEST,       RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x17,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
     { RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM_CHEST,       { RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM_CHEST,       RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x14,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
@@ -45,15 +43,18 @@ std::unordered_map<RandoCheck, RandoCheckData> Checks = {
     { RC_SNOWHEAD_TEMPLE_SF_DUAL_SWITCHES,                { RC_SNOWHEAD_TEMPLE_SF_DUAL_SWITCHES,                RCTYPE_STRAY_FAIRY,      SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_SWITCH,      0x2C,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
     { RC_SNOWHEAD_TEMPLE_SF_MAP_ROOM,                     { RC_SNOWHEAD_TEMPLE_SF_MAP_ROOM,                     RCTYPE_STRAY_FAIRY,      SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_SWITCH,      0x32,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
     { RC_SNOWHEAD_TEMPLE_SF_SNOW_ROOM,                    { RC_SNOWHEAD_TEMPLE_SF_SNOW_ROOM,                    RCTYPE_STRAY_FAIRY,      SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_SWITCH,      0x2B,                                                                RI_SNOWHEAD_STRAY_FAIRY } },
-
     { RC_SNOWHEAD_TEMPLE_BLOCK_ROOM,                      { RC_SNOWHEAD_TEMPLE_BLOCK_ROOM,                      RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x03,                                                                RI_SNOWHEAD_SMALL_KEY } },
-    { RC_SNOWHEAD_TEMPLE_BOSS_HC,                         { RC_SNOWHEAD_TEMPLE_BOSS_HC,                         RCTYPE_FREESTANDING,     SCENE_HAKUGIN_BS,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1f,                                                                RI_HEART_CONTAINER } },
     { RC_SNOWHEAD_TEMPLE_BOSS_KEY,                        { RC_SNOWHEAD_TEMPLE_BOSS_KEY,                        RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x1E,                                                                RI_SNOWHEAD_BOSS_KEY } },
     { RC_SNOWHEAD_TEMPLE_BRIDGE_ROOM,                     { RC_SNOWHEAD_TEMPLE_BRIDGE_ROOM,                     RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_SNOWHEAD_SMALL_KEY } },
     { RC_SNOWHEAD_TEMPLE_COMPASS,                         { RC_SNOWHEAD_TEMPLE_COMPASS,                         RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x1C,                                                                RI_SNOWHEAD_COMPASS } },
-    { RC_SNOWHEAD_TEMPLE_FIRE_ARROW,                      { RC_SNOWHEAD_TEMPLE_FIRE_ARROW,                      RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_SWITCH,      0x1B,                                                                RI_ARROW_FIRE } },
     { RC_SNOWHEAD_TEMPLE_ICICLE_ROOM,                     { RC_SNOWHEAD_TEMPLE_ICICLE_ROOM,                     RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x04,                                                                RI_SNOWHEAD_SMALL_KEY } },
     { RC_SNOWHEAD_TEMPLE_MAP,                             { RC_SNOWHEAD_TEMPLE_MAP,                             RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,       0x1D,                                                                RI_SNOWHEAD_MAP } },
+    { RC_SNOWHEAD_TEMPLE_FIRE_ARROW,                      { RC_SNOWHEAD_TEMPLE_FIRE_ARROW,                      RCTYPE_CHEST,            SCENE_HAKUGIN,                  FLAG_CYCL_SCENE_CHEST,      0x1B,                                                                RI_ARROW_FIRE } },
+
+    // Sort of working, more iteration and/or name needed
+
+    // HC spawns over rando item
+    // { RC_SNOWHEAD_TEMPLE_BOSS_HC,                         { RC_SNOWHEAD_TEMPLE_BOSS_HC,                         RCTYPE_FREESTANDING,     SCENE_HAKUGIN_BS,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1f,                                                                RI_HEART_CONTAINER } },
 
 
     // Converted list from ChatGPT
