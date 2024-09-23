@@ -45,7 +45,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_WOODFALL_BOSS_KEY:
         case RI_WOODFALL_MAP:
         case RI_WOODFALL_COMPASS:
-            SET_DUNGEON_ITEM(Rando::StaticData::Items[item].itemId - ITEM_KEY_BOSS, DUNGEON_INDEX_WOODFALL_TEMPLE);
+            SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
+                             DUNGEON_INDEX_WOODFALL_TEMPLE);
             break;
         case RI_WOODFALL_SMALL_KEY:
             if (DUNGEON_KEY_COUNT(DUNGEON_INDEX_WOODFALL_TEMPLE) < 0) {
@@ -57,7 +58,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_SNOWHEAD_BOSS_KEY:
         case RI_SNOWHEAD_MAP:
         case RI_SNOWHEAD_COMPASS:
-            SET_DUNGEON_ITEM(Rando::StaticData::Items[item].itemId - ITEM_KEY_BOSS, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
+            SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
+                             DUNGEON_INDEX_SNOWHEAD_TEMPLE);
             break;
         case RI_SNOWHEAD_SMALL_KEY:
             if (DUNGEON_KEY_COUNT(DUNGEON_INDEX_SNOWHEAD_TEMPLE) < 0) {
@@ -69,7 +71,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_GREAT_BAY_BOSS_KEY:
         case RI_GREAT_BAY_MAP:
         case RI_GREAT_BAY_COMPASS:
-            SET_DUNGEON_ITEM(Rando::StaticData::Items[item].itemId - ITEM_KEY_BOSS, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
+            SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
+                             DUNGEON_INDEX_GREAT_BAY_TEMPLE);
             break;
         case RI_GREAT_BAY_SMALL_KEY:
             if (DUNGEON_KEY_COUNT(DUNGEON_INDEX_GREAT_BAY_TEMPLE) < 0) {
@@ -81,7 +84,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_STONE_TOWER_BOSS_KEY:
         case RI_STONE_TOWER_MAP:
         case RI_STONE_TOWER_COMPASS:
-            SET_DUNGEON_ITEM(Rando::StaticData::Items[item].itemId - ITEM_KEY_BOSS, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
+            SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
+                             DUNGEON_INDEX_STONE_TOWER_TEMPLE);
             break;
         case RI_STONE_TOWER_SMALL_KEY:
             if (DUNGEON_KEY_COUNT(DUNGEON_INDEX_STONE_TOWER_TEMPLE) < 0) {
