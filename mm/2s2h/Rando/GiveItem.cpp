@@ -40,6 +40,15 @@ void Rando::GiveItem(RandoItemId randoItemId) {
                 gSaveContext.save.saveInfo.playerData.magicLevel = 0;
             }
             break;
+        case RI_PROGRESSIVE_BOW:
+            if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
+                Item_Give(gPlayState, ITEM_BOW);
+            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
+                Item_Give(gPlayState, ITEM_QUIVER_40);
+            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
+                Item_Give(gPlayState, ITEM_QUIVER_50);
+            }
+            break;
         // Don't love this because it doesn't hit GameInteractor_ExecuteOnItemGive()
         // but not sure how else to account for collecting outside of dungeon
         case RI_WOODFALL_BOSS_KEY:

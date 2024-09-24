@@ -11,6 +11,7 @@ std::unordered_map<RandoItemId, RandoStaticItem> Items = {
     { RI_DOUBLE_DEFENSE,          { "Double Defense",          ITEM_NONE,              GI_NONE,              GID_HEART_CONTAINER } },
     { RI_GREAT_BAY_STRAY_FAIRY,   { "Great Bay Stray Fairy",   ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
     { RI_GREAT_FAIRY_SWORD,       { "Great Fairy's Sword",     ITEM_SWORD_GREAT_FAIRY, GI_SWORD_GREAT_FAIRY, GID_SWORD_GREAT_FAIRY } },
+    { RI_PROGRESSIVE_BOW,         { "Progressive Bow",         ITEM_NONE,              GI_NONE,              GID_NONE } },
     { RI_ARROW_FIRE,              { "Fire Arrows",             ITEM_ARROW_FIRE,        GI_ARROW_FIRE,        GID_ARROW_FIRE } },
     { RI_GREAT_SPIN_ATTACK,       { "Great Spin Attack",       ITEM_NONE,              GI_NONE,              GID_SWORD_KOKIRI } },
     { RI_HEART_PIECE,             { "Heart Piece",             ITEM_HEART_PIECE,       GI_HEART_PIECE,       GID_HEART_PIECE } },
@@ -25,6 +26,11 @@ std::unordered_map<RandoItemId, RandoStaticItem> Items = {
     { RI_RUPEE_PURPLE,            { "Purple Rupee",            ITEM_RUPEE_PURPLE,      GI_RUPEE_PURPLE,      GID_RUPEE_PURPLE } },
     { RI_RUPEE_RED,               { "Red Rupee",               ITEM_RUPEE_RED,         GI_RUPEE_RED,         GID_RUPEE_RED } },
     { RI_RUPEE_SILVER,            { "Silver Rupee",            ITEM_RUPEE_SILVER,      GI_RUPEE_SILVER,      GID_RUPEE_SILVER } },
+    { RI_WOODFALL_STRAY_FAIRY,    { "Woodfall Stray Fairy",    ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
+    { RI_WOODFALL_SMALL_KEY,      { "Woodfall Small Key",      ITEM_KEY_SMALL,         GI_KEY_SMALL,         GID_KEY_SMALL } },
+    { RI_WOODFALL_BOSS_KEY,       { "Woodfall Boss Key",       ITEM_KEY_BOSS,          GI_KEY_BOSS,          GID_KEY_BOSS } },
+    { RI_WOODFALL_MAP,            { "Woodfall Map",            ITEM_DUNGEON_MAP,       GI_MAP,               GID_DUNGEON_MAP } },
+    { RI_WOODFALL_COMPASS,        { "Woodfall Compass",        ITEM_COMPASS,           GI_COMPASS,           GID_COMPASS } },
     { RI_SNOWHEAD_STRAY_FAIRY,    { "Snowhead Stray Fairy",    ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
     { RI_SNOWHEAD_SMALL_KEY,      { "Snowhead Small Key",      ITEM_KEY_SMALL,         GI_KEY_SMALL,         GID_KEY_SMALL } },
     { RI_SNOWHEAD_BOSS_KEY,       { "Snowhead Boss Key",       ITEM_KEY_BOSS,          GI_KEY_BOSS,          GID_KEY_BOSS } },
@@ -32,7 +38,6 @@ std::unordered_map<RandoItemId, RandoStaticItem> Items = {
     { RI_SNOWHEAD_COMPASS,        { "Snowhead Compass",        ITEM_COMPASS,           GI_COMPASS,           GID_COMPASS } },
     { RI_STONE_TOWER_STRAY_FAIRY, { "Stone Tower Stray Fairy", ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
     { RI_SUNS_SONG,               { "Sun's Song",              ITEM_SONG_SUN,          GI_NONE,              GID_NONE } },
-    { RI_WOODFALL_STRAY_FAIRY,    { "Woodfall Stray Fairy",    ITEM_STRAY_FAIRIES,     GI_STRAY_FAIRY,       GID_NONE } },
     { RI_MAX,                     { "Unknown",                 ITEM_NONE,              GI_MAX,               GID_MAXIMUM } },
 };
 // clang-format on
