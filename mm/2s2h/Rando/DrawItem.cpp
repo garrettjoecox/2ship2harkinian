@@ -124,18 +124,6 @@ void DrawDoubleDefense() {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
-void DrawProgressiveBow() {
-    // TODO: Since the upg_value updates between collecting and the item cutscene, the item cs is displaying the next
-    // upgrade
-    if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
-        GetItem_Draw(gPlayState, GID_BOW);
-    } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
-        GetItem_Draw(gPlayState, GID_QUIVER_40);
-    } else {
-        GetItem_Draw(gPlayState, GID_QUIVER_50);
-    }
-}
-
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
         case RI_SUNS_SONG:
@@ -151,8 +139,9 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_DOUBLE_DEFENSE:
             DrawDoubleDefense();
             break;
+        case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
-            DrawProgressiveBow();
+            Rando::DrawItem(Rando::ConvertItem(randoItemId));
             break;
         default:
             GetItem_Draw(gPlayState, Rando::StaticData::Items[randoItemId].drawId);

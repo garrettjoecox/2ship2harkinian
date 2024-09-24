@@ -31,34 +31,34 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
 
         switch (elfgrp->type) {
             case ENELFGRP_TYPE_POWER:
-                if (!Flags_GetRandoInf(RANDO_INF_WOODFALL_GREAT_FAIRY)) {
-                    Flags_SetRandoInf(RANDO_INF_WOODFALL_GREAT_FAIRY);
+                if (!RANDO_SAVE_CHECKS[RC_WOODFALL_GREAT_FAIRY].eligible) {
+                    RANDO_SAVE_CHECKS[RC_WOODFALL_GREAT_FAIRY].eligible = true;
                 }
                 break;
             case ENELFGRP_TYPE_WISDOM:
-                if (!Flags_GetRandoInf(RANDO_INF_SNOWHEAD_GREAT_FAIRY)) {
-                    Flags_SetRandoInf(RANDO_INF_SNOWHEAD_GREAT_FAIRY);
+                if (!RANDO_SAVE_CHECKS[RC_SNOWHEAD_GREAT_FAIRY].eligible) {
+                    RANDO_SAVE_CHECKS[RC_SNOWHEAD_GREAT_FAIRY].eligible = true;
                 }
                 break;
             case ENELFGRP_TYPE_COURAGE:
-                if (!Flags_GetRandoInf(RANDO_INF_GREAT_BAY_GREAT_FAIRY)) {
-                    Flags_SetRandoInf(RANDO_INF_GREAT_BAY_GREAT_FAIRY);
+                if (!RANDO_SAVE_CHECKS[RC_GREAT_BAY_GREAT_FAIRY].eligible) {
+                    RANDO_SAVE_CHECKS[RC_GREAT_BAY_GREAT_FAIRY].eligible = true;
                 }
                 break;
             case ENELFGRP_TYPE_KINDNESS:
-                if (!Flags_GetRandoInf(RANDO_INF_IKANA_GREAT_FAIRY)) {
-                    Flags_SetRandoInf(RANDO_INF_IKANA_GREAT_FAIRY);
+                if (!RANDO_SAVE_CHECKS[RC_IKANA_GREAT_FAIRY].eligible) {
+                    RANDO_SAVE_CHECKS[RC_IKANA_GREAT_FAIRY].eligible = true;
                 }
                 break;
             default: // ENELFGRP_TYPE_MAGIC
-                if (!Flags_GetRandoInf(RANDO_INF_CLOCK_TOWN_GREAT_FAIRY)) {
-                    Flags_SetRandoInf(RANDO_INF_CLOCK_TOWN_GREAT_FAIRY);
+                if (!RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_GREAT_FAIRY].eligible) {
+                    RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_GREAT_FAIRY].eligible = true;
                 }
                 // In the game this uses an `else`, but in rando we are okay with both of these happening at the same
                 // time
                 if (INV_CONTENT(ITEM_MASK_DEKU) == ITEM_MASK_DEKU &&
-                    !Flags_GetRandoInf(RANDO_INF_CLOCK_TOWN_GREAT_FAIRY_ALT)) {
-                    Flags_SetRandoInf(RANDO_INF_CLOCK_TOWN_GREAT_FAIRY_ALT);
+                    !RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_GREAT_FAIRY_ALT].eligible) {
+                    RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_GREAT_FAIRY_ALT].eligible = true;
                 }
                 break;
         }

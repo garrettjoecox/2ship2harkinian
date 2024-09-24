@@ -9,19 +9,30 @@ extern "C" {
 #include "functions.h"
 }
 
-void RandomizerQueueCheck(RandoCheckId randoCheckId) {
-    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+void RandomizerQueueChecks(Actor* actor) {
+    static bool queued = false;
+    if (queued) {
+        return;
+    }
 
-    randoSaveCheck.eligible = true;
-    GameInteractor::Instance->events.emplace_back(
-        GIEventGiveItem{ .showGetItemCutscene = true,
-                         .getItemText = Rando::StaticData::Items[randoSaveCheck.randoItemId].name,
-                         .drawItem = [randoSaveCheck]() { Rando::DrawItem(randoSaveCheck.randoItemId); },
-                         .giveItem =
-                             [&randoSaveCheck]() {
-                                 Rando::GiveItem(randoSaveCheck.randoItemId);
-                                 randoSaveCheck.obtained = true;
-                             } });
+    for (auto& randoSaveCheck : RANDO_SAVE_CHECKS) {
+        if (randoSaveCheck.eligible && !randoSaveCheck.obtained) {
+            queued = true;
+
+            RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+            GameInteractor::Instance->events.emplace_back(
+                GIEventGiveItem{ .showGetItemCutscene = true,
+                                 .getItemText = Rando::StaticData::Items[randoItemId].name,
+                                 .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
+                                 .giveItem =
+                                     [&randoSaveCheck, randoItemId]() {
+                                         Rando::GiveItem(randoItemId);
+                                         randoSaveCheck.obtained = true;
+                                         queued = false;
+                                     } });
+            return;
+        }
+    }
 }
 
 void RandomizerOnFlagSetHandler(FlagType flagType, u32 flag) {
@@ -30,7 +41,8 @@ void RandomizerOnFlagSetHandler(FlagType flagType, u32 flag) {
         return;
     }
 
-    RandomizerQueueCheck(randoStaticCheck.randoCheckId);
+    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+    randoSaveCheck.eligible = true;
 }
 
 void RandomizerOnSceneFlagSetHandler(s16 sceneId, FlagType flagType, u32 flag) {
@@ -39,7 +51,8 @@ void RandomizerOnSceneFlagSetHandler(s16 sceneId, FlagType flagType, u32 flag) {
         return;
     }
 
-    RandomizerQueueCheck(randoStaticCheck.randoCheckId);
+    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+    randoSaveCheck.eligible = true;
 }
 
 void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
@@ -81,14 +94,17 @@ void OnSaveLoadHandler(s16 fileNum) {
     static uint32_t onFlagSetHook = 0;
     static uint32_t onSceneFlagSetHook = 0;
     static uint32_t onVanillaBehaviorHook = 0;
+    static uint32_t onPlayerUpdateHook = 0;
 
     GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnFlagSet>(onFlagSetHook);
     GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneFlagSet>(onSceneFlagSetHook);
     GameInteractor::Instance->UnregisterGameHook<GameInteractor::ShouldVanillaBehavior>(onVanillaBehaviorHook);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(onPlayerUpdateHook);
 
     onFlagSetHook = 0;
     onSceneFlagSetHook = 0;
     onVanillaBehaviorHook = 0;
+    onPlayerUpdateHook = 0;
 
     Rando::InitActorBehavior(gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO);
 
@@ -101,6 +117,8 @@ void OnSaveLoadHandler(s16 fileNum) {
         GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(RandomizerOnSceneFlagSetHandler);
     onVanillaBehaviorHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::ShouldVanillaBehavior>(
         RandomizerOnVanillaBehaviorHandler);
+    onPlayerUpdateHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
+        ACTOR_PLAYER, RandomizerQueueChecks);
 }
 
 // Entry point for the rando module

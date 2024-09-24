@@ -30,24 +30,14 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             gSaveContext.save.saveInfo.playerData.doubleDefense = true;
             gSaveContext.save.saveInfo.inventory.defenseHearts = 20;
             break;
-        case RI_PROGRESSIVE_MAGIC:
-            if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
-                gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
-                gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
-            } else {
-                gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
-                gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
-                gSaveContext.save.saveInfo.playerData.magicLevel = 0;
-            }
+        case RI_SINGLE_MAGIC:
+            gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
+            gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
             break;
-        case RI_PROGRESSIVE_BOW:
-            if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
-                Item_Give(gPlayState, ITEM_BOW);
-            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
-                Item_Give(gPlayState, ITEM_QUIVER_40);
-            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
-                Item_Give(gPlayState, ITEM_QUIVER_50);
-            }
+        case RI_DOUBLE_MAGIC:
+            gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
+            gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
+            gSaveContext.save.saveInfo.playerData.magicLevel = 0;
             break;
         // Don't love this because it doesn't hit GameInteractor_ExecuteOnItemGive()
         // but not sure how else to account for collecting outside of dungeon
@@ -102,6 +92,11 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             } else {
                 DUNGEON_KEY_COUNT(DUNGEON_INDEX_STONE_TOWER_TEMPLE)++;
             }
+            break;
+        // Technically these should never be used, but leaving them here just in case
+        case RI_PROGRESSIVE_MAGIC:
+        case RI_PROGRESSIVE_BOW:
+            Rando::GiveItem(Rando::ConvertItem(randoItemId));
             break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);

@@ -110,12 +110,15 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
         *should = false;
 
         if (STRAY_FAIRY_TYPE((Actor*)opt) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
-            Flags_SetRandoInf(RANDO_INF_CLOCK_TOWN_STRAY_FAIRY_COLLECTED);
+            auto& randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_STRAY_FAIRY];
+            randoSaveCheck.eligible = true;
         }
     });
 
-    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY,
-                                       { *should = Flags_GetRandoInf(RANDO_INF_CLOCK_TOWN_STRAY_FAIRY_COLLECTED); });
+    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY, {
+        auto& randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_STRAY_FAIRY];
+        *should = randoSaveCheck.eligible;
+    });
 
     // Stray fairies that are trapped by enemies have their draw func set later on, so we need to override that as well
     shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
