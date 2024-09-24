@@ -27,7 +27,6 @@ std::shared_ptr<BenMenuBar> mBenMenuBar;
 
 std::shared_ptr<Ship::GuiWindow> mConsoleWindow;
 std::shared_ptr<Ship::GuiWindow> mStatsWindow;
-std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
 
 std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
@@ -35,6 +34,8 @@ std::shared_ptr<HudEditorWindow> mHudEditorWindow;
 std::shared_ptr<ActorViewerWindow> mActorViewerWindow;
 std::shared_ptr<CollisionViewerWindow> mCollisionViewerWindow;
 std::shared_ptr<EventLogWindow> mEventLogWindow;
+std::shared_ptr<BenMenu> mBenMenu;
+std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 
 void SetupGuiElements() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
@@ -47,13 +48,16 @@ void SetupGuiElements() {
     mBenMenuBar = std::make_shared<BenMenuBar>(CVAR_MENU_BAR_OPEN, CVarGetInteger(CVAR_MENU_BAR_OPEN, 0));
     gui->SetMenuBar(std::reinterpret_pointer_cast<Ship::GuiMenuBar>(mBenMenuBar));
 
-    if (gui->GetMenuBar() && !gui->GetMenuBar()->IsVisible()) {
+    if (!gui->GetMenuBar() && !CVarGetInteger("gSettings.DisableMenuShortcutNotify", 0)) {
 #if defined(__SWITCH__) || defined(__WIIU__)
         gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Press - to access enhancements menu");
 #else
         gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Press F1 to access enhancements menu");
 #endif
     }
+
+    mBenMenu = std::make_shared<BenMenu>("gWindows.Menu", "Settings Menu");
+    gui->SetMenu(mBenMenu);
 
     mStatsWindow = gui->GetGuiWindow("Stats");
     if (mStatsWindow == nullptr) {
@@ -65,37 +69,38 @@ void SetupGuiElements() {
         SPDLOG_ERROR("Could not find console window");
     }
 
-    mInputEditorWindow = gui->GetGuiWindow("Input Editor");
-    if (mInputEditorWindow == nullptr) {
-        SPDLOG_ERROR("Could not find input editor window");
-    }
-
     mGfxDebuggerWindow = gui->GetGuiWindow("GfxDebuggerWindow");
     if (mGfxDebuggerWindow == nullptr) {
         SPDLOG_ERROR("Could not find input GfxDebuggerWindow");
     }
 
-    mSaveEditorWindow = std::make_shared<SaveEditorWindow>("gWindows.SaveEditor", "Save Editor");
+    mBenInputEditorWindow = std::make_shared<BenInputEditorWindow>("gWindows.BenInputEditor", "2S2H Input Editor");
+    gui->AddGuiWindow(mBenInputEditorWindow);
+
+    mSaveEditorWindow = std::make_shared<SaveEditorWindow>("gWindows.SaveEditor", "Save Editor", ImVec2(480, 600));
     gui->AddGuiWindow(mSaveEditorWindow);
 
-    mHudEditorWindow = std::make_shared<HudEditorWindow>("gWindows.HudEditor", "Hud Editor");
+    mHudEditorWindow = std::make_shared<HudEditorWindow>("gWindows.HudEditor", "HUD Editor", ImVec2(480, 600));
     gui->AddGuiWindow(mHudEditorWindow);
 
-    mActorViewerWindow = std::make_shared<ActorViewerWindow>("gWindows.ActorViewer", "Actor Viewer");
+    mActorViewerWindow = std::make_shared<ActorViewerWindow>("gWindows.ActorViewer", "Actor Viewer", ImVec2(520, 600));
     gui->AddGuiWindow(mActorViewerWindow);
 
-    mCollisionViewerWindow = std::make_shared<CollisionViewerWindow>("gWindows.CollisionViewer", "Collision Viewer");
+    mCollisionViewerWindow =
+        std::make_shared<CollisionViewerWindow>("gWindows.CollisionViewer", "Collision Viewer", ImVec2(390, 475));
     gui->AddGuiWindow(mCollisionViewerWindow);
 
-    mEventLogWindow = std::make_shared<EventLogWindow>("gWindows.EventLog", "Event Log");
+    mEventLogWindow = std::make_shared<EventLogWindow>("gWindows.EventLog", "Event Log", ImVec2(520, 600));
     gui->AddGuiWindow(mEventLogWindow);
+    gui->SetPadBtnTogglesMenu();
 }
 
 void Destroy() {
     mBenMenuBar = nullptr;
+    mBenMenu = nullptr;
     mStatsWindow = nullptr;
     mConsoleWindow = nullptr;
-    mInputEditorWindow = nullptr;
+    mBenInputEditorWindow = nullptr;
     mGfxDebuggerWindow = nullptr;
     mCollisionViewerWindow = nullptr;
     mEventLogWindow = nullptr;

@@ -153,7 +153,7 @@ void DrawBenMenu() {
     }
 }
 
-extern std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
+extern std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 
 void DrawSettingsMenu() {
     if (UIWidgets::BeginMenu("Settings")) {
@@ -312,8 +312,8 @@ void DrawSettingsMenu() {
         // #region 2S2H [Todo] None of this works yet
         /*
         if (UIWidgets::BeginMenu("Controller")) { */
-        if (mInputEditorWindow) {
-            UIWidgets::WindowButton("Controller Mapping", "gWindows.InputEditor", mInputEditorWindow);
+        if (mBenInputEditorWindow) {
+            UIWidgets::WindowButton("Controller Mapping", "gWindows.InputEditor", mBenInputEditorWindow);
         }
         /*
         #ifndef __SWITCH__

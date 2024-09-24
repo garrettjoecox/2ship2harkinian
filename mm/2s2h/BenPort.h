@@ -24,6 +24,13 @@ class OTRGlobals {
   public:
     static OTRGlobals* Instance;
 
+    ImFont* fontStandard;
+    ImFont* fontStandardLarger;
+    ImFont* fontStandardLargest;
+    ImFont* fontMono;
+    ImFont* fontMonoLarger;
+    ImFont* fontMonoLargest;
+
     std::shared_ptr<Ship::Context> context;
 
     OTRGlobals();
@@ -35,6 +42,7 @@ class OTRGlobals {
     std::shared_ptr<std::vector<std::string>> ListFiles(std::string path);
 
   private:
+    ImFont* CreateFontWithSize(float size, std::string fontPath = "");
     void CheckSaveFile(size_t sramSize) const;
     bool hasMasterQuest;
     bool hasOriginal;
