@@ -152,6 +152,7 @@ void Rando::DrawItem(RandoItemId randoItemId) {
             break;
         case RI_PROGRESSIVE_BOW:
             DrawProgressiveBow();
+            break;
         default:
             GetItem_Draw(gPlayState, Rando::StaticData::Items[randoItemId].drawId);
             break;
