@@ -125,7 +125,7 @@ void DrawDoubleDefense() {
 }
 
 void DrawProgressiveBow() {
-    // Since the upg_value updates between collecting and the item cutscene, the item cs is displaying the next upgrade
+    // TODO: Since the upg_value updates between collecting and the item cutscene, the item cs is displaying the next upgrade
     if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
         GetItem_Draw(gPlayState, GID_BOW);
     } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
