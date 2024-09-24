@@ -352,6 +352,7 @@ typedef enum {
 } RandoItemId;
 
 typedef enum {
+    RANDO_INF_UNKNOWN,
     RANDO_INF_MAX,
 } RandoInf;
 
