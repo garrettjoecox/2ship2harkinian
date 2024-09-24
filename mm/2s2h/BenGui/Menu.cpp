@@ -233,7 +233,7 @@ void BenMenu::DrawElement() {
     ImVec2 pos = window->DC.CursorPos;
     float centerX = pos.x + windowWidth / 2 - (style.ItemSpacing.x * (sectionCount + 1));
     std::vector<ImVec2> headerSizes;
-    float headerWidth = 0;
+    float headerWidth = 200.0f + style.ItemSpacing.x;
     for (int i = 0; i < sectionCount; i++) {
         ImVec2 size = ImGui::CalcTextSize(menuEntries.at(i).label.c_str());
         headerSizes.push_back(size);
@@ -277,6 +277,7 @@ void BenMenu::DrawElement() {
             ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
         }
         if (ModernMenuHeaderEntry(entry.label)) {
+            menuSearch.Clear();
             CVarSetInteger(headerCvar, i);
             CVarSave();
             nextIndex = i;
@@ -295,6 +296,18 @@ void BenMenu::DrawElement() {
             headerIndex = nextIndex;
         }
     }
+    ImGui::SameLine();
+    if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0)) {
+        ImGui::SetKeyboardFocusHere(0);
+    }
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, { 0, 0, 0, 0 });
+    menuSearch.Draw("##search", 200.0f);
+    std::string menuSearchText(menuSearch.InputBuf);
+    if (menuSearchText.length() < 1) {
+        ImGui::SameLine(headerWidth - 200.0f + style.ItemSpacing.x);
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 0.4f), "Search...");
+    }
+    ImGui::PopStyleColor();
     ImGui::EndChild();
     ImGui::SameLine(menuSize.x - (buttonSize.x * 2) - style.ItemSpacing.x);
     if (UIWidgets::Button(ICON_FA_UNDO, { .color = UIWidgets::Colors::Red,
@@ -350,6 +363,7 @@ void BenMenu::DrawElement() {
             ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
         }
         if (ModernMenuSidebarEntry(sidebarEntry.label)) {
+            menuSearch.Clear();
             CVarSetInteger(sidebarCvar, i);
             CVarSave();
             nextIndex = i;
@@ -379,30 +393,77 @@ void BenMenu::DrawElement() {
     }
     float columnWidth = (sectionWidth - style.ItemSpacing.x * columns) / columns;
     bool useColumns = columns > 1;
-    if (!useColumns) {
+    if (!useColumns || menuSearchText.length() > 0) {
         ImGui::SameLine();
         ImGui::SetNextWindowSizeConstraints({ sectionWidth, 0 }, { sectionWidth, columnHeight });
         ImGui::BeginChild(sectionMenuId.c_str(), { sectionWidth, windowHeight * 4 }, ImGuiChildFlags_AutoResizeY,
                           ImGuiWindowFlags_NoTitleBar);
     }
-    for (int i = 0; i < columnFuncs; i++) {
-        std::string sectionId = fmt::format("{} Column {}", sectionMenuId, i);
-        if (useColumns) {
-            ImGui::SetNextWindowSizeConstraints({ columnWidth, 0 }, { columnWidth, columnHeight });
-            ImGui::BeginChild(sectionId.c_str(), { columnWidth, windowHeight * 4 }, ImGuiChildFlags_AutoResizeY,
-                              ImGuiWindowFlags_NoTitleBar);
+    if (menuSearchText.length() > 0) {
+        ImGui::BeginChild("Search Results");
+        int searchCount = 0;
+        for (auto& [menuLabel, menuSidebar, cvar] : menuEntries) {
+            for (auto& sidebar : menuSidebar) {
+                for (auto& widgets : sidebar.columnWidgets) {
+                    int column = 1;
+                    for (auto& info : widgets) {
+                        if (info.widgetType == WIDGET_SEPARATOR || info.widgetType == WIDGET_SEPARATOR_TEXT || info.isHidden) {
+                            continue;
+                        }
+                        std::string widgetStr = std::string(info.widgetName) + std::string(info.widgetTooltip);
+                        std::transform(menuSearchText.begin(), menuSearchText.end(), menuSearchText.begin(),
+                                        ::tolower);
+                        menuSearchText.erase(std::remove(menuSearchText.begin(), menuSearchText.end(), ' '),
+                                                menuSearchText.end());
+                        std::transform(widgetStr.begin(), widgetStr.end(), widgetStr.begin(), ::tolower);
+                        widgetStr.erase(std::remove(widgetStr.begin(), widgetStr.end(), ' '), widgetStr.end());
+                        if (widgetStr.find(menuSearchText) != std::string::npos) {
+                            SearchMenuGetItem(info);
+                            searchCount++;
+                            ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Gray);
+                            std::string origin =
+                                fmt::format("  ({} -> {}, Clmn {})", menuLabel, sidebar.label, column);
+                            ImGui::Text("%s", origin.c_str());
+                            ImGui::PopStyleColor();
+                        }
+                    }
+                    column++;
+                }
+            }
         }
-        for (auto& entry : sidebar.at(sectionIndex).columnWidgets.at(i)) {
-            SearchMenuGetItem(entry);
+
+        if (searchCount == 0) {
+            ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("No results found").x) / 2);
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.0f);
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 0.4f), "No results found");
+            ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("Clear Search").x) / 2 - 10.0f);
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.0f);
+            if (UIWidgets::Button("Clear Search", { .size = UIWidgets::Sizes::Inline })) {
+                menuSearch.Clear();
+            }
         }
-        if (useColumns) {
-            ImGui::EndChild();
-        }
-        if (i < columns - 1) {
-            ImGui::SameLine();
+
+        ImGui::EndChild();
+    } else {
+        for (int i = 0; i < columnFuncs; i++) {
+            std::string sectionId = fmt::format("{} Column {}", sectionMenuId, i);
+            if (useColumns) {
+                ImGui::SetNextWindowSizeConstraints({ columnWidth, 0 }, { columnWidth, columnHeight });
+                ImGui::BeginChild(sectionId.c_str(), { columnWidth, windowHeight * 4 }, ImGuiChildFlags_AutoResizeY,
+                                ImGuiWindowFlags_NoTitleBar);
+            }
+            for (auto& entry : sidebar.at(sectionIndex).columnWidgets.at(i)) {
+                SearchMenuGetItem(entry);
+            }
+            if (useColumns) {
+                ImGui::EndChild();
+            }
+            if (i < columns - 1) {
+                ImGui::SameLine();
+            }
         }
     }
-    if (!useColumns) {
+    if (!useColumns || menuSearchText.length() > 0) {
         ImGui::EndChild();
     }
     ImGui::PopFont();

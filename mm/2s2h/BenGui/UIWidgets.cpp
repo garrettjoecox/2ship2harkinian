@@ -3,6 +3,7 @@
 #include <imgui_internal.h>
 #include <libultraship/libultraship.h>
 #include <string>
+#include <sstream>
 #include <unordered_map>
 #include <libultraship/libultra/types.h>
 
