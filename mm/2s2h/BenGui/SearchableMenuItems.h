@@ -71,7 +71,6 @@ typedef enum {
     WIDGET_BUTTON,
     WIDGET_COLOR_24, // color picker without alpha
     WIDGET_COLOR_32, // color picker with alpha
-    WIDGET_SEARCH,
     WIDGET_SEPARATOR,
     WIDGET_SEPARATOR_TEXT,
     WIDGET_TEXT,
@@ -399,11 +398,6 @@ void FreeLookPitchMinMax() {
 }
 
 void AddSettings() {
-    // General
-    settingsSidebar.push_back(
-        { "Search",
-          1,
-          { { { "Menu Theme", "", "Searches all menus for the given text, including tooltips.", WIDGET_SEARCH } } } });
     // General Settings
     settingsSidebar.push_back(
         { "General",
@@ -1621,54 +1615,6 @@ void SearchMenuGetItem(widgetInfo& widget) {
                 if (!window->IsVisible()) {
                     window->DrawElement();
                 }
-            } break;
-            case WIDGET_SEARCH: {
-                if (ImGui::Button("Clear")) {
-                    menuSearch.Clear();
-                }
-                ImGui::SameLine();
-                if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() &&
-                    !ImGui::IsMouseClicked(0)) {
-                    ImGui::SetKeyboardFocusHere(0);
-                }
-                menuSearch.Draw();
-                std::string menuSearchText(menuSearch.InputBuf);
-
-                if (menuSearchText == "") {
-                    ImGui::Text("Start typing to see results.");
-                    return;
-                }
-                ImGui::BeginChild("Search Results");
-                for (auto& [menuLabel, menuSidebar, cvar] : menuEntries) {
-                    for (auto& sidebar : menuSidebar) {
-                        for (auto& widgets : sidebar.columnWidgets) {
-                            int column = 1;
-                            for (auto& info : widgets) {
-                                if (info.widgetType == WIDGET_SEARCH || info.widgetType == WIDGET_SEPARATOR ||
-                                    info.widgetType == WIDGET_SEPARATOR_TEXT || info.isHidden) {
-                                    continue;
-                                }
-                                std::string widgetStr = std::string(info.widgetName) + std::string(info.widgetTooltip);
-                                std::transform(menuSearchText.begin(), menuSearchText.end(), menuSearchText.begin(),
-                                               ::tolower);
-                                menuSearchText.erase(std::remove(menuSearchText.begin(), menuSearchText.end(), ' '),
-                                                     menuSearchText.end());
-                                std::transform(widgetStr.begin(), widgetStr.end(), widgetStr.begin(), ::tolower);
-                                widgetStr.erase(std::remove(widgetStr.begin(), widgetStr.end(), ' '), widgetStr.end());
-                                if (widgetStr.find(menuSearchText) != std::string::npos) {
-                                    SearchMenuGetItem(info);
-                                    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Gray);
-                                    std::string origin =
-                                        fmt::format("  ({} -> {}, Clmn {})", menuLabel, sidebar.label, column);
-                                    ImGui::Text("%s", origin.c_str());
-                                    ImGui::PopStyleColor();
-                                }
-                            }
-                            column++;
-                        }
-                    }
-                }
-                ImGui::EndChild();
             } break;
             default:
                 break;
