@@ -5,4 +5,5 @@ void Rando::InitActorBehavior(bool isRando) {
     ActorBehavior::InitEnElfgrpBehavior(isRando);
     ActorBehavior::InitEnElforgBehavior(isRando);
     ActorBehavior::InitEnItem00Behavior(isRando);
+    ActorBehavior::InitItemBHeartBehavior(isRando);
 }

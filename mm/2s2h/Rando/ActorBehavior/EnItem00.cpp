@@ -67,6 +67,11 @@ void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
             return;
         }
 
+        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, item00->collectibleFlag, gPlayState->sceneId);
+        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
         Flags_SetCollectible(gPlayState, item00->collectibleFlag);
         Actor_Kill(&item00->actor);
         *should = false;
