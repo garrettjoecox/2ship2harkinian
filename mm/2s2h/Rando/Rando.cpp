@@ -46,6 +46,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void
     switch (id) {
         case GI_VB_GIVE_ITEM_FROM_GURUGURU:
         case GI_VB_GIVE_ITEM_FROM_SCRIPT:
+        case GI_VB_GIVE_ITEM_FROM_SWORDSMAN:
             *should = false;
             break;
     }

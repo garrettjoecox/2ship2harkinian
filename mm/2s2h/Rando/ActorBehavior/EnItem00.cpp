@@ -67,7 +67,8 @@ void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
             return;
         }
 
-        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, item00->collectibleFlag, gPlayState->sceneId);
+        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
+                                                                    item00->collectibleFlag, gPlayState->sceneId);
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
             return;
         }

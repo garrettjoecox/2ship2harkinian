@@ -44,11 +44,12 @@ void Rando::ActorBehavior::InitItemBHeartBehavior(bool isRando) {
         return;
     }
 
-    onActorInitHookId =
-        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_ITEM_B_HEART, [](Actor* actor) {
+    onActorInitHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(
+        ACTOR_ITEM_B_HEART, [](Actor* actor) {
             ItemBHeart* itemBHeart = (ItemBHeart*)actor;
 
-            auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, 0x1F, gPlayState->sceneId);
+            auto randoStaticCheck =
+                Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, 0x1F, gPlayState->sceneId);
             if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
                 return;
             }
