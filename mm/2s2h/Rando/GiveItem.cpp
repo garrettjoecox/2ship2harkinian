@@ -98,6 +98,14 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_BOW:
             Rando::GiveItem(Rando::ConvertItem(randoItemId));
             break;
+        case RI_GS_TOKEN_SWAMP:
+            SET_QUEST_ITEM(randoItemId - ITEM_SKULL_TOKEN + QUEST_QUIVER);
+            Inventory_IncrementSkullTokenCount(SCENE_KINSTA1);
+            break;
+        case RI_GS_TOKEN_OCEAN:
+            SET_QUEST_ITEM(randoItemId - ITEM_SKULL_TOKEN + QUEST_QUIVER);
+            Inventory_IncrementSkullTokenCount(SCENE_KINDAN2);
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;

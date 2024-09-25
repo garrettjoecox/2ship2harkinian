@@ -5,6 +5,7 @@
  */
 
 #include "z_en_si.h"
+#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_200)
 
@@ -99,6 +100,10 @@ void EnSi_UpdateCollision(EnSi* this, PlayState* play) {
 
 void EnSi_GiveToken(EnSi* this, PlayState* play) {
     s32 chestFlag = ENSI_GET_CHEST_FLAG(&this->actor);
+
+    if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SI, true, this)) {
+        return;
+    }
 
     if ((chestFlag < 0x20) && (chestFlag >= 0)) {
         Flags_SetTreasure(play, chestFlag);

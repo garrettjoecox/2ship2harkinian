@@ -13,6 +13,7 @@ void InitEnBoxBehavior(bool isRando);
 void InitEnElfgrpBehavior(bool isRando);
 void InitEnElforgBehavior(bool isRando);
 void InitEnItem00Behavior(bool isRando);
+void InitEnSiBehavior(bool isRando);
 void InitItemBHeartBehavior(bool isRando);
 
 } // namespace ActorBehavior
