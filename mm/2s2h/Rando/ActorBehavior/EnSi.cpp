@@ -64,8 +64,6 @@ void Rando::ActorBehavior::InitEnSiBehavior(bool isRando) {
             return;
         }
 
-        Flags_SetTreasure(gPlayState, ENSI_GET_CHEST_FLAG(&enSi->actor));
-        Actor_Kill(&enSi->actor);
         *should = false;
     });
 }

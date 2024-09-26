@@ -101,13 +101,14 @@ void EnSi_UpdateCollision(EnSi* this, PlayState* play) {
 void EnSi_GiveToken(EnSi* this, PlayState* play) {
     s32 chestFlag = ENSI_GET_CHEST_FLAG(&this->actor);
 
+    if ((chestFlag < 0x20) && (chestFlag >= 0)) {
+        Flags_SetTreasure(play, chestFlag);
+    }
+
     if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SI, true, this)) {
         return;
     }
 
-    if ((chestFlag < 0x20) && (chestFlag >= 0)) {
-        Flags_SetTreasure(play, chestFlag);
-    }
     Item_Give(play, ITEM_SKULL_TOKEN);
     if (Inventory_GetSkullTokenCount(play->sceneId) >= SPIDER_HOUSE_TOKENS_REQUIRED) {
         Message_StartTextbox(play, 0xFC, NULL); // You collected all tokens, curse lifted
