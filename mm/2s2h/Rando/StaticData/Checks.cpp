@@ -4,7 +4,12 @@ namespace Rando {
 
 namespace StaticData {
 
-#define RC(id, type, scene, flagType, flag, item) { id, { id, #id, type, scene, flagType, flag, item } }
+#define RC(id, type, scene, flagType, flag, item)      \
+    {                                                  \
+        id, {                                          \
+            id, #id, type, scene, flagType, flag, item \
+        }                                              \
+    }
 
 // clang-format off
 std::map<RandoCheckId, RandoStaticCheck> Checks = {
@@ -288,7 +293,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
     s16 secondaryScene = SCENE_MAX;
     switch (sceneId) {
-        case SCENE_11GORONNOSATO: 
+        case SCENE_11GORONNOSATO:
             secondaryScene = SCENE_11GORONNOSATO2;
             break;
         case SCENE_11GORONNOSATO2:
@@ -297,9 +302,10 @@ RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
         default:
             break;
     }
-       
+
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId || data.sceneId == secondaryScene)) {
+        if (data.flagType == flagType && data.flag == flag &&
+            (sceneId == SCENE_MAX || data.sceneId == sceneId || data.sceneId == secondaryScene)) {
             return data;
         }
     }
