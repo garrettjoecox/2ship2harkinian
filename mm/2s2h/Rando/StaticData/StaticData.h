@@ -1,6 +1,7 @@
 #ifndef RANDO_STATIC_DATA_H
 #define RANDO_STATIC_DATA_H
 
+#include <map>
 #include <unordered_map>
 #include "Rando/Types.h"
 #include "Enhancements/GameInteractor/GameInteractor.h"
@@ -16,6 +17,7 @@ namespace StaticData {
 
 struct RandoStaticCheck {
     RandoCheckId randoCheckId;
+    const char* name;
     RandoCheckType randoCheckType;
     SceneId sceneId;
     FlagType flagType;
@@ -23,7 +25,7 @@ struct RandoStaticCheck {
     RandoItemId randoItemId;
 };
 
-extern std::unordered_map<RandoCheckId, RandoStaticCheck> Checks;
+extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 
 struct RandoStaticItem {
     const char* name;

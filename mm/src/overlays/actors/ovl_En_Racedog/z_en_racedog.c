@@ -519,7 +519,7 @@ void EnRacedog_UpdateSpeed(EnRacedog* this) {
 
         // Cap the speed of the dog, or always max it out with the 'Always Win Doggy Race' enhancement.
         bool vanillaCondition = this->actor.speed > 7.5f;
-        if (GameInteractor_Should(GI_VB_DOGGY_RACE_SET_MAX_SPEED, vanillaCondition, NULL)) {
+        if (GameInteractor_Should(GI_VB_DOGGY_RACE_SET_MAX_SPEED, vanillaCondition)) {
             this->actor.speed = 7.5f;
         }
     } else {

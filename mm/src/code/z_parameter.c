@@ -2823,7 +2823,7 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
                         (play->sceneId != SCENE_MITURIN_BS) && (play->sceneId != SCENE_HAKUGIN_BS) &&
                         (play->sceneId != SCENE_SEA_BS) && (play->sceneId != SCENE_INISIE_BS) &&
                         (play->sceneId != SCENE_LAST_BS);
-                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult, NULL)) {
+                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
                         if (gSaveContext.buttonStatus[i] != BTN_DISABLED) {
                             gSaveContext.buttonStatus[i] = BTN_DISABLED;
                             restoreHudVisibility = true;
@@ -2970,7 +2970,7 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
                         (play->sceneId != SCENE_MITURIN_BS) && (play->sceneId != SCENE_HAKUGIN_BS) &&
                         (play->sceneId != SCENE_SEA_BS) && (play->sceneId != SCENE_INISIE_BS) &&
                         (play->sceneId != SCENE_LAST_BS);
-                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult, NULL)) {
+                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
                         if (gSaveContext.shipSaveContext.dpad.status[j] != BTN_DISABLED) {
                             gSaveContext.shipSaveContext.dpad.status[j] = BTN_DISABLED;
                             restoreHudVisibility = true;
@@ -6155,7 +6155,7 @@ void Interface_DrawClock(PlayState* play) {
     s16 finalHoursClockSlots[8];
     s16 index;
 
-    if (GameInteractor_Should(GI_VB_PREVENT_CLOCK_DISPLAY, false, NULL)) {
+    if (GameInteractor_Should(GI_VB_PREVENT_CLOCK_DISPLAY, false)) {
         return;
     }
 

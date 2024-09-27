@@ -1375,7 +1375,7 @@ void Sram_OpenSave(FileSelectState* fileSelect, SramContext* sramCtx) {
         fileNum = gSaveContext.fileNum;
 
         // Remove Owl saves on save continue
-        if (GameInteractor_Should(GI_VB_DELETE_OWL_SAVE, true, 0)) {
+        if (GameInteractor_Should(GI_VB_DELETE_OWL_SAVE, true)) {
             func_80147314(sramCtx, fileNum);
         }
     }

@@ -145,15 +145,16 @@ void RegisterPersistentMasks() {
 
     // Overrides allowing them to equip a mask while transformed
     REGISTER_VB_SHOULD(GI_VB_USE_ITEM_CONSIDER_LINK_HUMAN, {
+        PlayerItemAction* itemAction = va_arg(args, PlayerItemAction*);
         if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0) &&
-            *(PlayerItemAction*)opt == PLAYER_IA_MASK_BUNNY) {
+            *itemAction == PLAYER_IA_MASK_BUNNY) {
             *should = true;
         }
     });
 
     // When they do equip the mask, prevent it and instead set our state
     REGISTER_VB_SHOULD(GI_VB_USE_ITEM_EQUIP_MASK, {
-        PlayerMask* maskId = (PlayerMask*)opt;
+        PlayerMask* maskId = va_arg(args, PlayerMask*);
         Player* player = GET_PLAYER(gPlayState);
 
         if (*maskId == PLAYER_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
@@ -172,21 +173,23 @@ void RegisterPersistentMasks() {
     // Prevent the "equipped" white border from being drawn so ours shows instead (ours was drawn before it, so it's
     // underneath)
     REGISTER_VB_SHOULD(GI_VB_DRAW_ITEM_EQUIPPED_OUTLINE, {
-        if (*(ItemId*)opt == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
+        ItemId* itemId = va_arg(args, ItemId*);
+        if (*itemId == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
             *should = false;
         }
     });
 
     // Typically when you are in a transformation all masks are dimmed on the C-Buttons
     REGISTER_VB_SHOULD(GI_VB_ITEM_BE_RESTRICTED, {
-        if (*(ItemId*)opt == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
+        ItemId* itemId = va_arg(args, ItemId*);
+        if (*itemId == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
             *should = false;
         }
     });
 
     // Override "A" press behavior on kaleido scope to toggle the mask state
     REGISTER_VB_SHOULD(GI_VB_KALEIDO_DISPLAY_ITEM_TEXT, {
-        ItemId* itemId = (ItemId*)opt;
+        ItemId* itemId = va_arg(args, ItemId*);
         if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0) && *itemId == ITEM_MASK_BUNNY) {
             *should = false;
             CVarSetInteger("gEnhancements.Masks.PersistentBunnyHood.State",

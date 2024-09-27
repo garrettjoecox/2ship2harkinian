@@ -247,15 +247,25 @@ void GameInteractor_ExecuteOnItemGive(u8 item) {
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnItemGive>(item);
 }
 
-bool GameInteractor_Should(GIVanillaBehavior flag, bool result, void* opt) {
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::ShouldVanillaBehavior>(flag, &result, opt);
-    GameInteractor::Instance->ExecuteHooksForID<GameInteractor::ShouldVanillaBehavior>(flag, flag, &result, opt);
-    if (opt != nullptr) {
-        GameInteractor::Instance->ExecuteHooksForPtr<GameInteractor::ShouldVanillaBehavior>((uintptr_t)opt, flag,
-                                                                                            &result, opt);
-    }
-    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::ShouldVanillaBehavior>(flag, &result, opt);
-    return result;
+bool GameInteractor_Should(GIVanillaBehavior flag, uint32_t result, ...) {
+    // Only the external function can use the Variadic Function syntax
+    // To pass the va args to the next caller must be done using va_list and reading the args into it
+    // Because there can be N subscribers registered to each template call, the subscribers will be responsible for
+    // creating a copy of this va_list to avoid incrementing the original pointer between calls
+    va_list args;
+    va_start(args, result);
+
+    // Because of default argument promotion, even though our incoming "result" is just a bool, it needs to be typed as
+    // an int to be permitted to be used in `va_start`, otherwise it is undefined behavior.
+    // Here we downcast back to a bool for our actual hook handlers
+    bool boolResult = static_cast<bool>(result);
+
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::ShouldVanillaBehavior>(flag, &boolResult, args);
+    GameInteractor::Instance->ExecuteHooksForID<GameInteractor::ShouldVanillaBehavior>(flag, flag, &boolResult, args);
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::ShouldVanillaBehavior>(flag, &boolResult, args);
+
+    va_end(args);
+    return boolResult;
 }
 
 // Returns 1 or -1 based on a number of factors like CVars or other game states.
@@ -404,13 +414,12 @@ void GameInteractor::Init() {
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER,
                                                                                    GameInteractor_ProcessEvents);
 
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(
-        GI_VB_GIVE_ITEM_FROM_ITEM00, [](GIVanillaBehavior _, bool* should, void* opt) {
-            EnItem00* item00 = static_cast<EnItem00*>(opt);
-            if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
-                *should = false;
-            }
-        });
+    REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ITEM00, {
+        EnItem00* item00 = va_arg(args, EnItem00*);
+        if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
+            *should = false;
+        }
+    });
 
     // If it's a give item event without a cutscene, clear the current event
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorKill>(ACTOR_EN_ITEM00, [](Actor* actor) {

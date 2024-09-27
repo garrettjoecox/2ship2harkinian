@@ -26,7 +26,7 @@ void RegisterSkipTatlInterrupts() {
     // General interupt
     REGISTER_VB_SHOULD(GI_VB_TATL_INTERUPT_MSG3, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
-            Actor* actor = static_cast<Actor*>(opt);
+            Actor* actor = va_arg(args, Actor*);
             *should = false;
             if (ELFMSG3_GET_SWITCH_FLAG(actor) != 0x7F) {
                 Flags_SetSwitch(gPlayState, ELFMSG3_GET_SWITCH_FLAG(actor));
@@ -38,7 +38,7 @@ void RegisterSkipTatlInterrupts() {
     // General interupt 2 (the flags were directly copied from the original code)
     REGISTER_VB_SHOULD(GI_VB_TATL_INTERUPT_MSG6, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
-            Actor* actor = static_cast<Actor*>(opt);
+            Actor* actor = va_arg(args, Actor*);
             *should = false;
             switch (actor->textId) {
                 case 0x224:

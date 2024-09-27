@@ -114,9 +114,9 @@ void EnItem00_3DItemsDraw(Actor* actor, PlayState* play) {
     }
 }
 
-void DrawSlime3DItem(GIVanillaBehavior _, bool* should, void* opt) {
+void DrawSlime3DItem(Actor* actor, bool* should) {
     *should = false;
-    EnSlime* slime = static_cast<EnSlime*>(opt);
+    EnSlime* slime = (EnSlime*)actor;
 
     // Rotate 3D item with chu body
     Matrix_RotateYS(slime->actor.shape.rot.y, MTXMODE_APPLY);
@@ -184,6 +184,8 @@ void Register3DItemDrops() {
                 actor->shape.rot.y += 0x3C0;
             }
         });
-    slimeVBHookID = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(
-        GI_VB_DRAW_SLIME_BODY_ITEM, DrawSlime3DItem);
+    slimeVBHookID = REGISTER_VB_SHOULD(GI_VB_DRAW_SLIME_BODY_ITEM, {
+        Actor* actor = va_arg(args, Actor*);
+        DrawSlime3DItem(actor, should);
+    });
 }

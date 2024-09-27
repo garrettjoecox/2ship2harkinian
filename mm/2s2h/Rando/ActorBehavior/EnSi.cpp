@@ -56,7 +56,7 @@ void Rando::ActorBehavior::InitEnSiBehavior(bool isRando) {
         });
 
     shouldHookId = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_SI, {
-        EnSi* enSi = static_cast<EnSi*>(opt);
+        EnSi* enSi = va_arg(args, EnSi*);
 
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
             FLAG_CYCL_SCENE_CHEST, ENSI_GET_CHEST_FLAG(&enSi->actor), gPlayState->sceneId);

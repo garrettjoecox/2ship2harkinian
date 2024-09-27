@@ -8,7 +8,7 @@ extern "C" {
 void RegisterFierceDeityZTargetMovement() {
     REGISTER_VB_SHOULD(GI_VB_ZTARGET_SPEED_CHECK, {
         Player* player = GET_PLAYER(gPlayState);
-        float* speedArg = (float*)opt;
+        float* speedArg = va_arg(args, float*);
 
         // If the player is Fierce Deity and targeting,
         if (player->lockOnActor != NULL && player->transformation == PLAYER_FORM_FIERCE_DEITY &&

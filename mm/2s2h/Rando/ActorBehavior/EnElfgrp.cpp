@@ -27,7 +27,7 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
     shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, {
         *should = false;
 
-        EnElfgrp* elfgrp = static_cast<EnElfgrp*>(opt);
+        EnElfgrp* elfgrp = va_arg(args, EnElfgrp*);
 
         switch (elfgrp->type) {
             case ENELFGRP_TYPE_POWER:

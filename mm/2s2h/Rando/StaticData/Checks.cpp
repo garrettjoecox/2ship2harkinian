@@ -4,9 +4,11 @@ namespace Rando {
 
 namespace StaticData {
 
+#define RC(id, type, scene, flagType, flag, item) { id, { id, #id, type, scene, flagType, flag, item } }
+
 // clang-format off
-std::unordered_map<RandoCheckId, RandoStaticCheck> Checks = {
-    { RC_UNKNOWN,                                          { RC_UNKNOWN,                                          RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN } },
+std::map<RandoCheckId, RandoStaticCheck> Checks = {
+    RC(RC_UNKNOWN,                                          RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN),
 
     // Verified as working & name decided, no more iteration necessary
     { RC_ANCIENT_CASTLE_OF_IKANA_HP,                       { RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_FREESTANDING,     SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE } },

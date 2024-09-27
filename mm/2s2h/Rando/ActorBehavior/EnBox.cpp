@@ -38,7 +38,7 @@ void Rando::ActorBehavior::InitEnBoxBehavior(bool isRando) {
     }
 
     shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_CHEST, {
-        EnBox* enBox = static_cast<EnBox*>(opt);
+        EnBox* enBox = va_arg(args, EnBox*);
         Player* player = GET_PLAYER(gPlayState);
         func_80832558(gPlayState, player, func_80837C78_override);
         *should = false;

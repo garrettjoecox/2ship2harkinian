@@ -17,7 +17,7 @@ void func_80A3A210(EnElfgrp* elfgrp, PlayState* play);
 void RegisterSkipGreatFairyCutscene() {
     REGISTER_VB_SHOULD(GI_VB_START_GREAT_FAIRY_CUTSCENE, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0)) {
-            EnElfgrp* elfgrp = static_cast<EnElfgrp*>(opt);
+            EnElfgrp* elfgrp = va_arg(args, EnElfgrp*);
 
             if (*should && !(elfgrp->stateFlags & ELFGRP_STATE_0)) {
                 elfgrp->stateFlags |= ELFGRP_STATE_0;

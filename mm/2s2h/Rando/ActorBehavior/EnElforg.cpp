@@ -108,8 +108,9 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
 
     shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ELFORG, {
         *should = false;
+        Actor* actor = va_arg(args, Actor*);
 
-        if (STRAY_FAIRY_TYPE((Actor*)opt) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
+        if (STRAY_FAIRY_TYPE(actor) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
             auto& randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_STRAY_FAIRY];
             randoSaveCheck.eligible = true;
         }
@@ -124,7 +125,7 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
     shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
         *should = false;
 
-        Actor* actor = (Actor*)opt;
+        Actor* actor = va_arg(args, Actor*);
         EnElforg* enElforg = (EnElforg*)actor;
         RandoCheckId randoCheckId = RC_UNKNOWN;
 

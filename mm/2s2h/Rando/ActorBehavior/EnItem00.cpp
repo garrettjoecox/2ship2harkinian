@@ -60,7 +60,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
         });
 
     shouldHookId = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ITEM00, {
-        EnItem00* item00 = static_cast<EnItem00*>(opt);
+        EnItem00* item00 = va_arg(args, EnItem00*);
 
         // If it's one of our items ignore it
         if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {

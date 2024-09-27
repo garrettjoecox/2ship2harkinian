@@ -160,7 +160,7 @@ void View_ApplyLetterbox(View* view) {
     s32 lrx;
     s32 lry;
 
-    if (GameInteractor_Should(GI_VB_DISABLE_LETTERBOX, false, NULL)) {
+    if (GameInteractor_Should(GI_VB_DISABLE_LETTERBOX, false)) {
         return;
     }
 
