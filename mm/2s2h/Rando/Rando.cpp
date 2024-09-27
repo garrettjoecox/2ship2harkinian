@@ -3,8 +3,10 @@
 #include <libultraship/libultraship.h>
 #include <random>
 #include "Rando/ActorBehavior/ActorBehavior.h"
+#include <boost_custom/container_hash/hash_32.hpp>
 
 extern "C" {
+#include "ShipUtils.h"
 #include "variables.h"
 #include "functions.h"
 }
@@ -72,6 +74,13 @@ void OnSaveInitHandler(s16 fileNum) {
         gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
         memset(&gSaveContext.save.shipSaveInfo.rando, 0, sizeof(gSaveContext.save.shipSaveInfo.rando));
 
+        std::string inputSeed = CVarGetString("gRando.InputSeed", "");
+
+        if (!inputSeed.empty()) {
+            uint32_t seedHash = boost::hash_32<std::string>{}(inputSeed);
+            Ship_Random_Seed(seedHash);
+        }
+
         std::vector<RandoItemId> itemPool;
         for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
             if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
@@ -79,7 +88,9 @@ void OnSaveInitHandler(s16 fileNum) {
             }
         }
 
-        std::shuffle(itemPool.begin(), itemPool.end(), std::mt19937(std::random_device()()));
+        for (size_t i = 0; i < itemPool.size(); i++) {
+            std::swap(itemPool[i], itemPool[Ship_Random(0, itemPool.size())]);
+        }
 
         for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
             if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {

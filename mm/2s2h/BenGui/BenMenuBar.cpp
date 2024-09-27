@@ -16,6 +16,7 @@
 #include "2s2h/Enhancements/Cheats/Cheats.h"
 #include "2s2h/Enhancements/Player/Player.h"
 #include "HudEditor.h"
+#include "Rando/Rando.h"
 
 extern "C" {
 #include "z64.h"
@@ -699,7 +700,6 @@ void DrawEnhancementsMenu() {
 
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
-        UIWidgets::CVarCheckbox("Rando", "gRando.Enabled");
         UIWidgets::CVarCheckbox("Infinite Health", "gCheats.InfiniteHealth");
         UIWidgets::CVarCheckbox("Infinite Magic", "gCheats.InfiniteMagic");
         UIWidgets::CVarCheckbox("Infinite Rupees", "gCheats.InfiniteRupees");
@@ -896,6 +896,10 @@ void BenMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawDeveloperToolsMenu();
+
+        ImGui::SetCursorPosY(0.0f);
+
+        Rando::DrawMenu();
 
         ImGui::SetCursorPosY(0.0f);
 

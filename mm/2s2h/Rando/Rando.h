@@ -12,6 +12,7 @@ void Init();
 void DrawItem(RandoItemId randoItemId);
 void GiveItem(RandoItemId randoItemId);
 RandoItemId ConvertItem(RandoItemId randoItemId);
+void DrawMenu();
 
 } // namespace Rando
 
