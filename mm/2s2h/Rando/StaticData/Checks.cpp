@@ -207,7 +207,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_WOODFALL_TEMPLE_WATER_CHEST,                      RCTYPE_CHEST,            SCENE_MITURIN,                  FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_WOODFALL_SMALL_KEY),
 
     // Sort of working, more iteration and/or name needed
-    RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_WOODFALL_STRAY_FAIRY),
+    RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
 
     // Converted list from ChatGPT
     // RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_UNKNOWN,          SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
