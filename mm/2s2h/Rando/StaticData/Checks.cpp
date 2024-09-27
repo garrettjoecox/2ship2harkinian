@@ -4,7 +4,12 @@ namespace Rando {
 
 namespace StaticData {
 
-#define RC(id, type, scene, flagType, flag, item) { id, { id, #id, type, scene, flagType, flag, item } }
+#define RC(id, type, scene, flagType, flag, item)      \
+    {                                                  \
+        id, {                                          \
+            id, #id, type, scene, flagType, flag, item \
+        }                                              \
+    }
 
 // clang-format off
 std::map<RandoCheckId, RandoStaticCheck> Checks = {
@@ -18,7 +23,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CLOCK_TOWN_NORTH_TREE_HP,                         RCTYPE_FREESTANDING,     SCENE_BACKTOWN,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_HEART_PIECE),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_RED),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_RUPEE_PURPLE),
-    RC(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP,                     RCTYPE_FREESTANDING,     SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_HEART_PIECE),
+    RC(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP,                     RCTYPE_FREESTANDING,     SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_RUPEE_PURPLE),
     RC(RC_CLOCK_TOWN_STRAY_FAIRY,                           RCTYPE_STRAY_FAIRY,      SCENE_ALLEY,                    FLAG_NONE,                   0x00,                                                                RI_CLOCK_TOWN_STRAY_FAIRY),
     RC(RC_GREAT_BAY_GREAT_FAIRY,                            RCTYPE_NPC,              SCENE_YOUSEI_IZUMI,             FLAG_NONE,                   0x00,                                                                RI_DOUBLE_DEFENSE),
     RC(RC_GREAT_BAY_TEMPLE_BABA_CHEST,                      RCTYPE_CHEST,            SCENE_SEA,                      FLAG_CYCL_SCENE_CHEST,       0x19,                                                                RI_GREAT_BAY_STRAY_FAIRY),
@@ -202,6 +207,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_WOODFALL_TEMPLE_WATER_CHEST,                      RCTYPE_CHEST,            SCENE_MITURIN,                  FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_WOODFALL_SMALL_KEY),
 
     // Sort of working, more iteration and/or name needed
+    RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_WOODFALL_STRAY_FAIRY),
 
     // Converted list from ChatGPT
     // RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_UNKNOWN,          SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
@@ -216,7 +222,6 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // RC(RC_DEKU_PALACE_GROTTO_CHEST,                         RCTYPE_CHEST,            SCENE_KAKUSIANA,                FLAG_CYCL_SCENE_CHEST,       0x05,                                                                RI_RUPEE_RED),
     // RC(RC_DEKU_PALACE_HP,                                   RCTYPE_UNKNOWN,          SCENE_22DEKUCITY,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
     // RC(RC_DOGGY_RACETRACK_CHEST,                            RCTYPE_CHEST,            SCENE_F01_B,                    FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_PURPLE),
-    // RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_UNKNOWN,          SCENE_11GORONNOSATO,            FLAG_PERM_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
     // RC(RC_GREAT_BAY_COAST_COW_BACK,                         RCTYPE_UNKNOWN,          SCENE_30GYOSON,                 FLAG_RANDO_INF,              0x16,                                                                RI_MILK),
     // RC(RC_GREAT_BAY_COAST_COW_FRONT,                        RCTYPE_UNKNOWN,          SCENE_30GYOSON,                 FLAG_RANDO_INF,              0x15,                                                                RI_MILK),
     // RC(RC_GREAT_BAY_COAST_FISHERMAN_GROTTO,                 RCTYPE_CHEST,            SCENE_KAKUSIANA,                FLAG_CYCL_SCENE_CHEST,       0x17,                                                                RI_RUPEE_RED),
@@ -283,8 +288,21 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // clang-format on
 
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
+    s16 secondaryScene = SCENE_MAX;
+    switch (sceneId) {
+        case SCENE_11GORONNOSATO:
+            secondaryScene = SCENE_11GORONNOSATO2;
+            break;
+        case SCENE_11GORONNOSATO2:
+            secondaryScene = SCENE_11GORONNOSATO;
+            break;
+        default:
+            break;
+    }
+
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag &&
+            (sceneId == SCENE_MAX || data.sceneId == sceneId || data.sceneId == secondaryScene)) {
             return data;
         }
     }

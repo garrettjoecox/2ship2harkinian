@@ -835,10 +835,7 @@ void DrawItemsAndMasksTab() {
                     .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                     .getItemText = randoStaticItem.name,
                     .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
-                    .giveItem =
-                        [randoItemId]() {
-                            Rando::GiveItem(randoItemId);
-                        } });
+                    .giveItem = [randoItemId]() { Rando::GiveItem(randoItemId); } });
             }
         }
     }
@@ -1126,10 +1123,12 @@ void DrawQuestStatusTab() {
     UIWidgets::PushStyleSlider();
     ImGui::PushItemWidth(ImGui::GetWindowWidth());
     if (ImGui::SliderInt("##swampSkulltulas", &SwampSkullTokens, 0, 30, "Swamp Tokens: %d")) {
-        gSaveContext.save.saveInfo.skullTokenCount = ((int)(SwampSkullTokens & 0xFFFF) << 0x10) | (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF);
+        gSaveContext.save.saveInfo.skullTokenCount =
+            ((int)(SwampSkullTokens & 0xFFFF) << 0x10) | (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF);
     }
     if (ImGui::SliderInt("##oceanSkulltulas", &OceanSkullTokens, 0, 30, "Ocean Tokens: %d")) {
-        gSaveContext.save.saveInfo.skullTokenCount = (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF0000) | (OceanSkullTokens & 0xFFFF);
+        gSaveContext.save.saveInfo.skullTokenCount =
+            (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF0000) | (OceanSkullTokens & 0xFFFF);
     }
     ImGui::PopItemWidth();
     UIWidgets::PopStyleSlider();
