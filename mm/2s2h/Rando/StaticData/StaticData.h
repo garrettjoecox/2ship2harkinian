@@ -9,6 +9,8 @@
 extern "C" {
 #include "z64item.h"
 #include "z64scene.h"
+
+s16 Play_GetOriginalSceneId(s16 sceneId);
 }
 
 namespace Rando {

@@ -124,9 +124,9 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_STOCK_POT_INN_LETTER_TO_KAFEI,                    RCTYPE_NPC,              SCENE_YADOYA,                   FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_HAD_MIDNIGHT_MEETING,                                   RI_LETTER_TO_KAFEI),
     RC(RC_STOCK_POT_INN_ROOM_KEY,                           RCTYPE_NPC,              SCENE_YADOYA,                   FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_RECEIVED_ROOM_KEY,                                      RI_ROOM_KEY),
     RC(RC_STOCK_POT_INN_STAFF_ROOM_CHEST,                   RCTYPE_CHEST,            SCENE_YADOYA,                   FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_RUPEE_SILVER),
-    RC(RC_STONE_TOWER_INVERTED_CHEST_1,                     RCTYPE_CHEST,            SCENE_F41,                      FLAG_CYCL_SCENE_CHEST,       0x1D,                                                                RI_RUPEE_SILVER),
-    RC(RC_STONE_TOWER_INVERTED_CHEST_2,                     RCTYPE_CHEST,            SCENE_F41,                      FLAG_CYCL_SCENE_CHEST,       0x1E,                                                                RI_BOMBCHU_10),
-    RC(RC_STONE_TOWER_INVERTED_CHEST_3,                     RCTYPE_CHEST,            SCENE_F41,                      FLAG_CYCL_SCENE_CHEST,       0x1F,                                                                RI_MAGIC_BEAN),
+    RC(RC_STONE_TOWER_INVERTED_CHEST_1,                     RCTYPE_CHEST,            SCENE_F40,                      FLAG_CYCL_SCENE_CHEST,       0x1D,                                                                RI_RUPEE_SILVER),
+    RC(RC_STONE_TOWER_INVERTED_CHEST_2,                     RCTYPE_CHEST,            SCENE_F40,                      FLAG_CYCL_SCENE_CHEST,       0x1E,                                                                RI_BOMBCHU_10),
+    RC(RC_STONE_TOWER_INVERTED_CHEST_3,                     RCTYPE_CHEST,            SCENE_F40,                      FLAG_CYCL_SCENE_CHEST,       0x1F,                                                                RI_MAGIC_BEAN),
     RC(RC_STONE_TOWER_TEMPLE_BEFORE_WATER_BRIDGE_CHEST,     RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x14,                                                                RI_STONE_TOWER_STRAY_FAIRY),
     RC(RC_STONE_TOWER_TEMPLE_CENTER_ACROSS_WATER_CHEST,     RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_STONE_TOWER_SMALL_KEY),
     RC(RC_STONE_TOWER_TEMPLE_CENTER_SUN_BLOCK_CHEST,        RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x18,                                                                RI_STONE_TOWER_STRAY_FAIRY),
@@ -208,6 +208,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 
     // Sort of working, more iteration and/or name needed
     RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
+    RC(RC_SOUTHERN_SWAMP_HP,                                RCTYPE_FREESTANDING,     SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
 
     // Converted list from ChatGPT
     // RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_UNKNOWN,          SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
@@ -258,7 +259,6 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // RC(RC_SECRET_SHRINE_WART_CHEST,                         RCTYPE_CHEST,            SCENE_RANDOM,                   FLAG_PERM_SCENE_CHEST,       0x02,                                                                RI_RUPEE_SILVER),
     // RC(RC_SECRET_SHRINE_WIZZROBE_CHEST,                     RCTYPE_CHEST,            SCENE_RANDOM,                   FLAG_PERM_SCENE_CHEST,       0x01,                                                                RI_RUPEE_SILVER),
     // RC(RC_SOUTHERN_SWAMP_GROTTO,                            RCTYPE_CHEST,            SCENE_KAKUSIANA,                FLAG_CYCL_SCENE_CHEST,       0x1d,                                                                RI_RUPEE_RED),
-    // RC(RC_SOUTHERN_SWAMP_HP,                                RCTYPE_UNKNOWN,          SCENE_20SICHITAI2,              FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
     // RC(RC_TERMINA_FIELD_BIO_BABA_GROTTO,                    RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_CYCL_SCENE_COLLECTIBLE, 0x02,                                                                RI_HEART_PIECE),
     // RC(RC_TERMINA_FIELD_COW_BACK,                           RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_RANDO_INF,              0x14,                                                                RI_MILK),
     // RC(RC_TERMINA_FIELD_COW_FRONT,                          RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_RANDO_INF,              0x13,                                                                RI_MILK),
@@ -288,21 +288,13 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // clang-format on
 
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    s16 secondaryScene = SCENE_MAX;
-    switch (sceneId) {
-        case SCENE_11GORONNOSATO:
-            secondaryScene = SCENE_11GORONNOSATO2;
-            break;
-        case SCENE_11GORONNOSATO2:
-            secondaryScene = SCENE_11GORONNOSATO;
-            break;
-        default:
-            break;
+        if (sceneId != SCENE_INISIE_R) {
+        sceneId = Play_GetOriginalSceneId(sceneId);
     }
 
     for (auto& [check, data] : Checks) {
         if (data.flagType == flagType && data.flag == flag &&
-            (sceneId == SCENE_MAX || data.sceneId == sceneId || data.sceneId == secondaryScene)) {
+            (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
             return data;
         }
     }
