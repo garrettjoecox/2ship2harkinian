@@ -288,13 +288,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // clang-format on
 
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-        if (sceneId != SCENE_INISIE_R) {
+    if (sceneId != SCENE_INISIE_R) {
         sceneId = Play_GetOriginalSceneId(sceneId);
     }
 
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag &&
-            (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
             return data;
         }
     }
