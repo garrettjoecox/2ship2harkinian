@@ -1,5 +1,9 @@
 #include "StaticData.h"
 
+extern "C" {
+s16 Play_GetOriginalSceneId(s16 sceneId);
+}
+
 namespace Rando {
 
 namespace StaticData {
