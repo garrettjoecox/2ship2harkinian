@@ -35,7 +35,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
     static uint32_t shouldHookId2 = 0;
     static uint32_t shouldHookId3 = 0;
     static uint32_t shouldHookId4 = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInit);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldActorInit>(onActorInit);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId2);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId3);
@@ -51,8 +51,8 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         return;
     }
 
-    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(
-        ACTOR_DM_CHAR02, [](Actor* actor) { actor->update = DmChar02_UpdateCustom; });
+    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
+        ACTOR_DM_CHAR02, [](Actor* actor, bool* should) { actor->update = DmChar02_UpdateCustom; });
 
     shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_DRAW_OCARINA_IN_STK_HAND, {
         if (*should) {

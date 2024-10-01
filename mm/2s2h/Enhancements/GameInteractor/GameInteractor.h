@@ -84,6 +84,12 @@ typedef enum {
     GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY,
     GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER,
     GI_VB_GIVE_ITEM_FROM_SWORDSMAN,
+    GI_VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
+    // Vanilla condition: (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
+    // !CHECK_QUEST_ITEM(QUEST_SONG_HEALING)
+    GI_VB_OSN_TEACH_SONG_OF_HEALING,
+    GI_VB_GIVE_ITEM_FROM_OSN,
+    GI_VB_GIVE_ITEM_FROM_MOONS_TEAR,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -335,7 +341,7 @@ class GameInteractor {
     DEFINE_HOOK(AfterKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(OnSaveInit, (s16 fileNum));
     DEFINE_HOOK(OnSaveLoad, (s16 fileNum));
-    DEFINE_HOOK(OnFileSelectSaveLoad, (s16 fileNum, bool isOwlSave, SaveContext * saveContext));
+    DEFINE_HOOK(OnFileSelectSaveLoad, (s16 fileNum, bool isOwlSave, SaveContext* saveContext));
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());

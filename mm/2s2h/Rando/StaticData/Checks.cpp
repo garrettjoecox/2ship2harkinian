@@ -74,13 +74,16 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 
 
     // Verified as working & name decided, no more iteration necessary
+    RC(RC_ASTRAL_OBSERVATORY_MOON_TEAR,                     RCTYPE_NPC,              SCENE_TENMON_DAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_74_40,                                                  RI_MOONS_TEAR),
     RC(RC_CLOCK_TOWER_ROOF_OCARINA,                         RCTYPE_NPC,              SCENE_OKUJOU,                   FLAG_NONE,                   0x00,                                                                RI_OCARINA),
     RC(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME,                    RCTYPE_SONG,             SCENE_OKUJOU,                   FLAG_NONE,                   0x00,                                                                RI_SONG_OF_TIME),
+    RC(RC_CLOCK_TOWN_DEKU_MASK,                             RCTYPE_NPC,              SCENE_INSIDETOWER,              FLAG_NONE,                   0x00,                                                                RI_MASK_DEKU),
     RC(RC_CLOCK_TOWN_EAST_UPPER_CHEST,                      RCTYPE_CHEST,            SCENE_TOWN,                     FLAG_CYCL_SCENE_CHEST,       0x0A,                                                                RI_RUPEE_SILVER),
     RC(RC_CLOCK_TOWN_GREAT_FAIRY_ALT,                       RCTYPE_NPC,              SCENE_YOUSEI_IZUMI,             FLAG_NONE,                   0x00,                                                                RI_MASK_GREAT_FAIRY),
     RC(RC_CLOCK_TOWN_GREAT_FAIRY,                           RCTYPE_NPC,              SCENE_YOUSEI_IZUMI,             FLAG_NONE,                   0x00,                                                                RI_PROGRESSIVE_MAGIC),
     RC(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU,                     RCTYPE_NPC,              SCENE_ALLEY,                    FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_38_40,                                                  RI_MASK_BREMEN),
     RC(RC_CLOCK_TOWN_NORTH_TREE_HP,                         RCTYPE_FREESTANDING,     SCENE_BACKTOWN,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_HEART_PIECE),
+    RC(RC_CLOCK_TOWN_SONG_OF_HEALING,                       RCTYPE_NPC,              SCENE_INSIDETOWER,              FLAG_NONE,                   0x00,                                                                RI_SONG_OF_HEALING),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_RED),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_RUPEE_PURPLE),
     RC(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP,                     RCTYPE_FREESTANDING,     SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_HEART_PIECE),

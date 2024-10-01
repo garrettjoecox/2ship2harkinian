@@ -28,11 +28,12 @@ void RegisterShoulds() {
 
         OPEN_DISPS(gFileSelectState->state.gfxCtx);
 
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[0], sWindowContentColors[1],
-                                sWindowContentColors[2], gFileSelectState->selectedFileIndex == fileIndex ? 255 : gFileSelectState->nameBoxAlpha[fileIndex]);
+        gDPSetPrimColor(
+            POLY_OPA_DISP++, 0, 0, sWindowContentColors[0], sWindowContentColors[1], sWindowContentColors[2],
+            gFileSelectState->selectedFileIndex == fileIndex ? 255 : gFileSelectState->nameBoxAlpha[fileIndex]);
         gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelRANDButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
-                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
-                            G_TX_NOLOD, G_TX_NOLOD);
+                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                            G_TX_NOLOD);
         gSP1Quadrangle(POLY_OPA_DISP++, 12, 14, 15, 13, 0);
 
         CLOSE_DISPS(gFileSelectState->state.gfxCtx);

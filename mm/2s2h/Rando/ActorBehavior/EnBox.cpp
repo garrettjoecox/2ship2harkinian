@@ -43,5 +43,5 @@ void Rando::ActorBehavior::InitEnBoxBehavior() {
         func_80832558(gPlayState, player, func_80837C78_override);
         *should = false;
     });
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_CHEST_SPAWN_FAIRY, { *should = false; });
+    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_CHEST_SPAWN_FAIRY, { *should = false; });
 }
