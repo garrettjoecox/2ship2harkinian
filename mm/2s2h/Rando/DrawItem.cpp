@@ -11,7 +11,8 @@ extern "C" {
 }
 
 // I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
-// render properly, and we don't really have the systems in place to mock that.
+// render properly, and we don't really have the systems in place to mock that, so we're rendering the fairy by hand
+// using it's individual DL's, for some reason half of the DL's either crash or don't render so we have to re-use some
 void DrawStrayFairy(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
@@ -99,6 +100,12 @@ void DrawSong(RandoItemId randoItemId) {
         case RI_SUNS_SONG:
             gDPSetEnvColor(POLY_XLU_DISP++, 237, 231, 62, 255);
             break;
+        case RI_SONG_OF_TIME:
+            gDPSetEnvColor(POLY_XLU_DISP++, 98, 177, 211, 255);
+            break;
+        case RI_SONG_OF_HEALING:
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 192, 203, 255);
+            break;
         default:
             break;
     }
@@ -126,7 +133,9 @@ void DrawDoubleDefense() {
 
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
+        case RI_SONG_OF_TIME:
         case RI_SUNS_SONG:
+        case RI_SONG_OF_HEALING:
             DrawSong(randoItemId);
             break;
         case RI_CLOCK_TOWN_STRAY_FAIRY:
@@ -141,6 +150,7 @@ void Rando::DrawItem(RandoItemId randoItemId) {
             break;
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
+        case RI_PROGRESSIVE_BOMB_BAG:
             Rando::DrawItem(Rando::ConvertItem(randoItemId));
             break;
         default:

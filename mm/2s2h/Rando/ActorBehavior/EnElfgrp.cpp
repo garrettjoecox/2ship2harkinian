@@ -8,6 +8,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Elfgrp/z_en_elfgrp.h"
 }
 
+// Handles the Great Fairy checks
 void Rando::ActorBehavior::InitEnElfgrpBehavior() {
     static uint32_t shouldHook1Id = 0;
     static uint32_t shouldHook2Id = 0;

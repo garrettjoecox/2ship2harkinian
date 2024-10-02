@@ -1560,6 +1560,8 @@ void func_801457CC(GameState* gameState, SramContext* sramCtx) {
                     }
                     fileSelect->maskCount[sp76] = maskCount;
                     fileSelect->heartPieceCount[sp76] = GET_QUEST_HEART_PIECE_COUNT;
+
+                    GameInteractor_ExecuteOnFileSelectSaveLoad(sp76, false, &gSaveContext);
                 }
 
                 if (sp6E == 1) {
@@ -1674,6 +1676,8 @@ void func_801457CC(GameState* gameState, SramContext* sramCtx) {
                         }
                         fileSelect->maskCount[sp76] = maskCount;
                         fileSelect->heartPieceCount[sp76] = GET_QUEST_HEART_PIECE_COUNT;
+
+                        GameInteractor_ExecuteOnFileSelectSaveLoad(sp76 - 2, true, &gSaveContext);
                     }
 
                     if (sp6E == 1) {
@@ -1791,6 +1795,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
             fileSelect->maskCount[fileSelect->copyDestFileIndex + 2] = maskCount;
             fileSelect->heartPieceCount[fileSelect->copyDestFileIndex + 2] = GET_QUEST_HEART_PIECE_COUNT;
+
+            GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->copyDestFileIndex, true, &gSaveContext);
         }
 
         // clear buffer
@@ -1832,6 +1838,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
         fileSelect->maskCount[fileSelect->copyDestFileIndex] = maskCount;
         fileSelect->heartPieceCount[fileSelect->copyDestFileIndex] = GET_QUEST_HEART_PIECE_COUNT;
+
+        GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->copyDestFileIndex, false, &gSaveContext);
     }
 
     gSaveContext.save.time = D_801F6AF0;
@@ -1898,6 +1906,8 @@ void Sram_InitSave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
         fileSelect->maskCount[fileSelect->buttonIndex] = maskCount;
         fileSelect->heartPieceCount[fileSelect->buttonIndex] = GET_QUEST_HEART_PIECE_COUNT;
+
+        GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->buttonIndex, false, &gSaveContext);
     }
 
     gSaveContext.save.time = D_801F6AF0;

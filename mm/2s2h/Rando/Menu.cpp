@@ -4,6 +4,9 @@
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "BenPort.h"
 
+// TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
+std::vector<std::string> logicOptions = { "No Logic", "Vanilla" };
+
 void Rando::DrawMenu() {
     if (UIWidgets::BeginMenu("Rando", UIWidgets::Colors::Green)) {
         UIWidgets::CVarCheckbox("Enable Rando (Randomizes new files upon creation)", "gRando.Enabled");
@@ -34,6 +37,8 @@ void Rando::DrawMenu() {
             UIWidgets::PopStyleSlider();
 
             UIWidgets::CVarCheckbox("Generate Spoiler File", "gRando.GenerateSpoiler");
+
+            UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
         }
 
         ImGui::EndMenu();

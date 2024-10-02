@@ -54,6 +54,10 @@ void GameInteractor_ExecuteOnSaveLoad(s16 fileNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSaveLoad>(fileNum);
 }
 
+void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, SaveContext* saveContext) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFileSelectSaveLoad>(fileNum, isOwlSave, saveContext);
+}
+
 void GameInteractor_ExecuteBeforeEndOfCycleSave() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeEndOfCycleSave>();
 }
@@ -328,7 +332,22 @@ void EnItem00_DrawCustomForOverHead(Actor* thisx, PlayState* play) {
     EnItem00* enItem00 = (EnItem00*)thisx;
     thisx->shape.rot.y += 0x3C0;
     Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-    Matrix_Translate(0.0f, -50.0f, 0.0f, MTXMODE_APPLY);
+    f32 height = -30.0f;
+    switch (GET_PLAYER_FORM) {
+        case PLAYER_FORM_DEKU:
+            height = -50.0f;
+            break;
+        case PLAYER_FORM_FIERCE_DEITY:
+            height = 120.0f;
+            break;
+        case PLAYER_FORM_GORON:
+            height = 45.0f;
+            break;
+        case PLAYER_FORM_ZORA:
+            height = 30.0f;
+            break;
+    }
+    Matrix_Translate(0.0f, height, 0.0f, MTXMODE_APPLY);
     GetItem_Draw(play, GID_SHIP);
 }
 

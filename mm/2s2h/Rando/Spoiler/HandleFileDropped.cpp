@@ -20,10 +20,13 @@ bool Rando::Spoiler::HandleFileDropped(std::string filePath) {
         }
 
         nlohmann::json j;
+
+        // Attempt to parse the file
         try {
             fileStream >> j;
         } catch (nlohmann::json::exception& e) { return false; }
 
+        // Check if the file is a spoiler file
         if (!j.contains("type") || j["type"] != "2S2H_RANDO_SPOILER") {
             return false;
         }

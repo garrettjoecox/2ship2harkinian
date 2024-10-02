@@ -40,6 +40,7 @@ void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
+// This handles the Stray fairy checks, as well as overriding the draw function for the Stray Fairies
 void Rando::ActorBehavior::InitEnElforgBehavior() {
     static uint32_t onActorInitHookId = 0;
     static uint32_t shouldHook1Id = 0;

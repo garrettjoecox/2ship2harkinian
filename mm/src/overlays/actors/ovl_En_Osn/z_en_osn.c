@@ -6,6 +6,7 @@
 
 #include "z_en_osn.h"
 #include "objects/object_osn/object_osn.h"
+#include "Enhancements/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -720,10 +721,14 @@ void EnOsn_ChooseAction(EnOsn* this, PlayState* play) {
 void EnOsn_Idle(EnOsn* this, PlayState* play) {
     s16 yaw = this->actor.yawTowardsPlayer - this->actor.shape.rot.y;
 
-    if ((gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
-        !CHECK_QUEST_ITEM(QUEST_SONG_HEALING)) {
+    if (GameInteractor_Should(GI_VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
+                              (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
+                                  !CHECK_QUEST_ITEM(QUEST_SONG_HEALING),
+                              this)) {
         if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
-            this->actionFunc = EnOsn_StartCutscene;
+            if (GameInteractor_Should(GI_VB_OSN_TEACH_SONG_OF_HEALING, true, this)) {
+                this->actionFunc = EnOsn_StartCutscene;
+            }
         } else if (((this->actor.xzDistToPlayer < 100.0f) || this->actor.isLockedOn) && (yaw < 0x4000) &&
                    (yaw > -0x4000)) {
             Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);

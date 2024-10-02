@@ -96,6 +96,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         // Technically these should never be used, but leaving them here just in case
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
+        case RI_PROGRESSIVE_BOMB_BAG:
             Rando::GiveItem(Rando::ConvertItem(randoItemId));
             break;
         case RI_GS_TOKEN_SWAMP:

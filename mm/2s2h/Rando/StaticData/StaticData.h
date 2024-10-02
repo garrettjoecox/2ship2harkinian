@@ -26,6 +26,9 @@ struct RandoStaticCheck {
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 
+RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId = SCENE_MAX);
+RandoCheckId GetCheckIdFromName(const char* name);
+
 struct RandoStaticItem {
     RandoItemId randoItemId;
     const char* spoilerName;
@@ -37,9 +40,17 @@ struct RandoStaticItem {
 
 extern std::map<RandoItemId, RandoStaticItem> Items;
 
-RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId = SCENE_MAX);
-RandoCheckId GetCheckIdFromName(const char* name);
 RandoItemId GetItemIdFromName(const char* name);
+
+struct RandoStaticOption {
+    RandoOptionId randoOptionId;
+    const char* name;
+    const char* cvar;
+};
+
+extern std::map<RandoOptionId, RandoStaticOption> Options;
+
+RandoOptionId GetOptionIdFromName(const char* name);
 
 } // namespace StaticData
 

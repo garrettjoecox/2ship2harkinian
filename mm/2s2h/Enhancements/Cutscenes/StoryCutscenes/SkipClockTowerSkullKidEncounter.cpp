@@ -11,6 +11,7 @@ extern "C" {
 
 extern SaveContext gSaveContext;
 extern PlayState* gPlayState;
+extern f32 sBgmEnemyDistSq;
 void DmStk_ClockTower_StartIntroCutsceneVersion1(DmStk* dmstk, PlayState* play);
 void DmStk_ClockTower_StartIntroCutsceneVersion2(DmStk* dmstk, PlayState* play);
 void DmStk_ClockTower_IdleWithOcarina(DmStk* dmstk, PlayState* play);
@@ -32,11 +33,15 @@ void SkipClockTowerSkullKidEncounter() {
             return;
         }
 
+        dmstk->actor.world.pos.y += 100.0f;
+
         if (dmstk->actionFunc == DmStk_ClockTower_StartIntroCutsceneVersion1) {
             dmstk->animIndex = 33; // SK_ANIM_CALL_DOWN_MOON_LOOP
             dmstk->handType = 3;   // SK_HAND_TYPE_HOLDING_OCARINA
             DmStk_ChangeAnim(dmstk, gPlayState, &dmstk->skelAnime, &moonLoop, 0);
             dmstk->actionFunc = DmStk_ClockTower_IdleWithOcarina;
+            Actor_PlaySfx(&dmstk->actor, NA_SE_EN_STAL20_CALL_MOON);
+            Audio_PlaySequenceInCutscene(56);
         } else if (dmstk->actionFunc == DmStk_ClockTower_StartIntroCutsceneVersion2) {
             dmstk->animIndex = 38; // SK_ANIM_FLOATING_ARMS_CROSSED
             DmStk_ChangeAnim(dmstk, gPlayState, &dmstk->skelAnime, &armsCrossedLoop, 0);

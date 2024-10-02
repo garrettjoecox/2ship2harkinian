@@ -340,6 +340,7 @@ typedef struct RandoSaveCheck {
 typedef struct RandoSaveInfo {
     u16 randoInf[(RANDO_INF_MAX + 15) / 16];
     RandoSaveCheck randoSaveChecks[RC_MAX];
+    s8 randoSaveOptions[RO_MAX]; // Type here may change in the future
 } RandoSaveInfo;
 
 // These are values added by 2S2H that we need to be persisted to the save file

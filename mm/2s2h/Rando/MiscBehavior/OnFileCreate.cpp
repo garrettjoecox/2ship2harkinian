@@ -29,21 +29,33 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 uint32_t finalSeed = boost::hash_32<std::string>{}(inputSeed);
                 Ship_Random_Seed(finalSeed);
 
-                std::vector<RandoItemId> itemPool;
-                for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                    if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                        itemPool.push_back(randoStaticCheck.randoItemId);
+                for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
+                    RANDO_SAVE_OPTIONS[randoOptionId] = CVarGetInteger(randoStaticOption.cvar, 0);
+                }
+
+                if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_VANILLA) {
+                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
+                        }
                     }
-                }
+                } else {
+                    std::vector<RandoItemId> itemPool;
+                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                            itemPool.push_back(randoStaticCheck.randoItemId);
+                        }
+                    }
 
-                for (size_t i = 0; i < itemPool.size(); i++) {
-                    std::swap(itemPool[i], itemPool[Ship_Random(0, itemPool.size() - 1)]);
-                }
+                    for (size_t i = 0; i < itemPool.size(); i++) {
+                        std::swap(itemPool[i], itemPool[Ship_Random(0, itemPool.size() - 1)]);
+                    }
 
-                for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                    if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                        RANDO_SAVE_CHECKS[randoCheckId].randoItemId = itemPool.back();
-                        itemPool.pop_back();
+                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = itemPool.back();
+                            itemPool.pop_back();
+                        }
                     }
                 }
 
@@ -52,6 +64,12 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     j["type"] = "2S2H_RANDO_SPOILER";
                     j["inputSeed"] = inputSeed;
                     j["finalSeed"] = finalSeed;
+
+                    j["options"] = nlohmann::json::object();
+                    for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
+                        j["options"][randoStaticOption.name] = RANDO_SAVE_OPTIONS[randoOptionId];
+                    }
+
                     j["checks"] = nlohmann::json::object();
                     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
                         if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
@@ -99,6 +117,10 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
 
                 if (!j.contains("type") || j["type"] != "2S2H_RANDO_SPOILER") {
                     throw std::runtime_error("Spoiler file is not a valid spoiler file");
+                }
+
+                for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
+                    RANDO_SAVE_OPTIONS[randoOptionId] = j["options"][randoStaticOption.name].get<int>();
                 }
 
                 for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {

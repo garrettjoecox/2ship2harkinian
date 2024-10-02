@@ -11,12 +11,16 @@ void Init();
 void OnFileLoad();
 
 void InitDmStkBehavior();
+void InitEnAkindonutsBehavior();
 void InitEnBoxBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnItem00Behavior();
+void InitEnOsnBehavior();
+void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitItemBHeartBehavior();
+void InitObjMoonStoneBehavior();
 
 } // namespace ActorBehavior
 

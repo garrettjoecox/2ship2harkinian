@@ -36,12 +36,16 @@ void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
 
 void to_json(json& j, const RandoSaveInfo& rando) {
     j = json{
+        { "randoInf", rando.randoInf },
         { "randoSaveChecks", rando.randoSaveChecks },
+        { "randoSaveOptions", rando.randoSaveOptions },
     };
 }
 
 void from_json(const json& j, RandoSaveInfo& rando) {
+    j.at("randoInf").get_to(rando.randoInf);
     j.at("randoSaveChecks").get_to(rando.randoSaveChecks);
+    j.at("randoSaveOptions").get_to(rando.randoSaveOptions);
 }
 
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {
