@@ -39,6 +39,12 @@ void Rando::DrawMenu() {
             UIWidgets::CVarCheckbox("Generate Spoiler File", "gRando.GenerateSpoiler");
 
             UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
+
+            if (CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, RO_LOGIC_NO_LOGIC) != RO_LOGIC_VANILLA) {
+                UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
+                                        Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
+                UIWidgets::CVarCheckbox("Shuffle Pots", Rando::StaticData::Options[RO_SHUFFLE_POTS].cvar);
+            }
         }
 
         ImGui::EndMenu();

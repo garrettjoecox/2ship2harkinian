@@ -15,6 +15,7 @@ void RegisterSkipClockTowerOpen();
 void SkipClockTowerSkullKidEncounter();
 void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
+void RegisterSkipSongOfTimeCutscene();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

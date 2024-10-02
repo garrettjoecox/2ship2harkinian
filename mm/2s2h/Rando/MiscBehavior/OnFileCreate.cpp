@@ -33,29 +33,41 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     RANDO_SAVE_OPTIONS[randoOptionId] = CVarGetInteger(randoStaticOption.cvar, 0);
                 }
 
-                if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_VANILLA) {
-                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
-                        }
+                // Begin by placing all vanilla items in their vanilla locations
+                for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                    if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                        RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
                     }
-                } else {
+                }
+
+                if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_NO_LOGIC) {
+                    std::vector<RandoCheckId> checkPool;
                     std::vector<RandoItemId> itemPool;
                     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                            itemPool.push_back(randoStaticCheck.randoItemId);
+                        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+                            continue;
                         }
+
+                        if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
+                            RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
+                            continue;
+                        }
+
+                        if (randoStaticCheck.randoCheckType == RCTYPE_POT &&
+                            RANDO_SAVE_OPTIONS[RO_SHUFFLE_POTS] == RO_GENERIC_NO) {
+                            continue;
+                        }
+
+                        checkPool.push_back(randoCheckId);
+                        itemPool.push_back(randoStaticCheck.randoItemId);
                     }
 
                     for (size_t i = 0; i < itemPool.size(); i++) {
                         std::swap(itemPool[i], itemPool[Ship_Random(0, itemPool.size() - 1)]);
                     }
 
-                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = itemPool.back();
-                            itemPool.pop_back();
-                        }
+                    for (size_t i = 0; i < checkPool.size(); i++) {
+                        RANDO_SAVE_CHECKS[checkPool[i]].randoItemId = itemPool[i];
                     }
                 }
 

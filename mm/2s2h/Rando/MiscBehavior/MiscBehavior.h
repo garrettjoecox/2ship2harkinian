@@ -13,6 +13,8 @@ void OnFileLoad();
 void CheckQueue();
 void CheckQueueReset();
 void InitFileSelect();
+void BeforeEndOfCycleSave();
+void AfterEndOfCycleSave();
 void OnFileCreate(s16 fileNum);
 void OnFlagSet(FlagType flagType, u32 flag);
 void OnSceneFlagSet(s16 sceneId, FlagType flagType, u32 flag);

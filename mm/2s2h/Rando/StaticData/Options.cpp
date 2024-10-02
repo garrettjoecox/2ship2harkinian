@@ -14,6 +14,8 @@ namespace StaticData {
 // clang-format off
 std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_LOGIC),
+    RO(RO_SHUFFLE_GOLD_SKULLTULAS),
+    RO(RO_SHUFFLE_POTS),
 };
 // clang-format on
 

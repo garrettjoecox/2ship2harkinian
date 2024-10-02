@@ -150,6 +150,7 @@ void Rando::DrawItem(RandoItemId randoItemId) {
             break;
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
+        case RI_PROGRESSIVE_BOMB_BAG:
             Rando::DrawItem(Rando::ConvertItem(randoItemId));
             break;
         default:
