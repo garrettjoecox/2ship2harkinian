@@ -13,6 +13,7 @@ void RegisterCutscenes() {
     SkipClockTowerSkullKidEncounter();
     RegisterSkipLearningSongOfHealing();
     RegisterSkipLearningSongOfTime();
+    RegisterSkipSongOfTimeCutscene();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();

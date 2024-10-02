@@ -29,6 +29,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CLOCK_TOWN_GREAT_FAIRY,                           RCTYPE_NPC,              SCENE_YOUSEI_IZUMI,             FLAG_NONE,                   0x00,                                                                RI_PROGRESSIVE_MAGIC),
     RC(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU,                     RCTYPE_NPC,              SCENE_ALLEY,                    FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_38_40,                                                  RI_MASK_BREMEN),
     RC(RC_CLOCK_TOWN_NORTH_TREE_HP,                         RCTYPE_FREESTANDING,     SCENE_BACKTOWN,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x0A,                                                                RI_HEART_PIECE),
+    RC(RC_CLOCK_TOWN_SCRUB_DEED,                            RCTYPE_NPC,              SCENE_CLOCKTOWER,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_17_80,                                                  RI_DEED_CLOCK_TOWN),
     RC(RC_CLOCK_TOWN_SONG_OF_HEALING,                       RCTYPE_NPC,              SCENE_INSIDETOWER,              FLAG_NONE,                   0x00,                                                                RI_SONG_OF_HEALING),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_RED),
     RC(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER,                     RCTYPE_CHEST,            SCENE_CLOCKTOWER,               FLAG_CYCL_SCENE_CHEST,       0x01,                                                                RI_RUPEE_PURPLE),
@@ -405,6 +406,8 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // Sort of working, more iteration and/or name needed
     RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
     RC(RC_SOUTHERN_SWAMP_HP,                                RCTYPE_FREESTANDING,     SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
+    RC(RC_SOUTHERN_SWAMP_SCRUB_DEED,                        RCTYPE_NPC,              SCENE_20SICHITAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_61_10,                                                  RI_DEED_SWAMP),
+    RC(RC_GORON_VILLAGE_SCRUB_DEED,                         RCTYPE_NPC,              SCENE_11GORONNOSATO,            FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_61_80,                                                  RI_DEED_MOUNTAIN),
 
     // Converted list from ChatGPT
     // RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_UNKNOWN,          SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
