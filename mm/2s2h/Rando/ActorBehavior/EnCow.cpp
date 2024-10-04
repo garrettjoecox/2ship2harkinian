@@ -73,7 +73,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         return;
     }
 
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_COW, { 
+    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_COW, {
         // Original Should is the Range check, if it fails just Return.
         Actor* actor = va_arg(args, Actor*);
         if (!((actor->xzDistToPlayer < 90.0f) &&
@@ -82,13 +82,13 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
             return;
         }
         RandoCheckId randoCheckId = IdentifyCow(actor);
-        
+
         if (randoCheckId == RC_UNKNOWN) {
             *should = true;
             return;
         }
 
-        RandoSaveCheck &randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
         if (randoSaveCheck.eligible) {
             *should = true;
             return;
@@ -97,7 +97,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         *should = false;
     });
 
-    shouldHookId2 = REGISTER_VB_SHOULD(GI_VB_COW_CONSIDER_EPONAS_SONG_PLAYED, { 
+    shouldHookId2 = REGISTER_VB_SHOULD(GI_VB_COW_CONSIDER_EPONAS_SONG_PLAYED, {
         EnCow* actor = va_arg(args, EnCow*);
         if (actor->flags & EN_COW_FLAG_WONT_GIVE_MILK) {
             gPlayState->msgCtx.songPlayed = 0;
@@ -105,37 +105,38 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         *should = gPlayState->msgCtx.songPlayed == OCARINA_SONG_EPONAS;
     });
 
-    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(ACTOR_EN_COW, [](Actor* refActor, bool* should) {
-        RandoCheckId randoCheckId = IdentifyCow(refActor);
-        switch (randoCheckId) {
-            case RC_ROMANI_RANCH_BARN_COW_LEFT:
-                refActor->world.pos.x = -470.0f;
-                refActor->world.pos.y = 1.0f;
-                refActor->world.pos.z = 53.0f;
-                refActor->shape.rot.y = 7116.0f;
-                break;
-            case RC_ROMANI_RANCH_BARN_COW_RIGHT:
-                refActor->world.pos.x = -208.0f;
-                refActor->world.pos.y = 0.0f;
-                refActor->world.pos.z = 87.0f;
-                refActor->shape.rot.y = -32768.0f;
-                break;
-            case RC_GREAT_BAY_COAST_COW_FRONT:
-            case RC_TERMINA_FIELD_COW_FRONT:
-                refActor->world.pos.x = 2503.0f;
-                refActor->world.pos.y = 0.0f;
-                refActor->world.pos.z = 907.0f;
-                refActor->shape.rot.y = -5085.0f;
-                break;
-            case RC_GREAT_BAY_COAST_COW_BACK:
-            case RC_TERMINA_FIELD_COW_BACK:
-                refActor->world.pos.x = 2269.0f;
-                refActor->world.pos.y = 0.0f;
-                refActor->world.pos.z = 907.0f;
-                refActor->shape.rot.y = 2950.0f;
-                break;
-            default:
-                break;
-        }
-    });
+    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
+        ACTOR_EN_COW, [](Actor* refActor, bool* should) {
+            RandoCheckId randoCheckId = IdentifyCow(refActor);
+            switch (randoCheckId) {
+                case RC_ROMANI_RANCH_BARN_COW_LEFT:
+                    refActor->world.pos.x = -470.0f;
+                    refActor->world.pos.y = 1.0f;
+                    refActor->world.pos.z = 53.0f;
+                    refActor->shape.rot.y = 7116.0f;
+                    break;
+                case RC_ROMANI_RANCH_BARN_COW_RIGHT:
+                    refActor->world.pos.x = -208.0f;
+                    refActor->world.pos.y = 0.0f;
+                    refActor->world.pos.z = 87.0f;
+                    refActor->shape.rot.y = -32768.0f;
+                    break;
+                case RC_GREAT_BAY_COAST_COW_FRONT:
+                case RC_TERMINA_FIELD_COW_FRONT:
+                    refActor->world.pos.x = 2503.0f;
+                    refActor->world.pos.y = 0.0f;
+                    refActor->world.pos.z = 907.0f;
+                    refActor->shape.rot.y = -5085.0f;
+                    break;
+                case RC_GREAT_BAY_COAST_COW_BACK:
+                case RC_TERMINA_FIELD_COW_BACK:
+                    refActor->world.pos.x = 2269.0f;
+                    refActor->world.pos.y = 0.0f;
+                    refActor->world.pos.z = 907.0f;
+                    refActor->shape.rot.y = 2950.0f;
+                    break;
+                default:
+                    break;
+            }
+        });
 }
