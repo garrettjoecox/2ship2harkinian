@@ -23,6 +23,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitDmStkBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
+    Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();

@@ -533,14 +533,17 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,                  RCTYPE_POT,              SCENE_31MISAKI,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x25,                                                                RI_ARROWS_30),
 
     // --- Not Finished --- //
-    // RC(RC_BENEATH_THE_WELL_COW,                             RCTYPE_UNKNOWN,          SCENE_REDEAD,                   FLAG_RANDO_INF,              0x17,                                                                RI_MILK),
-    // RC(RC_GREAT_BAY_COAST_COW_BACK,                         RCTYPE_UNKNOWN,          SCENE_30GYOSON,                 FLAG_RANDO_INF,              0x16,                                                                RI_MILK),
-    // RC(RC_GREAT_BAY_COAST_COW_FRONT,                        RCTYPE_UNKNOWN,          SCENE_30GYOSON,                 FLAG_RANDO_INF,              0x15,                                                                RI_MILK),
-    // RC(RC_ROMANI_RANCH_BARN_COW_LEFT,                       RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_RANDO_INF,              0x10,                                                                RI_MILK),
-    // RC(RC_ROMANI_RANCH_BARN_COW_RIGHT_BACK,                 RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_RANDO_INF,              0x12,                                                                RI_MILK),
-    // RC(RC_ROMANI_RANCH_BARN_COW_RIGHT_FRONT,                RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_RANDO_INF,              0x11,                                                                RI_MILK),
-    // RC(RC_TERMINA_FIELD_COW_BACK,                           RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_RANDO_INF,              0x14,                                                                RI_MILK),
-    // RC(RC_TERMINA_FIELD_COW_FRONT,                          RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_RANDO_INF,              0x13,                                                                RI_MILK),
+    RC(RC_BENEATH_THE_WELL_COW,                             RCTYPE_UNKNOWN,          SCENE_REDEAD,                   FLAG_NONE,                   0x17,                                                                RI_MILK_REFILL),
+    RC(RC_GREAT_BAY_COAST_COW_BACK,                         RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_NONE,                   0x16,                                                                RI_MILK_REFILL),
+    RC(RC_GREAT_BAY_COAST_COW_FRONT,                        RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_NONE,                   0x15,                                                                RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_BARN_COW_MIDDLE,                     RCTYPE_UNKNOWN,          SCENE_OMOYA,                    FLAG_NONE,                   0x10,                                                                RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_BARN_COW_LEFT,                       RCTYPE_UNKNOWN,          SCENE_OMOYA,                    FLAG_NONE,                   0x12,                                                                RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_BARN_COW_RIGHT,                      RCTYPE_UNKNOWN,          SCENE_OMOYA,                    FLAG_NONE,                   0x11,                                                                RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_FIELD_COW_ENTRANCE,                  RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_NONE,                   0x0,                                                                 RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_FIELD_COW_NEAR_HOUSE_BACK,           RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_NONE,                   0x0,                                                                 RI_MILK_REFILL),
+    RC(RC_ROMANI_RANCH_FIELD_COW_NEAR_HOUSE_FRONT,          RCTYPE_UNKNOWN,          SCENE_F01,                      FLAG_NONE,                   0x0,                                                                 RI_MILK_REFILL),
+    RC(RC_TERMINA_FIELD_COW_BACK,                           RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_NONE,                   0x14,                                                                RI_MILK_REFILL),
+    RC(RC_TERMINA_FIELD_COW_FRONT,                          RCTYPE_UNKNOWN,          SCENE_KAKUSIANA,                FLAG_NONE,                   0x13,                                                                RI_MILK_REFILL),
 };
 // clang-format on
 
