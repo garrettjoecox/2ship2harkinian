@@ -32,6 +32,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
+    Rando::ActorBehavior::InitObjTsuboBehavior();
 
     static uint32_t onVanillaBehaviorHook = 0;
 

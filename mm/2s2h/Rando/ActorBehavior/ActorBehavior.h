@@ -22,6 +22,7 @@ void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitItemBHeartBehavior();
 void InitObjMoonStoneBehavior();
+void InitObjTsuboBehavior();
 
 } // namespace ActorBehavior
 
