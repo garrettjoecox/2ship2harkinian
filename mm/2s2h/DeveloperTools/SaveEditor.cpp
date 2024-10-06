@@ -1,7 +1,9 @@
 #include "SaveEditor.h"
 #include "2s2h/BenGui/UIWidgets.hpp"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
+#include "2s2h/CustomItem/CustomItem.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -833,9 +835,22 @@ void DrawItemsAndMasksTab() {
             if (UIWidgets::Button(buttonLabel.c_str())) {
                 GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                     .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
-                    .getItemText = randoStaticItem.name,
-                    .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
-                    .giveItem = [randoItemId]() { Rando::GiveItem(randoItemId); } });
+                    .param = (int16_t)randoItemId,
+                    .giveItem =
+                        [](Actor* actor, PlayState* play) {
+                            std::string message = "You received the {{item}}!";
+                            CustomMessage::Replace(&message, "{{item}}",
+                                                   Rando::StaticData::Items[(RandoItemId)CUSTOM_ITEM_PARAM].name);
+
+                            if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
+                                CustomMessage::SetActiveCustomMessage(message, { .textboxType = 2 });
+                            } else {
+                                CustomMessage::StartTextbox(message + "\x1C\x02\x10", { .textboxType = 2 });
+                            }
+                            Rando::GiveItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                        },
+                    .drawItem = [](Actor* actor,
+                                   PlayState* play) { Rando::DrawItem((RandoItemId)CUSTOM_ITEM_PARAM); } });
             }
         }
     }
@@ -1977,12 +1992,6 @@ void DrawFlagsTab() {
 }
 
 void SaveEditorWindow::DrawElement() {
-    ImGui::SetNextWindowSize(ImVec2(480, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Save Editor", &mIsVisible, ImGuiWindowFlags_NoFocusOnAppearing)) {
-        ImGui::End();
-        return;
-    }
-
     if (ImGui::BeginTabBar("SaveContextTabBar", ImGuiTabBarFlags_NoCloseWithMiddleMouseButton)) {
         if (ImGui::BeginTabItem("General")) {
             DrawGeneralTab();
@@ -2026,8 +2035,6 @@ void SaveEditorWindow::DrawElement() {
 
         ImGui::EndTabBar();
     }
-
-    ImGui::End();
 }
 
 const char* textureLoad[8] = { gDungeonStrayFairyWoodfallIconTex,

@@ -1,7 +1,7 @@
 #include "ActorViewer.h"
 #include "2s2h/BenGui/UIWidgets.hpp"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
-#include "2s2h/Enhancements/NameTag/NameTag.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/NameTag/NameTag.h"
 #include <spdlog/fmt/fmt.h>
 #include <string>
 #include <vector>
@@ -177,12 +177,6 @@ void ActorViewerWindow::UpdateElement() {
 }
 
 void ActorViewerWindow::DrawElement() {
-    ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Actor Viewer", &mIsVisible, ImGuiWindowFlags_NoFocusOnAppearing)) {
-        ImGui::End();
-        return;
-    }
-
     if (gPlayState != nullptr) {
         if (lastSceneId != gPlayState->sceneId) {
             ResetVariables();
@@ -442,7 +436,6 @@ void ActorViewerWindow::DrawElement() {
     } else {
         ImGui::Text("Playstate needed for actors!");
     }
-    ImGui::End();
 }
 
 void ActorViewerWindow::InitElement() {

@@ -1,9 +1,12 @@
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+
+extern "C" {
 #include "z64.h"
 #include "global.h"
 
 #include "overlays/actors/ovl_En_Ginko_Man/z_en_ginko_man.h"
+}
 
 static const char zeroRupees[3] = { '0', '0', '0' };
 

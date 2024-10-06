@@ -17,7 +17,7 @@ void Rando::ActorBehavior::InitEnOsnBehavior() {
         return;
     }
 
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_OSN, {
+    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_OSN, {
         *should = false;
 
         RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_DEKU_MASK].eligible = true;

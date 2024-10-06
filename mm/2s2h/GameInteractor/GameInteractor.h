@@ -34,73 +34,82 @@ typedef enum {
 
 typedef enum {
     // Vanilla condition: gSaveContext.showTitleCard
-    GI_VB_SHOW_TITLE_CARD,
-    GI_VB_PLAY_ENTRANCE_CS,
-    GI_VB_DISABLE_FD_MASK,
-    GI_VB_DOGGY_RACE_SET_MAX_SPEED,
-    GI_VB_LOWER_RAZOR_SWORD_DURABILITY,
-    GI_VB_SET_BLAST_MASK_COOLDOWN_TIMER,
-    GI_VB_PATCH_POWER_CROUCH_STAB,
-    GI_VB_PATCH_SIDEROLL,
-    GI_VB_TATL_CONVERSATION_AVAILABLE,
-    GI_VB_PREVENT_MASK_TRANSFORMATION_CS,
-    GI_VB_RESET_PUTAWAY_TIMER,
-    GI_VB_SET_CLIMB_SPEED,
-    GI_VB_PREVENT_CLOCK_DISPLAY,
-    GI_VB_SONG_AVAILABLE_TO_PLAY,
-    GI_VB_USE_CUSTOM_CAMERA,
-    GI_VB_DELETE_OWL_SAVE,
-    GI_VB_CONSIDER_BUNNY_HOOD_EQUIPPED,
-    GI_VB_USE_ITEM_EQUIP_MASK,
-    GI_VB_KALEIDO_DISPLAY_ITEM_TEXT,
-    GI_VB_USE_ITEM_CONSIDER_LINK_HUMAN,
-    GI_VB_DRAW_ITEM_EQUIPPED_OUTLINE,
-    GI_VB_PLAY_TRANSITION_CS,
-    GI_VB_PLAY_SONG_OF_TIME_CS,
-    GI_VB_TATL_INTERUPT_MSG3,
-    GI_VB_TATL_INTERUPT_MSG6,
-    GI_VB_ITEM_BE_RESTRICTED,
-    GI_VB_FLIP_HOP_VARIABLE,
-    GI_VB_DISABLE_LETTERBOX,
-    GI_VB_CHEST_SPAWN_FAIRY,
-    GI_VB_START_GREAT_FAIRY_CUTSCENE,
-    GI_VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
-    GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY,
-    GI_VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE,
-    GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY,
-    GI_VB_DRAW_SLIME_BODY_ITEM,
-    GI_VB_DRAW_OCARINA_IN_STK_HAND,
-    GI_VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX,
-    GI_VB_OVERRIDE_CHAR02_LIMB,
-    GI_VB_STK_HAVE_OCARINA,
-    GI_VB_POST_CHAR02_LIMB,
-    GI_VB_ZTARGET_SPEED_CHECK,
-    GI_VB_GIVE_ITEM_FROM_ELFORG,
-    GI_VB_GIVE_ITEM_FROM_ITEM00,
-    GI_VB_GIVE_ITEM_FROM_SCRIPT,
-    GI_VB_GIVE_ITEM_FROM_SI,
-    GI_VB_GIVE_ITEM_FROM_CHEST,
-    GI_VB_GIVE_ITEM_FROM_POT,
-    GI_VB_GIVE_ITEM_FROM_COW,
-    GI_VB_COW_CONSIDER_EPONAS_SONG_PLAYED,
-    GI_VB_GIVE_ITEM_FROM_GURUGURU,
-    GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY,
-    GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER,
-    GI_VB_GIVE_ITEM_FROM_SWORDSMAN,
-    GI_VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
+    VB_SHOW_TITLE_CARD,
+    VB_PLAY_ENTRANCE_CS,
+    VB_DISABLE_FD_MASK,
+    VB_DOGGY_RACE_SET_MAX_SPEED,
+    VB_LOWER_RAZOR_SWORD_DURABILITY,
+    VB_SET_BLAST_MASK_COOLDOWN_TIMER,
+    VB_PATCH_POWER_CROUCH_STAB,
+    VB_PATCH_SIDEROLL,
+    VB_TATL_CONVERSATION_AVAILABLE,
+    VB_PREVENT_MASK_TRANSFORMATION_CS,
+    VB_RESET_PUTAWAY_TIMER,
+    VB_SET_CLIMB_SPEED,
+    VB_PREVENT_CLOCK_DISPLAY,
+    VB_SONG_AVAILABLE_TO_PLAY,
+    VB_USE_CUSTOM_CAMERA,
+    VB_DELETE_OWL_SAVE,
+    VB_MSG_SCRIPT_DEL_ITEM,
+    VB_CONSIDER_BUNNY_HOOD_EQUIPPED,
+    VB_USE_ITEM_EQUIP_MASK,
+    VB_KALEIDO_DISPLAY_ITEM_TEXT,
+    VB_USE_ITEM_CONSIDER_LINK_HUMAN,
+    VB_DRAW_ITEM_EQUIPPED_OUTLINE,
+    VB_PLAY_TRANSITION_CS,
+    VB_PLAY_SONG_OF_TIME_CS,
+    VB_TATL_INTERUPT_MSG3,
+    VB_TATL_INTERUPT_MSG6,
+    VB_ITEM_BE_RESTRICTED,
+    VB_FLIP_HOP_VARIABLE,
+    VB_DISABLE_LETTERBOX,
+    VB_CHEST_SPAWN_FAIRY,
+    VB_START_GREAT_FAIRY_CUTSCENE,
+    VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
+    VB_KILL_CLOCK_TOWN_STRAY_FAIRY,
+    VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE,
+    VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY,
+    VB_DRAW_SLIME_BODY_ITEM,
+    VB_DRAW_OCARINA_IN_STK_HAND,
+    VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX,
+    VB_OVERRIDE_CHAR02_LIMB,
+    VB_STK_HAVE_OCARINA,
+    VB_POST_CHAR02_LIMB,
+    VB_ZTARGET_SPEED_CHECK,
+    VB_GIVE_ITEM_FROM_ELFORG,
+    VB_GIVE_ITEM_FROM_ITEM00,
+    VB_GIVE_ITEM_FROM_SCRIPT,
+    VB_GIVE_ITEM_FROM_SI,
+    VB_GIVE_ITEM_FROM_CHEST,
+    VB_GIVE_ITEM_FROM_POT,
+    VB_GIVE_ITEM_FROM_COW,
+    VB_COW_CONSIDER_EPONAS_SONG_PLAYED,
+    VB_GIVE_ITEM_FROM_GURUGURU,
+    VB_GIVE_ITEM_FROM_GREAT_FAIRY,
+    VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER,
+    VB_GIVE_ITEM_FROM_SWORDSMAN,
+    VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
     // Vanilla condition: (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
     // !CHECK_QUEST_ITEM(QUEST_SONG_HEALING)
-    GI_VB_OSN_TEACH_SONG_OF_HEALING,
-    GI_VB_GIVE_ITEM_FROM_OSN,
-    GI_VB_GIVE_ITEM_FROM_MOONS_TEAR,
-    GI_VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG,
-    GI_VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL,
-    GI_VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED,
+    VB_OSN_TEACH_SONG_OF_HEALING,
+    VB_GIVE_ITEM_FROM_OSN,
+    VB_GIVE_ITEM_FROM_MOONS_TEAR,
+    VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG,
+    VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL,
+    VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED,
 } GIVanillaBehavior;
 
 typedef enum {
     GI_INVERT_CAMERA_RIGHT_STICK_X,
     GI_INVERT_CAMERA_RIGHT_STICK_Y,
+    GI_INVERT_MOVEMENT_X,
+    GI_INVERT_FIRST_PERSON_AIM_X,
+    GI_INVERT_SHIELD_X,
+    GI_INVERT_SHOP_X,
+    GI_INVERT_HORSE_X,
+    GI_INVERT_ZORA_SWIM_X,
+    GI_INVERT_DEBUG_DPAD_X,
+    GI_INVERT_TELESCOPE_X,
 } GIInvertType;
 
 typedef enum {
@@ -117,11 +126,13 @@ typedef enum {
 
 #ifdef __cplusplus
 
+#include "2s2h/CustomMessage/CustomMessage.h"
 #include <vector>
 #include <functional>
 #include <unordered_map>
 #include <cstdint>
 #include <algorithm>
+#include <variant>
 
 typedef uint32_t HOOK_ID;
 
@@ -131,31 +142,33 @@ typedef uint32_t HOOK_ID;
         typedef std::function<bool args> filter; \
     }
 
-struct GIEventNone {
-    GIEventType type = GI_EVENT_NONE;
-};
+struct GIEventNone {};
 
 struct GIEventGiveItem {
-    GIEventType type = GI_EVENT_GIVE_ITEM;
+    // Whether or not to show the get item cutscene. If true and the player is in the air, the
+    // player will instead be frozen for a few seconds. If this is true you _must_ call
+    // CustomMessage::SetActiveCustomMessage in the giveItem function otherwise you'll just see a blank message.
     bool showGetItemCutscene;
-    std::string getItemText;
-    std::function<void()> drawItem;
-    std::function<void()> giveItem;
+    // Arbitrary s16 that can be accessed from within the give/draw functions with CUSTOM_ITEM_PARAM
+    s16 param;
+    // These are run in the context of an item00 actor. This isn't super important but can be useful in some cases
+    ActorFunc giveItem;
+    ActorFunc drawItem;
 };
 
 struct GIEventSpawnActor {
-    GIEventType type = GI_EVENT_SPAWN_ACTOR;
     s16 actorId;
     f32 posX;
     f32 posY;
     f32 posZ;
     s16 rot;
     s32 params;
+    // if true, the coordinates are made relative to the player's position and rotation, 0 rotation is facing the same
+    // direction as the player, x+ is to the players right, y+ is up, z+ is in front of the player
     bool relativeCoords;
 };
 
 struct GIEventTransition {
-    GIEventType type = GI_EVENT_TRANSITION;
     u16 entrance;
     u16 cutsceneIndex;
     s8 transitionTrigger;
@@ -167,6 +180,8 @@ typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTra
 class GameInteractor {
   public:
     static GameInteractor* Instance;
+
+    void RegisterOwnHooks();
 
     // Game State
     std::vector<GIEvent> events = {};
@@ -316,8 +331,6 @@ class GameInteractor {
         }
     }
 
-    void Init();
-
     class HookFilter {
       public:
         static auto ActorNotPlayer(Actor* actor) {
@@ -379,8 +392,7 @@ class GameInteractor {
 
     DEFINE_HOOK(OnPassPlayerInputs, (Input * input));
 
-    DEFINE_HOOK(OnOpenText, (u16 * textId));
-    DEFINE_HOOK(OnHandleCustomMessage, (s32 modId, s32 textId, std::string* msg));
+    DEFINE_HOOK(OnOpenText, (u16 * textId, bool* loadFromMessageTable));
 
     DEFINE_HOOK(ShouldItemGive, (u8 item, bool* should));
     DEFINE_HOOK(OnItemGive, (u8 item));
@@ -432,7 +444,7 @@ void GameInteractor_ExecuteOnCameraChangeSettingsFlags(Camera* camera);
 
 void GameInteractor_ExecuteOnPassPlayerInputs(Input* input);
 
-void GameInteractor_ExecuteOnOpenText(u16* textId);
+void GameInteractor_ExecuteOnOpenText(u16* textId, bool* loadFromMessageTable);
 
 bool GameInteractor_ShouldItemGive(u8 item);
 void GameInteractor_ExecuteOnItemGive(u8 item);
@@ -450,12 +462,8 @@ bool GameInteractor_Should(GIVanillaBehavior flag, uint32_t result, ...);
 int GameInteractor_InvertControl(GIInvertType type);
 uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo);
 
-void GameInteractor_GetItemDraw(PlayState* play, s16 drawId);
-
 #ifdef __cplusplus
 }
-
-void GameInteractor_ExecuteOnHandleCustomMessage(s32 modId, s32 textId, std::string* msg);
 
 #endif
 

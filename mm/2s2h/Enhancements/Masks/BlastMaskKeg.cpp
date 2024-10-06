@@ -1,10 +1,10 @@
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
-#include "global.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 static uint32_t bombType;
 
 extern "C" {
+#include "global.h"
 #include "overlays/actors/ovl_En_Bom/z_en_bom.h"
 EquipSlot func_8082FDC4(void);
 }

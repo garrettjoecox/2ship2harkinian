@@ -6,7 +6,7 @@
 #include "interface/parameter_static/parameter_static.h"
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 #include "BenPort.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "assets/archives/schedule_dma_static/schedule_dma_static_yar.h"
 #include "assets/archives/icon_item_static/icon_item_static_yar.h"
@@ -3281,7 +3281,8 @@ void Message_OpenText(PlayState* play, u16 textId) {
     Player* player = GET_PLAYER(play);
     f32 var_fv0;
 
-    GameInteractor_ExecuteOnOpenText(&textId);
+    bool loadFromMessageTable = true;
+    GameInteractor_ExecuteOnOpenText(&textId, &loadFromMessageTable);
 
     // BENTODO do this somewhere else
     gSaveContext.options.language = LANGUAGE_ENG;
@@ -3358,8 +3359,9 @@ void Message_OpenText(PlayState* play, u16 textId) {
     sCharTexSize = msgCtx->textCharScale * 16.0f;
     sCharTexScale = 1024.0f / msgCtx->textCharScale;
     D_801F6B08 = 1024.0f / var_fv0;
-    if (textId == CUSTOM_MESSAGE_ID) {
-        CustomMessage_HandleCustomMessage();
+    // BENTODO all of these
+    if (!loadFromMessageTable) {
+        // no-op
     } else if (msgCtx->textIsCredits) {
         Message_FindCreditsMessage(play, textId);
         MessageTableEntry* msgEntry = (MessageTableEntry*)font->messageStart;
@@ -4591,7 +4593,7 @@ void Message_DrawMain(PlayState* play, Gfx** gfxP) {
                         AudioOcarina_SetOcarinaDisableTimer(0, 20);
                         Message_CloseTextbox(play);
                         play->msgCtx.ocarinaMode = OCARINA_MODE_PLAYED_FULL_EVAN_SONG;
-                    } else if (GameInteractor_Should(GI_VB_SONG_AVAILABLE_TO_PLAY, vanillaOwnedSongCheck,
+                    } else if (GameInteractor_Should(VB_SONG_AVAILABLE_TO_PLAY, vanillaOwnedSongCheck,
                                                      &msgCtx->ocarinaStaff->state)) {
                         sLastPlayedSong = msgCtx->ocarinaStaff->state;
                         msgCtx->lastPlayedSong = msgCtx->ocarinaStaff->state;

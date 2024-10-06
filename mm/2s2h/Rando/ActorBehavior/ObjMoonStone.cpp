@@ -36,7 +36,7 @@ void Rando::ActorBehavior::InitObjMoonStoneBehavior() {
             actor->draw = ObjMoonstone_DrawCustom;
         });
 
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_MOONS_TEAR, {
+    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_MOONS_TEAR, {
         ObjMoonStone* objMoonStone = va_arg(args, ObjMoonStone*);
         if (objMoonStone->actor.xzDistToPlayer < 25.0f) {
             *should = false;

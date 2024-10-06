@@ -37,11 +37,11 @@ void Rando::ActorBehavior::InitEnBoxBehavior() {
         return;
     }
 
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_CHEST, {
+    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_CHEST, {
         EnBox* enBox = va_arg(args, EnBox*);
         Player* player = GET_PLAYER(gPlayState);
         func_80832558(gPlayState, player, func_80837C78_override);
         *should = false;
     });
-    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_CHEST_SPAWN_FAIRY, { *should = false; });
+    shouldHook2Id = REGISTER_VB_SHOULD(VB_CHEST_SPAWN_FAIRY, { *should = false; });
 }

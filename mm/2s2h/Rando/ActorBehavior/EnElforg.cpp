@@ -107,7 +107,7 @@ void Rando::ActorBehavior::InitEnElforgBehavior() {
             }
         });
 
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ELFORG, {
+    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_ELFORG, {
         *should = false;
         Actor* actor = va_arg(args, Actor*);
 
@@ -117,13 +117,13 @@ void Rando::ActorBehavior::InitEnElforgBehavior() {
         }
     });
 
-    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY, {
+    shouldHook2Id = REGISTER_VB_SHOULD(VB_KILL_CLOCK_TOWN_STRAY_FAIRY, {
         auto& randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_STRAY_FAIRY];
         *should = randoSaveCheck.eligible;
     });
 
     // Stray fairies that are trapped by enemies have their draw func set later on, so we need to override that as well
-    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
+    shouldHook2Id = REGISTER_VB_SHOULD(VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
         *should = false;
 
         Actor* actor = va_arg(args, Actor*);

@@ -54,7 +54,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
     onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
         ACTOR_DM_CHAR02, [](Actor* actor, bool* should) { actor->update = DmChar02_UpdateCustom; });
 
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_DRAW_OCARINA_IN_STK_HAND, {
+    shouldHookId1 = REGISTER_VB_SHOULD(VB_DRAW_OCARINA_IN_STK_HAND, {
         if (*should) {
             *should = false;
 
@@ -74,13 +74,13 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         }
     });
 
-    shouldHookId2 = REGISTER_VB_SHOULD(GI_VB_OVERRIDE_CHAR02_LIMB, {
+    shouldHookId2 = REGISTER_VB_SHOULD(VB_OVERRIDE_CHAR02_LIMB, {
         Gfx** dList = va_arg(args, Gfx**);
 
         *dList = NULL;
     });
 
-    shouldHookId3 = REGISTER_VB_SHOULD(GI_VB_POST_CHAR02_LIMB, {
+    shouldHookId3 = REGISTER_VB_SHOULD(VB_POST_CHAR02_LIMB, {
         Matrix_Scale(15.0f, 15.0f, 15.0f, MTXMODE_APPLY);
         Vec3s rot;
         rot.x = -11554;
@@ -94,7 +94,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         Rando::DrawItem(randoSaveCheck.randoItemId);
     });
 
-    shouldHookId4 = REGISTER_VB_SHOULD(GI_VB_STK_HAVE_OCARINA, {
+    shouldHookId4 = REGISTER_VB_SHOULD(VB_STK_HAVE_OCARINA, {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
         *should = !randoSaveCheck.eligible;
     });

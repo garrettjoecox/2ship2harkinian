@@ -22,9 +22,9 @@
 
 #include "2s2h_assets.h"
 
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
-#include "2s2h/Enhancements/Songs/PauseOwlWarp.h"
+#include "2s2h/Enhancements/Songs/Songs.h"
 
 // Page Textures (Background of Page):
 // Broken up into multiple textures.
@@ -2918,12 +2918,16 @@ void KaleidoScope_UpdateCursorSize(PlayState* play) {
                         pauseCtx->cursorX = sWorldMapCursorsX[pauseCtx->cursorPoint[PAUSE_WORLD_MAP]];
                         pauseCtx->cursorY = sWorldMapCursorsY[pauseCtx->cursorPoint[PAUSE_WORLD_MAP]];
                     }
-                    if (!IS_PAUSE_STATE_OWLWARP) {
+                    if (!IS_PAUSE_STATE_OWLWARP && !PauseOwlWarp_IsOwlWarpEnabled()) {
                         pauseCtx->cursorHeight = 10.0f;
                         pauseCtx->cursorWidth = 10.0f;
                     } else {
                         pauseCtx->cursorHeight = 15.0f;
                         pauseCtx->cursorWidth = 15.0f;
+                    }
+                    // Flip the position of the cursor with an additional offset to align with flipped map points
+                    if (CVarGetInteger("gModes.MirroredWorld.State", 0)) {
+                        pauseCtx->cursorX = (pauseCtx->cursorX * -1.0) + 5.0f;
                     }
                 } else {
                     pauseCtx->cursorX = sDungeonMapCursorsX[pauseCtx->cursorPoint[PAUSE_MAP]];

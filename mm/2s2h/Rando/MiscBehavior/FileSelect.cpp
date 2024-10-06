@@ -17,7 +17,7 @@ u8 isRando[4];
 
 // Cannot use OPEN_DISPS inside a namespaced function?
 void RegisterShoulds() {
-    REGISTER_VB_SHOULD(GI_VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX, {
+    REGISTER_VB_SHOULD(VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX, {
         int fileIndex = va_arg(args, int);
 
         if (!isRando[fileIndex]) {

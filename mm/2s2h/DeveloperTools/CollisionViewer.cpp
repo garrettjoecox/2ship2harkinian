@@ -8,7 +8,7 @@
 #include <random>
 #include <libultraship/bridge.h>
 #include <libultraship/libultraship.h>
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include <z64.h>
@@ -42,12 +42,6 @@ static std::vector<Vtx> sphereVtx;
 
 // Draws the ImGui window for the collision viewer
 void CollisionViewerWindow::DrawElement() {
-    ImGui::SetNextWindowSize(ImVec2(390, 475), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Collision Viewer", &mIsVisible, ImGuiWindowFlags_NoFocusOnAppearing)) {
-        ImGui::End();
-        return;
-    }
-
     UIWidgets::CVarCheckbox("Enabled", "gCollisionViewer.Enabled");
 
     ImGui::SameLine();
@@ -113,8 +107,6 @@ void CollisionViewerWindow::DrawElement() {
                                { 192, 0, 192, 255 });
 
     ImGui::EndDisabled();
-
-    ImGui::End();
 }
 
 // Calculates the normal for a triangle at the 3 specified points

@@ -1,6 +1,5 @@
-#include "3DItemDrops.h"
 #include "libultraship/libultraship.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include "z64.h"
@@ -184,7 +183,7 @@ void Register3DItemDrops() {
                 actor->shape.rot.y += 0x3C0;
             }
         });
-    slimeVBHookID = REGISTER_VB_SHOULD(GI_VB_DRAW_SLIME_BODY_ITEM, {
+    slimeVBHookID = REGISTER_VB_SHOULD(VB_DRAW_SLIME_BODY_ITEM, {
         Actor* actor = va_arg(args, Actor*);
         DrawSlime3DItem(actor, should);
     });

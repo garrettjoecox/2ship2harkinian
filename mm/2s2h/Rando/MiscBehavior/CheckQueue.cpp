@@ -1,5 +1,8 @@
 #include "MiscBehavior.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/CustomItem/CustomItem.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
 
 extern "C" {
 #include "variables.h"
@@ -21,20 +24,38 @@ void Rando::MiscBehavior::CheckQueue() {
         return;
     }
 
-    for (auto& randoSaveCheck : RANDO_SAVE_CHECKS) {
+    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+
         if (randoSaveCheck.eligible && !randoSaveCheck.obtained) {
             queued = true;
 
-            RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                 .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
-                .getItemText = Rando::StaticData::Items[randoItemId].name,
-                .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
+                .param = (int16_t)randoCheckId,
                 .giveItem =
-                    [&randoSaveCheck, randoItemId]() {
+                    [](Actor* actor, PlayState* play) {
+                        auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                        RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+
+                        std::string message = "You received {{item}}!";
+                        CustomMessage::Replace(&message, "{{item}}", Rando::StaticData::Items[randoItemId].name);
+
+                        if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
+                            CustomMessage::SetActiveCustomMessage(message, { .textboxType = 2 });
+                        } else {
+                            CustomMessage::StartTextbox(message + "\x1C\x02\x10", { .textboxType = 2 });
+                        }
                         Rando::GiveItem(randoItemId);
                         randoSaveCheck.obtained = true;
                         queued = false;
+                    },
+                .drawItem =
+                    [](Actor* actor, PlayState* play) {
+                        auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                        RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                        Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                        Rando::DrawItem(randoItemId);
                     } });
             return;
         }

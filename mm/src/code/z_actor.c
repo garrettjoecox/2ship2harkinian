@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/BenPort.h"
 
 // bss
@@ -1416,6 +1416,10 @@ void func_800B6F20(PlayState* play, Input* input, f32 magnitude, s16 baseYaw) {
     s16 relativeYaw = baseYaw - Camera_GetInputDirYaw(GET_ACTIVE_CAM(play));
 
     input->cur.stick_x = -Math_SinS(relativeYaw) * magnitude;
+    // 2S2H [Enhancement] Allow inverting the X axis with GI, primarily for mirror mode,
+    // otherwise link moves in the opposite direction and likely get soft locked, and
+    // kafei turns the wrong direction as he paths.
+    input->cur.stick_x *= GameInteractor_InvertControl(GI_INVERT_MOVEMENT_X);
     input->rel.stick_x = input->cur.stick_x;
     input->cur.stick_y = Math_CosS(relativeYaw) * magnitude;
     input->rel.stick_y = input->cur.stick_y;

@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "2s2h/BenGui/UIWidgets.hpp"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include <z64.h>
@@ -239,14 +239,15 @@ void RegisterEventLogHooks() {
         TrimEventLog();
     });
 
-    onOpenTextHookId = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnOpenText>([](u16* textId) {
-        eventLogEntries.insert(eventLogEntries.begin(), {
-                                                            .timestamp = CurrentTime(),
-                                                            .type = EVENT_LOG_ENTRY_TYPE_OPEN_TEXT,
-                                                            .meta = fmt::format("0x{:02x}", *textId),
-                                                        });
-        TrimEventLog();
-    });
+    onOpenTextHookId = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnOpenText>(
+        [](u16* textId, bool* loadFromMessageTable) {
+            eventLogEntries.insert(eventLogEntries.begin(), {
+                                                                .timestamp = CurrentTime(),
+                                                                .type = EVENT_LOG_ENTRY_TYPE_OPEN_TEXT,
+                                                                .meta = fmt::format("0x{:02x}", *textId),
+                                                            });
+            TrimEventLog();
+        });
 
     onItemGiveHookId = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnItemGive>([](u8 item) {
         eventLogEntries.insert(eventLogEntries.begin(), {
@@ -259,12 +260,6 @@ void RegisterEventLogHooks() {
 }
 
 void EventLogWindow::DrawElement() {
-    ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Event Log", &mIsVisible, ImGuiWindowFlags_NoFocusOnAppearing)) {
-        ImGui::End();
-        return;
-    }
-
     if (UIWidgets::CVarCheckbox("Enable", "gEventLog.Enabled")) {
         RegisterEventLogHooks();
     }
@@ -384,8 +379,6 @@ void EventLogWindow::DrawElement() {
 
         ImGui::EndTable();
     }
-
-    ImGui::End();
 }
 
 void EventLogWindow::InitElement() {

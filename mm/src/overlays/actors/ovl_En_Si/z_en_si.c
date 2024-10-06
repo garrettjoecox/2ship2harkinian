@@ -5,7 +5,7 @@
  */
 
 #include "z_en_si.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_200)
 
@@ -105,7 +105,7 @@ void EnSi_GiveToken(EnSi* this, PlayState* play) {
         Flags_SetTreasure(play, chestFlag);
     }
 
-    if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SI, true, this)) {
+    if (!GameInteractor_Should(VB_GIVE_ITEM_FROM_SI, true, this)) {
         return;
     }
 

@@ -55,7 +55,7 @@ void Rando::ActorBehavior::InitEnSiBehavior() {
             actor->draw = EnSi_DrawCustom;
         });
 
-    shouldHookId = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_SI, {
+    shouldHookId = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_SI, {
         EnSi* enSi = va_arg(args, EnSi*);
 
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(

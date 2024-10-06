@@ -25,7 +25,7 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior() {
         return;
     }
 
-    shouldHook1Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, {
+    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, {
         *should = false;
 
         EnElfgrp* elfgrp = va_arg(args, EnElfgrp*);
@@ -65,6 +65,6 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior() {
         }
     });
 
-    shouldHook2Id = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_GREAT_FAIRY, { *should = false; });
-    shouldHook3Id = REGISTER_VB_SHOULD(GI_VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS, { *should = false; });
+    shouldHook2Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_GREAT_FAIRY, { *should = false; });
+    shouldHook3Id = REGISTER_VB_SHOULD(VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS, { *should = false; });
 }

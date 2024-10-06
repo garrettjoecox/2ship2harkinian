@@ -59,7 +59,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             actor->draw = EnItem00_DrawCustomForFreestanding;
         });
 
-    shouldHookId = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ITEM00, {
+    shouldHookId = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_ITEM00, {
         EnItem00* item00 = va_arg(args, EnItem00*);
 
         // If it's one of our items ignore it

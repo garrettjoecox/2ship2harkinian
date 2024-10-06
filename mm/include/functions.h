@@ -1330,6 +1330,7 @@ void PadMgr_ThreadEntry();
 void Heaps_Alloc(void);
 void KaleidoScope_UpdateOwlWarpNamePanel(PlayState* play);
 void KaleidoScope_UpdateNamePanel(PlayState* play);
+void SkinMatrix_Clear(MtxF* mf);
 // #endregion
 // #region 2S2H [Port] New methods added for porting
 void AudioSeq_SetPortVolumeScale(u8 seqPlayerIndex, f32 volume);

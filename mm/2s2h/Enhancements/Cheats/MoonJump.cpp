@@ -1,6 +1,5 @@
-#include "MoonJump.h"
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "variables.h"
 
 static HOOK_ID moonJumpOnLGameStateUpdateHookId = 0;

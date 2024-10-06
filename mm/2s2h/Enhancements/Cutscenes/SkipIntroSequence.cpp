@@ -1,5 +1,5 @@
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include "z64.h"
@@ -8,7 +8,7 @@ extern SaveContext gSaveContext;
 }
 
 void RegisterSkipIntroSequence() {
-    REGISTER_VB_SHOULD(GI_VB_PLAY_TRANSITION_CS, {
+    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
         // Intro cutscene
         if (!(gSaveContext.save.entrance == ENTRANCE(CUTSCENE, 0) && gSaveContext.save.cutsceneIndex == 0))
             return;

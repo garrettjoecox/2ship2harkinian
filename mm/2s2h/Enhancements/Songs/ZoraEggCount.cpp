@@ -1,6 +1,5 @@
-#include "ZoraEggCount.h"
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include "src/overlays/actors/ovl_En_Mk/z_en_mk.h"

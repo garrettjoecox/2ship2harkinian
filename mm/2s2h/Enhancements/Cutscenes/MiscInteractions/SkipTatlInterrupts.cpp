@@ -1,5 +1,5 @@
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define ELFMSG3_GET_SWITCH_FLAG(thisx) (((thisx)->params & 0x7F00) >> 8)
 
@@ -15,7 +15,7 @@ void Actor_Kill(Actor* actor);
 
 void RegisterSkipTatlInterrupts() {
     // First time entering Clock Town Interupt
-    REGISTER_VB_SHOULD(GI_VB_PLAY_TRANSITION_CS, {
+    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
         if (gSaveContext.save.entrance == ENTRANCE(SOUTH_CLOCK_TOWN, 0) && gSaveContext.save.cutsceneIndex == 0 &&
             !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_04) &&
             CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0)) {
@@ -24,7 +24,7 @@ void RegisterSkipTatlInterrupts() {
     });
 
     // General interupt
-    REGISTER_VB_SHOULD(GI_VB_TATL_INTERUPT_MSG3, {
+    REGISTER_VB_SHOULD(VB_TATL_INTERUPT_MSG3, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
@@ -36,7 +36,7 @@ void RegisterSkipTatlInterrupts() {
     });
 
     // General interupt 2 (the flags were directly copied from the original code)
-    REGISTER_VB_SHOULD(GI_VB_TATL_INTERUPT_MSG6, {
+    REGISTER_VB_SHOULD(VB_TATL_INTERUPT_MSG6, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;

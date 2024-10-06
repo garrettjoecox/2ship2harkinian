@@ -69,7 +69,7 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         return;
     }
 
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_POT, {
+    shouldHookId1 = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_POT, {
         Actor* actor = va_arg(args, Actor*);
         RandoCheckId randoCheckId = IdentifyPot(actor);
         if (randoCheckId == RC_UNKNOWN) {
@@ -85,5 +85,4 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         randoSaveCheck.eligible = true;
         *should = false;
     });
-
 }

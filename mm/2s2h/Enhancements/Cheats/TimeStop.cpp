@@ -1,7 +1,7 @@
 #include <libultraship/libultraship.h>
 #include "BenPort.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
-#include "Enhancements/Enhancements.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Enhancements/Enhancements.h"
 
 extern "C" {
 #include <variables.h>

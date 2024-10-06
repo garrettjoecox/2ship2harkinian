@@ -3,7 +3,7 @@
 #include "2s2h/resource/type/Scene.h"
 #include <utils/StringHelper.h>
 #include <Vertex.h>
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 extern "C" {
 #include "global.h"

@@ -20,7 +20,7 @@
 #include <string.h>
 #include "BenGui/HudEditor.h"
 #include "2s2h_assets.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 // 2S2H [Port] This was originally static but needs to be global so it can be accessed in z_kaleido_collect,
 // z_kaleido_debug, and z_kaleido_draw.
@@ -2782,8 +2782,8 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
             for (i = EQUIP_SLOT_C_LEFT; i <= EQUIP_SLOT_C_RIGHT; i++) {
                 // Individual C button
                 ItemId itemId = GET_CUR_FORM_BTN_ITEM(i);
-                if (GameInteractor_Should(GI_VB_ITEM_BE_RESTRICTED,
-                                          !gPlayerFormItemRestrictions[GET_PLAYER_FORM][itemId], &itemId)) {
+                if (GameInteractor_Should(VB_ITEM_BE_RESTRICTED, !gPlayerFormItemRestrictions[GET_PLAYER_FORM][itemId],
+                                          &itemId)) {
                     // Item not usable in current playerForm
                     if (gSaveContext.buttonStatus[i] != BTN_DISABLED) {
                         gSaveContext.buttonStatus[i] = BTN_DISABLED;
@@ -2823,7 +2823,7 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
                         (play->sceneId != SCENE_MITURIN_BS) && (play->sceneId != SCENE_HAKUGIN_BS) &&
                         (play->sceneId != SCENE_SEA_BS) && (play->sceneId != SCENE_INISIE_BS) &&
                         (play->sceneId != SCENE_LAST_BS);
-                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
+                    if (GameInteractor_Should(VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
                         if (gSaveContext.buttonStatus[i] != BTN_DISABLED) {
                             gSaveContext.buttonStatus[i] = BTN_DISABLED;
                             restoreHudVisibility = true;
@@ -2929,8 +2929,8 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
             for (s16 j = EQUIP_SLOT_D_RIGHT; j <= EQUIP_SLOT_D_UP; j++) {
                 // Individual D button
                 ItemId itemId = DPAD_GET_CUR_FORM_BTN_ITEM(j);
-                if (GameInteractor_Should(GI_VB_ITEM_BE_RESTRICTED,
-                                          !gPlayerFormItemRestrictions[GET_PLAYER_FORM][itemId], &itemId)) {
+                if (GameInteractor_Should(VB_ITEM_BE_RESTRICTED, !gPlayerFormItemRestrictions[GET_PLAYER_FORM][itemId],
+                                          &itemId)) {
                     // Item not usable in current playerForm
                     if (gSaveContext.shipSaveContext.dpad.status[j] != BTN_DISABLED) {
                         gSaveContext.shipSaveContext.dpad.status[j] = BTN_DISABLED;
@@ -2970,7 +2970,7 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
                         (play->sceneId != SCENE_MITURIN_BS) && (play->sceneId != SCENE_HAKUGIN_BS) &&
                         (play->sceneId != SCENE_SEA_BS) && (play->sceneId != SCENE_INISIE_BS) &&
                         (play->sceneId != SCENE_LAST_BS);
-                    if (GameInteractor_Should(GI_VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
+                    if (GameInteractor_Should(VB_DISABLE_FD_MASK, vanillaSceneConditionResult)) {
                         if (gSaveContext.shipSaveContext.dpad.status[j] != BTN_DISABLED) {
                             gSaveContext.shipSaveContext.dpad.status[j] = BTN_DISABLED;
                             restoreHudVisibility = true;
@@ -6155,7 +6155,7 @@ void Interface_DrawClock(PlayState* play) {
     s16 finalHoursClockSlots[8];
     s16 index;
 
-    if (GameInteractor_Should(GI_VB_PREVENT_CLOCK_DISPLAY, false)) {
+    if (GameInteractor_Should(VB_PREVENT_CLOCK_DISPLAY, false)) {
         return;
     }
 
@@ -8614,7 +8614,15 @@ void Interface_Draw(PlayState* play) {
         Map_DrawMinimap(play);
 
         if ((R_PAUSE_BG_PRERENDER_STATE != 2) && (R_PAUSE_BG_PRERENDER_STATE != 3)) {
+            if (CVarGetInteger("gModes.MirroredWorld.State", 0)) {
+                gSPMatrix(OVERLAY_DISP++, interfaceCtx->view.shipMirrorProjectionPtr,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            }
             Target_Draw(&play->actorCtx.targetCtx, play);
+            if (CVarGetInteger("gModes.MirroredWorld.State", 0)) {
+                gSPMatrix(OVERLAY_DISP++, interfaceCtx->view.projectionPtr,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            }
         }
 
         Gfx_SetupDL39_Overlay(play->state.gfxCtx);

@@ -70,9 +70,9 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
         });
 
     // TODO: Should there be a bomb bag requirement here still?
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG, { *should = true; });
-    shouldHookId2 = REGISTER_VB_SHOULD(GI_VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED, {
+    shouldHookId1 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG, { *should = true; });
+    shouldHookId2 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED, {
         *should = Flags_GetRandoInf(RANDO_INF_PURCHASED_BOMB_BAG_FROM_GORON_VILLAGE_SCRUB);
     });
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, { *should = true; });
+    shouldHookId1 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, { *should = true; });
 }

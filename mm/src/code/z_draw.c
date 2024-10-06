@@ -90,8 +90,6 @@
 #include "assets/objects/object_bsmask/object_bsmask.h"
 #include "assets/objects/object_st/object_st.h"
 
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
-
 void GetItem_DrawBombchu(PlayState* play, s16 drawId);
 void GetItem_DrawPoes(PlayState* play, s16 drawId);
 void GetItem_DrawFairyBottle(PlayState* play, s16 drawId);
@@ -373,8 +371,6 @@ static DrawItemTableEntry sDrawItemTable[] = {
     { GetItem_DrawOpa0Xlu1, { gGiPictoBoxFrameDL, gGiPictoBoxBodyAndLensDL } },
     // GID_MASK_FIERCE_DEITY, OBJECT_GI_MASK03
     { GetItem_DrawOpa01, { gGiFierceDeityMaskFaceDL, gGiFierceDeityMaskHairAndHatDL } },
-    // GID_SHIP
-    { GameInteractor_GetItemDraw, {} },
 };
 
 /**

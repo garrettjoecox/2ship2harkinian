@@ -167,12 +167,6 @@ enum Presets {
 };
 
 void HudEditorWindow::DrawElement() {
-    ImGui::SetNextWindowSize(ImVec2(480, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Hud Editor", &mIsVisible, ImGuiWindowFlags_NoFocusOnAppearing)) {
-        ImGui::End();
-        return;
-    }
-
     static HudEditor::Presets preset = HudEditor::Presets::VANILLA;
     if (UIWidgets::Combobox("Preset", &preset, presetNames)) {
         for (int i = HUD_EDITOR_ELEMENT_B; i < HUD_EDITOR_ELEMENT_MAX; i++) {
@@ -252,7 +246,9 @@ void HudEditorWindow::DrawElement() {
         }
         if (CVarGetInteger(hudEditorElements[i].modeCvar, HUD_EDITOR_ELEMENT_MODE_VANILLA) >=
             HUD_EDITOR_ELEMENT_MODE_MOVABLE_43) {
-            if (ImGui::BeginTable("##table", 3, ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBody)) {
+            if (ImGui::BeginTable("##table", 3,
+                                  ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBody |
+                                      ImGuiTableFlags_SizingStretchSame)) {
                 ImGui::TableNextColumn();
                 UIWidgets::CVarSliderInt("X", hudEditorElements[i].xCvar, -10, 330, hudEditorElements[i].defaultX,
                                          {
@@ -279,6 +275,4 @@ void HudEditorWindow::DrawElement() {
         }
         ImGui::PopID();
     }
-
-    ImGui::End();
 }

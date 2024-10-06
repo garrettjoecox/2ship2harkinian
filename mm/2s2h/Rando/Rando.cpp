@@ -1,5 +1,5 @@
 #include "Rando.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include <libultraship/libultraship.h>
 #include "Rando/ActorBehavior/ActorBehavior.h"
 #include "Rando/MiscBehavior/MiscBehavior.h"

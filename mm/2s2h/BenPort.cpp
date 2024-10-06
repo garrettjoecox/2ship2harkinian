@@ -15,6 +15,7 @@
 #include "z64animation.h"
 #include "z64bgcheck.h"
 #include <libultraship/libultra/gbi.h>
+#include <Fonts.h>
 #ifdef _WIN32
 #include <Windows.h>
 #else
@@ -48,14 +49,16 @@ CrowdControl* CrowdControl::Instance;
 #include <libultraship/libultraship.h>
 #include <BenGui/BenGui.hpp>
 
-#include "Enhancements/GameInteractor/GameInteractor.h"
-#include "Enhancements/Enhancements.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/DeveloperTools/DebugConsole.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Rando/Rando.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
 #include "2s2h/SaveManager/SaveManager.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
+#include "2s2h/CustomItem/CustomItem.h"
 
 // Resource Types/Factories
 #include "resource/type/Blob.h"
@@ -97,6 +100,8 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/resource/importer/BackgroundFactory.h"
 #include "2s2h/resource/importer/TextureAnimationFactory.h"
 #include "2s2h/resource/importer/KeyFrameFactory.h"
+#include "window/gui/resource/Font.h"
+#include "window/gui/resource/FontFactory.h"
 
 OTRGlobals* OTRGlobals::Instance;
 GameInteractor* GameInteractor::Instance;
@@ -149,7 +154,9 @@ OTRGlobals::OTRGlobals() {
                                                  OOT_PAL_GC,     OOT_PAL_GC_DBG1,   OOT_PAL_GC_DBG2 };
     // tell LUS to reserve 3 SoH specific threads (Game, Audio, Save)
     context =
-        Ship::Context::CreateInstance("2 Ship 2 Harkinian", appShortName, "2ship2harkinian.json", archiveFiles, {}, 3);
+        Ship::Context::CreateInstance("2 Ship 2 Harkinian", appShortName, "2ship2harkinian.json", archiveFiles, {}, 3,
+                                      { .SampleRate = 44100, .SampleLength = 1024, .DesiredBuffered = 2480 });
+
     prevAltAssets = CVarGetInteger("gAltAssets", 0);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 
@@ -279,6 +286,14 @@ OTRGlobals::OTRGlobals() {
         }
     }
 #endif
+
+    fontMono = CreateFontWithSize(16.0f, "fonts/Inconsolata-Regular.ttf");
+    fontMonoLarger = CreateFontWithSize(20.0f, "fonts/Inconsolata-Regular.ttf");
+    fontMonoLargest = CreateFontWithSize(24.0f, "fonts/Inconsolata-Regular.ttf");
+    fontStandard = CreateFontWithSize(16.0f, "fonts/Montserrat-Regular.ttf");
+    fontStandardLarger = CreateFontWithSize(20.0f, "fonts/Montserrat-Regular.ttf");
+    fontStandardLargest = CreateFontWithSize(24.0f, "fonts/Montserrat-Regular.ttf");
+    ImGui::GetIO().FontDefault = fontMono;
 }
 
 OTRGlobals::~OTRGlobals() {
@@ -309,6 +324,37 @@ struct ExtensionEntry {
     std::string path;
     std::string ext;
 };
+
+ImFont* OTRGlobals::CreateFontWithSize(float size, std::string fontPath) {
+    auto mImGuiIo = &ImGui::GetIO();
+    ImFont* font;
+    if (fontPath == "") {
+        ImFontConfig fontCfg = ImFontConfig();
+        fontCfg.OversampleH = fontCfg.OversampleV = 1;
+        fontCfg.PixelSnapH = true;
+        fontCfg.SizePixels = size;
+        font = mImGuiIo->Fonts->AddFontDefault(&fontCfg);
+    } else {
+        auto initData = std::make_shared<Ship::ResourceInitData>();
+        initData->Format = RESOURCE_FORMAT_BINARY;
+        initData->Type = static_cast<uint32_t>(RESOURCE_TYPE_FONT);
+        initData->ResourceVersion = 0;
+        initData->Path = fontPath;
+        std::shared_ptr<Ship::Font> fontData = std::static_pointer_cast<Ship::Font>(
+            Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fontPath, false, initData));
+        font = mImGuiIo->Fonts->AddFontFromMemoryTTF(fontData->Data, fontData->DataSize, size);
+    }
+    // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+    float iconFontSize = size * 2.0f / 3.0f;
+    static const ImWchar sIconsRanges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+    ImFontConfig iconsConfig;
+    iconsConfig.MergeMode = true;
+    iconsConfig.PixelSnapH = true;
+    iconsConfig.GlyphMinAdvanceX = iconFontSize;
+    mImGuiIo->Fonts->AddFontFromMemoryCompressedBase85TTF(fontawesome_compressed_data_base85, iconFontSize,
+                                                          &iconsConfig, sIconsRanges);
+    return font;
+}
 
 extern "C" void OTRMessage_Init();
 extern "C" void AudioMgr_CreateNextAudioBuffer(s16* samples, u32 num_samples);
@@ -470,13 +516,15 @@ extern "C" void InitOTR() {
 
     OTRGlobals::Instance = new OTRGlobals();
     GameInteractor::Instance = new GameInteractor();
-    GameInteractor::Instance->Init();
     BenGui::SetupGuiElements();
     InitEnhancements();
     InitDeveloperTools();
     Rando::Init();
     GfxPatcher_ApplyNecessaryAuthenticPatches();
     DebugConsole_Init();
+    GameInteractor::Instance->RegisterOwnHooks();
+    CustomItem::RegisterHooks();
+    CustomMessage::RegisterHooks();
 
     OTRMessage_Init();
     OTRAudio_Init();
@@ -1477,9 +1525,9 @@ extern "C" void OTRControllerCallback(uint8_t rumble) {
     Ship::Context::GetInstance()->GetControlDeck()->GetControllerByPort(0)->GetLED()->SetLEDColor(
         GetColorForControllerLED());
 
-    static std::shared_ptr<Ship::InputEditorWindow> controllerConfigWindow = nullptr;
+    static std::shared_ptr<BenInputEditorWindow> controllerConfigWindow = nullptr;
     if (controllerConfigWindow == nullptr) {
-        controllerConfigWindow = std::dynamic_pointer_cast<Ship::InputEditorWindow>(
+        controllerConfigWindow = std::dynamic_pointer_cast<BenInputEditorWindow>(
             Ship::Context::GetInstance()->GetWindow()->GetGui()->GetGuiWindow("Input Editor"));
         // TODO: Add SoH Controller Config window rumble testing to upstream LUS config window
         //       note: the current implementation may not be desired in LUS, as "true" rumble support

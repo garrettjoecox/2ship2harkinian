@@ -5,7 +5,7 @@
 #include <string.h>
 #include "BenPort.h"
 
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 void Sram_SyncWriteToFlash(SramContext* sramCtx, s32 curPage, s32 numPages);
 void func_80147414(SramContext* sramCtx, s32 fileNum, s32 arg2);
@@ -1375,7 +1375,7 @@ void Sram_OpenSave(FileSelectState* fileSelect, SramContext* sramCtx) {
         fileNum = gSaveContext.fileNum;
 
         // Remove Owl saves on save continue
-        if (GameInteractor_Should(GI_VB_DELETE_OWL_SAVE, true)) {
+        if (GameInteractor_Should(VB_DELETE_OWL_SAVE, true)) {
             func_80147314(sramCtx, fileNum);
         }
     }

@@ -1,5 +1,7 @@
 #include "global.h"
 #include <libultraship/bridge.h>
+#include "BenPort.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 f32 Math_CosS(s16 angle) {
     return coss(angle) * SHT_MINV;
@@ -223,12 +225,14 @@ void Lib_GetControlStickData(f32* outMagnitude, s16* outAngle, Input* input) {
     f32 y = input->rel.stick_y;
     f32 magnitude;
 
+    x *= GameInteractor_InvertControl(GI_INVERT_MOVEMENT_X);
     magnitude = sqrtf(SQ(x) + SQ(y));
     *outMagnitude = (60.0f < magnitude) ? 60.0f : magnitude;
 
     if (magnitude > 0.0f) {
         x = input->cur.stick_x;
         y = input->cur.stick_y;
+        x *= GameInteractor_InvertControl(GI_INVERT_MOVEMENT_X);
         *outAngle = Math_Atan2S_XY(y, -x);
     } else {
         *outAngle = 0;

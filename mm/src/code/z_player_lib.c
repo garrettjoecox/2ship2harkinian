@@ -45,7 +45,7 @@
 #include "overlays/actors/ovl_En_Arrow/z_en_arrow.h"
 
 #include "2s2h/BenPort.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 void PlayerCall_Init(Actor* thisx, PlayState* play);
 void PlayerCall_Destroy(Actor* thisx, PlayState* play);

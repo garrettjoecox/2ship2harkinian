@@ -156,6 +156,31 @@ static const char* sMapGrandTextures[] = {
     map_grand_static_Blob_034BB0, map_grand_static_Blob_034F50,
 };
 
+static bool sMirrorWorldActive = false;
+static u16 sOriginalMapDataRoomFlags[32] = { 0 };
+
+s32 Ship_MapModifyPosMirrorMode(s32 pos, s32 offset) {
+    if (sMirrorWorldActive) {
+        pos -= offset;
+        pos *= -1;
+        pos += offset;
+    }
+    return pos;
+}
+
+void Ship_MapDispUpdateMirrorMode() {
+    sMirrorWorldActive = CVarGetInteger("gModes.MirroredWorld.State", 0);
+
+    for (s32 i = 0; i < sSceneNumRooms; i++) {
+        sMapDataRooms[i].flags = sOriginalMapDataRoomFlags[i];
+
+        if (sMirrorWorldActive) {
+            // Toggle the bit in case the scene already has this flag set, this way the map is still "flipped" visually
+            sMapDataRooms[i].flags ^= MAP_DATA_ROOM_FLIP_X;
+        }
+    }
+}
+
 // BENTODO, can we just set dest insetead of doing a memcpy?
 void MapDisp_GetMapITexture(void* dst, s32 mapCompactId) {
     s32 mapSize = MapDisp_GetSizeOfMapITex(mapCompactId);
@@ -414,6 +439,9 @@ void MapDisp_Minimap_DrawActorIcon(PlayState* play, Actor* actor) {
                sMapDisp.minimapCurY - sMapDisp.minimapBaseY + texOffsetY;
     }
 
+    posX = Ship_MapModifyPosMirrorMode(posX, sMapDisp.minimapBaseX + sMapDisp.minimapCurX - sMapDisp.minimapBaseX +
+                                                 texOffsetX);
+
     // 2S2H [Cosmetic] Widescreen support
     if ((posX > OTRGetRectDimensionFromLeftEdge(0)) && (posX < 0x3FF) && (posY > 0) && (posY < 0x3FF)) {
         // #region 2S2H [Cosmetic] Hud Editor override actor values and use them below
@@ -448,6 +476,9 @@ void MapDisp_Minimap_DrawActorIcon(PlayState* play, Actor* actor) {
             compassRot = (s32)(0x7FFF - actor->focus.rot.y) / 1024;
             if (MapDisp_IsDataRotated(play)) {
                 compassRot += 0x7FFF;
+            }
+            if (sMirrorWorldActive) {
+                compassRot *= -1;
             }
             Matrix_RotateYF(compassRot / 10.0f, MTXMODE_APPLY);
             Matrix_Scale(0.4f, 0.4f, 0.4f, MTXMODE_APPLY);
@@ -585,6 +616,9 @@ void MapDisp_Minimap_DrawDoorActor(PlayState* play, Actor* actor) {
                     sMapDisp.minimapBaseY) +
                    texOffsetY;
         }
+
+        posX = Ship_MapModifyPosMirrorMode(posX, sMapDisp.minimapBaseX + sMapDisp.minimapCurX - sMapDisp.minimapBaseX +
+                                                     texOffsetX);
 
         // 2S2H [Cosmetic] Widescreen support
         if ((posX > OTRGetRectDimensionFromLeftEdge(0)) && (posX < 0x3FF) && (posY > 0) && (posY < 0x3FF)) {
@@ -893,6 +927,8 @@ void MapDisp_InitMapData(PlayState* play, void* segmentAddress) {
 
         for (i = 0; i < sSceneNumRooms; i++) {
             sMapDataRooms[i] = *mapDataRooms++;
+            // 2S2H [Enhancement] Track original flags to that we can make modifications mid-scene
+            sOriginalMapDataRoomFlags[i] = sMapDataRooms[i].flags;
         }
 
         sMapDataScene.rooms = sMapDataRooms;
@@ -996,6 +1032,7 @@ void MapDisp_Update(PlayState* play) {
     s16 targetY;
 
     if ((sMapDisp.mapDataScene != NULL) && (sSceneNumRooms != 0)) {
+        Ship_MapDispUpdateMirrorMode();
         // #region 2S2H [Cosmetic] Hud Editor minimap base position
         // This value is used to determine the relative positioning for all the other elements
         MapDataRoom* mapDataRoom = &sMapDisp.mapDataScene->rooms[sMapDisp.curRoom];
@@ -1161,6 +1198,8 @@ void MapDisp_SwapRooms(s16 nextRoom) {
                             (f32)prevOffsetY);
                     }
 
+                    sMapDisp.minimapPrevX = Ship_MapModifyPosMirrorMode(sMapDisp.minimapPrevX, offsetX - prevOffsetX);
+
                     sMapDisp.minimapCurX = minimapBaseX - sMapDisp.minimapPrevX;
                     sMapDisp.minimapCurY = minimapBaseY - sMapDisp.minimapPrevY;
                 }
@@ -1243,6 +1282,9 @@ void MapDisp_Minimap_DrawRedCompassIcon(PlayState* play, s32 x, s32 z, s32 rot) 
                (sMapDisp.minimapCurY - sMapDisp.minimapBaseY) + texOffsetY;
     }
 
+    posX = Ship_MapModifyPosMirrorMode(posX, sMapDisp.minimapBaseX + sMapDisp.minimapCurX - sMapDisp.minimapBaseX +
+                                                 texOffsetX);
+
     // 2S2H [Cosmetic] Widescreen support
     if ((posX > OTRGetRectDimensionFromLeftEdge(0)) && (posX < 0x3FF) && (posY > 0) && (posY < 0x3FF)) {
         // 2S2H [Cosmetic] Hud Editor red compass position
@@ -1263,6 +1305,9 @@ void MapDisp_Minimap_DrawRedCompassIcon(PlayState* play, s32 x, s32 z, s32 rot) 
         Matrix_RotateXFApply(-1.6f);
         if (MapDisp_IsDataRotated(play)) {
             rot += 0x7FFF;
+        }
+        if (sMirrorWorldActive) {
+            rot *= -1;
         }
         Matrix_RotateYF(rot / 10.0f, MTXMODE_APPLY);
         Matrix_Scale(0.4f, 0.4f, 0.4f, MTXMODE_APPLY);
@@ -1642,7 +1687,10 @@ void MapDisp_DrawRooms(PlayState* play, s32 viewX, s32 viewY, s32 viewWidth, s32
 
         if (mapDataRoom->flags & MAP_DATA_ROOM_FLIP_X) {
             offsetX = ((texWidth / 2) - offsetX) + (texWidth / 2);
-            s = (texWidth - 1) << 5;
+            // 2S2H [Port] The width originally was subtracted by 1, but this caused the flipped texture to overflow on
+            // the edge. There are no vanilla scenes that leverage this, so its possibly an authentic bug.
+            // Removing it will allow the texture to display correctly for things like Mirror Mode.
+            s = (texWidth - 0) << 5;
             dsdx = 0xFC00;
         } else {
             s = 0;
@@ -1664,6 +1712,8 @@ void MapDisp_DrawRooms(PlayState* play, s32 viewX, s32 viewY, s32 viewWidth, s32
             ((mapDataRoom->centerX - (f32)sMapDisp.sceneMidX) * scaleFrac - offsetX) + ((viewWidth / two) + viewX);
         texPosY =
             ((mapDataRoom->centerZ - (f32)sMapDisp.sceneMidZ) * scaleFrac - offsetY) + ((viewHeight / two) + viewY);
+
+        texPosX = Ship_MapModifyPosMirrorMode(texPosX, -offsetX + ((viewWidth / two) + viewX));
 
         if (i == play->roomCtx.curRoom.num) {
             if (Map_IsInBossScene(play)) {
@@ -1781,6 +1831,8 @@ void MapDisp_DrawChests(PlayState* play, s32 viewX, s32 viewY, s32 viewWidth, s3
         texPosY = (s32)((((mapDataChests[i].z - (f32)sMapDisp.sceneMidZ) * scaleFrac) - offsetZ) +
                         ((viewHeight / 2) + viewY));
 
+        texPosX = Ship_MapModifyPosMirrorMode(texPosX, -offsetX + ((viewWidth / 2) + viewX));
+
         gSPTextureRectangle(POLY_OPA_DISP++, texPosX << 2, texPosY << 2, (texPosX + 8) << 2, (texPosY + 8) << 2,
                             G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
     }
@@ -1833,6 +1885,9 @@ void MapDisp_DrawRoomExits(PlayState* play, s32 viewX, s32 viewY, s32 viewWidth,
                                   ((viewWidth / 2) + viewX);
                         texPosY = ((f32)sTransitionActors[i].pos.z - sMapDisp.sceneMidZ) * scaleFrac +
                                   ((viewHeight / 2) + viewY);
+
+                        texPosX = Ship_MapModifyPosMirrorMode(texPosX, ((viewWidth / 2) + viewX));
+
                         gSPTextureRectangle(POLY_OPA_DISP++, ((texPosX - 1) << 2), ((texPosY - 1) << 2),
                                             ((texPosX + 1) << 2), ((texPosY + 1) << 2), G_TX_RENDERTILE, 0, 0, 1 << 10,
                                             1 << 10);
@@ -1894,6 +1949,9 @@ void MapDisp_DrawBossIcon(PlayState* play, s32 viewX, s32 viewY, s32 viewWidth, 
                       ((viewWidth / 2) + viewX);
             texPosY = ((((f32)sTransitionActors[i].pos.z - sMapDisp.sceneMidZ) * scaleFrac) - offsetZ) +
                       ((viewHeight / 2) + viewY);
+
+            texPosX = Ship_MapModifyPosMirrorMode(texPosX, -offsetX + ((viewWidth / 2) + viewX));
+
             gSPTextureRectangle(POLY_OPA_DISP++, texPosX << 2, texPosY << 2, (texPosX + 8) << 2, (texPosY + 8) << 2,
                                 G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
         }

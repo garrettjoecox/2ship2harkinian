@@ -8,13 +8,7 @@
 #include <unordered_map>
 #include <string>
 #include "2s2h/Enhancements/Enhancements.h"
-#include "2s2h/Enhancements/Graphics/3DItemDrops.h"
-#include "2s2h/Enhancements/Graphics/MotionBlur.h"
-#include "2s2h/Enhancements/Graphics/PlayAsKafei.h"
-#include "2s2h/Enhancements/Modes/TimeMovesWhenYouMove.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
-#include "2s2h/Enhancements/Cheats/Cheats.h"
-#include "2s2h/Enhancements/Player/Player.h"
 #include "HudEditor.h"
 #include "Rando/Rando.h"
 
@@ -154,7 +148,7 @@ void DrawBenMenu() {
     }
 }
 
-extern std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
+extern std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 
 void DrawSettingsMenu() {
     if (UIWidgets::BeginMenu("Settings")) {
@@ -313,8 +307,8 @@ void DrawSettingsMenu() {
         // #region 2S2H [Todo] None of this works yet
         /*
         if (UIWidgets::BeginMenu("Controller")) { */
-        if (mInputEditorWindow) {
-            UIWidgets::WindowButton("Controller Mapping", "gWindows.InputEditor", mInputEditorWindow);
+        if (mBenInputEditorWindow) {
+            UIWidgets::WindowButton("Controller Mapping", "gWindows.InputEditor", mBenInputEditorWindow);
         }
         /*
         #ifndef __SWITCH__
@@ -485,6 +479,13 @@ void DrawEnhancementsMenu() {
                 { .tooltip =
                       "Playing the Song Of Time will not reset the current time speed set by Inverted Song of Time." });
 
+            if (UIWidgets::CVarCheckbox(
+                    "Keep Express Mail", "gEnhancements.Cycle.KeepExpressMail",
+                    { .tooltip = "Allows the player to keep the Express Mail in their inventory after delivering it "
+                                 "the first time, so that both deliveries can be done within one cycle" })) {
+                RegisterKeepExpressMail();
+            }
+
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(255, 255, 0, 255));
             ImGui::SeparatorText("Unstable");
             ImGui::PopStyleColor();
@@ -543,6 +544,10 @@ void DrawEnhancementsMenu() {
             UIWidgets::CVarCheckbox("Fix Text Control Characters", "gEnhancements.Fixes.ControlCharacters",
                                     { .tooltip = "Fixes certain control characters not functioning properly "
                                                  "depending on their position within the text." });
+
+            UIWidgets::CVarCheckbox("Fix Ikana Great Fairy Fountain Color", "gFixes.FixIkanaGreatFairyFountainColor",
+                                    { .tooltip = "Fixes a bug that results in the Ikana Great Fairy fountain looking "
+                                                 "green instead of yellow, this was fixed in the EU version" });
 
             ImGui::EndMenu();
         }
@@ -629,6 +634,14 @@ void DrawEnhancementsMenu() {
             if (UIWidgets::CVarCheckbox("Time Moves When You Move", "gModes.TimeMovesWhenYouMove")) {
                 RegisterTimeMovesWhenYouMove();
             }
+            if (UIWidgets::CVarCheckbox("Mirrored World", "gModes.MirroredWorld.Mode")) {
+                if (CVarGetInteger("gModes.MirroredWorld.Mode", 0)) {
+                    CVarSetInteger("gModes.MirroredWorld.State", 1);
+                } else {
+                    CVarClear("gModes.MirroredWorld.State");
+                }
+            }
+
             ImGui::EndMenu();
         }
 

@@ -73,7 +73,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         return;
     }
 
-    shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_COW, {
+    shouldHookId1 = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_COW, {
         // Original Should is the Range check, if it fails just Return.
         Actor* actor = va_arg(args, Actor*);
         if (!((actor->xzDistToPlayer < 90.0f) &&
@@ -97,7 +97,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         *should = false;
     });
 
-    shouldHookId2 = REGISTER_VB_SHOULD(GI_VB_COW_CONSIDER_EPONAS_SONG_PLAYED, {
+    shouldHookId2 = REGISTER_VB_SHOULD(VB_COW_CONSIDER_EPONAS_SONG_PLAYED, {
         EnCow* actor = va_arg(args, EnCow*);
         if (actor->flags & EN_COW_FLAG_WONT_GIVE_MILK) {
             gPlayState->msgCtx.songPlayed = 0;

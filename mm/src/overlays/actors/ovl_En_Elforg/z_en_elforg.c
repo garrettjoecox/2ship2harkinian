@@ -5,7 +5,7 @@
  */
 
 #include "z_en_elforg.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -81,8 +81,7 @@ void EnElforg_Init(Actor* thisx, PlayState* play) {
 
     switch (STRAY_FAIRY_TYPE(thisx)) {
         case STRAY_FAIRY_TYPE_CLOCK_TOWN:
-            if (GameInteractor_Should(GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80),
-                                      this)) {
+            if (GameInteractor_Should(VB_KILL_CLOCK_TOWN_STRAY_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80), this)) {
                 Actor_Kill(thisx);
                 return;
             }
@@ -489,7 +488,7 @@ void EnElforg_FreeFloating(EnElforg* this, PlayState* play) {
                     break;
             }
 
-            if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_ELFORG, true, this)) {
+            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_ELFORG, true, this)) {
                 if (STRAY_FAIRY_TYPE(&this->actor) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
                     player->actor.freezeTimer = 100;
                     player->stateFlags1 |= PLAYER_STATE1_20000000;
@@ -553,7 +552,7 @@ void EnElforg_TrappedByEnemy(EnElforg* this, PlayState* play) {
     if (this->enemy->update == NULL) {
         EnElforg_InitializeParams(this);
         this->actionFunc = EnElforg_FreeFloating;
-        if (GameInteractor_Should(GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, true, this)) {
+        if (GameInteractor_Should(VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, true, this)) {
             this->actor.draw = EnElforg_Draw;
         }
         Actor_PlaySfx(&this->actor, NA_SE_EV_CHIBI_FAIRY_SAVED);
