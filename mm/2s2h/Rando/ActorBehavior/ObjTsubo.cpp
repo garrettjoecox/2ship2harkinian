@@ -6,7 +6,7 @@ extern "C" {
 #include "overlays/actors/ovl_Obj_Tsubo/z_obj_tsubo.h"
 }
 
-#define IS_AT(xx, zz) (actor->home.pos.x == xx && actor->home.pos.z == zz)
+#define IS_AT(xx, zz) (actor->world.pos.x == xx, actor->world.pos.z = zz)
 
 RandoCheckId IdentifyPot(Actor* actor) {
     RandoCheckId randoCheckId = RC_UNKNOWN;
@@ -14,42 +14,43 @@ RandoCheckId IdentifyPot(Actor* actor) {
         case SCENE_REDEAD:
             if (IS_AT(1185.0f, -915.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_1;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -945.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_2;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -975.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_3;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1005.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_4;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1035.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_5;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1065.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_6;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1095.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_7;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1125.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_8;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1155.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_9;
+                break;
             }
-            break;
             if (IS_AT(1185.0f, -1185.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_10;
+                break;
             }
             break;
         default:
@@ -71,7 +72,6 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
     shouldHookId1 = REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_POT, {
         Actor* actor = va_arg(args, Actor*);
         RandoCheckId randoCheckId = IdentifyPot(actor);
-
         if (randoCheckId == RC_UNKNOWN) {
             *should = true;
             return;
