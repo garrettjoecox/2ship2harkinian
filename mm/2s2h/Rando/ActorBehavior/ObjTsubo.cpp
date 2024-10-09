@@ -18,7 +18,7 @@ RandoCheckId IdentifyPot(Actor* actor) {
     if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
         return randoStaticCheck.randoCheckId;
     }
-    
+
     RandoCheckId randoCheckId = RC_UNKNOWN;
 
     switch (gPlayState->sceneId) {
@@ -766,30 +766,30 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(-1410.0f, -510.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4;
             }
-            //if (IS_AT(-30.0f, -1995.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1;
-            //}
-            //if (IS_AT(-30.0f, -1965.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_2;
-            //}
-            //if (IS_AT(-30.0f, -1935.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_3;
-            //}
-            //if (IS_AT(-30.0f, -1905.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_4;
-            //}
-            //if (IS_AT(30.0f, -1995.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_5;
-            //}
-            //if (IS_AT(30.0f, -1965.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_6;
-            //}
-            //if (IS_AT(30.0f, -1935.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_7;
-            //}
-            //if (IS_AT(30.0f, -1905.0f)) {
-            //    randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_8;
-            //}
+            // if (IS_AT(-30.0f, -1995.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1;
+            // }
+            // if (IS_AT(-30.0f, -1965.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_2;
+            // }
+            // if (IS_AT(-30.0f, -1935.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_3;
+            // }
+            // if (IS_AT(-30.0f, -1905.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_4;
+            // }
+            // if (IS_AT(30.0f, -1995.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_5;
+            // }
+            // if (IS_AT(30.0f, -1965.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_6;
+            // }
+            // if (IS_AT(30.0f, -1935.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_7;
+            // }
+            // if (IS_AT(30.0f, -1905.0f)) {
+            //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_8;
+            // }
             if (IS_AT(45.0f, -690.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_1;
             }
@@ -864,12 +864,13 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         return;
     }
 
-    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_OBJ_TSUBO, [](Actor* actor) {
-        RandoCheckId randoCheckId = IdentifyPot(actor);
-        if (randoCheckId != RC_UNKNOWN) {
-            actor->home.rot.x = randoCheckId;
-        }
-    });
+    onActorInit =
+        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_OBJ_TSUBO, [](Actor* actor) {
+            RandoCheckId randoCheckId = IdentifyPot(actor);
+            if (randoCheckId != RC_UNKNOWN) {
+                actor->home.rot.x = randoCheckId;
+            }
+        });
 
     shouldHookId1 = REGISTER_VB_SHOULD(VB_POT_DROP_COLLECTIBLE, {
         Actor* actor = va_arg(args, Actor*);
@@ -877,24 +878,27 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         if (randoCheckId == RC_UNKNOWN) {
             return;
         }
-    
+
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
         if (randoSaveCheck.eligible) {
             return;
         }
 
-        CustomItem::Spawn(actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH, randoCheckId, [](Actor* actor, PlayState* play) { 
-            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-            if (randoSaveCheck.eligible) {
-                return;
-            }
-            randoSaveCheck.eligible = true;
-        }, [](Actor* actor, PlayState* play) { 
-            auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-            RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
-            Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-            Rando::DrawItem(randoItemId);
-        });
+        CustomItem::Spawn(
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH, randoCheckId,
+            [](Actor* actor, PlayState* play) {
+                RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                if (randoSaveCheck.eligible) {
+                    return;
+                }
+                randoSaveCheck.eligible = true;
+            },
+            [](Actor* actor, PlayState* play) {
+                auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                Rando::DrawItem(randoItemId);
+            });
         *should = false;
     });
 }

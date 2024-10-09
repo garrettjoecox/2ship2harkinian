@@ -115,7 +115,8 @@ s32 func_809275C0(ObjTsubo* this, PlayState* play) {
 }
 
 void func_8092762C(ObjTsubo* this, PlayState* play) {
-    if (GameInteractor_Should(VB_POT_DROP_COLLECTIBLE, !OBJ_TSUBO_P0010(&this->actor) && (OBJ_TSUBO_ZROT(&this->actor) != 2), this)) {
+    if (GameInteractor_Should(VB_POT_DROP_COLLECTIBLE,
+                              !OBJ_TSUBO_P0010(&this->actor) && (OBJ_TSUBO_ZROT(&this->actor) != 2), this)) {
         Item_DropCollectibleRandom(play, NULL, &this->actor.world.pos, OBJ_TSUBO_P000F(&this->actor) << 4);
     }
 }
