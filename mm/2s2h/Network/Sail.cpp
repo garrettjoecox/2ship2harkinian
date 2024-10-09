@@ -8,7 +8,7 @@
 #include "ShipUtils.h"
 
 void Sail::Enable() {
-    Network::Enable(CVarGetString("gNetwork.Sail.Host", "127.0.0.1"), CVarGetInteger("gNetwork.Sail.Port", 43384));
+    Network::Enable(CVarGetString("gNetwork.Sail.Host", "127.0.0.1"), CVarGetInteger("gNetwork.Sail.Port", 43385));
 }
 
 void Sail::OnIncomingJson(nlohmann::json payload) {

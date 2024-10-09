@@ -7,7 +7,10 @@
 #include <variant>
 #include <tuple>
 #include "ShipUtils.h"
+#ifdef ENABLE_NETWORKING
 #include "2s2h/Network/Sail.h"
+#include "2s2h/Network/Anchor.h"
+#endif
 
 extern "C" {
 #include "functions.h"
@@ -80,6 +83,7 @@ typedef enum {
     WIDGET_SEPARATOR,
     WIDGET_SEPARATOR_TEXT,
     WIDGET_TEXT,
+    WIDGET_ANCHOR, // Renders the entire anchor menu
     WIDGET_WINDOW_BUTTON,
     WIDGET_AUDIO_BACKEND, // needed because of special operations that can't be handled easily with the normal combobox
                           // widget
@@ -337,8 +341,8 @@ static std::map<DisableOption, disabledInfo> disabledMap = {
     { DISABLE_FOR_SAIL_FORM_INVALID,
       { [](disabledInfo& info) -> bool {
            return !(!isStringEmpty(CVarGetString("gNetwork.Sail.Host", "127.0.0.1")) &&
-                    CVarGetInteger("gNetwork.Sail.Port", 43384) > 1024 &&
-                    CVarGetInteger("gNetwork.Sail.Port", 43384) < 65535);
+                    CVarGetInteger("gNetwork.Sail.Port", 43385) > 1024 &&
+                    CVarGetInteger("gNetwork.Sail.Port", 43385) < 65535);
        },
         "Invalid Host/Port" } },
     { DISABLE_FOR_SAIL_ENABLED,
@@ -711,72 +715,73 @@ void AddSettings() {
     // Network
     settingsSidebar.push_back(
         { "Network",
-          3,
+          2,
           { {
-              { .widgetName = "Sail", .widgetType = WIDGET_SEPARATOR_TEXT },
-              { "Host",
-                "gNetwork.Sail.Host",
-                "",
-                WIDGET_CVAR_INPUT_STRING,
-                { .defaultVariant = "127.0.0.1" },
-                {},
-                [](widgetInfo& info) {
-                    if (disabledMap.at(DISABLE_FOR_SAIL_ENABLED).active) {
-                        info.activeDisables.push_back(DISABLE_FOR_SAIL_ENABLED);
-                    }
-                } },
-              { "Port",
-                "gNetwork.Sail.Port",
-                "",
-                WIDGET_CVAR_INPUT_INT,
-                { .defaultVariant = 43384 },
-                {},
-                [](widgetInfo& info) {
-                    if (disabledMap.at(DISABLE_FOR_SAIL_ENABLED).active) {
-                        info.activeDisables.push_back(DISABLE_FOR_SAIL_ENABLED);
-                    }
-                } },
-              { "Connect",
-                "",
-                "Connect/Disconnect to the Sail server.",
-                WIDGET_BUTTON,
-                {},
-                [](widgetInfo& info) {
-                    if (Sail::Instance->isEnabled) {
-                        CVarClear("gNetwork.Sail.Enabled");
-                        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
-                        Sail::Instance->Disable();
-                    } else {
-                        CVarSetInteger("gNetwork.Sail.Enabled", 1);
-                        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
-                        Sail::Instance->Enable();
-                    }
-                },
-                [](widgetInfo& info) {
-                    if (Sail::Instance->isEnabled) {
-                        info.widgetName = "Disconnect";
-                    } else {
-                        info.widgetName = "Connect";
-                    }
-                    if (disabledMap.at(DISABLE_FOR_SAIL_FORM_INVALID).active)
-                        info.activeDisables.push_back(DISABLE_FOR_SAIL_FORM_INVALID);
-                } },
-              { "Connected",
-                "",
-                "Displays the current connection status.",
-                WIDGET_TEXT,
-                {},
-                {},
-                [](widgetInfo& info) {
-                    if (Sail::Instance->isEnabled && Sail::Instance->isConnected) {
-                        info.widgetName = "Connected";
-                    } else if (Sail::Instance->isEnabled) {
-                        info.widgetName = "Connecting...";
-                    } else {
-                        info.isHidden = true;
-                    }
-                } },
-          } } });
+                { .widgetName = "Sail", .widgetType = WIDGET_SEPARATOR_TEXT },
+                { "Host",
+                  "gNetwork.Sail.Host",
+                  "",
+                  WIDGET_CVAR_INPUT_STRING,
+                  { .defaultVariant = "127.0.0.1" },
+                  {},
+                  [](widgetInfo& info) {
+                      if (disabledMap.at(DISABLE_FOR_SAIL_ENABLED).active) {
+                          info.activeDisables.push_back(DISABLE_FOR_SAIL_ENABLED);
+                      }
+                  } },
+                { "Port",
+                  "gNetwork.Sail.Port",
+                  "",
+                  WIDGET_CVAR_INPUT_INT,
+                  { .defaultVariant = 43385 },
+                  {},
+                  [](widgetInfo& info) {
+                      if (disabledMap.at(DISABLE_FOR_SAIL_ENABLED).active) {
+                          info.activeDisables.push_back(DISABLE_FOR_SAIL_ENABLED);
+                      }
+                  } },
+                { "Connect",
+                  "",
+                  "Connect/Disconnect to the Sail server.",
+                  WIDGET_BUTTON,
+                  {},
+                  [](widgetInfo& info) {
+                      if (Sail::Instance->isEnabled) {
+                          CVarClear("gNetwork.Sail.Enabled");
+                          Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                          Sail::Instance->Disable();
+                      } else {
+                          CVarSetInteger("gNetwork.Sail.Enabled", 1);
+                          Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                          Sail::Instance->Enable();
+                      }
+                  },
+                  [](widgetInfo& info) {
+                      if (Sail::Instance->isEnabled) {
+                          info.widgetName = "Disconnect";
+                      } else {
+                          info.widgetName = "Connect";
+                      }
+                      if (disabledMap.at(DISABLE_FOR_SAIL_FORM_INVALID).active)
+                          info.activeDisables.push_back(DISABLE_FOR_SAIL_FORM_INVALID);
+                  } },
+                { "Connected",
+                  "",
+                  "Displays the current connection status.",
+                  WIDGET_TEXT,
+                  {},
+                  {},
+                  [](widgetInfo& info) {
+                      if (Sail::Instance->isEnabled && Sail::Instance->isConnected) {
+                          info.widgetName = "Connected";
+                      } else if (Sail::Instance->isEnabled) {
+                          info.widgetName = "Connecting...";
+                      } else {
+                          info.isHidden = true;
+                      }
+                  } },
+            },
+            { { "Anchor", "", "Anchor", WIDGET_ANCHOR } } } });
 #endif
 
     if (CVarGetInteger("gSettings.SidebarSearch", 0)) {
@@ -1609,6 +1614,9 @@ void SearchMenuGetItem(widgetInfo& widget) {
                     UpdateWindowBackendObjects();
                 }
             } break;
+            case WIDGET_ANCHOR:
+                Anchor::Instance->DrawMenu();
+                break;
             case WIDGET_SEPARATOR:
                 ImGui::Separator();
                 break;

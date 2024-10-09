@@ -16,6 +16,7 @@ TexturePtr Ship_GetCharFontTextureNES(u8 character);
 #ifdef __cplusplus
 }
 bool isStringEmpty(std::string str);
+const char* getSceneName(s16 sceneId);
 #endif
 
 #endif // SHIP_UTILS_H

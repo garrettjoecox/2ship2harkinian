@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "macros.h"
+#include "z64.h"
 
 extern f32 sNESFontWidths[160];
 extern const char* fontTbl[156];
@@ -66,5 +67,26 @@ bool isStringEmpty(std::string str) {
         return true; // The string is empty
     } else {
         return false; // The string is not empty
+    }
+}
+
+// 2S2H Added columns to scene table: entranceSceneId, betterMapSelectIndex, humanName
+#define DEFINE_SCENE(_name, enumValue, _textId, _drawConfig, _restrictionFlags, _persistentCycleFlags, \
+                     _entranceSceneId, _betterMapSelectIndex, humanName)                               \
+    { enumValue, humanName },
+#define DEFINE_SCENE_UNSET(_enumValue)
+
+std::unordered_map<s16, const char*> sceneNames = {
+#include "tables/scene_table.h"
+};
+
+#undef DEFINE_SCENE
+#undef DEFINE_SCENE_UNSET
+
+const char* getSceneName(s16 sceneId) {
+    if (sceneNames.find(sceneId) != sceneNames.end()) {
+        return sceneNames[sceneId];
+    } else {
+        return "Unknown";
     }
 }
