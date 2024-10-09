@@ -214,7 +214,7 @@ jobs:
     - name: Build 2Ship
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DBUILD_NETWORKING=1
         cmake --build build-cmake --config Release --parallel 10
         (cd build-cmake && cpack)
 
@@ -257,6 +257,7 @@ jobs:
           SDL2-2.30.3
           tinyxml2-10.0.0
           libzip-1.10.1
+          SDL2_net-2.2.0
     - name: Install latest SDL
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -283,6 +284,18 @@ jobs:
         cmake ..
         make
         sudo make install
+    - name: Install latest SDL_net
+      run: |
+        export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+        if [ ! -d "SDL2_net-2.2.0" ]; then
+          wget https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.2.0.tar.gz
+          tar -xzf SDL2_net-2.2.0.tar.gz
+        fi
+        cd SDL2_net-2.2.0
+        ./configure
+        make -j 10
+        sudo make install
+        sudo cp -av /usr/local/lib/libSDL* /lib/x86_64-linux-gnu/
     - name: Install libzip without crypto
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -305,7 +318,7 @@ jobs:
     - name: Build 2Ship
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_REMOTE_CONTROL=1
+        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_NETWORKING=1
         cmake --build build-cmake --config Release -j3
         (cd build-cmake && cpack -G External)
 
@@ -365,7 +378,7 @@ jobs:
         VCPKG_ROOT: ${{github.workspace}}/vcpkg
       run: |
         set $env:PATH="$env:USERPROFILE/.cargo/bin;$env:PATH"
-        cmake -S . -B build-windows -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        cmake -S . -B build-windows -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DBUILD_NETWORKING=1
         cmake --build build-windows --config Release --parallel 10
 
         (cd build-windows && cpack)

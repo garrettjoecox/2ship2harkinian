@@ -413,6 +413,33 @@ namespace UIWidgets {
     bool SliderFloat(const char* label, float* value, float min, float max, const FloatSliderOptions& options = {});
     bool CVarSliderFloat(const char* label, const char* cvarName, float min, float max, const float defaultValue, const FloatSliderOptions& options = {});
     bool CVarColorPicker(const char* label, const char* cvarName, Color_RGBA8 defaultColor);
+
+    struct InputStringOptions {
+        const ImVec4 color = Colors::Gray;
+        const char* tooltip = "";
+        bool disabled = false;
+        const char* disabledTooltip = "";
+        const char* placeholder = "";
+        const char* defaultValue = ""; // Only applicable to CVarInputString
+        LabelPosition labelPosition = LabelPosition::Above;
+    };
+
+    struct InputIntOptions {
+        const ImVec4 color = Colors::Gray;
+        const char* tooltip = "";
+        bool disabled = false;
+        const char* disabledTooltip = "";
+        const char* placeholder = "";
+        int32_t defaultValue = 0; // Only applicable to CVarInputInt
+        LabelPosition labelPosition = LabelPosition::Above;
+    };
+
+    void PushStyleInput(const ImVec4& color = Colors::Indigo);
+    void PopStyleInput();
+    bool InputString(const char* label, std::string* value, const InputStringOptions& options = {});
+    bool CVarInputString(const char* label, const char* cvarName, const InputStringOptions& options = {});
+    bool InputInt(const char* label, int32_t* value, const InputIntOptions& options = {});
+    bool CVarInputInt(const char* label, const char* cvarName, const InputIntOptions& options = {});
     void DrawFlagArray32(const std::string& name, uint32_t& flags);
     void DrawFlagArray16(const std::string& name, uint16_t& flags);
     void DrawFlagArray8(const std::string& name, uint8_t& flags);

@@ -2563,6 +2563,7 @@ void Actor_SpawnSetupActors(PlayState* play, ActorContext* actorCtx) {
 
         // Prevents re-spawning the setup actors
         play->numSetupActors = -play->numSetupActors;
+        GameInteractor_ExecuteOnSceneSpawnActors();
     }
 }
 

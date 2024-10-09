@@ -524,6 +524,111 @@ bool CVarColorPicker(const char* label, const char* cvarName, Color_RGBA8 defaul
     return changed;
 }
 
+void PushStyleInput(const ImVec4& color) {
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(color.x, color.y, color.z, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(color.x, color.y, color.z, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(color.x, color.y, color.z, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(color.x, color.y, color.z, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(1.0, 1.0, 1.0, 0.4f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(1.0, 1.0, 1.0, 0.5f));
+    ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 3.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+}
+
+void PopStyleInput() {
+    ImGui::PopStyleVar(4);
+    ImGui::PopStyleColor(6);
+}
+
+// Reference: imgui-src/misc/cpp/imgui_stdlib.cpp
+int InputTextResizeCallback(ImGuiInputTextCallbackData* data) {
+    std::string* value = (std::string*)data->UserData;
+    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize) {
+        value->resize(data->BufTextLen);
+        data->Buf = (char*)value->c_str();
+    }
+    return 0;
+}
+
+bool InputString(const char* label, std::string* value, const InputStringOptions& options) {
+    bool dirty = false;
+    ImGui::PushID(label);
+    ImGui::BeginGroup();
+    std::string invisibleLabelStr = "##" + std::string(label);
+    const char* invisibleLabel = invisibleLabelStr.c_str();
+    PushStyleInput(options.color);
+    ImGui::BeginDisabled(options.disabled);
+    if (options.labelPosition != LabelPosition::None) {
+        ImGui::Text(label);
+    }
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+    if (ImGui::InputText(invisibleLabel, (char*)value->c_str(), value->capacity() + 1,
+                         ImGuiInputTextFlags_CallbackResize, InputTextResizeCallback, value)) {
+        dirty = true;
+    }
+    ImGui::EndDisabled();
+    if (options.disabled && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) &&
+        strcmp(options.disabledTooltip, "") != 0) {
+        ImGui::SetTooltip("%s", WrappedText(options.disabledTooltip).c_str());
+    } else if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && strcmp(options.tooltip, "") != 0) {
+        ImGui::SetTooltip("%s", WrappedText(options.tooltip).c_str());
+    }
+    PopStyleInput();
+    ImGui::EndGroup();
+    ImGui::PopID();
+    return dirty;
+}
+
+bool CVarInputString(const char* label, const char* cvarName, const InputStringOptions& options) {
+    std::string value = CVarGetString(cvarName, options.defaultValue);
+    bool dirty = InputString(label, &value, options);
+    if (dirty) {
+        CVarSetString(cvarName, value.c_str());
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+    }
+    return dirty;
+}
+
+bool InputInt(const char* label, int32_t* value, const InputIntOptions& options) {
+    bool dirty = false;
+    ImGui::PushID(label);
+    ImGui::BeginGroup();
+    std::string invisibleLabelStr = "##" + std::string(label);
+    const char* invisibleLabel = invisibleLabelStr.c_str();
+    PushStyleInput(options.color);
+    ImGui::BeginDisabled(options.disabled);
+    if (options.labelPosition != LabelPosition::None) {
+        ImGui::Text(label);
+    }
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+    if (ImGui::InputInt(invisibleLabel, value, NULL, NULL)) {
+        dirty = true;
+    }
+    ImGui::EndDisabled();
+    if (options.disabled && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) &&
+        strcmp(options.disabledTooltip, "") != 0) {
+        ImGui::SetTooltip("%s", WrappedText(options.disabledTooltip).c_str());
+    } else if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && strcmp(options.tooltip, "") != 0) {
+        ImGui::SetTooltip("%s", WrappedText(options.tooltip).c_str());
+    }
+    PopStyleInput();
+    ImGui::EndGroup();
+    ImGui::PopID();
+    return dirty;
+}
+
+bool CVarInputInt(const char* label, const char* cvarName, const InputIntOptions& options) {
+    int32_t value = CVarGetInteger(cvarName, options.defaultValue);
+    bool dirty = InputInt(label, &value, options);
+    if (dirty) {
+        CVarSetInteger(cvarName, value);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+    }
+    return dirty;
+}
+
 void DrawFlagArray32(const std::string& name, uint32_t& flags) {
     ImGui::PushID(name.c_str());
     for (int32_t flagIndex = 0; flagIndex < 32; flagIndex++) {

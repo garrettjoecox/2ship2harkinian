@@ -13,6 +13,7 @@
 #include "interface/parameter_static/parameter_static.h"
 #include "misc/title_static/title_static.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h_assets.h"
 #include <string.h>
 #include "BenPort.h"
@@ -2231,6 +2232,8 @@ void FileSelect_LoadGame(GameState* thisx) {
     gSaveContext.hudVisibilityTimer = 0;
 
     gSaveContext.save.saveInfo.playerData.tatlTimer = 0;
+
+    GameInteractor_ExecuteOnSaveLoad(gSaveContext.fileNum);
 }
 
 void (*sSelectModeUpdateFuncs[])(GameState*) = {

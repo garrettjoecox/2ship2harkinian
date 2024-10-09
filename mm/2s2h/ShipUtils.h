@@ -5,6 +5,7 @@
 #include "PR/ultratypes.h"
 
 #ifdef __cplusplus
+#include <string>
 extern "C" {
 #endif
 
@@ -14,6 +15,8 @@ TexturePtr Ship_GetCharFontTextureNES(u8 character);
 
 #ifdef __cplusplus
 }
+bool isStringEmpty(std::string str);
+const char* getSceneName(s16 sceneId);
 #endif
 
 #endif // SHIP_UTILS_H

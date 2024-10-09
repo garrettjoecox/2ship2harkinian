@@ -7,6 +7,7 @@
 
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipUtils.h"
 
 extern "C" {
 #include <z64.h>
@@ -55,19 +56,6 @@ std::unordered_map<s16, const char*> actorNames = {
 #undef DEFINE_ACTOR
 #undef DEFINE_ACTOR_INTERNAL
 #undef DEFINE_ACTOR_UNSET
-
-// 2S2H Added columns to scene table: entranceSceneId, betterMapSelectIndex, humanName
-#define DEFINE_SCENE(_name, enumValue, _textId, _drawConfig, _restrictionFlags, _persistentCycleFlags, \
-                     _entranceSceneId, _betterMapSelectIndex, humanName)                               \
-    { enumValue, humanName },
-#define DEFINE_SCENE_UNSET(_enumValue)
-
-std::unordered_map<s16, const char*> sceneNames = {
-#include "tables/scene_table.h"
-};
-
-#undef DEFINE_SCENE
-#undef DEFINE_SCENE_UNSET
 
 static HOOK_ID onFlagSetHookId = 0;
 static HOOK_ID onFlagUnsetHookId = 0;
@@ -219,22 +207,23 @@ void RegisterEventLogHooks() {
         TrimEventLog();
     });
 
-    onSceneInitHookId = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s16 sceneId,
-                                                                                                   s8 spawnNum) {
-        eventLogEntries.insert(eventLogEntries.begin(), {
-                                                            .timestamp = CurrentTime(),
-                                                            .type = EVENT_LOG_ENTRY_TYPE_SCENE_INIT,
-                                                            .meta = fmt::format("{} {}", sceneNames[sceneId], spawnNum),
-                                                        });
-        TrimEventLog();
-    });
+    onSceneInitHookId =
+        GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s16 sceneId, s8 spawnNum) {
+            eventLogEntries.insert(eventLogEntries.begin(),
+                                   {
+                                       .timestamp = CurrentTime(),
+                                       .type = EVENT_LOG_ENTRY_TYPE_SCENE_INIT,
+                                       .meta = fmt::format("{} {}", getSceneName(sceneId), spawnNum),
+                                   });
+            TrimEventLog();
+        });
 
     onRoomInitHookId = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnRoomInit>([](s16 sceneId,
                                                                                                  s8 roomId) {
         eventLogEntries.insert(eventLogEntries.begin(), {
                                                             .timestamp = CurrentTime(),
                                                             .type = EVENT_LOG_ENTRY_TYPE_ROOM_INIT,
-                                                            .meta = fmt::format("{} {}", sceneNames[sceneId], roomId),
+                                                            .meta = fmt::format("{} {}", getSceneName(sceneId), roomId),
                                                         });
         TrimEventLog();
     });

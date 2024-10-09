@@ -4,12 +4,11 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
-
-#include "macros.h"
 #include "BenJsonConversions.hpp"
 #include "BenPort.h"
 
 extern "C" {
+#include "macros.h"
 #include "src/overlays/gamestates/ovl_file_choose/z_file_select.h"
 extern FileSelectState* gFileSelectState;
 

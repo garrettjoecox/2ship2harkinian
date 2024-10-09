@@ -285,11 +285,13 @@ class GameInteractor {
     DEFINE_HOOK(BeforeKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(AfterKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(OnSaveInit, (s16 fileNum));
+    DEFINE_HOOK(OnSaveLoad, (s16 fileNum));
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
 
     DEFINE_HOOK(OnSceneInit, (s8 sceneId, s8 spawnNum));
+    DEFINE_HOOK(OnSceneSpawnActors, ());
     DEFINE_HOOK(OnRoomInit, (s8 sceneId, s8 roomNum));
     DEFINE_HOOK(AfterRoomSceneCommands, (s8 sceneId, s8 roomNum));
     DEFINE_HOOK(OnPlayDrawWorldEnd, ());
@@ -335,11 +337,13 @@ void GameInteractor_ExecuteOnKaleidoUpdate(PauseContext* pauseCtx);
 void GameInteractor_ExecuteBeforeKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteAfterKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteOnSaveInit(s16 fileNum);
+void GameInteractor_ExecuteOnSaveLoad(s16 fileNum);
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
 
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum);
+void GameInteractor_ExecuteOnSceneSpawnActors();
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum);
 void GameInteractor_ExecuteAfterRoomSceneCommands(s16 sceneId, s8 roomNum);
 void GameInteractor_ExecuteOnPlayDrawWorldEnd();
