@@ -48,6 +48,11 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
                 return;
             }
+            // Hack for now, need to find better way to prevent this in the future. Pots handle their own items,
+            // after check has been received we want vanilla drops.
+            if (randoStaticCheck.randoCheckType == RCTYPE_POT) {
+                return;
+            }
 
             auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 

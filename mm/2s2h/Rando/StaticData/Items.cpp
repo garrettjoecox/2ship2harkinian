@@ -63,6 +63,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_MASK_GREAT_FAIRY,         "the Great Fairy Mask",          ITEM_MASK_GREAT_FAIRY,  GI_MASK_GREAT_FAIRY,    GID_MASK_GREAT_FAIRY),
     RI(RI_MILK_REFILL,              "a Milk Refill",                 ITEM_MILK,              GI_MILK,                GID_MILK),
     RI(RI_MOONS_TEAR,               "the Moon's Tear",               ITEM_MOONS_TEAR,        GI_MOONS_TEAR,          GID_MOONS_TEAR),
+    RI(RI_NONE,                     "literally nothing",             ITEM_NONE,              GI_NONE,                GID_NONE),
     RI(RI_NUTS_10,                  "10 Deku Nuts",                  ITEM_DEKU_NUTS_10,      GI_DEKU_NUTS_10,        GID_DEKU_NUTS),
     RI(RI_OCARINA,                  "the Ocarina of Time",           ITEM_OCARINA_OF_TIME,   GI_OCARINA_OF_TIME,     GID_OCARINA),
     RI(RI_PROGRESSIVE_BOMB_BAG,     "a Progressive Bomb Bag",        ITEM_BOMB_BAG_20,       GI_BOMB_BAG_20,         GID_BOMB_BAG_20),
