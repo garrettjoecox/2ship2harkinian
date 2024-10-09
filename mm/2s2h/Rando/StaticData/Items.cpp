@@ -71,7 +71,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_PROGRESSIVE_MAGIC,        "Progressive Magic",             ITEM_NONE,              GI_NONE,                GID_MAGIC_JAR_SMALL),
     RI(RI_QUIVER_40,                "a Medium Quiver",               ITEM_QUIVER_40,         GI_QUIVER_40,           GID_QUIVER_40),
     RI(RI_QUIVER_50,                "a Large Quiver",                ITEM_QUIVER_50,         GI_QUIVER_50,           GID_QUIVER_50),
-    RI(RI_RECOVERY_HEART,           "a recovery heart",              ITEM_RECOVERY_HEART,    GI_RECOVERY_HEART,      GID_RECOVERY_HEART),
+    RI(RI_RECOVERY_HEART,           "a Recovery Heart",              ITEM_RECOVERY_HEART,    GI_RECOVERY_HEART,      GID_RECOVERY_HEART),
     RI(RI_ROOM_KEY,                 "the Room Key",                  ITEM_ROOM_KEY,          GI_ROOM_KEY,            GID_ROOM_KEY),
     RI(RI_RUPEE_BLUE,               "a Blue Rupee",                  ITEM_RUPEE_BLUE,        GI_RUPEE_BLUE,          GID_RUPEE_BLUE),
     RI(RI_RUPEE_GREEN,              "a Green Rupee",                 ITEM_RUPEE_GREEN,       GI_RUPEE_GREEN,         GID_RUPEE_GREEN),
