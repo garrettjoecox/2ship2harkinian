@@ -308,9 +308,8 @@ void EnMaYto_ChooseAction(EnMaYto* this, PlayState* play) {
 
         case MA_YTO_TYPE_AFTERMILKRUN:
             this->unk310 = 0;
-            if ((INV_CONTENT(ITEM_MASK_ROMANI) == ITEM_MASK_ROMANI) &&
-                CHECK_WEEKEVENTREG(WEEKEVENTREG_ESCORTED_CREMIA) && (Rand_Next() & 0x80) &&
-                GameInteractor_Should(VB_CREMIA_CUTSCENE_CHANCE, true)) {
+            if (GameInteractor_Should(VB_HAVE_ROMANI_MASK, (INV_CONTENT(ITEM_MASK_ROMANI) == ITEM_MASK_ROMANI)) &&
+                CHECK_WEEKEVENTREG(WEEKEVENTREG_ESCORTED_CREMIA) && (Rand_Next() & 0x80)) {
                 EnMaYto_SetupBeginWarmFuzzyFeelingCs(this);
             } else {
                 EnMaYto_SetupAfterMilkRunInit(this);
@@ -1001,7 +1000,7 @@ void EnMaYto_SetupPostMilkRunGiveReward(EnMaYto* this) {
 void EnMaYto_PostMilkRunGiveReward(EnMaYto* this, PlayState* play) {
     if (Actor_HasParent(&this->actor, play)) {
         EnMaYto_SetupPostMilkRunExplainReward(this);
-    } else if (INV_CONTENT(ITEM_MASK_ROMANI) == ITEM_MASK_ROMANI) {
+    } else if (GameInteractor_Should(VB_HAVE_ROMANI_MASK, (INV_CONTENT(ITEM_MASK_ROMANI) == ITEM_MASK_ROMANI))) {
         Actor_OfferGetItem(&this->actor, play, GI_RUPEE_HUGE, 500.0f, 100.0f);
         this->unk310 = 2;
     } else {

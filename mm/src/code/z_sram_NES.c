@@ -1805,7 +1805,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
         if (SysFlashrom_ReadData(&sramCtx->saveBuf[0], gFlashSaveStartPages[fileSelect->selectedFileIndex * 2],
                                  gFlashSaveNumPages[fileSelect->selectedFileIndex * 2])) {}
 
-        if (SysFlashrom_ReadData(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], gFlashSaveStartPages[fileSelect->selectedFileIndex * 2 + 1],
+        if (SysFlashrom_ReadData(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE],
+                                 gFlashSaveStartPages[fileSelect->selectedFileIndex * 2 + 1],
                                  gFlashSaveNumPages[fileSelect->selectedFileIndex * 2 + 1])) {}
 
         // copy buffer to save context

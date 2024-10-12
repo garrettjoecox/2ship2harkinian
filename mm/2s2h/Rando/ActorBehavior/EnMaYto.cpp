@@ -31,12 +31,13 @@ void Rando::ActorBehavior::InitEnMaYtoBehavior() {
                 if (CHECK_WEEKEVENTREG(WEEKEVENTREG_ESCORTED_CREMIA)) {
                     if (!RANDO_SAVE_CHECKS[RC_MILK_RUN_REWARD].eligible) {
                         RANDO_SAVE_CHECKS[RC_MILK_RUN_REWARD].eligible = true;
+                        enMaYto->unk310 = 3;
+                        enMaYto->actionFunc = EnMaYto_PostMilkRunEnd;
                     }
-                    enMaYto->unk310 = 3;
-                    enMaYto->actionFunc = EnMaYto_PostMilkRunEnd;
                 }
             }
         });
 
-    shouldHookId1 = REGISTER_VB_SHOULD(VB_CREMIA_CUTSCENE_CHANCE, { *should = false; });
+    shouldHookId1 =
+        REGISTER_VB_SHOULD(VB_HAVE_ROMANI_MASK, { *should = RANDO_SAVE_CHECKS[RC_MILK_RUN_REWARD].obtained; });
 }
