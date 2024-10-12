@@ -1,15 +1,11 @@
 #ifndef LIBC_STDINT_H
 #define LIBC_STDINT_H
 
-#include "PR/ultratypes.h"
-
 // #region 2S2H [Port] These are defined by LUS
 #if 0
-typedef s32 intptr_t;
-typedef u32 uintptr_t;
-#endif
-// #endregion
-#if 0
+typedef signed long intptr_t;
+typedef unsigned long uintptr_t;
+
 #define INT8_MIN    (-0x80)
 #define INT16_MIN   (-0x8000)
 #define INT32_MIN   (-0x80000000)
@@ -29,5 +25,6 @@ typedef u32 uintptr_t;
 #define INTPTR_MAX  0x7FFFFFFF
 #define UINTPTR_MAX 0xFFFFFFFF
 #endif
+// #endregion
 
 #endif /* STDINT_H */
