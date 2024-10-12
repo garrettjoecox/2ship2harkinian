@@ -27,7 +27,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
-    Rando::ActorBehavior::InitEnMaYtoBehavior();
+    Rando::ActorBehavior::InitObjUmBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();

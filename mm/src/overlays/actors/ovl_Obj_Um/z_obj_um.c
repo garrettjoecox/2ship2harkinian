@@ -8,6 +8,7 @@
 #include "z64horse.h"
 #include "overlays/actors/ovl_En_In/z_en_in.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
@@ -1552,12 +1553,14 @@ void ObjUm_PostMilkRunWaitPathFinished(ObjUm* this, PlayState* play) {
         CutsceneManager_Stop(this->dyna.actor.csId);
         Audio_SetCutsceneFlag(false);
         SET_WEEKEVENTREG(WEEKEVENTREG_59_02);
-        gSaveContext.nextCutsceneIndex = 0xFFF3;
-        play->nextEntrance = ENTRANCE(TERMINA_FIELD, 0);
-        play->transitionType = TRANS_TYPE_64;
-        gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
-        play->transitionTrigger = TRANS_TRIGGER_START;
-        gSaveContext.save.time += CLOCK_TIME(1, 0) + 2;
+        if (GameInteractor_Should(VB_WON_MILK_RUN, true)) {
+            gSaveContext.nextCutsceneIndex = 0xFFF3;
+            play->nextEntrance = ENTRANCE(TERMINA_FIELD, 0);
+            play->transitionType = TRANS_TYPE_64;
+            gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
+            play->transitionTrigger = TRANS_TRIGGER_START;
+            gSaveContext.save.time += CLOCK_TIME(1, 0) + 2;
+        }
     }
     Actor_MoveWithGravity(&this->dyna.actor);
 }
