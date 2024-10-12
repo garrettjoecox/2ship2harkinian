@@ -10,6 +10,7 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "HudEditor.h"
+#include "2s2h/ShipConfig.h"
 
 extern "C" {
 #include "z64.h"
@@ -789,6 +790,15 @@ void DrawEnhancementsMenu() {
 
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
+        ImGui::Text("%d", gShipConfig.someInt);
+        ImGui::Text("%s", gShipConfig.cppString.c_str());
+        ImGui::Text("%s", gShipConfig.enhancements->myName.c_str());
+        ImGui::Text("%d", gShipConfig.enhancements->someInt);
+        ImGui::Text("%d", gShipConfig.enhancements->someOtherInt);
+        ImGui::Text("%s", gShipConfig.rando->spoiler.c_str());
+        ImGui::Text("%d", gShipConfig.rando->someInt);
+        ImGui::Text("%d", gShipConfig.rando->someOtherInt);
+        UIWidgets::Checkbox("Sup", (bool*)&gShipConfig.enhancements->someInt);
         UIWidgets::CVarCheckbox("Infinite Health", "gCheats.InfiniteHealth");
         UIWidgets::CVarCheckbox("Infinite Magic", "gCheats.InfiniteMagic");
         UIWidgets::CVarCheckbox("Infinite Rupees", "gCheats.InfiniteRupees");

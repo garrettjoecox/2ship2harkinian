@@ -1605,6 +1605,12 @@ void Play_Main(GameState* thisx) {
     static Input* prevInput = NULL;
     PlayState* this = (PlayState*)thisx;
 
+    gShipConfig.someInt = 1;
+    gShipConfig.enhancements->someInt = 2;
+    gShipConfig.enhancements->someOtherInt = 3;
+    gShipConfig.rando->someInt = 4;
+    gShipConfig.rando->someOtherInt = 5;
+
     prevInput = CONTROLLER1(&this->state);
     DebugDisplay_Init();
 

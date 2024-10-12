@@ -1,5 +1,6 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipConfig.h"
 
 extern "C" {
 #include "macros.h"
@@ -13,6 +14,17 @@ void RegisterFastFlowerLaunch() {
     static HOOK_ID playerUpdateHook = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(playerUpdateHook);
     playerUpdateHook = 0;
+
+    RegisterConfigValue({
+        .path = { MENU_SETTINGS, MENU_SETTINGS_GENERAL },
+        .name = "Fast Flower Launch",
+        .tooltip = "Speeds up the time it takes to be able to get maximum height from launching out of a deku flower",
+        .pointer = &gShipConfig.enhancements->myName,
+    });
+
+    // gShipConfig.cppString = "cppString";
+    // gShipConfig.enhancements->myName = "enhancements.myName";
+    // gShipConfig.rando->spoiler = "rando.spoiler";
 
     if (!CVarGetInteger("gEnhancements.Player.FastFlowerLaunch", 0)) {
         return;

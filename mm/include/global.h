@@ -5,5 +5,6 @@
 #include "functions.h"
 #include "variables.h"
 #include "macros.h"
+#include "2s2h/ShipConfig.h"
 
 #endif
