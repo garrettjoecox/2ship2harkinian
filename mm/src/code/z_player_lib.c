@@ -47,11 +47,6 @@
 #include "2s2h/BenPort.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
-void PlayerCall_Init(Actor* thisx, PlayState* play);
-void PlayerCall_Destroy(Actor* thisx, PlayState* play);
-void PlayerCall_Update(Actor* thisx, PlayState* play);
-void PlayerCall_Draw(Actor* thisx, PlayState* play);
-
 typedef struct {
     /* 0x00 */ Vec3f unk_00;
     /* 0x0C */ Vec3f unk_0C;
@@ -1452,7 +1447,7 @@ u8 Player_GetStrength(void) {
     return sPlayerStrengths[GET_PLAYER_FORM];
 }
 
-s32 Player_GetMask(PlayState* play) {
+u8 Player_GetMask(PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     return player->currentMask;
