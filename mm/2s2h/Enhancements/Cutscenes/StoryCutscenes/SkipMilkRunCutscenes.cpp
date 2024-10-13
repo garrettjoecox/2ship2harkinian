@@ -15,10 +15,6 @@ void RegisterSkipMilkRunCutscenes() {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) || IS_RANDO) {
             Player* player = GET_PLAYER(gPlayState);
             if (gSaveContext.save.cutsceneIndex == 0x0 && gSaveContext.save.entrance == ENTRANCE(ROMANI_RANCH, 11)) {
-                // This block crashes
-                // if (player->stateFlags1 & PLAYER_STATE1_800000) {
-                //     D_801BDAA0 = true;
-                // }
                 gSaveContext.save.cutsceneIndex = 0;
                 gSaveContext.save.entrance = ENTRANCE(GORMAN_TRACK, 4);
                 // Add time that occurs during skipped cutscenes
