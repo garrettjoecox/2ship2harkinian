@@ -23,7 +23,6 @@
         <TextureAnimation Name="object_moonend_Matanimheader_00B540" Offset="0xB540" />
 
         <KeyFrameSkel Name="gMoonendKFSkel_B5A0" LimbType="Flex" Offset="0xB5A0"/>
-
         <!--<Blob Name="object_moonend_Blob_00B550" Size="0x50" Offset="0xB550" />
         <Blob Name="object_moonend_Blob_00B5A0" Size="0x170" Offset="0xB5A0" />-->
 
