@@ -1486,7 +1486,45 @@ extern u8 gSampleBankTable[];
 // bss
 // extern UNK_TYPE1 D_801ED894;
 
-extern SaveContext gSaveContext;
+extern Vec3f D_801EDE00;
+extern Vec3f D_801EDE10;
+extern Vec3f D_801EDE20;
+extern Vec3f D_801EDE30;
+extern TriNorm D_801EDE40;
+extern TriNorm D_801EDE78;
+extern Linef D_801EDEB0;
+extern TriNorm D_801EDEC8;
+extern TriNorm D_801EDF00;
+extern Vec3f D_801EDF38;
+extern Vec3f D_801EDF48;
+extern TriNorm D_801EDF58;
+extern TriNorm D_801EDF90;
+extern Linef D_801EDFC8;
+extern Vec3f D_801EDFE0;
+extern Vec3f D_801EDFF0;
+extern TriNorm D_801EE000;
+extern TriNorm D_801EE038;
+extern TriNorm D_801EE070[2];
+extern Vec3f D_801EE0D8;
+extern TriNorm D_801EE0E8[2];
+extern TriNorm D_801EE150;
+extern TriNorm D_801EE188;
+extern Vec3f D_801EE1C0;
+extern Vec3f D_801EE1D0;
+extern Vec3f D_801EE1E0;
+extern Vec3f D_801EE1F0;
+// extern UNK_TYPE1 D_801EE1F4;
+// extern UNK_TYPE1 D_801EE1F8;
+extern EffectSparkInit D_801EE200;
+// extern TriNorm D_801EE6C8;
+extern TriNorm D_801EE700;
+extern EffectSparkInit D_801EE738;
+extern EffectSparkInit D_801EEC00;
+extern EffectSparkInit D_801EF0C8;
+extern TriNorm D_801EF590;
+extern TriNorm D_801EF5C8;
+extern TriNorm D_801EF600;
+extern TriNorm D_801EF638;
 
 // extern UNK_TYPE1 D_801F4E20;
 // extern UNK_TYPE1 sBeatingHeartsDDPrim;
@@ -1499,7 +1537,15 @@ extern SaveContext gSaveContext;
 // extern UNK_TYPE1 D_801F4F66;
 // extern UNK_TYPE1 D_801F4F68;
 // extern UNK_TYPE1 D_801F4F6A;
-// extern LightsBuffer sLightsBuffer;
+
+// extern UNK_TYPE1 D_801F5130;
+// extern UNK_TYPE1 D_801F5270;
+// extern UNK_TYPE1 D_801F528E;
+// extern UNK_TYPE1 D_801F53B0;
+// extern UNK_TYPE1 D_801F56B0;
+// extern UNK_TYPE1 D_801F5730;
+// extern UNK_TYPE1 D_801F57B4;
+// extern UNK_TYPE1 D_801F5834;
 
 // extern UNK_TYPE1 sSkyboxDrawMatrix;
 // extern UNK_TYPE1 D_801F6AF0;
@@ -1538,7 +1584,6 @@ extern AudioCustomReverbFunction gAudioCustomReverbFunction;
 extern AudioCustomSynthFunction gAudioCustomSynthFunction;
 
 // other segments
-extern GfxMasterList D_0E000000;
 extern Mtx D_01000000;
 extern u16 D_0F000000[];
 

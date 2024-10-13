@@ -1,7 +1,39 @@
-#include "global.h"
+#include "z64lib.h"
+
+#include "main.h"
+#include "ichain.h"
+#include "sfx.h"
+#include "z64actor.h"
+#include "z64game.h"
+#include "functions.h"
+#include "macros.h"
+
 #include <libultraship/bridge.h>
 #include "BenPort.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
+
+void* Lib_MemCpy(void* dest, void* src, size_t size) {
+    bcopy(src, dest, size);
+
+    return dest;
+}
+
+void* Lib_MemSet(void* buffer, s32 value, size_t size) {
+    u8* v0;
+    s32 i;
+
+    if (value == 0) {
+        bzero(buffer, size);
+
+        return buffer;
+    }
+
+    for (v0 = (u8*)buffer, i = size; i > 0; i--) {
+        *v0++ = value;
+    }
+
+    return buffer;
+}
 
 f32 Math_CosS(s16 angle) {
     return coss(angle) * SHT_MINV;

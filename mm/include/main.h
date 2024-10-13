@@ -16,4 +16,7 @@ extern PadMgr gPadMgr;
 
 void Main(void* arg);
 
+// 2S2H [Port]
+#define SEGMENTED_TO_K0(addr) (addr) // (void*)((gSegments[SEGMENT_NUMBER(addr)] + K0BASE) + SEGMENT_OFFSET(addr))
+
 #endif

@@ -1,4 +1,6 @@
 #include "global.h"
+#include "z64malloc.h"
+
 #include "BenPort.h"
 #include <string.h>
 #include <stdio.h>
