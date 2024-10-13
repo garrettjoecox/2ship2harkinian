@@ -5,7 +5,6 @@
 extern "C" {
 extern SaveContext gSaveContext;
 extern PlayState* gPlayState;
-// extern s32 D_801BDAA0;
 }
 
 void RegisterSkipMilkRunCutscenes() {
