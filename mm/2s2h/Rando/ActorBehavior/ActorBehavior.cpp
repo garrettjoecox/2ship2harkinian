@@ -12,9 +12,6 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_GIVE_ITEM_FROM_SWORDSMAN:
             *should = false;
             break;
-        case VB_HAVE_ROMANI_MASK:
-            *should = RANDO_SAVE_CHECKS[RC_CREMIA_ESCORT].obtained;
-            break;
     }
 }
 
@@ -30,6 +27,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
+    Rando::ActorBehavior::InitEnMaYtoBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();

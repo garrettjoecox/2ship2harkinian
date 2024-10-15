@@ -17,6 +17,7 @@ void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnItem00Behavior();
+void InitEnMaYtoBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();

@@ -1004,7 +1004,10 @@ void EnMaYto_PostMilkRunGiveReward(EnMaYto* this, PlayState* play) {
         Actor_OfferGetItem(&this->actor, play, GI_RUPEE_HUGE, 500.0f, 100.0f);
         this->unk310 = 2;
     } else {
-        Actor_OfferGetItem(&this->actor, play, GI_MASK_ROMANI, 500.0f, 100.0f);
+        LUSLOG_DEBUG("else", NULL);
+        if (GameInteractor_Should(VB_GIVE_ROMANI_MASK, true, this)) {
+            Actor_OfferGetItem(&this->actor, play, GI_MASK_ROMANI, 500.0f, 100.0f);
+        }
         this->unk310 = 1;
     }
 }
