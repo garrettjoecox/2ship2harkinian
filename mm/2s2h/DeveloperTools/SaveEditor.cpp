@@ -1,6 +1,9 @@
 #include "SaveEditor.h"
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Rando/Rando.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
+#include "2s2h/CustomItem/CustomItem.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -823,6 +826,38 @@ void DrawItemsAndMasksTab() {
     }
     UIWidgets::Checkbox("Safe Mode", &safeMode);
 
+    if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        ImGui::SeparatorText("Queue Randomizer Item Gives");
+
+        for (auto& [randoItemId, randoStaticItem] : Rando::StaticData::Items) {
+            std::string buttonLabel = "Give ";
+            buttonLabel += randoStaticItem.name;
+            if (UIWidgets::Button(buttonLabel.c_str())) {
+                GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
+                    .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
+                    .param = (int16_t)randoItemId,
+                    .giveItem =
+                        [](Actor* actor, PlayState* play) {
+                            std::string message = "You received the {{item}}!";
+                            CustomMessage::Replace(&message, "{{item}}",
+                                                   Rando::StaticData::Items[(RandoItemId)CUSTOM_ITEM_PARAM].name);
+
+                            if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
+                                CustomMessage::SetActiveCustomMessage(message, { .textboxType = 2 });
+                            } else {
+                                CustomMessage::StartTextbox(message + "\x1C\x02\x10", { .textboxType = 2 });
+                            }
+                            Rando::GiveItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                        },
+                    .drawItem =
+                        [](Actor* actor, PlayState* play) {
+                            Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                            Rando::DrawItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                        } });
+            }
+        }
+    }
+
     // Expose inputs to edit raw number values of equips
     // ImGui::Text("Equips");
     // ImGui::Text("C-Buttons");
@@ -979,7 +1014,7 @@ void DrawSong(QuestItem slot) {
         ImGui::Text(songTooltip);
         ImGui::EndTooltip();
     }
-    if (slot != QUEST_SONG_SUN) {
+    if (slot != QUEST_SONG_SUN && slot != QUEST_SONG_SARIA) {
         ImGui::SameLine();
     }
 }
@@ -1026,35 +1061,21 @@ void DrawQuestStatusTab() {
             }
         }
     }
-
-    ImGui::BeginChild("remainsBox",
-                      ImVec2(INV_GRID_WIDTH * 4 + INV_GRID_PADDING * 2,
-                             INV_GRID_HEIGHT * 1 + INV_GRID_PADDING * 2 + INV_GRID_TOP_MARGIN),
-                      ImGuiChildFlags_Border);
-    ImGui::Text("Boss Remains");
+    ImGui::BeginChild("leftColumn", ImVec2(ImGui::GetWindowWidth() / 2, 0));
+    ImGui::SeparatorText("Boss Remains");
     for (int32_t i = QUEST_REMAINS_ODOLWA; i <= QUEST_REMAINS_TWINMOLD; i++) {
         QuestItem slot = static_cast<QuestItem>(i);
 
         DrawQuestSlot(slot);
     }
-    ImGui::EndChild();
-    ImGui::BeginChild("songBox",
-                      ImVec2((INV_GRID_WIDTH / 1.1f) * 6 + INV_GRID_PADDING * 2,
-                             INV_GRID_HEIGHT * 2.15f + INV_GRID_PADDING * 1 + INV_GRID_TOP_MARGIN),
-                      ImGuiChildFlags_Border);
-    ImGui::Text("Songs");
+    ImGui::SeparatorText("Songs");
     for (int32_t i = QUEST_SONG_TIME; i <= QUEST_SONG_SUN; i++) {
         DrawSong((QuestItem)i);
     }
     for (int32_t i = QUEST_SONG_SONATA; i <= QUEST_SONG_SARIA; i++) {
         DrawSong((QuestItem)i);
     }
-    ImGui::EndChild();
-    ImGui::BeginChild("equipBox",
-                      ImVec2(INV_GRID_WIDTH * 2.2 + INV_GRID_PADDING * 2,
-                             INV_GRID_HEIGHT * 1 + INV_GRID_PADDING * 2 + INV_GRID_TOP_MARGIN),
-                      ImGuiChildFlags_Border);
-    ImGui::Text("Equipment");
+    ImGui::SeparatorText("Equipment");
     if (GET_PLAYER_FORM == PLAYER_FORM_FIERCE_DEITY) {
         ImTextureID swordTextureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(
             (const char*)gItemIcons[ITEM_SWORD_DEITY]);
@@ -1089,13 +1110,7 @@ void DrawQuestStatusTab() {
             NextQuestInSlot(QUEST_SHIELD);
         }
     }
-    ImGui::EndChild();
     ImGui::SameLine();
-    ImGui::BeginChild("notebookBox",
-                      ImVec2(INV_GRID_WIDTH * 1 + INV_GRID_PADDING * 2,
-                             INV_GRID_HEIGHT * 1 + INV_GRID_PADDING * 2 + INV_GRID_TOP_MARGIN),
-                      ImGuiChildFlags_Border);
-    ImGui::Text("Bombers");
     ImTextureID textureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(
         (const char*)gItemIcons[ITEM_BOMBERS_NOTEBOOK]);
     if (ImGui::ImageButton(std::to_string(ITEM_BOMBERS_NOTEBOOK).c_str(), textureId,
@@ -1104,11 +1119,7 @@ void DrawQuestStatusTab() {
                            ImVec4(1, 1, 1, CHECK_QUEST_ITEM(QUEST_BOMBERS_NOTEBOOK) ? 1.0f : 0.4f))) {
         NextQuestInSlot(QUEST_BOMBERS_NOTEBOOK);
     }
-    ImGui::EndChild();
-    ImGui::BeginChild("heartshapedBox",
-                      ImVec2(INV_GRID_WIDTH * 2 + INV_GRID_PADDING * 2, INV_GRID_HEIGHT + INV_GRID_PADDING),
-                      ImGuiChildFlags_Border);
-    ImGui::Text("Heart Pieces");
+    ImGui::SeparatorText("Heart Pieces");
     int32_t pohCount = (gSaveContext.save.saveInfo.inventory.questItems & 0xF0000000) >> 28;
     UIWidgets::PushStyleCombobox(UIWidgets::Colors::Red);
     if (ImGui::BeginCombo("##PoHcount", std::to_string(pohCount).c_str())) {
@@ -1122,7 +1133,42 @@ void DrawQuestStatusTab() {
     }
     UIWidgets::PopStyleCombobox();
     ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("rightColumn", ImVec2(0, 0));
+    ImGui::SeparatorText("Gold Skulltula Tokens");
+    int OceanSkullTokens = Inventory_GetSkullTokenCount(SCENE_KINDAN2);
+    int SwampSkullTokens = Inventory_GetSkullTokenCount(SCENE_KINSTA1);
+    UIWidgets::PushStyleSlider();
+    ImGui::PushItemWidth(ImGui::GetWindowWidth());
+    if (ImGui::SliderInt("##swampSkulltulas", &SwampSkullTokens, 0, 30, "Swamp Tokens: %d")) {
+        gSaveContext.save.saveInfo.skullTokenCount =
+            ((int)(SwampSkullTokens & 0xFFFF) << 0x10) | (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF);
+    }
+    if (ImGui::SliderInt("##oceanSkulltulas", &OceanSkullTokens, 0, 30, "Ocean Tokens: %d")) {
+        gSaveContext.save.saveInfo.skullTokenCount =
+            (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF0000) | (OceanSkullTokens & 0xFFFF);
+    }
+    ImGui::PopItemWidth();
+    UIWidgets::PopStyleSlider();
 
+    if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        ImGui::SeparatorText("Randomizer Check Status");
+
+        for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+            std::string hiddenName = "##";
+            hiddenName += randoStaticCheck.name;
+            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+            UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
+            ImGui::SetItemTooltip("Eligible");
+            ImGui::SameLine();
+            UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
+            ImGui::SetItemTooltip("Obtained");
+            // Associated Flag will go here, kinda complicated
+            ImGui::SameLine();
+            ImGui::Text("%s", randoStaticCheck.name);
+        }
+    }
+    ImGui::EndChild();
     ImGui::EndChild();
     ImGui::PopStyleVar(2);
     ImGui::PopStyleColor(1);

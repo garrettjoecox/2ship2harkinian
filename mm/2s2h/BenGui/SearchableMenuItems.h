@@ -403,6 +403,12 @@ void FreeLookPitchMinMax() {
     CVarSetFloat("gEnhancements.Camera.FreeLook.MinPitch", std::min(maxY, minY));
 }
 
+void InsertSidebarSearch() {
+    menuEntries[0].sidebarEntries.insert(menuEntries[0].sidebarEntries.begin() + searchSidebarIndex,
+                                         searchSidebarEntry);
+    CVarSetInteger(menuEntries[0].sidebarCvar, CVarGetInteger(menuEntries[0].sidebarCvar, 0) + 1);
+}
+
 void AddSettings() {
     // General Settings
     settingsSidebar.push_back(
@@ -447,12 +453,18 @@ void AddSettings() {
                 {},
                 [](widgetInfo& info) {
                     if (CVarGetInteger("gSettings.SidebarSearch", 0)) {
-                        menuEntries[0].sidebarEntries.insert(menuEntries[0].sidebarEntries.begin() + searchSidebarIndex,
-                                                             searchSidebarEntry);
-                        CVarSetInteger(menuEntries[0].sidebarCvar, CVarGetInteger(menuEntries[0].sidebarCvar, 0) + 1);
+                        InsertSidebarSearch();
                     } else {
-                        menuEntries[0].sidebarEntries.erase(menuEntries[0].sidebarEntries.begin() + searchSidebarIndex);
-                        CVarSetInteger(menuEntries[0].sidebarCvar, CVarGetInteger(menuEntries[0].sidebarCvar, 0) - 1);
+                        std::erase_if(menuEntries[0].sidebarEntries, [](SidebarEntry entry) {
+                            return strncmp(entry.label.c_str(), searchSidebarEntry.label.c_str(), 5) == 0;
+                        });
+                        int32_t sidebarVal = CVarGetInteger(menuEntries[0].sidebarCvar, 0);
+                        if (sidebarVal < menuEntries.size()) {
+                            sidebarVal -= 1;
+                        } else {
+                            sidebarVal = menuEntries.size() - 1;
+                        }
+                        CVarSetInteger(menuEntries[0].sidebarCvar, sidebarVal);
                     }
                 } },
               { "Search Input Autofocus", "gSettings.SearchAutofocus",
@@ -679,6 +691,10 @@ void AddSettings() {
                                       "Enables the separate Input Editor window.",
                                       WIDGET_WINDOW_BUTTON,
                                       { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
+
+    if (CVarGetInteger("gSettings.SidebarSearch", 0)) {
+        settingsSidebar.insert(settingsSidebar.begin() + searchSidebarIndex, searchSidebarEntry);
+    }
 }
 int32_t motionBlurStrength;
 
@@ -930,6 +946,17 @@ void AddEnhancements() {
                 "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Rupees", "gEnhancements.Cycle.DoNotResetRupees",
                 "Playing the Song Of Time will not reset the your rupees.", WIDGET_CVAR_CHECKBOX },
+              { "Do not reset Time Speed", "gEnhancements.Cycle.DoNotResetTimeSpeed",
+                "Playing the Song Of Time will not reset the current time speed set by Inverted Song of Time.",
+                WIDGET_CVAR_CHECKBOX },
+              {
+                  .widgetName = "Keep Express Mail",
+                  .widgetCVar = "gEnhancements.Cycle.KeepExpressMail",
+                  .widgetTooltip = "Allows the player to keep the Express Mail in their inventory after delivering it "
+                                   "the first time, so that both deliveries can be done within one cycle",
+                  .widgetType = WIDGET_CVAR_CHECKBOX,
+                  .widgetCallback = [](widgetInfo& info) { RegisterKeepExpressMail(); },
+              },
               { .widgetName = "Unstable",
                 .widgetType = WIDGET_SEPARATOR_TEXT,
                 .widgetOptions = { .color = UIWidgets::Colors::Yellow } },

@@ -982,6 +982,7 @@ void Sram_InitNewSave(void) {
     // #region 2S2H
     memcpy(&gSaveContext.save.shipSaveInfo.dpadEquips, &sSaveDefaultDpadItemEquips, sizeof(DpadSaveInfo));
     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
+    gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     // #endregion
 
     Sram_GenerateRandomSaveFields();
@@ -1207,6 +1208,7 @@ void Sram_InitDebugSave(void) {
     // #region 2S2H
     memcpy(&gSaveContext.save.shipSaveInfo.dpadEquips, &sSaveDefaultDpadItemEquips, sizeof(DpadSaveInfo));
     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
+    gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     // #endregion
 
     Sram_GenerateRandomSaveFields();
@@ -1410,7 +1412,7 @@ void func_8014546C(SramContext* sramCtx) {
 
         if (gSaveContext.flashSaveAvailable) {
             memcpy(sramCtx->saveBuf, &gSaveContext, sizeof(Save));
-            memcpy(&sramCtx->saveBuf[0x2000], &gSaveContext.save, sizeof(Save));
+            memcpy(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], &gSaveContext.save, sizeof(Save));
         }
     }
 }
@@ -1433,7 +1435,7 @@ void func_80145698(SramContext* sramCtx) {
     gSaveContext.save.saveInfo.checksum = Sram_CalcChecksum(&gSaveContext.save, sizeof(Save));
     if (gSaveContext.flashSaveAvailable) {
         memcpy(sramCtx->saveBuf, &gSaveContext, sizeof(Save));
-        memcpy(&sramCtx->saveBuf[0x2000], &gSaveContext.save, sizeof(Save));
+        memcpy(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], &gSaveContext.save, sizeof(Save));
     }
 }
 
@@ -1558,11 +1560,13 @@ void func_801457CC(GameState* gameState, SramContext* sramCtx) {
                     }
                     fileSelect->maskCount[sp76] = maskCount;
                     fileSelect->heartPieceCount[sp76] = GET_QUEST_HEART_PIECE_COUNT;
+
+                    GameInteractor_ExecuteOnFileSelectSaveLoad(sp76, false, &gSaveContext);
                 }
 
                 if (sp6E == 1) {
                     // backup save
-                    memcpy(&sramCtx->saveBuf[0x2000], &gSaveContext.save, sizeof(Save));
+                    memcpy(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], &gSaveContext.save, sizeof(Save));
                     Sram_SyncWriteToFlash(sramCtx, gFlashSaveStartPages[sp64], gFlashSpecialSaveNumPages[sp64]);
                 } else if (!sp6E) {
                     // main save
@@ -1582,7 +1586,7 @@ void func_801457CC(GameState* gameState, SramContext* sramCtx) {
                         (oldCheckSum != phi_s2)) {
                         SysFlashrom_ReadData(sramCtx->saveBuf, gFlashSaveStartPages[sp64], gFlashSaveNumPages[sp64]);
                         memcpy(&gSaveContext.save, sramCtx->saveBuf, sizeof(Save));
-                        memcpy(&sramCtx->saveBuf[0x2000], &gSaveContext.save, sizeof(Save));
+                        memcpy(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], &gSaveContext.save, sizeof(Save));
                         Sram_SyncWriteToFlash(sramCtx, gFlashSaveStartPages[sp64], gFlashSpecialSaveNumPages[sp64]);
                     }
                 }
@@ -1672,6 +1676,8 @@ void func_801457CC(GameState* gameState, SramContext* sramCtx) {
                         }
                         fileSelect->maskCount[sp76] = maskCount;
                         fileSelect->heartPieceCount[sp76] = GET_QUEST_HEART_PIECE_COUNT;
+
+                        GameInteractor_ExecuteOnFileSelectSaveLoad(sp76 - 2, true, &gSaveContext);
                     }
 
                     if (sp6E == 1) {
@@ -1789,6 +1795,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
             fileSelect->maskCount[fileSelect->copyDestFileIndex + 2] = maskCount;
             fileSelect->heartPieceCount[fileSelect->copyDestFileIndex + 2] = GET_QUEST_HEART_PIECE_COUNT;
+
+            GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->copyDestFileIndex, true, &gSaveContext);
         }
 
         // clear buffer
@@ -1797,7 +1805,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
         if (SysFlashrom_ReadData(&sramCtx->saveBuf[0], gFlashSaveStartPages[fileSelect->selectedFileIndex * 2],
                                  gFlashSaveNumPages[fileSelect->selectedFileIndex * 2])) {}
 
-        if (SysFlashrom_ReadData(&sramCtx->saveBuf[0x2000], gFlashSaveStartPages[fileSelect->selectedFileIndex * 2 + 1],
+        if (SysFlashrom_ReadData(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE],
+                                 gFlashSaveStartPages[fileSelect->selectedFileIndex * 2 + 1],
                                  gFlashSaveNumPages[fileSelect->selectedFileIndex * 2 + 1])) {}
 
         // copy buffer to save context
@@ -1830,6 +1839,8 @@ void Sram_CopySave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
         fileSelect->maskCount[fileSelect->copyDestFileIndex] = maskCount;
         fileSelect->heartPieceCount[fileSelect->copyDestFileIndex] = GET_QUEST_HEART_PIECE_COUNT;
+
+        GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->copyDestFileIndex, false, &gSaveContext);
     }
 
     gSaveContext.save.time = D_801F6AF0;
@@ -1865,7 +1876,7 @@ void Sram_InitSave(FileSelectState* fileSelect2, SramContext* sramCtx) {
         GameInteractor_ExecuteOnSaveInit(fileSelect->buttonIndex);
 
         memcpy(sramCtx->saveBuf, &gSaveContext.save, sizeof(Save));
-        memcpy(&sramCtx->saveBuf[0x2000], &gSaveContext.save, sizeof(Save));
+        memcpy(&sramCtx->saveBuf[HALF_SAVE_BUFFER_SIZE], &gSaveContext.save, sizeof(Save));
 
         for (i = 0; i < ARRAY_COUNT(gSaveContext.save.saveInfo.playerData.newf); i++) {
             fileSelect->newf[fileSelect->buttonIndex][i] = gSaveContext.save.saveInfo.playerData.newf[i];
@@ -1896,6 +1907,8 @@ void Sram_InitSave(FileSelectState* fileSelect2, SramContext* sramCtx) {
 
         fileSelect->maskCount[fileSelect->buttonIndex] = maskCount;
         fileSelect->heartPieceCount[fileSelect->buttonIndex] = GET_QUEST_HEART_PIECE_COUNT;
+
+        GameInteractor_ExecuteOnFileSelectSaveLoad(fileSelect->buttonIndex, false, &gSaveContext);
     }
 
     gSaveContext.save.time = D_801F6AF0;

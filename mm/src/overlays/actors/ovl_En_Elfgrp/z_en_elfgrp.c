@@ -33,6 +33,7 @@
 #include "z_en_elfgrp.h"
 #include "overlays/actors/ovl_En_Elforg/z_en_elforg.h"
 #include "overlays/actors/ovl_Demo_Effect/z_demo_effect.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -482,6 +483,10 @@ void func_80A3A398(EnElfgrp* this, PlayState* play) {
         this->actionFunc = func_80A3A274;
         Flags_UnsetSwitch(play, ENELFGRP_GET_SWITCH_FLAG_PARAMS(&this->actor));
 
+        if (!GameInteractor_Should(VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
+            goto skipGiveItem;
+        }
+
         if (this->stateFlags & ELFGRP_STATE_1) {
             Item_Give(play, ITEM_MASK_GREAT_FAIRY);
         }
@@ -494,8 +499,9 @@ void func_80A3A398(EnElfgrp* this, PlayState* play) {
             Item_Give(play, ITEM_SWORD_GREAT_FAIRY);
         }
 
+    skipGiveItem: // #2S2H
         this->stateFlags &= ~ELFGRP_STATE_3;
-    } else if (this->actor.xzDistToPlayer < 350.0f) {
+    } else if (GameInteractor_Should(VB_START_GREAT_FAIRY_CUTSCENE, this->actor.xzDistToPlayer < 350.0f, this)) {
         CutsceneManager_Queue(this->actor.csId);
     }
 }
@@ -526,14 +532,16 @@ void func_80A3A520(EnElfgrp* this, PlayState* play) {
         this->actionFunc = func_80A3A4AC;
         Flags_SetSwitch(play, ENELFGRP_GET_SWITCH_FLAG_PARAMS(&this->actor));
 
-        if (this->stateFlags & ELFGRP_STATE_1) {
-            Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
+            if (this->stateFlags & ELFGRP_STATE_1) {
+                Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+            }
         }
 
         if (ENELFGRP_GET_SWITCHFLAG_ROT(&this->actor) != 0) {
             Flags_SetSwitch(play, ENELFGRP_GET_SWITCHFLAG_ROT(&this->actor));
         }
-    } else if (this->actor.xzDistToPlayer < 350.0f) {
+    } else if (GameInteractor_Should(VB_START_GREAT_FAIRY_CUTSCENE, this->actor.xzDistToPlayer < 350.0f, this)) {
         CutsceneManager_Queue(this->actor.csId);
     }
 }

@@ -11,6 +11,7 @@
 #include "z_dm_stk.h"
 #include "objects/object_stk2/object_stk2.h"
 #include "objects/object_stk3/object_stk3.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_2000000)
 
@@ -1101,7 +1102,8 @@ void DmStk_Init(Actor* thisx, PlayState* play) {
                         R_MOON_CRASH_TIMER_X = 115;
                     }
 
-                    if (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] == ITEM_NONE) {
+                    if (GameInteractor_Should(VB_STK_HAVE_OCARINA,
+                                              gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] == ITEM_NONE)) {
                         sCylinderInit.base.colType = COLTYPE_WOOD;
                         this->actionFunc = DmStk_ClockTower_StartIntroCutsceneVersion1;
                     } else {
@@ -2051,10 +2053,12 @@ void DmStk_PostLimbDraw2(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot
                 break;
 
             case SK_HAND_TYPE_HOLDING_OCARINA:
-                if ((play->sceneId != SCENE_LOST_WOODS) || (gSaveContext.sceneLayer != 1)) {
+                gSPDisplayList(POLY_OPA_DISP++, gSkullKidTwoFingersExtendedLeftHandDL);
+                if (GameInteractor_Should(VB_DRAW_OCARINA_IN_STK_HAND,
+                                          (play->sceneId != SCENE_LOST_WOODS) || (gSaveContext.sceneLayer != 1),
+                                          this)) {
                     gSPDisplayList(POLY_OPA_DISP++, gSkullKidOcarinaOfTimeDL);
                 }
-                gSPDisplayList(POLY_OPA_DISP++, gSkullKidTwoFingersExtendedLeftHandDL);
                 break;
 
             case SK_HAND_TYPE_JUGGLING_OR_DROPPING_OCARINA:

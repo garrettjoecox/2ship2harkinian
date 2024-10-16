@@ -6,6 +6,7 @@
 
 #include "z_bg_dy_yoseizo.h"
 #include "overlays/actors/ovl_Demo_Effect/z_demo_effect.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_2000000)
 
@@ -319,7 +320,8 @@ void func_80A0B35C(BgDyYoseizo* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
 
     if (this->timer == 60) {
-        if (!Flags_GetSwitch(play, GREAT_FAIRY_GET_SWITCHFLAG(&this->actor))) {
+        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_GREAT_FAIRY,
+                                  !Flags_GetSwitch(play, GREAT_FAIRY_GET_SWITCHFLAG(&this->actor)), this)) {
             switch (GREAT_FAIRY_GET_TYPE(&this->actor)) {
                 case GREAT_FAIRY_TYPE_MAGIC:
                     if (gSaveContext.save.saveInfo.playerData.isMagicAcquired != true) {
@@ -349,7 +351,9 @@ void func_80A0B35C(BgDyYoseizo* this, PlayState* play) {
         Interface_SetHudVisibility(9);
     }
 
-    if ((this->timer < 50) && (GREAT_FAIRY_GET_TYPE(&this->actor) == GREAT_FAIRY_TYPE_COURAGE)) {
+    if (GameInteractor_Should(VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
+                              (this->timer < 50) && (GREAT_FAIRY_GET_TYPE(&this->actor) == GREAT_FAIRY_TYPE_COURAGE),
+                              this)) {
         if (gSaveContext.save.saveInfo.inventory.defenseHearts < 20) {
             gSaveContext.save.saveInfo.inventory.defenseHearts++;
         }

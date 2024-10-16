@@ -12,6 +12,7 @@ shipofharkinian.json
 .envrc
 imgui.ini
 saves/*
+randomizer/*
 
 mm/libultraship/extern/Debug/ImGui.lib
 

@@ -133,3 +133,6 @@ static const ALIGN_ASSET(2) char gFileSelFourthDayTex[] = dgFileSelFourthDayTex;
 
 #define dgFileSelCheatingDayTex "__OTR__misc/title_static/gFileSelCheatingDayTex"
 static const ALIGN_ASSET(2) char gFileSelCheatingDayTex[] = dgFileSelCheatingDayTex;
+
+#define dgFileSelRANDButtonTex "__OTR__textures/title_static/gFileSelRANDButtonTex"
+static const ALIGN_ASSET(2) char gFileSelRANDButtonTex[] = dgFileSelRANDButtonTex;

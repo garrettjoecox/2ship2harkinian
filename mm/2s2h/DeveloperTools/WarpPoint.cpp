@@ -48,6 +48,9 @@ void Warp() {
         gSaveContext.save.linkAge = 0;
         gSaveContext.fileNum = 0xFF;
         MapSelect_LoadGame((MapSelectState*)gGameState, CVarGetInteger(WARP_POINT_CVAR "Entrance", 0), 0);
+        // These two lines allow randomizer to be used with BootToWarpPoint. Not sure how reliable this is, might remove
+        GameInteractor_ExecuteOnSaveInit(gSaveContext.fileNum);
+        GameInteractor_ExecuteOnSaveLoad(gSaveContext.fileNum);
     } else {
         // The else case, and the rest of this function is primarly relevant code copied from Play_SetRespawnData and
         // func_80169EFC, minus the parts that copy scene flags to scene we are warping to (this is obviously

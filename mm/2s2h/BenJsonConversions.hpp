@@ -20,16 +20,58 @@ void from_json(const json& j, DpadSaveInfo& dpadEquips) {
     }
 }
 
+void to_json(json& j, const RandoSaveCheck& randoSaveCheck) {
+    j = json{
+        { "randoItemId", randoSaveCheck.randoItemId },
+        { "eligible", randoSaveCheck.eligible },
+        { "obtained", randoSaveCheck.obtained },
+        { "shuffled", randoSaveCheck.shuffled },
+        { "price", randoSaveCheck.price },
+    };
+}
+
+void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
+    j.at("randoItemId").get_to(randoSaveCheck.randoItemId);
+    j.at("eligible").get_to(randoSaveCheck.eligible);
+    j.at("obtained").get_to(randoSaveCheck.obtained);
+    j.at("shuffled").get_to(randoSaveCheck.shuffled);
+    j.at("price").get_to(randoSaveCheck.price);
+}
+
+void to_json(json& j, const RandoSaveInfo& rando) {
+    j = json{
+        { "randoInf", rando.randoInf },
+        { "randoSaveChecks", rando.randoSaveChecks },
+        { "randoSaveOptions", rando.randoSaveOptions },
+    };
+}
+
+void from_json(const json& j, RandoSaveInfo& rando) {
+    j.at("randoInf").get_to(rando.randoInf);
+    j.at("randoSaveChecks").get_to(rando.randoSaveChecks);
+    j.at("randoSaveOptions").get_to(rando.randoSaveOptions);
+}
+
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {
     j = json {
         { "dpadEquips", shipSaveInfo.dpadEquips },
         { "pauseSaveEntrance", shipSaveInfo.pauseSaveEntrance },
+        { "saveType", shipSaveInfo.saveType },
     };
+
+    if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        j["rando"] = shipSaveInfo.rando;
+    }
 }
 
 void from_json(const json& j, ShipSaveInfo& shipSaveInfo) {
     j.at("dpadEquips").get_to(shipSaveInfo.dpadEquips);
     j.at("pauseSaveEntrance").get_to(shipSaveInfo.pauseSaveEntrance);
+    j.at("saveType").get_to(shipSaveInfo.saveType);
+
+    if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        j.at("rando").get_to(shipSaveInfo.rando);
+    }
 }
 
 void to_json(json& j, const ItemEquips& itemEquips) {

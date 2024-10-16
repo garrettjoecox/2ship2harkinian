@@ -39,9 +39,9 @@ struct EventLogEntry {
 std::vector<EventLogEntry> eventLogEntries;
 
 const char* flagTypeNames[] = {
-    "",      "weekEventReg", "eventInf",    "scenesVisible", "owlActivation",
-    "chest", "switch",       "clearedRoom", "collectible",   "unk_14",
-    "rooms", "chest *",      "switch *",    "clearedRoom *", "collectible *",
+    "",         "weekEventReg",  "eventInf",      "scenesVisible", "owlActivation", "chest",
+    "switch",   "clearedRoom",   "collectible",   "unk_14",        "rooms",         "chest *",
+    "switch *", "clearedRoom *", "collectible *", "randoInf",
 };
 
 #define DEFINE_ACTOR(name, _enumValue, _allocType, _debugName, _humanName) { _enumValue, _debugName },

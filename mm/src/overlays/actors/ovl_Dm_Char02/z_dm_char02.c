@@ -6,6 +6,7 @@
 
 #include "z_dm_char02.h"
 #include "objects/object_stk2/object_stk2.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
@@ -159,10 +160,11 @@ void DmChar02_Update(Actor* thisx, PlayState* play) {
 }
 
 s32 DmChar02_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx) {
-    return false;
+    return GameInteractor_Should(VB_OVERRIDE_CHAR02_LIMB, false, dList);
 }
 
 void DmChar02_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
+    GameInteractor_Should(VB_POST_CHAR02_LIMB, true, thisx); // no-op
 }
 
 void DmChar02_TransformLimbDraw(PlayState* play, s32 limbIndex, Actor* thisx) {

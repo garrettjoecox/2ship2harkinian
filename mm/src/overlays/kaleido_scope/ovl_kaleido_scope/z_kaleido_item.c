@@ -767,12 +767,14 @@ void KaleidoScope_UpdateItemCursor(PlayState* play) {
                 } else if ((pauseCtx->debugEditor == DEBUG_EDITOR_NONE) && (pauseCtx->state == PAUSE_STATE_MAIN) &&
                            (pauseCtx->mainState == PAUSE_MAIN_STATE_IDLE) &&
                            CHECK_BTN_ALL(CONTROLLER1(&play->state)->press.button, BTN_A) && (msgCtx->msgLength == 0)) {
-                    // Give description on item through a message box
-                    pauseCtx->itemDescriptionOn = true;
-                    if (pauseCtx->cursorYIndex[PAUSE_ITEM] < 2) {
-                        func_801514B0(play, 0x1700 + pauseCtx->cursorItem[PAUSE_ITEM], 3);
-                    } else {
-                        func_801514B0(play, 0x1700 + pauseCtx->cursorItem[PAUSE_ITEM], 1);
+                    if (GameInteractor_Should(VB_KALEIDO_DISPLAY_ITEM_TEXT, true, &cursorItem)) {
+                        // Give description on item through a message box
+                        pauseCtx->itemDescriptionOn = true;
+                        if (pauseCtx->cursorYIndex[PAUSE_ITEM] < 2) {
+                            func_801514B0(play, 0x1700 + pauseCtx->cursorItem[PAUSE_ITEM], 3);
+                        } else {
+                            func_801514B0(play, 0x1700 + pauseCtx->cursorItem[PAUSE_ITEM], 1);
+                        }
                     }
                 }
             }

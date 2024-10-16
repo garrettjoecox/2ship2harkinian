@@ -22,6 +22,7 @@ void InitEnhancements() {
     RegisterEndOfCycleSaveHooks();
     RegisterSavingEnhancements();
     RegisterAutosave();
+    RegisterKeepExpressMail();
 
     // Dialogue
     RegisterFastBankSelection();

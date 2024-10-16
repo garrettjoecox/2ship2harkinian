@@ -8,6 +8,8 @@
 #include "z64horse.h"
 #include "z64voice.h"
 
+#include "2s2h/GameInteractor/GameInteractor.h"
+
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
 #define THIS ((EnCow*)thisx)
@@ -270,12 +272,15 @@ void EnCow_Talk(EnCow* this, PlayState* play) {
 
 void EnCow_Idle(EnCow* this, PlayState* play) {
     if ((play->msgCtx.ocarinaMode == OCARINA_MODE_NONE) || (play->msgCtx.ocarinaMode == OCARINA_MODE_END)) {
-        if (gHorsePlayedEponasSong) {
+        if (GameInteractor_Should(VB_COW_CONSIDER_EPONAS_SONG_PLAYED, gHorsePlayedEponasSong, this)) {
             if (this->flags & EN_COW_FLAG_WONT_GIVE_MILK) {
                 this->flags &= ~EN_COW_FLAG_WONT_GIVE_MILK;
                 gHorsePlayedEponasSong = false;
-            } else if ((this->actor.xzDistToPlayer < 150.0f) &&
-                       ABS_ALT(BINANG_SUB(this->actor.yawTowardsPlayer, this->actor.shape.rot.y)) < 25000) {
+            } else if (GameInteractor_Should(
+                           VB_GIVE_ITEM_FROM_COW,
+                           (this->actor.xzDistToPlayer < 150.0f) &&
+                               ABS_ALT(BINANG_SUB(this->actor.yawTowardsPlayer, this->actor.shape.rot.y)) < 25000,
+                           this)) {
                 gHorsePlayedEponasSong = false;
                 this->actionFunc = EnCow_Talk;
                 this->actor.flags |= ACTOR_FLAG_10000;

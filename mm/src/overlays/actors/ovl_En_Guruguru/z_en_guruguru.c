@@ -5,6 +5,7 @@
  */
 
 #include "z_en_guruguru.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -307,7 +308,7 @@ void func_80BC73F4(EnGuruguru* this) {
 
 void func_80BC7440(EnGuruguru* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
-    if (Actor_HasParent(&this->actor, play)) {
+    if (Actor_HasParent(&this->actor, play) || !GameInteractor_Should(VB_GIVE_ITEM_FROM_GURUGURU, true, NULL)) {
         this->actor.parent = NULL;
         this->textIdIndex++;
         this->actor.textId = textIDs[this->textIdIndex];

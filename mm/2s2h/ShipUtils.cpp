@@ -2,6 +2,12 @@
 #include <libultraship/libultra.h>
 #include "PR/ultratypes.h"
 #include "assets/2s2h_assets.h"
+#include <string>
+#include <random>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
+#include <boost_custom/container_hash/hash_32.hpp>
 
 extern "C" {
 #include "macros.h"
@@ -53,4 +59,21 @@ extern "C" TexturePtr Ship_GetCharFontTextureNES(u8 character) {
     }
 
     return (TexturePtr)fontTbl[adjustedChar];
+}
+
+static bool seeded = false;
+static boost::random::mt19937 generator;
+
+extern "C" void Ship_Random_Seed(u32 seed) {
+    seeded = true;
+    generator = boost::random::mt19937{ seed };
+}
+
+extern "C" s32 Ship_Random(s32 min, s32 max) {
+    if (!seeded) {
+        const auto seed = static_cast<uint32_t>(std::random_device{}());
+        Ship_Random_Seed(seed);
+    }
+    boost::random::uniform_int_distribution<uint32_t> distribution(min, max - 1);
+    return distribution(generator);
 }

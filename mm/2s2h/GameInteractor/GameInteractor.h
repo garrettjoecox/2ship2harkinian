@@ -5,6 +5,7 @@
 
 #ifdef __cplusplus
 #include <string>
+#include <variant>
 extern "C" {
 #endif
 #include "z64.h"
@@ -28,6 +29,7 @@ typedef enum {
     FLAG_CYCL_SCENE_SWITCH,
     FLAG_CYCL_SCENE_CLEARED_ROOM,
     FLAG_CYCL_SCENE_COLLECTIBLE,
+    FLAG_RANDO_INF,
 } FlagType;
 
 typedef enum {
@@ -48,20 +50,56 @@ typedef enum {
     VB_SONG_AVAILABLE_TO_PLAY,
     VB_USE_CUSTOM_CAMERA,
     VB_DELETE_OWL_SAVE,
+    VB_MSG_SCRIPT_DEL_ITEM,
     VB_CONSIDER_BUNNY_HOOD_EQUIPPED,
     VB_USE_ITEM_EQUIP_MASK,
     VB_KALEIDO_DISPLAY_ITEM_TEXT,
     VB_USE_ITEM_CONSIDER_LINK_HUMAN,
     VB_DRAW_ITEM_EQUIPPED_OUTLINE,
     VB_PLAY_TRANSITION_CS,
+    VB_PLAY_SONG_OF_TIME_CS,
     VB_TATL_INTERUPT_MSG3,
     VB_TATL_INTERUPT_MSG6,
     VB_ITEM_BE_RESTRICTED,
     VB_FLIP_HOP_VARIABLE,
     VB_DISABLE_LETTERBOX,
+    VB_CHEST_SPAWN_FAIRY,
+    VB_START_GREAT_FAIRY_CUTSCENE,
+    VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
+    VB_KILL_CLOCK_TOWN_STRAY_FAIRY,
     VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE,
+    VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY,
     VB_DRAW_SLIME_BODY_ITEM,
+    VB_DRAW_OCARINA_IN_STK_HAND,
+    VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX,
+    VB_OVERRIDE_CHAR02_LIMB,
+    VB_STK_HAVE_OCARINA,
+    VB_POST_CHAR02_LIMB,
     VB_ZTARGET_SPEED_CHECK,
+    VB_GIVE_ITEM_FROM_ELFORG,
+    VB_GIVE_ITEM_FROM_ITEM00,
+    VB_GIVE_ITEM_FROM_SCRIPT,
+    VB_GIVE_ITEM_FROM_SI,
+    VB_GIVE_ITEM_FROM_CHEST,
+    VB_POT_DROP_COLLECTIBLE,
+    VB_GIVE_ITEM_FROM_COW,
+    VB_COW_CONSIDER_EPONAS_SONG_PLAYED,
+    VB_GIVE_ITEM_FROM_GURUGURU,
+    VB_GIVE_ITEM_FROM_GREAT_FAIRY,
+    VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER,
+    VB_GIVE_ITEM_FROM_SWORDSMAN,
+    VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
+    // Vanilla condition: (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
+    // !CHECK_QUEST_ITEM(QUEST_SONG_HEALING)
+    VB_OSN_TEACH_SONG_OF_HEALING,
+    VB_GIVE_ITEM_FROM_OSN,
+    VB_GIVE_ITEM_FROM_MOONS_TEAR,
+    VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG,
+    VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL,
+    VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED,
+    // Vanilla Condition: INV_CONTENT(ITEM_MASK_KAFEIS_MASK) != ITEM_MASK_KAFEIS_MASK
+    VB_MADAME_AROMA_ASK_FOR_HELP,
+    VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -81,6 +119,13 @@ typedef enum {
     GI_DPAD_OCARINA,
     GI_DPAD_EQUIP,
 } GIDpadType;
+
+typedef enum {
+    GI_EVENT_NONE,
+    GI_EVENT_GIVE_ITEM,
+    GI_EVENT_SPAWN_ACTOR,
+    GI_EVENT_TRANSITION,
+} GIEventType;
 
 #ifdef __cplusplus
 
@@ -317,6 +362,8 @@ class GameInteractor {
     DEFINE_HOOK(BeforeKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(AfterKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(OnSaveInit, (s16 fileNum));
+    DEFINE_HOOK(OnSaveLoad, (s16 fileNum));
+    DEFINE_HOOK(OnFileSelectSaveLoad, (s16 fileNum, bool isOwlSave, SaveContext* saveContext));
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
@@ -367,6 +414,8 @@ void GameInteractor_ExecuteOnKaleidoUpdate(PauseContext* pauseCtx);
 void GameInteractor_ExecuteBeforeKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteAfterKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteOnSaveInit(s16 fileNum);
+void GameInteractor_ExecuteOnSaveLoad(s16 fileNum);
+void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, SaveContext* saveContext);
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
@@ -418,6 +467,7 @@ uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo);
 
 #ifdef __cplusplus
 }
+
 #endif
 
 #endif // GAME_INTERACTOR_H

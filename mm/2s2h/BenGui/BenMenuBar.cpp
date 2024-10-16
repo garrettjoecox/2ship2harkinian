@@ -10,6 +10,7 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "HudEditor.h"
+#include "Rando/Rando.h"
 
 extern "C" {
 #include "z64.h"
@@ -434,6 +435,8 @@ void DrawEnhancementsMenu() {
                     .tooltip =
                         "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time",
                 });
+            UIWidgets::CVarCheckbox("Skip Get Item Cutscenes", "gEnhancements.Cutscenes.SkipGetItemCutscenes",
+                                    { .tooltip = "This only works in Randomizer currently" });
 
             ImGui::EndMenu();
         }
@@ -475,6 +478,13 @@ void DrawEnhancementsMenu() {
                 "Do not reset Time Speed", "gEnhancements.Cycle.DoNotResetTimeSpeed",
                 { .tooltip =
                       "Playing the Song Of Time will not reset the current time speed set by Inverted Song of Time." });
+
+            if (UIWidgets::CVarCheckbox(
+                    "Keep Express Mail", "gEnhancements.Cycle.KeepExpressMail",
+                    { .tooltip = "Allows the player to keep the Express Mail in their inventory after delivering it "
+                                 "the first time, so that both deliveries can be done within one cycle" })) {
+                RegisterKeepExpressMail();
+            }
 
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(255, 255, 0, 255));
             ImGui::SeparatorText("Unstable");
@@ -899,6 +909,10 @@ void BenMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawDeveloperToolsMenu();
+
+        ImGui::SetCursorPosY(0.0f);
+
+        Rando::DrawMenu();
 
         ImGui::SetCursorPosY(0.0f);
 

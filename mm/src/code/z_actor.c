@@ -915,6 +915,20 @@ void Flags_ClearEventInf(s32 flag) {
 }
 // #endregion
 
+// #region 2S2H Our rando_inf flags
+s32 Flags_GetRandoInf(s32 flag) {
+    return gSaveContext.save.shipSaveInfo.rando.randoInf[(flag) >> 4] & (1 << ((flag)&0xF));
+}
+
+void Flags_SetRandoInf(s32 flag) {
+    u8 previouslyOff = !Flags_GetRandoInf(flag);
+    gSaveContext.save.shipSaveInfo.rando.randoInf[(flag) >> 4] |= (1 << ((flag)&0xF));
+    if (previouslyOff) {
+        GameInteractor_ExecuteOnFlagSet(FLAG_RANDO_INF, flag);
+    }
+}
+// #endregion
+
 /* End of Flags section */
 
 /* Start of TitleCard section */
