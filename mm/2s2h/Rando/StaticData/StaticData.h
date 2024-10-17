@@ -36,6 +36,7 @@ struct RandoStaticItem {
     ItemId itemId;
     GetItemId getItemId;
     GetItemDrawId drawId;
+    ItemRepeatFlag repeatFlag;
 };
 
 extern std::map<RandoItemId, RandoStaticItem> Items;

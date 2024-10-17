@@ -981,4 +981,9 @@ typedef enum {
     RANDO_INF_MAX,
 } RandoInf;
 
+typedef enum {
+    REPEAT_YES,
+    REPEAT_NO,
+} ItemRepeatFlag;
+
 #endif // RANDO_TYPES_H
