@@ -13,6 +13,7 @@ void OnFileLoad();
 void CheckQueue();
 void CheckQueueReset();
 void InitFileSelect();
+void InitKaleidoItemPage();
 void BeforeEndOfCycleSave();
 void AfterEndOfCycleSave();
 void OnFileCreate(s16 fileNum);

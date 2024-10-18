@@ -6,6 +6,8 @@
 
 #include "z_en_al.h"
 
+#include "2s2h/GameInteractor/GameInteractor.h"
+
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
 #define THIS ((EnAl*)thisx)
@@ -773,7 +775,8 @@ MsgScript* func_80BDEABC(EnAl* this, PlayState* play) {
                 return D_80BDFDD0;
             }
 
-            if (INV_CONTENT(ITEM_MASK_KAFEIS_MASK) != ITEM_MASK_KAFEIS_MASK) {
+            if (GameInteractor_Should(VB_MADAME_AROMA_ASK_FOR_HELP,
+                                      INV_CONTENT(ITEM_MASK_KAFEIS_MASK) != ITEM_MASK_KAFEIS_MASK, this)) {
                 return D_80BDFE8C;
             }
 

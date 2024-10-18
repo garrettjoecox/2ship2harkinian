@@ -335,8 +335,10 @@ typedef enum {
 
 typedef struct RandoSaveCheck {
     RandoItemId randoItemId;
+    bool shuffled;
     bool eligible;
     bool obtained;
+    u16 price; // Only applicable for shops/merchants
 } RandoSaveCheck;
 
 typedef struct RandoSaveInfo {

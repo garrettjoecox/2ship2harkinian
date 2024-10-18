@@ -7,6 +7,7 @@ void RegisterCutscenes();
 void RegisterSkipDekuSalesman();
 void RegisterSkipFallingMoonsTear();
 void RegisterSkipGreatFairyCutscene();
+void RegisterSkipKafeiReveal();
 void RegisterSkipScarecrowDance();
 void RegisterSkipTatlInterrupts();
 

@@ -30,6 +30,7 @@ void Rando::MiscBehavior::OnFileLoad() {
     afterEndOfCycleSaveHook = 0;
 
     Rando::MiscBehavior::CheckQueueReset();
+    Rando::MiscBehavior::InitKaleidoItemPage();
 
     if (!IS_RANDO) {
         return;

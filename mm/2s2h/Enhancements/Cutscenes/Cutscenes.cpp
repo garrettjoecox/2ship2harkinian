@@ -5,6 +5,7 @@ void RegisterCutscenes() {
     RegisterSkipDekuSalesman();
     RegisterSkipFallingMoonsTear();
     RegisterSkipGreatFairyCutscene();
+    RegisterSkipKafeiReveal();
     RegisterSkipScarecrowDance();
     RegisterSkipTatlInterrupts();
 

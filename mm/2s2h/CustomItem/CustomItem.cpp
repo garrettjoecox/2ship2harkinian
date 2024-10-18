@@ -50,6 +50,13 @@ void CustomItem00_Init(Actor* actor, PlayState* play) {
         Math_Vec3f_Copy(&actor->world.pos, &GET_PLAYER(play)->actor.world.pos);
     }
 
+    if (CUSTOM_ITEM_FLAGS & CustomItem::TOSS_ON_SPAWN) {
+        actor->velocity.y = 8.0f;
+        actor->speed = 2.0f;
+        actor->gravity = -1.4f;
+        actor->world.rot.y = Rand_ZeroOne() * 40000.0f;
+    }
+
     enItem00->unk152 = -1;
 }
 
@@ -193,6 +200,20 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
             }
         }
     }
+
+    if (actor->gravity != 0.0f) {
+        Actor_MoveWithGravity(actor);
+        Actor_UpdateBgCheckInfo(play, actor, 20.0f, 15.0f, 15.0f,
+                                UPDBGCHECKINFO_FLAG_1 | UPDBGCHECKINFO_FLAG_4 | UPDBGCHECKINFO_FLAG_8 |
+                                    UPDBGCHECKINFO_FLAG_10);
+    }
+
+    if (actor->bgCheckFlags & (BGCHECKFLAG_GROUND | BGCHECKFLAG_GROUND_TOUCH)) {
+        actor->speed = 0.0f;
+    }
+
+    Collider_UpdateCylinder(actor, &enItem00->collider);
+    CollisionCheck_SetAC(play, &play->colChkCtx, &enItem00->collider.base);
 }
 
 void CustomItem::RegisterHooks() {

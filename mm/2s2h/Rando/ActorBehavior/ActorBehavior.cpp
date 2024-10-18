@@ -1,4 +1,5 @@
 #include "ActorBehavior.h"
+#include <libultraship/libultraship.h>
 
 extern "C" {
 #include "variables.h"
@@ -10,7 +11,11 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_GIVE_ITEM_FROM_GURUGURU:
         case VB_GIVE_ITEM_FROM_SCRIPT:
         case VB_GIVE_ITEM_FROM_SWORDSMAN:
+        case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
             *should = false;
+            break;
+        case VB_MADAME_AROMA_ASK_FOR_HELP:
+            *should = !CHECK_WEEKEVENTREG(WEEKEVENTREG_BOMBERS_NOTEBOOK_EVENT_RECEIVED_KAFEIS_MASK);
             break;
     }
 }
@@ -26,6 +31,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
+    Rando::ActorBehavior::InitEnGirlABehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();

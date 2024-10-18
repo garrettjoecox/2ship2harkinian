@@ -44,6 +44,7 @@ void Rando::DrawMenu() {
                 UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
                                         Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Pots", Rando::StaticData::Options[RO_SHUFFLE_POTS].cvar);
+                UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
             }
         }
 

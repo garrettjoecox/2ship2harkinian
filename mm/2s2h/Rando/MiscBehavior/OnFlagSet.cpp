@@ -11,7 +11,9 @@ void Rando::MiscBehavior::OnFlagSet(FlagType flagType, u32 flag) {
     }
 
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-    randoSaveCheck.eligible = true;
+    if (randoSaveCheck.shuffled) {
+        randoSaveCheck.eligible = true;
+    }
 }
 
 void Rando::MiscBehavior::OnSceneFlagSet(s16 sceneId, FlagType flagType, u32 flag) {
@@ -21,5 +23,7 @@ void Rando::MiscBehavior::OnSceneFlagSet(s16 sceneId, FlagType flagType, u32 fla
     }
 
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-    randoSaveCheck.eligible = true;
+    if (randoSaveCheck.shuffled) {
+        randoSaveCheck.eligible = true;
+    }
 }

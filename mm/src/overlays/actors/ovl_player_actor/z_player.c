@@ -20523,7 +20523,8 @@ void Player_CsAction_41(PlayState* play, Player* this, CsCmdActorCue* cue) {
                 this->getItemDrawIdPlusOne = GID_PENDANT_OF_MEMORIES + 1;
             }
         } else if (this->av2.actionVar2 < 0) {
-            if (Actor_HasParent(&this->actor, play)) {
+            if (Actor_HasParent(&this->actor, play) ||
+                !GameInteractor_Should(VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI, true)) {
                 this->actor.parent = NULL;
                 this->av2.actionVar2 = 1;
             } else {

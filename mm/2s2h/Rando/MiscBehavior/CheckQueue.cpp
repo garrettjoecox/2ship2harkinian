@@ -53,6 +53,7 @@ void Rando::MiscBehavior::CheckQueue() {
                 .drawItem =
                     [](Actor* actor, PlayState* play) {
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                        // Do we want to convert here? Maybe not?
                         RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
                         Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
                         Rando::DrawItem(randoItemId);

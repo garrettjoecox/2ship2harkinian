@@ -849,8 +849,11 @@ void DrawItemsAndMasksTab() {
                             }
                             Rando::GiveItem((RandoItemId)CUSTOM_ITEM_PARAM);
                         },
-                    .drawItem = [](Actor* actor,
-                                   PlayState* play) { Rando::DrawItem((RandoItemId)CUSTOM_ITEM_PARAM); } });
+                    .drawItem =
+                        [](Actor* actor, PlayState* play) {
+                            Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                            Rando::DrawItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                        } });
             }
         }
     }

@@ -47,7 +47,11 @@ void Rando::ActorBehavior::InitEnSiBehavior() {
 
             auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-            if (randoSaveCheck.obtained) {
+            if (!randoSaveCheck.shuffled) {
+                return;
+            }
+
+            if (randoSaveCheck.eligible) {
                 Actor_Kill(&enSi->actor);
                 return;
             }
@@ -61,6 +65,12 @@ void Rando::ActorBehavior::InitEnSiBehavior() {
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(
             FLAG_CYCL_SCENE_CHEST, ENSI_GET_CHEST_FLAG(&enSi->actor), gPlayState->sceneId);
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+
+        if (!randoSaveCheck.shuffled) {
             return;
         }
 

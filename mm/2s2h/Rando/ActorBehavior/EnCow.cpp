@@ -63,7 +63,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
     static uint32_t onActorInit = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId2);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInit);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldActorInit>(onActorInit);
 
     shouldHookId1 = 0;
     shouldHookId2 = 0;

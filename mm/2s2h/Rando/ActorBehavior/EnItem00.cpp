@@ -1,30 +1,16 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/CustomItem/CustomItem.h"
 
 extern "C" {
 #include "functions.h"
 #include "variables.h"
 }
 
-void EnItem00_DrawCustomForFreestanding(Actor* thisx, PlayState* play) {
-    EnItem00* enItem00 = (EnItem00*)thisx;
-    Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
-
-    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, enItem00->collectibleFlag,
-                                                                gPlayState->sceneId);
-    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-        return;
-    }
-
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-
-    Rando::DrawItem(randoSaveCheck.randoItemId);
-}
-
 void Rando::ActorBehavior::InitEnItem00Behavior() {
     static uint32_t onActorInitHookId = 0;
     static uint32_t shouldHookId = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInitHookId);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldActorInit>(onActorInitHookId);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId);
 
     onActorInitHookId = 0;
@@ -34,52 +20,50 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         return;
     }
 
-    onActorInitHookId =
-        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_EN_ITEM00, [](Actor* actor) {
+    onActorInitHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
+        ACTOR_EN_ITEM00, [](Actor* actor, bool* should) {
             EnItem00* item00 = (EnItem00*)actor;
 
             // If it's one of our items ignore it
-            if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
+            if (item00->actor.params == ITEM00_NOTHING) {
                 return;
             }
 
             auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
-                                                                        item00->collectibleFlag, gPlayState->sceneId);
+                                                                        ENITEM00_GET_7F00(actor), gPlayState->sceneId);
             if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
                 return;
             }
-            // Hack for now, need to find better way to prevent this in the future. Pots handle their own items,
-            // after check has been received we want vanilla drops.
+
+            // Pots handle their own items, ignore them
             if (randoStaticCheck.randoCheckType == RCTYPE_POT) {
                 return;
             }
 
             auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-            if (randoSaveCheck.obtained) {
-                Actor_Kill(&item00->actor);
+            if (!randoSaveCheck.shuffled) {
                 return;
             }
 
-            actor->draw = EnItem00_DrawCustomForFreestanding;
+            // Prevent the original item from spawning
+            *should = false;
+
+            // If it hasn't been collected yet, spawn a dummy item
+            if (!randoSaveCheck.eligible) {
+                CustomItem::Spawn(
+                    actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
+                    randoStaticCheck.randoCheckId,
+                    [](Actor* actor, PlayState* play) {
+                        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                        randoSaveCheck.eligible = true;
+                    },
+                    [](Actor* actor, PlayState* play) {
+                        auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                        RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                        Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                        Rando::DrawItem(randoItemId);
+                    });
+            }
         });
-
-    shouldHookId = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_ITEM00, {
-        EnItem00* item00 = va_arg(args, EnItem00*);
-
-        // If it's one of our items ignore it
-        if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
-            return;
-        }
-
-        auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
-                                                                    item00->collectibleFlag, gPlayState->sceneId);
-        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        Flags_SetCollectible(gPlayState, item00->collectibleFlag);
-        Actor_Kill(&item00->actor);
-        *should = false;
-    });
 }

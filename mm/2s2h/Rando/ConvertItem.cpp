@@ -42,9 +42,38 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId) {
                 return RI_RUPEE_BLUE;
             }
             break;
+        case RI_MILK_REFILL:
+        case RI_FAIRY_REFILL:
+        case RI_RED_POTION_REFILL:
         case RI_BLUE_POTION_REFILL:
         case RI_GREEN_POTION_REFILL:
             if (!Inventory_HasEmptyBottle()) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_ARROWS_10:
+        case RI_ARROWS_30:
+        case RI_ARROWS_50:
+            if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_BOMBCHU:
+        case RI_BOMBCHU_5:
+        case RI_BOMBCHU_10:
+        case RI_BOMBS_5:
+        case RI_BOMBS_10:
+            if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 0) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_SHIELD_HERO:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) != EQUIP_VALUE_SHIELD_NONE) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_SHIELD_MIRROR:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_MIRROR) {
                 return RI_RUPEE_BLUE;
             }
             break;

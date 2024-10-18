@@ -866,9 +866,15 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
     onActorInit =
         GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_OBJ_TSUBO, [](Actor* actor) {
             RandoCheckId randoCheckId = IdentifyPot(actor);
-            if (randoCheckId != RC_UNKNOWN) {
-                actor->home.rot.x = randoCheckId;
+            if (randoCheckId == RC_UNKNOWN) {
+                return;
             }
+
+            if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].eligible) {
+                return;
+            }
+
+            actor->home.rot.x = randoCheckId;
         });
 
     shouldHookId1 = REGISTER_VB_SHOULD(VB_POT_DROP_COLLECTIBLE, {
@@ -884,7 +890,8 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         }
 
         CustomItem::Spawn(
-            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH, randoCheckId,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
+            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoCheckId,
             [](Actor* actor, PlayState* play) {
                 RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                 if (randoSaveCheck.eligible) {

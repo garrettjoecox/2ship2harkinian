@@ -153,6 +153,9 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_BOMB_BAG:
             Rando::DrawItem(Rando::ConvertItem(randoItemId));
             break;
+        case RI_NONE:
+        case RI_UNKNOWN:
+            break;
         default:
             GetItem_Draw(gPlayState, Rando::StaticData::Items[randoItemId].drawId);
             break;

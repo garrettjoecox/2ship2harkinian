@@ -58,6 +58,14 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                             continue;
                         }
 
+                        if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
+                            if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
+                                continue;
+                            } else {
+                                RANDO_SAVE_CHECKS[randoCheckId].price = Ship_Random(0, 200);
+                            }
+                        }
+
                         checkPool.push_back(randoCheckId);
                         itemPool.push_back(randoStaticCheck.randoItemId);
                     }
@@ -67,6 +75,7 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     }
 
                     for (size_t i = 0; i < checkPool.size(); i++) {
+                        RANDO_SAVE_CHECKS[checkPool[i]].shuffled = true;
                         RANDO_SAVE_CHECKS[checkPool[i]].randoItemId = itemPool[i];
                     }
                 }
@@ -84,7 +93,20 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
 
                     j["checks"] = nlohmann::json::object();
                     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+                            continue;
+                        }
+
+                        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled) {
+                            continue;
+                        }
+
+                        if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
+                            j["checks"][randoStaticCheck.name] = nlohmann::json::object();
+                            j["checks"][randoStaticCheck.name]["randoItemId"] =
+                                Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].spoilerName;
+                            j["checks"][randoStaticCheck.name]["price"] = RANDO_SAVE_CHECKS[randoCheckId].price;
+                        } else {
                             j["checks"][randoStaticCheck.name] =
                                 Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].spoilerName;
                         }
@@ -136,9 +158,33 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 }
 
                 for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-                    if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
-                        RANDO_SAVE_CHECKS[randoCheckId].randoItemId = Rando::StaticData::GetItemIdFromName(
-                            j["checks"][randoStaticCheck.name].get<std::string>().c_str());
+                    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+                        continue;
+                    }
+
+                    if (!j["checks"].contains(randoStaticCheck.name)) {
+                        continue;
+                    }
+
+                    // Check if it's an object or a string
+                    if (j["checks"][randoStaticCheck.name].is_object()) {
+                        std::string itemName = j["checks"][randoStaticCheck.name]["randoItemId"].get<std::string>();
+                        RandoItemId randoItemId = Rando::StaticData::GetItemIdFromName(itemName.c_str());
+
+                        RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoItemId;
+                        RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
+
+                        // If it has a price, set it
+                        if (j["checks"][randoStaticCheck.name].contains("price")) {
+                            RANDO_SAVE_CHECKS[randoCheckId].price =
+                                j["checks"][randoStaticCheck.name]["price"].get<uint16_t>();
+                        }
+                    } else {
+                        std::string itemName = j["checks"][randoStaticCheck.name].get<std::string>();
+                        RandoItemId randoItemId = Rando::StaticData::GetItemIdFromName(itemName.c_str());
+
+                        RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoItemId;
+                        RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
                     }
                 }
 

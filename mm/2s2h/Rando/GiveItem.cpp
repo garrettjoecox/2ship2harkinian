@@ -108,6 +108,42 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             SET_QUEST_ITEM(QUEST_QUIVER);
             Inventory_IncrementSkullTokenCount(SCENE_KINDAN2);
             break;
+        case RI_MOONS_TEAR:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_DEED_LAND:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_DEED_LAND);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_DEED_SWAMP:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_DEED_MOUNTAIN:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_DEED_OCEAN:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_ROOM_KEY:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_LETTER_TO_MAMA:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_LETTER_TO_KAFEI:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_PENDANT_OF_MEMORIES:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
