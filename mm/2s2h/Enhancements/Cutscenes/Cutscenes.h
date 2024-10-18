@@ -17,6 +17,7 @@ void SkipClockTowerSkullKidEncounter();
 void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
 void RegisterSkipSongOfTimeCutscene();
+void RegisterSkipMilkRunCutscenes();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

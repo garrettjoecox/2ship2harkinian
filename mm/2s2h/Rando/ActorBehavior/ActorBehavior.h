@@ -18,6 +18,7 @@ void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnGirlABehavior();
 void InitEnItem00Behavior();
+void InitEnMaYtoBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();

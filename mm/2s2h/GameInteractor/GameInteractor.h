@@ -100,6 +100,8 @@ typedef enum {
     // Vanilla Condition: INV_CONTENT(ITEM_MASK_KAFEIS_MASK) != ITEM_MASK_KAFEIS_MASK
     VB_MADAME_AROMA_ASK_FOR_HELP,
     VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI,
+    VB_HAVE_ROMANI_MASK,
+    VB_GIVE_ROMANI_MASK,
 } GIVanillaBehavior;
 
 typedef enum {
