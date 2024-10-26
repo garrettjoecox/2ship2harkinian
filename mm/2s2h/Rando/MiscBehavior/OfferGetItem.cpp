@@ -53,6 +53,10 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
         Player* player = GET_PLAYER(gPlayState);
 
         switch (actor->id) {
+            // Otherwise, Dotour will repeat the current textbox and not display the next one
+            case ACTOR_EN_DT:
+                actor->textId = 0x2AD1;
+                [[fallthrough]];
             case ACTOR_EN_KENDO_JS:
             case ACTOR_EN_GURUGURU:
             case ACTOR_EN_HS:
