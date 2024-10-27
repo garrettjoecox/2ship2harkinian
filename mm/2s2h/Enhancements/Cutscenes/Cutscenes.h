@@ -10,6 +10,7 @@ void RegisterSkipGreatFairyCutscene();
 void RegisterSkipKafeiReveal();
 void RegisterSkipScarecrowDance();
 void RegisterSkipTatlInterrupts();
+void RegisterSkipMayorsOfficeCutscene();
 
 // StoryCutscenes
 void RegisterSkipClockTowerOpen();

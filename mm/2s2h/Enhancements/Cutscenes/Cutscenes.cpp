@@ -8,6 +8,7 @@ void RegisterCutscenes() {
     RegisterSkipKafeiReveal();
     RegisterSkipScarecrowDance();
     RegisterSkipTatlInterrupts();
+    RegisterSkipMayorsOfficeCutscene();
 
     // StoryCutscenes
     RegisterSkipClockTowerOpen();
