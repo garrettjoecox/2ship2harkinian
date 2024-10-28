@@ -34,6 +34,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
+    Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();

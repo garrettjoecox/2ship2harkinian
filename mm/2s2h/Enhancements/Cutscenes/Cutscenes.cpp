@@ -17,6 +17,7 @@ void RegisterCutscenes() {
     RegisterSkipLearningSongOfTime();
     RegisterSkipSongOfTimeCutscene();
     RegisterSkipMilkRunCutscenes();
+    RegisterSkipBombBagTheftCutscene();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();

@@ -9,6 +9,7 @@
 #include "overlays/actors/ovl_En_Door/z_en_door.h"
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "overlays/effects/ovl_Effect_Ss_Solder_Srch_Ball/z_eff_ss_solder_srch_ball.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -191,9 +192,11 @@ void EnSuttari_UpdateCollider(EnSuttari* this, PlayState* play) {
         if (this->collider.base.acFlags & AC_HIT) {
             this->collider.base.acFlags &= ~AC_HIT;
             if (this->actor.colChkInfo.damageEffect == 0xF) {
-                this->flags1 |= 0x100;
-                this->flags1 &= ~0x40;
-                Enemy_StartFinishingBlow(play, &this->actor);
+                if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
+                    this->flags1 |= 0x100;
+                    this->flags1 &= ~0x40;
+                    Enemy_StartFinishingBlow(play, &this->actor);
+                }
             } else if (this->actor.colChkInfo.damageEffect == 0xE) {
                 this->flags1 |= 0x200;
                 this->flags1 &= ~0x40;
@@ -906,7 +909,9 @@ void func_80BAC2FC(EnSuttari* this, PlayState* play) {
                     this->flags1 |= 0x1000;
                     this->flags2 |= 2;
                 } else {
-                    CutsceneManager_Queue(this->csIdList[0]);
+                    if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
+                        CutsceneManager_Queue(this->csIdList[0]);
+                    }
                 }
             }
             func_80BABFD4(this, play);
@@ -1219,7 +1224,9 @@ void func_80BAD130(EnSuttari* this, PlayState* play) {
 
 void func_80BAD230(EnSuttari* this, PlayState* play) {
     if (CutsceneManager_IsNext(this->csIdList[1])) {
-        CutsceneManager_Start(this->csIdList[1], &this->actor);
+        if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
+            CutsceneManager_Start(this->csIdList[1], &this->actor);
+        }
         this->textId = 0x2A31;
         Message_StartTextbox(play, this->textId, &this->actor);
         this->flags1 |= 0x4000;

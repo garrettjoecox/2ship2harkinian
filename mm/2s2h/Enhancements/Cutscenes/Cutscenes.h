@@ -19,6 +19,7 @@ void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
 void RegisterSkipSongOfTimeCutscene();
 void RegisterSkipMilkRunCutscenes();
+void RegisterSkipBombBagTheftCutscene();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

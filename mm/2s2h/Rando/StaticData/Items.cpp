@@ -62,6 +62,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_MAGIC_BEAN,                 "a Magic Bean",                  ITEM_MAGIC_BEANS,                GI_MAGIC_BEANS,              GID_MAGIC_BEANS),
     RI(RI_MAGIC_JAR_BIG,              "a Large Magic Refill",          ITEM_MAGIC_JAR_BIG,              GI_MAGIC_JAR_BIG,            GID_MAGIC_JAR_BIG),
     RI(RI_MAGIC_JAR_SMALL,            "a Small Magic Refill",          ITEM_MAGIC_JAR_SMALL,            GI_MAGIC_JAR_SMALL,          GID_MAGIC_JAR_SMALL),
+    RI(RI_MASK_BLAST,                 "the Blast Mask",                ITEM_MASK_BLAST,                 GI_MASK_BLAST,               GID_MASK_BLAST),
     RI(RI_MASK_BREMEN,                "the Bremen Mask",               ITEM_MASK_BREMEN,                GI_MASK_BREMEN,              GID_MASK_BREMEN),
     RI(RI_MASK_BUNNY,                 "the Bunny Hood",                ITEM_MASK_BUNNY,                 GI_MASK_BUNNY,               GID_MASK_BUNNY),
     RI(RI_MASK_CAPTAIN,               "the Captain's Hat",             ITEM_MASK_CAPTAIN,               GI_MASK_CAPTAIN,             GID_MASK_CAPTAIN),
