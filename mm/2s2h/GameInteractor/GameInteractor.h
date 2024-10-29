@@ -111,7 +111,6 @@ typedef enum {
     VB_MAGIC_SPIN_ATTACK_CHECK_FORM,
     VB_TRANSFORM_THUNDER_MATRIX,
     VB_PLAY_BOMB_BAG_THEFT_CS,
-    VB_GIVE_ITEM_FROM_BOMB_SHOP_LADY,
 } GIVanillaBehavior;
 
 typedef enum {

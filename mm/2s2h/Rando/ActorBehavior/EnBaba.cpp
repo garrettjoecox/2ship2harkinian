@@ -13,7 +13,7 @@ void EnBaba_GaveBlastMask(EnBaba* enBaba, PlayState* play);
 // The Bomb Shop Lady's item give is non-scripted, but the catch-all for VB_GIVE_ITEM_FROM_OFFER does not work for
 // this case, as Link can move freely once the next textbox appears. This code fixes that.
 void Rando::ActorBehavior::InitEnBabaBehavior() {
-    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_BOMB_SHOP_LADY, IS_RANDO, {
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
         *should = false;
 
         EnBaba* enBaba = va_arg(args, EnBaba*);

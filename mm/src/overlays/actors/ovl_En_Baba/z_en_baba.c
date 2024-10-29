@@ -632,7 +632,7 @@ void EnBaba_Talk(EnBaba* this, PlayState* play) {
                 this->stateFlags &= ~BOMB_SHOP_LADY_STATE_GIVE_BLAST_MASK;
                 play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
                 play->msgCtx.stateTimer = 4;
-                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_BOMB_SHOP_LADY, true, this)) {
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_OFFER, true, this)) {
                     this->actionFunc = EnBaba_GiveBlastMask;
                 }
             } else {
