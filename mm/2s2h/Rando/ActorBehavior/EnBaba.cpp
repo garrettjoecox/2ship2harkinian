@@ -16,6 +16,7 @@ void Rando::ActorBehavior::InitEnBabaBehavior() {
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
         *should = false;
 
+        GetItemId* item = va_arg(args, GetItemId*);
         EnBaba* enBaba = va_arg(args, EnBaba*);
         Player* player = GET_PLAYER(gPlayState);
         enBaba->stateFlags |= BOMB_SHOP_LADY_STATE_GAVE_BLAST_MASK;
