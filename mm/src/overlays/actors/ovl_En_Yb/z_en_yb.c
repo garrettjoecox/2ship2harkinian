@@ -6,6 +6,7 @@
 
 #include "z_en_yb.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_2000000)
 
@@ -136,7 +137,7 @@ void EnYb_Destroy(Actor* thisx, PlayState* play) {
 }
 
 void func_80BFA2FC(PlayState* play) {
-    if (INV_CONTENT(ITEM_MASK_KAMARO) == ITEM_MASK_KAMARO) {
+    if (GameInteractor_Should(VB_HAVE_KAMAROS_MASK, INV_CONTENT(ITEM_MASK_KAMARO) == ITEM_MASK_KAMARO)) {
         Message_BombersNotebookQueueEvent(play, BOMBERS_NOTEBOOK_EVENT_RECEIVED_KAMAROS_MASK);
     }
     Message_BombersNotebookQueueEvent(play, BOMBERS_NOTEBOOK_EVENT_MET_KAMARO);
@@ -362,7 +363,9 @@ void EnYb_Idle(EnYb* this, PlayState* play) {
         (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) && (play->msgCtx.lastPlayedSong == OCARINA_SONG_HEALING) &&
         (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)) {
         this->actionFunc = EnYb_TeachingDance;
-        this->teachingCutsceneTimer = 200;
+        if (GameInteractor_Should(VB_PLAY_KAMARO_TEACH_DANCE, true, this)) {
+            this->teachingCutsceneTimer = 200;
+        }
         EnYb_ChangeCutscene(this, 0);
     } else if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
         func_80BFA2FC(play);
