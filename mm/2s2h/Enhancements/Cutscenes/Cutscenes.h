@@ -21,6 +21,7 @@ void RegisterSkipLearningSongOfTime();
 void RegisterSkipSongOfTimeCutscene();
 void RegisterSkipMilkRunCutscenes();
 void RegisterSkipBombBagTheftCutscene();
+void RegisterSkipRosaSistersDance();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

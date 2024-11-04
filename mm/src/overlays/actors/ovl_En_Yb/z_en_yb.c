@@ -363,9 +363,7 @@ void EnYb_Idle(EnYb* this, PlayState* play) {
         (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) && (play->msgCtx.lastPlayedSong == OCARINA_SONG_HEALING) &&
         (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)) {
         this->actionFunc = EnYb_TeachingDance;
-        if (GameInteractor_Should(VB_PLAY_KAMARO_TEACH_DANCE, true, this)) {
-            this->teachingCutsceneTimer = 200;
-        }
+        this->teachingCutsceneTimer = 200;
         EnYb_ChangeCutscene(this, 0);
     } else if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
         func_80BFA2FC(play);

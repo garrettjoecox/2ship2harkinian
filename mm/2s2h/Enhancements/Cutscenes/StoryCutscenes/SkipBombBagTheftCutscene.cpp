@@ -6,11 +6,8 @@ extern "C" {
 void EnSuttari_TriggerTransition(PlayState* play, u16 entrance);
 }
 
-// Upon the second bomb theft textbox, Sakon fires off a move route that updates even before the textbox closes. This
-// means it is possible for him to escape before the textbox is dismissed. This happens even in vanilla, so note that
-// this is not a bug introduced by this skip.
 void RegisterSkipBombBagTheftCutscene() {
-    REGISTER_VB_SHOULD(VB_PLAY_BOMB_BAG_THEFT_CS, {
+    REGISTER_VB_SHOULD(VB_SAKON_TAKE_DAMAGE, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             EnSuttari* enSuttari = va_arg(args, EnSuttari*);
             if (enSuttari->actor.colChkInfo.damageEffect == 0xF && enSuttari->unk428 == 4) {
@@ -26,6 +23,24 @@ void RegisterSkipBombBagTheftCutscene() {
                 EnSuttari_TriggerTransition(gPlayState, ENTRANCE(NORTH_CLOCK_TOWN, 7));
             } else {
                 // Avoid cutscene
+                *should = false;
+            }
+        }
+    });
+    /*
+     * Upon the second bomb theft textbox, Sakon fires off a move route that updates even before the textbox closes.
+     * This means it is possible for him to escape before the textbox is dismissed. This happens even in vanilla, so
+     * note that this is not a bug introduced by this skip.
+     */
+    REGISTER_VB_SHOULD(VB_QUEUE_CUTSCENE, {
+        /*
+         * Scene 18 in North Clock Town is the bomb bag theft. Preventing the cutscene from starting is not sufficient;
+         * Sakon's actor will lock Link in place if this cutscene is queued. Preventing the queue instead allows the
+         * player to roam freely as the theft takes place.
+         */
+        if (gPlayState->sceneId == SCENE_BACKTOWN) {
+            s16* csId = va_arg(args, s16*);
+            if (*csId == 18) {
                 *should = false;
             }
         }

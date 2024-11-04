@@ -192,7 +192,7 @@ void EnSuttari_UpdateCollider(EnSuttari* this, PlayState* play) {
         if (this->collider.base.acFlags & AC_HIT) {
             this->collider.base.acFlags &= ~AC_HIT;
             if (this->actor.colChkInfo.damageEffect == 0xF) {
-                if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
+                if (GameInteractor_Should(VB_SAKON_TAKE_DAMAGE, true, this)) {
                     this->flags1 |= 0x100;
                     this->flags1 &= ~0x40;
                     Enemy_StartFinishingBlow(play, &this->actor);
@@ -909,9 +909,7 @@ void func_80BAC2FC(EnSuttari* this, PlayState* play) {
                     this->flags1 |= 0x1000;
                     this->flags2 |= 2;
                 } else {
-                    if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
-                        CutsceneManager_Queue(this->csIdList[0]);
-                    }
+                    CutsceneManager_Queue(this->csIdList[0]);
                 }
             }
             func_80BABFD4(this, play);
@@ -1224,9 +1222,7 @@ void func_80BAD130(EnSuttari* this, PlayState* play) {
 
 void func_80BAD230(EnSuttari* this, PlayState* play) {
     if (CutsceneManager_IsNext(this->csIdList[1])) {
-        if (GameInteractor_Should(VB_PLAY_BOMB_BAG_THEFT_CS, true, this)) {
-            CutsceneManager_Start(this->csIdList[1], &this->actor);
-        }
+        CutsceneManager_Start(this->csIdList[1], &this->actor);
         this->textId = 0x2A31;
         Message_StartTextbox(play, this->textId, &this->actor);
         this->flags1 |= 0x4000;
