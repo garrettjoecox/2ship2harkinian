@@ -99,6 +99,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_SNOWHEAD_MAP,               "the Snowhead Map",              ITEM_DUNGEON_MAP,                GI_MAP,                      GID_DUNGEON_MAP),
     RI(RI_SNOWHEAD_SMALL_KEY,         "a Snowhead Small Key",          ITEM_KEY_SMALL,                  GI_KEY_SMALL,                GID_KEY_SMALL),
     RI(RI_SNOWHEAD_STRAY_FAIRY,       "a Snowhead Stray Fairy",        ITEM_STRAY_FAIRIES,              GI_STRAY_FAIRY,              GID_NONE),
+    RI(RI_SONATA_OF_AWAKENING,        "the Sonata of Awakening",       ITEM_SONG_SONATA,                GI_NONE,                     GID_NONE),
     RI(RI_SONG_OF_HEALING,            "the Song of Healing",           ITEM_SONG_HEALING,               GI_NONE,                     GID_NONE),
     RI(RI_SONG_OF_TIME,               "the Song of Time",              ITEM_SONG_TIME,                  GI_NONE,                     GID_NONE),
     RI(RI_STONE_TOWER_BOSS_KEY,       "the Stone Tower Boss Key",      ITEM_KEY_BOSS,                   GI_KEY_BOSS,                 GID_KEY_BOSS),

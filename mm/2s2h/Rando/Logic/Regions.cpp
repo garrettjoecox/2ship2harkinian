@@ -229,6 +229,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_DEKU_KINGS_CHAMBER_HOLDING_CELL, RandoRegion{ .name = "Holding Cell", .sceneId = SCENE_DEKU_KING,
+        .checks = {
+            CHECK(RC_DEKU_KINGS_CHAMBER_MONKEY, CAN_BE_DEKU && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(DEKU_PALACE, 3),              ENTRANCE(DEKU_KINGS_CHAMBER, 1), true),
         },

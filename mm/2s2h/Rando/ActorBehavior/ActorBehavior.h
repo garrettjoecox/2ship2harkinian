@@ -25,6 +25,7 @@ void InitEnSiBehavior();
 void InitEnBabaBehavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();
+void InitEnMnkBehavior();
 void InitItemBHeartBehavior();
 void InitObjMoonStoneBehavior();
 void InitObjTsuboBehavior();

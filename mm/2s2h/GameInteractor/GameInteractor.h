@@ -114,6 +114,7 @@ typedef enum {
     VB_HAVE_KAMAROS_MASK,
     VB_START_CUTSCENE,
     VB_QUEUE_CUTSCENE,
+    VB_GIVE_ITEM_FROM_MNK,
 } GIVanillaBehavior;
 
 typedef enum {

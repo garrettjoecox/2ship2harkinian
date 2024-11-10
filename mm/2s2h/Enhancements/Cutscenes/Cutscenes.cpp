@@ -20,6 +20,7 @@ void RegisterCutscenes() {
     RegisterSkipMilkRunCutscenes();
     RegisterSkipBombBagTheftCutscene();
     RegisterSkipRosaSistersDance();
+    RegisterSkipLearningSonataOfAwakening();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();
