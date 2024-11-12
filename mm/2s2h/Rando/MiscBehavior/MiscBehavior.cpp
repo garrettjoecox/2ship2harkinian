@@ -25,7 +25,10 @@ void Rando::MiscBehavior::OnFileLoad() {
     COND_VB_SHOULD(VB_TERMINA_FIELD_BE_EMPTY, IS_RANDO, { *should = false; });
 
     // Override "first-cycle" timespeed if you don't have the Ocarina
-    COND_HOOK(AfterRoomSceneCommands, IS_RANDO, [](s16 sceneId, s8 roomNum) { if (R_TIME_SPEED == 5) R_TIME_SPEED = 3; });
+    COND_HOOK(AfterRoomSceneCommands, IS_RANDO, [](s16 sceneId, s8 roomNum) {
+        if (R_TIME_SPEED == 5)
+            R_TIME_SPEED = 3;
+    });
 
     // In Sram_OpenSave (right before this code runs) for non-owl saves, it overwrites the entrance to
     // ENTRANCE(CUTSCENE, 0), we need to override that with our starting location (Harcoded to South Clock Town)
