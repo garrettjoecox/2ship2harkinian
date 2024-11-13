@@ -77,6 +77,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_NONE,                       "literally nothing",             ITEM_NONE,                       GI_NONE,                     GID_NONE),
     RI(RI_OCARINA,                    "the Ocarina of Time",           ITEM_OCARINA_OF_TIME,            GI_OCARINA_OF_TIME,          GID_OCARINA),
     RI(RI_PENDANT_OF_MEMORIES,        "the Pendant of Memories",       ITEM_PENDANT_OF_MEMORIES,        GI_PENDANT_OF_MEMORIES,      GID_PENDANT_OF_MEMORIES),
+    RI(RI_POWDER_KEG,                 "a Powder Keg",                  ITEM_POWDER_KEG,                 GI_POWDER_KEG,               GID_POWDER_KEG),
     RI(RI_PROGRESSIVE_BOMB_BAG,       "a Progressive Bomb Bag",        ITEM_BOMB_BAG_20,                GI_BOMB_BAG_20,              GID_BOMB_BAG_20),
     RI(RI_PROGRESSIVE_BOW,            "a Progressive Bow",             ITEM_BOW,                        GI_QUIVER_30,                GID_BOW),
     RI(RI_PROGRESSIVE_MAGIC,          "Progressive Magic",             ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_SMALL),

@@ -19,10 +19,17 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
         Player* player = GET_PLAYER(gPlayState);
         static std::vector<u8> skipCmds = {};
 
-        // SPDLOG_INFO("VB_EXEC_MSG_EVENT {}", cmdId);
+        SPDLOG_INFO("VB_EXEC_MSG_EVENT {}", cmdId);
 
         if (cmdId == MSCRIPT_CMD_06) { // MSCRIPT_OFFER_ITEM
             switch (actor->id) {
+                case ACTOR_EN_GO:
+                    func_80832558(gPlayState, player, func_80837B60);
+                    *should = false;
+                    skipCmds.clear();
+                    skipCmds.push_back(MSCRIPT_CMD_07);
+                    skipCmds.push_back(MSCRIPT_CMD_12);
+                    return;
                 // Anju crashes for some reason here if you don't skip the next text wait.
                 case ACTOR_EN_AN:
                     skipCmds.clear();
@@ -33,7 +40,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 case ACTOR_EN_AL:
                     func_80832558(gPlayState, player, func_80837B60);
                     *should = false;
-                    return;
+                    return;                
             }
         }
 

@@ -50,6 +50,7 @@ void InitEnhancements() {
     // Minigames
     RegisterAlwaysWinDoggyRace();
     RegisterCremiaHugs();
+    RegisterPowderKegCertification();
     RegisterSwordsmanSchool();
 
     // Player

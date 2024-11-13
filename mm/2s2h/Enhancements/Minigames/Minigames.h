@@ -3,6 +3,7 @@
 
 void RegisterAlwaysWinDoggyRace();
 void RegisterCremiaHugs();
+void RegisterPowderKegCertification();
 void RegisterSwordsmanSchool();
 
 #endif // MINIGAMES_H
