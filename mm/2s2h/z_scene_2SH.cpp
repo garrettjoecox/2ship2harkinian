@@ -283,7 +283,9 @@ void Scene_CommandTimeSettings(PlayState* play, SOH::ISceneCommand* cmd) {
     }
 
     // Increase time speed during first cycle
-    if ((gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] == ITEM_NONE) && (play->envCtx.sceneTimeSpeed != 0)) {
+    if (GameInteractor_Should(VB_FASTER_FIRST_CYCLE,
+                              (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] == ITEM_NONE) &&
+                                  (play->envCtx.sceneTimeSpeed != 0))) {
         play->envCtx.sceneTimeSpeed = 5;
     }
 
