@@ -1,4 +1,5 @@
 #include "global.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define SCHEDULE_CALC_TIME(hour, minute, dest, temp) \
     (temp) = (hour)*60.0f;                           \
@@ -109,7 +110,8 @@ s32 Schedule_Nop(PlayState* play, u8** script, ScheduleOutput* output) {
 s32 Schedule_CheckMiscS(PlayState* play, u8** script, ScheduleOutput* output) {
     ScheduleCmdCheckMiscS* cmd = (ScheduleCmdCheckMiscS*)*script;
 
-    if (((cmd->which == SCHEDULE_CHECK_MISC_ROOM_KEY) && (INV_CONTENT(ITEM_ROOM_KEY) == ITEM_ROOM_KEY)) ||
+    if (((cmd->which == SCHEDULE_CHECK_MISC_ROOM_KEY) &&
+         GameInteractor_Should(VB_CHECK_FOR_ROOM_KEY, INV_CONTENT(ITEM_ROOM_KEY) == ITEM_ROOM_KEY)) ||
         ((cmd->which == SCHEDULE_CHECK_MISC_LETTER_TO_KAFEI) &&
          (INV_CONTENT(ITEM_LETTER_TO_KAFEI) == ITEM_LETTER_TO_KAFEI)) ||
         ((cmd->which == SCHEDULE_CHECK_MISC_MASK_ROMANI) && (Player_GetMask(play) == PLAYER_MASK_ROMANI))) {

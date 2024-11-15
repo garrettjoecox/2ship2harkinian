@@ -117,6 +117,7 @@ typedef enum {
     VB_GIVE_ITEM_FROM_MNK,
     VB_TERMINA_FIELD_BE_EMPTY,
     VB_FASTER_FIRST_CYCLE,
+    VB_CHECK_FOR_ROOM_KEY,
 } GIVanillaBehavior;
 
 typedef enum {

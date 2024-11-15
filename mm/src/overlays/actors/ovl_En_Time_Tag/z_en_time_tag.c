@@ -10,6 +10,7 @@
 
 #include "z_en_time_tag.h"
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -318,7 +319,8 @@ void EnTimeTag_KickOut_WaitForTime(EnTimeTag* this, PlayState* play) {
     s16 hour;
     s16 minute;
 
-    if ((play->sceneId == SCENE_YADOYA) && (INV_CONTENT(ITEM_ROOM_KEY) == ITEM_ROOM_KEY)) {
+    if ((play->sceneId == SCENE_YADOYA) &&
+        GameInteractor_Should(VB_CHECK_FOR_ROOM_KEY, INV_CONTENT(ITEM_ROOM_KEY) == ITEM_ROOM_KEY)) {
         // Having the room key allows you to stay in Stock Pot Inn
         return;
     }
