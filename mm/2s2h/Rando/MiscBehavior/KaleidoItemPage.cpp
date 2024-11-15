@@ -11,10 +11,10 @@ extern "C" {
 // Currently this enables a simple "press a" to cycle through the available trade items
 void Rando::MiscBehavior::InitKaleidoItemPage() {
     COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, IS_RANDO, {
-        ItemId* itemId = va_arg(args, ItemId*);
+        ItemId itemId = (ItemId)*va_arg(args, u16*);
 
-        if (SLOT(*itemId) != SLOT_TRADE_COUPLE && SLOT(*itemId) != SLOT_TRADE_DEED &&
-            SLOT(*itemId) != SLOT_TRADE_KEY_MAMA) {
+        if (SLOT(itemId) != SLOT_TRADE_COUPLE && SLOT(itemId) != SLOT_TRADE_DEED &&
+            SLOT(itemId) != SLOT_TRADE_KEY_MAMA) {
             return;
         }
 
@@ -22,7 +22,7 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
 
         // Build list of available items
         std::vector<u8> availableItems;
-        switch (SLOT(*itemId)) {
+        switch (SLOT(itemId)) {
             case SLOT_TRADE_COUPLE:
                 if (Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES)) {
                     availableItems.push_back(ITEM_PENDANT_OF_MEMORIES);
@@ -61,7 +61,7 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
         // get current index
         int index = -1;
         for (int i = 0; i < availableItems.size(); i++) {
-            if (availableItems[i] == *itemId) {
+            if (availableItems[i] == itemId) {
                 index = i;
                 break;
             }
@@ -72,6 +72,6 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
         }
 
         // Display the item
-        Inventory_ReplaceItem(gPlayState, (u8)*itemId, availableItems[(index + 1) % availableItems.size()]);
+        Inventory_ReplaceItem(gPlayState, (u8)itemId, availableItems[(index + 1) % availableItems.size()]);
     });
 }
