@@ -10,6 +10,8 @@ namespace ActorBehavior {
 void Init();
 void OnFileLoad();
 
+void InitDoorWarp1VBehavior();
+void InitDmHinaBehavior();
 void InitDmStkBehavior();
 void InitEnAkindonutsBehavior();
 void InitEnBoxBehavior();

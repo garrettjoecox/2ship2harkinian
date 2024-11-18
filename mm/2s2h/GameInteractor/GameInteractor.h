@@ -118,6 +118,8 @@ typedef enum {
     VB_TERMINA_FIELD_BE_EMPTY,
     VB_FASTER_FIRST_CYCLE,
     VB_CHECK_FOR_ROOM_KEY,
+    VB_DRAW_BOSS_REMAINS,
+    VB_SPAWN_BOSS_REMAINS,
 } GIVanillaBehavior;
 
 typedef enum {

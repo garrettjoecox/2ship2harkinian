@@ -22,6 +22,8 @@ void Rando::ActorBehavior::Init() {
 }
 
 void Rando::ActorBehavior::OnFileLoad() {
+    Rando::ActorBehavior::InitDoorWarp1VBehavior();
+    Rando::ActorBehavior::InitDmHinaBehavior();
     Rando::ActorBehavior::InitDmStkBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();

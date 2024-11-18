@@ -29,6 +29,10 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_BOMBCHU,                    "a Bombchu",                     ITEM_BOMBCHUS_1,                 GI_BOMBCHUS_1,               GID_BOMBCHU), // not sure about this
     RI(RI_BOMBS_10,                   "10 Bombs",                      ITEM_BOMBS_10,                   GI_BOMBS_10,                 GID_BOMB),
     RI(RI_BOMBS_5,                    "5 Bombs",                       ITEM_BOMBS_5,                    GI_BOMBS_5,                  GID_BOMB),
+    RI(RI_BOSS_REMAINS_GOHT,          "Goht's Remains",                ITEM_REMAINS_GOHT,               GI_REMAINS_GOHT,             GID_REMAINS_GOHT),
+    RI(RI_BOSS_REMAINS_GYORG,         "Gyorg's Remains",               ITEM_REMAINS_GYORG,              GI_REMAINS_GYORG,            GID_REMAINS_GYORG),
+    RI(RI_BOSS_REMAINS_ODOLWA,        "Odolwa's Remains",              ITEM_REMAINS_ODOLWA,             GI_REMAINS_ODOLWA,           GID_REMAINS_ODOLWA),
+    RI(RI_BOSS_REMAINS_TWINMOLD,      "Twinmold's Remains",            ITEM_REMAINS_TWINMOLD,           GI_REMAINS_TWINMOLD,         GID_REMAINS_TWINMOLD),
     RI(RI_BOTTLE_EMPTY,               "an Empty Bottle",               ITEM_BOTTLE,                     GI_BOTTLE,                   GID_BOTTLE),
     RI(RI_BOW,                        "a Bow",                         ITEM_BOW,                        GI_QUIVER_30,                GID_BOW),
     RI(RI_CLOCK_TOWN_STRAY_FAIRY,     "a Clock Town Stray Fairy",      ITEM_STRAY_FAIRIES,              GI_STRAY_FAIRY,              GID_NONE),
@@ -75,6 +79,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_MILK_REFILL,                "a Milk Refill",                 ITEM_MILK,                       GI_MILK,                     GID_MILK),
     RI(RI_MOONS_TEAR,                 "the Moon's Tear",               ITEM_MOONS_TEAR,                 GI_MOONS_TEAR,               GID_MOONS_TEAR),
     RI(RI_NONE,                       "literally nothing",             ITEM_NONE,                       GI_NONE,                     GID_NONE),
+    RI(RI_OATH_TO_ORDER,              "the Oath to Order",             ITEM_SONG_OATH,                  GI_NONE,                     GID_NONE),
     RI(RI_OCARINA,                    "the Ocarina of Time",           ITEM_OCARINA_OF_TIME,            GI_OCARINA_OF_TIME,          GID_OCARINA),
     RI(RI_PENDANT_OF_MEMORIES,        "the Pendant of Memories",       ITEM_PENDANT_OF_MEMORIES,        GI_PENDANT_OF_MEMORIES,      GID_PENDANT_OF_MEMORIES),
     RI(RI_PROGRESSIVE_BOMB_BAG,       "a Progressive Bomb Bag",        ITEM_BOMB_BAG_20,                GI_BOMB_BAG_20,              GID_BOMB_BAG_20),

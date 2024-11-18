@@ -23,10 +23,13 @@ void RegisterSkipMilkRunCutscenes();
 void RegisterSkipBombBagTheftCutscene();
 void RegisterSkipRosaSistersDance();
 void RegisterSkipLearningSonataOfAwakening();
+void RegisterSkipBossCutscenes();
+void RegisterSkipGiantsChamber();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();
 void RegisterSkipIntroSequence();
 void RegisterSkipToFileSelect();
+void HandleGiantsCutsceneSkip();
 
 #endif // CUTSCENES_H

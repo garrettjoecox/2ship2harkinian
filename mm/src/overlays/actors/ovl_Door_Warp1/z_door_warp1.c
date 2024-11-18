@@ -7,6 +7,7 @@
 #include "prevent_bss_reordering.h"
 #include "z_door_warp1.h"
 #include "objects/object_warp1/object_warp1.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS 0x00000000
 
@@ -78,14 +79,16 @@ void DoorWarp1_SetupAction(DoorWarp1* this, DoorWarp1ActionFunc actionFunc) {
 s32 func_808B849C(DoorWarp1* this, PlayState* play) {
     s32 ret = 0;
 
-    if ((play->sceneId == SCENE_MITURIN_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA)) {
-        ret = 1;
-    } else if ((play->sceneId == SCENE_HAKUGIN_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT)) {
-        ret = 2;
-    } else if ((play->sceneId == SCENE_SEA_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG)) {
-        ret = 3;
-    } else if ((play->sceneId == SCENE_INISIE_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) {
-        ret = 4;
+    if (GameInteractor_Should(VB_SPAWN_BOSS_REMAINS, true, &ret)) {
+        if ((play->sceneId == SCENE_MITURIN_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA)) {
+            ret = 1;
+        } else if ((play->sceneId == SCENE_HAKUGIN_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT)) {
+            ret = 2;
+        } else if ((play->sceneId == SCENE_SEA_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG)) {
+            ret = 3;
+        } else if ((play->sceneId == SCENE_INISIE_BS) && !CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) {
+            ret = 4;
+        }
     }
     return ret;
 }

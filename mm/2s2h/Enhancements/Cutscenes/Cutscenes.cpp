@@ -21,6 +21,8 @@ void RegisterCutscenes() {
     RegisterSkipBombBagTheftCutscene();
     RegisterSkipRosaSistersDance();
     RegisterSkipLearningSonataOfAwakening();
+    RegisterSkipBossCutscenes();
+    RegisterSkipGiantsChamber();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();
