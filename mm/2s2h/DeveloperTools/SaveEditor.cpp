@@ -1200,27 +1200,6 @@ void DrawQuestStatusTab() {
     ImGui::PopItemWidth();
     UIWidgets::PopStyleSlider();
 
-    if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
-        ImGui::SeparatorText("Randomizer Check Status");
-
-        for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-            if (!randoSaveCheck.shuffled) {
-                continue;
-            }
-
-            std::string hiddenName = "##";
-            hiddenName += randoStaticCheck.name;
-            UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
-            ImGui::SetItemTooltip("Eligible");
-            ImGui::SameLine();
-            UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
-            ImGui::SetItemTooltip("Obtained");
-            // Associated Flag will go here, kinda complicated
-            ImGui::SameLine();
-            ImGui::Text("%s", randoStaticCheck.name);
-        }
-    }
     ImGui::EndChild();
     ImGui::EndChild();
     ImGui::PopStyleVar(2);
@@ -2047,6 +2026,51 @@ void DrawFlagsTab() {
     ImGui::PopStyleVar(2);
 }
 
+void DrawRandoTab() {
+    ImGui::BeginChild("RandoChild");
+    if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
+
+        ImGui::BeginTable("Check List", 4);
+        ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 40.0f);
+        ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 40.0f);
+        ImGui::TableSetupColumn("Check Name");
+        ImGui::TableSetupColumn("Reward");
+        ImGui::TableSetupScrollFreeze(4, 1);
+        ImGui::TableHeadersRow();
+
+        for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+            if (!randoSaveCheck.shuffled) {
+                continue;
+            }
+            std::string hiddenName = "##";
+            hiddenName += randoStaticCheck.name;
+            ImGui::TableNextColumn();
+            UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
+            UIWidgets::Tooltip("Eligible");
+            ImGui::TableNextColumn();
+            UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
+            UIWidgets::Tooltip("Obtained");
+            ImGui::TableNextColumn();
+            ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White, randoStaticCheck.name);
+            ImGui::TableNextColumn();
+            if (randoSaveCheck.obtained) {
+                ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White, 
+                    Rando::StaticData::Items[randoStaticCheck.randoItemId].name);
+            }
+        }
+
+        ImGui::EndTable();
+        ImGui::PopStyleColor(3);
+    } else {
+        ImGui::Text("No Rando Save Loaded...");
+    }
+    ImGui::EndChild();
+}
+
 void SaveEditorWindow::DrawElement() {
     if (ImGui::BeginTabBar("SaveContextTabBar", ImGuiTabBarFlags_NoCloseWithMiddleMouseButton)) {
         if (ImGui::BeginTabItem("General")) {
@@ -2086,6 +2110,11 @@ void SaveEditorWindow::DrawElement() {
 
         if (ImGui::BeginTabItem("Player")) {
             DrawPlayerTab();
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Rando")) {
+            DrawRandoTab();
             ImGui::EndTabItem();
         }
 

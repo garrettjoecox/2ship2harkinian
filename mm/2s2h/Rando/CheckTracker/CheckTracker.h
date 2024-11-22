@@ -12,7 +12,7 @@ class Window : public Ship::GuiWindow {
   public:
     using GuiWindow::GuiWindow;
 
-    void InitElement() override{};
+    void InitElement();
     void DrawElement() override;
     void UpdateElement() override{};
 };
@@ -29,5 +29,10 @@ class SettingsWindow : public Ship::GuiWindow {
 } // namespace CheckTracker
 
 } // namespace Rando
+
+typedef enum {
+    SCENE_LOAD,
+    SCENE_UPDATE
+};
 
 #endif // RANDO_CHECK_TRACKER_H
