@@ -64,8 +64,8 @@ void CheckTrackerUpdateSceneList(int32_t action) {
                 }
             }
             if (!sceneExists) {
-                sceneCheckList.push_back(std::make_tuple(Ship_GetSceneName(randoStaticCheck.sceneId), 
-                    randoStaticCheck.sceneId, true, false));
+                sceneCheckList.push_back(std::make_tuple(Ship_GetSceneName(randoStaticCheck.sceneId),
+                                                         randoStaticCheck.sceneId, true, false));
             }
         }
     } else {
@@ -141,14 +141,15 @@ void Window::DrawElement() {
                         if (!randoSaveCheck.shuffled) {
                             continue;
                         }
-                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? 
-                            UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
+                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
+                                                                                     : UIWidgets::Colors::White);
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
                             ImGui::Text(convertToReadableName(randoStaticCheck.name).c_str());
                             if (randoSaveCheck.obtained) {
                                 ImGui::SameLine(0, 50.0f);
                                 std::string itemName = "(";
-                                itemName += convertToReadableName(Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
+                                itemName +=
+                                    convertToReadableName(Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
                                 itemName += ")";
                                 ImGui::Text(itemName.c_str());
                             }
@@ -178,9 +179,8 @@ void SettingsWindow::DrawElement() {
 }
 
 void Window::InitElement() {
-    COND_HOOK(OnSaveLoad, &gSaveContext.save.shipSaveInfo.rando, [](uint32_t fileNum) {
-        CheckTrackerUpdateSceneList(SCENE_LOAD);
-    });
+    COND_HOOK(OnSaveLoad, &gSaveContext.save.shipSaveInfo.rando,
+              [](uint32_t fileNum) { CheckTrackerUpdateSceneList(SCENE_LOAD); });
 }
 
 } // namespace CheckTracker

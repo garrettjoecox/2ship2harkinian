@@ -53,14 +53,11 @@ void Rando::DrawMenu() {
                 UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
             }
         }
-        UIWidgets::WindowButton("Check Tracker", "gWindows.CheckTracker", BenGui::mRandoCheckTrackerWindow, {
-                .size = ImVec2((ImGui::GetContentRegionAvail().x - 48.0f), 32.0f)
-            });
+        UIWidgets::WindowButton("Check Tracker", "gWindows.CheckTracker", BenGui::mRandoCheckTrackerWindow,
+                                { .size = ImVec2((ImGui::GetContentRegionAvail().x - 48.0f), 32.0f) });
         // TODO: Implement Check Tracker Settings
         ImGui::SameLine();
-        if (UIWidgets::Button(ICON_FA_COG, {
-                .size = ImVec2(32.0f, 32.0f)
-            })) {
+        if (UIWidgets::Button(ICON_FA_COG, { .size = ImVec2(32.0f, 32.0f) })) {
             BenGui::mRandoCheckTrackerSettingsWindow->ToggleVisibility();
         }
         ImGui::EndMenu();

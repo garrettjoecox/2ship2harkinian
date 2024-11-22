@@ -2034,8 +2034,10 @@ void DrawRandoTab() {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
 
         ImGui::BeginTable("Check List", 4);
-        ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 40.0f);
-        ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 40.0f);
+        ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed,
+                                40.0f);
+        ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed,
+                                40.0f);
         ImGui::TableSetupColumn("Check Name");
         ImGui::TableSetupColumn("Reward");
         ImGui::TableSetupScrollFreeze(4, 1);
@@ -2055,11 +2057,12 @@ void DrawRandoTab() {
             UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
             UIWidgets::Tooltip("Obtained");
             ImGui::TableNextColumn();
-            ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White, randoStaticCheck.name);
+            ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
+                               randoStaticCheck.name);
             ImGui::TableNextColumn();
             if (randoSaveCheck.obtained) {
-                ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White, 
-                    Rando::StaticData::Items[randoStaticCheck.randoItemId].name);
+                ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
+                                   Rando::StaticData::Items[randoStaticCheck.randoItemId].name);
             }
         }
 
