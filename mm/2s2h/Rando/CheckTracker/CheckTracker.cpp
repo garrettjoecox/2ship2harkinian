@@ -5,6 +5,7 @@
 #include "2s2h/BenGui/UIWidgets.hpp"
 
 bool showLogic = false;
+bool hideCollected = false;
 bool expandHeader = true;
 
 std::vector<std::tuple<std::string, SceneId, bool, bool>> sceneCheckList;
@@ -75,6 +76,14 @@ void CheckTrackerUpdateSceneList(int32_t action) {
     }
 }
 
+bool checkTrackerShouldShowRow(bool obtained) {
+    bool showCheck = true;
+    if (hideCollected && obtained) {
+        showCheck = false;
+    }
+    return showCheck;
+}
+
 void Window::DrawElement() {
     if (showLogic) {
         std::set<RandoRegionId> reachableRegions = {};
@@ -134,11 +143,15 @@ void Window::DrawElement() {
                         }
                         ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? 
                             UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
-                        ImGui::Text(convertToReadableName(randoStaticCheck.name).c_str());
-                        if (randoSaveCheck.obtained) {
-                            ImGui::SameLine(0, 50.0f);
-                            std::string itemName = "(" + convertToReadableName(Rando::StaticData::Items[randoSaveCheck.randoItemId].name) + ")";
-                            ImGui::Text(itemName.c_str());
+                        if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
+                            ImGui::Text(convertToReadableName(randoStaticCheck.name).c_str());
+                            if (randoSaveCheck.obtained) {
+                                ImGui::SameLine(0, 50.0f);
+                                std::string itemName = "(";
+                                itemName += convertToReadableName(Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
+                                itemName += ")";
+                                ImGui::Text(itemName.c_str());
+                            }
                         }
                         ImGui::PopStyleColor();
                     }
@@ -147,7 +160,7 @@ void Window::DrawElement() {
             }
             if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
                 bool isExpanded = std::get<2>(scene);
-                std::get<2>(scene) = !isExpanded; // Toggle the bool
+                std::get<2>(scene) = !isExpanded;
             }
             ImGui::PopStyleColor(1);
         }
@@ -156,7 +169,8 @@ void Window::DrawElement() {
 
 void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
-    UIWidgets::Checkbox("Show Available", &showLogic);
+    UIWidgets::Checkbox("Show Logic", &showLogic);
+    UIWidgets::Checkbox("Hide Collected", &hideCollected);
     if (ImGui::Button("Expand/Collapse All")) {
         expandHeader = !expandHeader;
         CheckTrackerUpdateSceneList(SCENE_UPDATE);
