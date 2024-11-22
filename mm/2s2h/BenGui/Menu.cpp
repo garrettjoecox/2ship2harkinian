@@ -134,8 +134,10 @@ bool ModernMenuHeaderEntry(std::string label) {
 
 void BenMenu::Draw() {
     if (!IsVisible()) {
+        Ship::Context::GetInstance()->GetControlDeck()->UnblockGameInput(999);
         return;
     }
+    Ship::Context::GetInstance()->GetControlDeck()->BlockGameInput(999);
     DrawElement();
     // Sync up the IsVisible flag if it was changed by ImGui
     SyncVisibilityConsoleVariable();
