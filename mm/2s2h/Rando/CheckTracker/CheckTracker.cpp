@@ -6,9 +6,10 @@
 
 bool showLogic = false;
 bool hideCollected = false;
+bool updateHeaders = false;
 bool expandHeader = true;
 
-std::vector<std::tuple<std::string, SceneId, bool, bool>> sceneCheckList;
+std::vector<std::tuple<std::string, SceneId, bool, bool, uint32_t>> sceneCheckList;
 
 std::string convertToReadableName(const std::string& input) {
     std::string result;
@@ -47,6 +48,19 @@ std::string convertToReadableName(const std::string& input) {
     return result;
 }
 
+uint32_t totalCheckAmount(SceneId sceneId) {
+    uint32_t collected = 0;
+    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+        if (sceneId == randoStaticCheck.sceneId) {
+            if (randoSaveCheck.obtained) {
+                collected++;
+            }
+        }
+    }
+    return collected;
+}
+
 namespace Rando {
 
 namespace CheckTracker {
@@ -60,12 +74,13 @@ void CheckTrackerUpdateSceneList(int32_t action) {
                 sceneExists = false;
                 if (std::get<1>(scene) == randoStaticCheck.sceneId) {
                     sceneExists = true;
+                    std::get<4>(scene)++;
                     break;
                 }
             }
             if (!sceneExists) {
                 sceneCheckList.push_back(std::make_tuple(Ship_GetSceneName(randoStaticCheck.sceneId),
-                                                         randoStaticCheck.sceneId, true, false));
+                                                         randoStaticCheck.sceneId, true, false, 1));
             }
         }
     } else {
@@ -127,13 +142,24 @@ void Window::DrawElement() {
             if (std::get<0>(scene) == "Unknown") {
                 continue;
             }
+            ImGui::PushID(std::get<1>(scene));
             ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
+            uint32_t popCount = 1;
             ImGui::Separator();
-            if (!std::get<3>(scene)) {
-                ImGui::SetNextItemOpen(std::get<2>(scene));
-                std::get<3>(scene) = true;
+            uint32_t collectedChecks = totalCheckAmount(std::get<1>(scene));
+            std::string headerText = std::get<0>(scene).c_str();
+            headerText += " (" + std::to_string(collectedChecks) + "/" + std::to_string(std::get<4>(scene)) + ")";
+            if (collectedChecks == std::get<4>(scene)) {
+                ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::LightGreen);
+                popCount++;
             }
-            if (ImGui::CollapsingHeader(std::get<0>(scene).c_str())) {
+            bool shouldExpand = std::get<2>(scene);
+            if (updateHeaders) {
+                ImGui::SetNextItemOpen(shouldExpand);
+            } else {
+                ImGui::SetNextItemOpen(shouldExpand, ImGuiCond_Once);
+            }
+            if (ImGui::CollapsingHeader(headerText.c_str())) {
                 ImGui::Indent(20.0f);
                 for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
                     if (std::get<1>(scene) == randoStaticCheck.sceneId) {
@@ -159,12 +185,14 @@ void Window::DrawElement() {
                 }
                 ImGui::Unindent(20.0f);
             }
-            if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
+            if (ImGui::IsItemClicked()) {
                 bool isExpanded = std::get<2>(scene);
                 std::get<2>(scene) = !isExpanded;
             }
-            ImGui::PopStyleColor(1);
+            ImGui::PopStyleColor(popCount);
+            ImGui::PopID();
         }
+        updateHeaders = false;
     }
 }
 
@@ -174,6 +202,7 @@ void SettingsWindow::DrawElement() {
     UIWidgets::Checkbox("Hide Collected", &hideCollected);
     if (ImGui::Button("Expand/Collapse All")) {
         expandHeader = !expandHeader;
+        updateHeaders = true;
         CheckTrackerUpdateSceneList(SCENE_UPDATE);
     }
 }
