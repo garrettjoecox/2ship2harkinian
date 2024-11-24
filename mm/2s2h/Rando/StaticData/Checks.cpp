@@ -20,6 +20,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_UNKNOWN,                                              RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN),
 
     // --- Verified as working --- //
+    RC(RC_ANCIENT_CASTLE_OF_IKANA_BOSS,                         RCTYPE_SONG,             SCENE_IKNINSIDE,                FLAG_NONE,                   0x00,                                                                RI_ELEGY_OF_EMPTINESS),
     RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                           RCTYPE_FREESTANDING,     SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
     RC(RC_ASTRAL_OBSERVATORY_MOON_TEAR,                         RCTYPE_NPC,              SCENE_TENMON_DAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_74_40,                                                  RI_MOONS_TEAR),
     RC(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST,                     RCTYPE_CHEST,            SCENE_TENMON_DAI,               FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_SILVER),

@@ -5,7 +5,7 @@ extern "C" {
 #include "global.h"
 }
 
-// TODO: Handle other bosses like Igos and Majora
+// TODO: Handle other bosses like Majora
 void RegisterSkipBossCutscenes() {
     // Odolwa intro
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
@@ -41,6 +41,14 @@ void RegisterSkipBossCutscenes() {
         ACTOR_BOSS_02, [](Actor* actor, bool* should) {
             if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
                 SET_EVENTINF(EVENTINF_55);
+            }
+        });
+
+    // Igos du Ikana (and lackeys) intro
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
+        ACTOR_EN_KNIGHT, [](Actor* actor, bool* should) {
+            if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
+                SET_EVENTINF(EVENTINF_57);
             }
         });
 
@@ -87,6 +95,7 @@ void RegisterSkipBossCutscenes() {
                     if (*csId == 31) { // Warping from Twinmold's Lair
                         *should = false;
                     }
+                    break;
                 default:
                     break;
             }

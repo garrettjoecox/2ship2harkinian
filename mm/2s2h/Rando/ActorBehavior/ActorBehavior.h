@@ -21,6 +21,7 @@ void InitEnElforgBehavior();
 void InitEnGirlABehavior();
 void InitEnGsBehavior();
 void InitEnItem00Behavior();
+void InitEnKnightBehavior();
 void InitEnMaYtoBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();

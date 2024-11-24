@@ -46,6 +46,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_DEKU_STICK,                 "a Deku Stick",                  ITEM_DEKU_STICK,                 GI_DEKU_STICKS_1,            GID_DEKU_STICK),
     RI(RI_DOUBLE_DEFENSE,             "Double Defense",                ITEM_NONE,                       GI_NONE,                     GID_HEART_CONTAINER),
     RI(RI_DOUBLE_MAGIC,               "a Magic Upgrade",               ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_BIG),
+    RI(RI_ELEGY_OF_EMPTINESS,         "the Elegy of Emptiness",        ITEM_SONG_ELEGY,                 GI_NONE,                     GID_NONE),
     RI(RI_FAIRY_REFILL,               "a Fairy",                       ITEM_FAIRY,                      GI_FAIRY,                    GID_FAIRY),
     RI(RI_GREAT_BAY_BOSS_KEY,         "the Great Bay Boss Key",        ITEM_KEY_BOSS,                   GI_KEY_BOSS,                 GID_KEY_BOSS),
     RI(RI_GREAT_BAY_COMPASS,          "the Great Bay Compass",         ITEM_COMPASS,                    GI_COMPASS,                  GID_COMPASS),

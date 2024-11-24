@@ -16,6 +16,7 @@ void RegisterSkipKamaroTeachDance();
 // StoryCutscenes
 void RegisterSkipClockTowerOpen();
 void SkipClockTowerSkullKidEncounter();
+void RegisterSkipLearningElegyOfEmptiness();
 void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
 void RegisterSkipSongOfTimeCutscene();
