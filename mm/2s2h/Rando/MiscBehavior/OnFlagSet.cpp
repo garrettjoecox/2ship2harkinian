@@ -22,6 +22,11 @@ void Rando::MiscBehavior::OnSceneFlagSet(s16 sceneId, FlagType flagType, u32 fla
         return;
     }
 
+    // Pots handle their own items, ignore them
+    if (randoStaticCheck.randoCheckType == RCTYPE_POT) {
+        return;
+    }
+
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
     if (randoSaveCheck.shuffled) {
         randoSaveCheck.eligible = true;
