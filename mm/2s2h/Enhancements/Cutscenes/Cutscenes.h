@@ -26,6 +26,8 @@ void RegisterSkipRosaSistersDance();
 void RegisterSkipLearningSonataOfAwakening();
 void RegisterSkipBossCutscenes();
 void RegisterSkipGiantsChamber();
+void RegisterSkipHealingDarmani();
+void RegisterSkipHealingMikau();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

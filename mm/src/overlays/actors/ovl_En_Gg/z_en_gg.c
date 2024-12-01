@@ -6,6 +6,7 @@
 
 #include "z_en_gg.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_REACT_TO_LENS)
 
@@ -678,7 +679,7 @@ void EnGg_Init(Actor* thisx, PlayState* play) {
     s32 pad;
     EnGg* this = THIS;
 
-    if (INV_CONTENT(ITEM_MASK_GORON) == ITEM_MASK_GORON) {
+    if (GameInteractor_Should(VB_CONSIDER_DARMANI_HEALED, INV_CONTENT(ITEM_MASK_GORON) == ITEM_MASK_GORON)) {
         Actor_Kill(&this->actor);
         return;
     }

@@ -30,6 +30,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
+    Rando::ActorBehavior::InitEnGgBehavior();
     Rando::ActorBehavior::InitEnGirlABehavior();
     Rando::ActorBehavior::InitEnGoBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
@@ -43,6 +44,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnMnkBehavior();
+    Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();

@@ -10,6 +10,7 @@
 #include "objects/object_sekihin/object_sekihin.h"
 #include "objects/object_sekihiz/object_sekihiz.h"
 #include "objects/object_zog/object_zog.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -112,7 +113,8 @@ void func_80A44DE8(EnSekihi* this, PlayState* play) {
         }
 
         this->dyna.bgId = DynaPoly_SetBgActor(play, &play->colCtx.dyna, &this->dyna.actor, colHeader);
-        if ((type == SEKIHI_TYPE_4) && (INV_CONTENT(ITEM_MASK_ZORA) != ITEM_MASK_ZORA)) {
+        if ((type == SEKIHI_TYPE_4) &&
+            GameInteractor_Should(VB_CONSIDER_MIKAU_HEALED, INV_CONTENT(ITEM_MASK_ZORA) != ITEM_MASK_ZORA, false)) {
             Actor_Kill(&this->dyna.actor);
         }
     }

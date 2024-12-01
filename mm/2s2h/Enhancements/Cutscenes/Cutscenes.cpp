@@ -24,6 +24,8 @@ void RegisterCutscenes() {
     RegisterSkipLearningSonataOfAwakening();
     RegisterSkipBossCutscenes();
     RegisterSkipGiantsChamber();
+    RegisterSkipHealingDarmani();
+    RegisterSkipHealingMikau();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();

@@ -7,6 +7,7 @@
 #include "z_en_tsn.h"
 #include "z64snap.h"
 #include "objects/object_tsn/object_tsn.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_2000000)
 
@@ -247,12 +248,14 @@ void func_80AE0010(EnTsn* this, PlayState* play) {
 
             case 0x1088:
                 SET_WEEKEVENTREG(WEEKEVENTREG_26_01);
-                if (INV_CONTENT(ITEM_MASK_ZORA) == ITEM_MASK_ZORA) {
+                if (GameInteractor_Should(VB_CONSIDER_MIKAU_HEALED, INV_CONTENT(ITEM_MASK_ZORA) == ITEM_MASK_ZORA,
+                                          true)) {
                     Message_CloseTextbox(play);
                     Animation_MorphToLoop(&this->skelAnime, &object_tsn_Anim_0092FC, -10.0f);
                     this->actionFunc = func_80AE0304;
                     this->actor.textId = 0;
                 } else {
+                    // "Come to think of it, there was a Zora floating lifelessly out in the bay..."
                     Message_ContinueTextbox(play, 0x1093);
                     Animation_MorphToLoop(&this->skelAnime, &object_tsn_Anim_0092FC, -10.0f);
                 }
