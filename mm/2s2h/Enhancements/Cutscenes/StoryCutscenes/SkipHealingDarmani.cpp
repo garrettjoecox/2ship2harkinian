@@ -7,15 +7,15 @@
 
 void RegisterSkipHealingDarmani() {
     REGISTER_VB_SHOULD(VB_START_CUTSCENE, {
-        // Forced on in rando for now. The Goron Mask item get processing, as well as others, is handled by DmChar05.
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) || IS_RANDO) {
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             s16* csId = va_arg(args, s16*);
+            Actor* csActor = va_arg(args, Actor*);
+
             // Played Song of Healing for Darmani in Goron Graveyard
             if (gPlayState->sceneId == SCENE_GORON_HAKA && *csId == 9) {
                 *should = false;
-                if (IS_RANDO) {
-                    RANDO_SAVE_CHECKS[RC_GORON_GRAVEYARD_DARMANI].eligible = true;
-                } else {
+
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DARMANI, true)) {
                     GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                         .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                         .param = GID_MASK_GORON,
@@ -32,7 +32,7 @@ void RegisterSkipHealingDarmani() {
                             },
                     });
                 }
-                Actor_Kill(va_arg(args, Actor*));
+                Actor_Kill(csActor);
             }
         }
     });

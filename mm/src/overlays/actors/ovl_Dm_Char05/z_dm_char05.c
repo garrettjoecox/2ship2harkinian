@@ -6,6 +6,7 @@
 
 #include "z_dm_char05.h"
 #include "objects/object_dmask/object_dmask.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
@@ -341,7 +342,9 @@ void func_80AACF04(DmChar05* this, PlayState* play) {
                             break;
 
                         case 4:
-                            Item_Give(play, ITEM_MASK_GORON);
+                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DARMANI, true)) {
+                                Item_Give(play, ITEM_MASK_GORON);
+                            }
                             changeAnim = false;
                             this->actionFunc = func_80AAC990;
                             break;
@@ -385,7 +388,9 @@ void func_80AACF04(DmChar05* this, PlayState* play) {
                             break;
 
                         case 4:
-                            Item_Give(play, ITEM_MASK_ZORA);
+                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_MIKAU, true)) {
+                                Item_Give(play, ITEM_MASK_ZORA);
+                            }
                             changeAnim = false;
                             this->actionFunc = func_80AACD1C;
                             break;

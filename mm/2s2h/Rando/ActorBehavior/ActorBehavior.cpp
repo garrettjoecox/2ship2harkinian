@@ -8,6 +8,14 @@ extern "C" {
 // This is kind of a catch-all for things that are simple enough to not need their own file.
 void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
     switch (id) {
+        case VB_GIVE_ITEM_FROM_MIKAU:
+            RANDO_SAVE_CHECKS[RC_GREAT_BAY_COAST_MIKAU].eligible = true;
+            *should = false;
+            break;
+        case VB_GIVE_ITEM_FROM_DARMANI:
+            RANDO_SAVE_CHECKS[RC_GORON_GRAVEYARD_DARMANI].eligible = true;
+            *should = false;
+            break;
         case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
             *should = false;
             break;

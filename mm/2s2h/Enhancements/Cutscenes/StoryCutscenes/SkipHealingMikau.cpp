@@ -7,14 +7,13 @@
 
 void RegisterSkipHealingMikau() {
     REGISTER_VB_SHOULD(VB_START_CUTSCENE, {
-        // Forced on in rando for now. The Zora Mask item get processing, as well as others, is handled by DmChar05.
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) || IS_RANDO) {
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             s16* csId = va_arg(args, s16*);
+            Actor* csActor = va_arg(args, Actor*);
+
             // Played Song of Healing for Mikau at Great Bay Coast
             if (gPlayState->sceneId == SCENE_30GYOSON && *csId == 13) {
-                if (IS_RANDO) {
-                    RANDO_SAVE_CHECKS[RC_GREAT_BAY_COAST_MIKAU].eligible = true;
-                } else {
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_MIKAU, true)) {
                     GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                         .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                         .param = GID_MASK_ZORA,
@@ -40,7 +39,7 @@ void RegisterSkipHealingMikau() {
                  * just operate as normal.
                  */
                 Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_SEKIHI, 838.0f, 80.0f, 3588.0, 0, -16749, 0, 4);
-                Actor_Kill(va_arg(args, Actor*));
+                Actor_Kill(csActor);
                 *should = false;
             }
         }

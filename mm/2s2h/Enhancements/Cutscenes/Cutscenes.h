@@ -11,6 +11,7 @@ void RegisterSkipKafeiReveal();
 void RegisterSkipScarecrowDance();
 void RegisterSkipTatlInterrupts();
 void RegisterSkipMayorsOfficeCutscene();
+void RegisterSkipPushingMikau();
 void RegisterSkipKamaroTeachDance();
 
 // StoryCutscenes
