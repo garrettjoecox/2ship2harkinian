@@ -27,6 +27,7 @@ void InitEnMaYtoBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
+void InitEnStoneheishiBehavior();
 void InitEnBabaBehavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();

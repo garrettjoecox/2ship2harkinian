@@ -5,6 +5,7 @@
  */
 
 #include "z_en_stone_heishi.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_REACT_TO_LENS)
 
@@ -385,8 +386,10 @@ void EnStoneheishi_GiveItemReward(EnStoneheishi* this, PlayState* play) {
         Actor_OfferGetItem(&this->actor, play, GI_MASK_STONE, 300.0f, 300.0f);
     }
 
-    this->action = EN_STONE_ACTION_4;
-    this->actionFunc = func_80BC9D28;
+    if (GameInteractor_Should(VB_STONE_HEISHI_SET_ACTION, true)) {
+        this->action = EN_STONE_ACTION_4;
+        this->actionFunc = func_80BC9D28;
+    }
 }
 
 void func_80BC9D28(EnStoneheishi* this, PlayState* play) {

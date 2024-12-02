@@ -122,6 +122,7 @@ typedef enum {
     VB_SPAWN_BOSS_REMAINS,
     VB_BE_HOOKSHOT_SURFACE,
     VB_GIVE_ITEM_FROM_KNIGHT,
+    VB_STONE_HEISHI_SET_ACTION,
 } GIVanillaBehavior;
 
 typedef enum {
