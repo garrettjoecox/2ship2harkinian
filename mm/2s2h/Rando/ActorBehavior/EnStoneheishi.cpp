@@ -8,8 +8,6 @@ void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 void func_80BC9E50(EnStoneheishi* enStoneheishi, PlayState* play);
 }
 
-#define EN_STONE_ACTION_1 1
-
 /*
  * This is the same block found for non-scripted actors in OfferGetItem.cpp, with the addition of setting
  * ACTOR_FLAG_TALK_REQUESTED, other actor data, and finishes actor's dialogue.
