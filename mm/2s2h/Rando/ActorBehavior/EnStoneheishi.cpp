@@ -3,7 +3,7 @@
 
 extern "C" {
 #include "variables.h"
-#include "overlays/actors/ovl_En_Stone_Heishi/z_en_stone_heishi.h"
+#include "overlays/actors/ovl_En_Stone_heishi/z_en_stone_heishi.h"
 void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 void func_80BC9E50(EnStoneheishi* enStoneheishi, PlayState* play);
 }
