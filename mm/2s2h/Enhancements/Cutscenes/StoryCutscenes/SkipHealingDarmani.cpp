@@ -6,16 +6,16 @@
 #include "functions.h"
 
 void RegisterSkipHealingDarmani() {
-    REGISTER_VB_SHOULD(VB_START_CUTSCENE, {
+    /*
+     * Use the cutscene queue hook here. This allows us to kill the actor while it is still invisible. Using the
+     * cutscene start hook would result in 1 frame where the actor becomes visible before disappearing again.
+     */
+    REGISTER_VB_SHOULD(VB_QUEUE_CUTSCENE, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             s16* csId = va_arg(args, s16*);
-            Actor* csActor = va_arg(args, Actor*);
-
             // Played Song of Healing for Darmani in Goron Graveyard
             if (gPlayState->sceneId == SCENE_GORON_HAKA && *csId == 9) {
-                *should = false;
-
-                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DARMANI, true)) {
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DMCHAR05, true, ITEM_MASK_GORON)) {
                     GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                         .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                         .param = GID_MASK_GORON,
@@ -32,7 +32,14 @@ void RegisterSkipHealingDarmani() {
                             },
                     });
                 }
-                Actor_Kill(csActor);
+                /*
+                 * Darmani's ghost normally goes away after a scene reload, but we're skipping that transition, so we
+                 * find the actor and kill it manually.
+                 */
+                Actor* actor =
+                    Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_EN_GG, ACTORCAT_NPC, 99999.9f);
+                Actor_Kill(actor);
+                *should = false;
             }
         }
     });

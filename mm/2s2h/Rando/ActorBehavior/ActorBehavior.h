@@ -11,6 +11,7 @@ void Init();
 void OnFileLoad();
 
 void InitDoorWarp1VBehavior();
+void InitDmChar05Behavior();
 void InitDmHinaBehavior();
 void InitDmStkBehavior();
 void InitEnAkindonutsBehavior();

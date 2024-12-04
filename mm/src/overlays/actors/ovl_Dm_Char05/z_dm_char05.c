@@ -342,7 +342,7 @@ void func_80AACF04(DmChar05* this, PlayState* play) {
                             break;
 
                         case 4:
-                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DARMANI, true)) {
+                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DMCHAR05, true, ITEM_MASK_GORON)) {
                                 Item_Give(play, ITEM_MASK_GORON);
                             }
                             changeAnim = false;
@@ -388,7 +388,7 @@ void func_80AACF04(DmChar05* this, PlayState* play) {
                             break;
 
                         case 4:
-                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_MIKAU, true)) {
+                            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DMCHAR05, true, ITEM_MASK_ZORA)) {
                                 Item_Give(play, ITEM_MASK_ZORA);
                             }
                             changeAnim = false;
@@ -732,7 +732,9 @@ void func_80AADD9C(PlayState* play, DmChar05* this) {
         Matrix_Translate(this->unk_190.x, this->unk_190.y, this->unk_190.z, MTXMODE_NEW);
         Matrix_RotateZYX(0, play->gameplayFrames * 1000, 0, MTXMODE_APPLY);
         Matrix_Scale(0.2f, 0.2f, 0.2f, MTXMODE_APPLY);
-        GetItem_Draw(play, GID_MASK_GORON);
+        if (GameInteractor_Should(VB_DRAW_ITEM_FROM_DMCHAR05, true, GID_MASK_GORON)) {
+            GetItem_Draw(play, GID_MASK_GORON);
+        }
     }
 
     if (Object_IsLoaded(&play->objectCtx, this->objectSlot)) {
@@ -745,7 +747,9 @@ void func_80AADE78(PlayState* play, DmChar05* this) {
         Matrix_Translate(this->unk_190.x, this->unk_190.y, this->unk_190.z, MTXMODE_NEW);
         Matrix_RotateZYX(0, play->gameplayFrames * 1000, 0, MTXMODE_APPLY);
         Matrix_Scale(0.2f, 0.2f, 0.2f, MTXMODE_APPLY);
-        GetItem_Draw(play, GID_MASK_ZORA);
+        if (GameInteractor_Should(VB_DRAW_ITEM_FROM_DMCHAR05, true, GID_MASK_ZORA)) {
+            GetItem_Draw(play, GID_MASK_ZORA);
+        }
     }
 
     if (Object_IsLoaded(&play->objectCtx, this->objectSlot)) {
