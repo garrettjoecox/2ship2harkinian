@@ -520,14 +520,42 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_2,   HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_3,   HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
         },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(TERMINA_FIELD, 2),              ENTRANCE(GREAT_BAY_COAST, 0), true),
-            EXIT(ENTRANCE(ZORA_CAPE, 0),                  ENTRANCE(GREAT_BAY_COAST, 1), true),
-            EXIT(ENTRANCE(PINNACLE_ROCK, 0),              ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_ZORA),
-            EXIT(ENTRANCE(FISHERMANS_HUT, 0),             ENTRANCE(GREAT_BAY_COAST, 4), true),
-            EXIT(ENTRANCE(PIRATES_FORTRESS, 0),           ENTRANCE(GREAT_BAY_COAST, 5), CAN_BE_ZORA),
-            EXIT(ENTRANCE(MARINE_RESEARCH_LAB, 0),        ENTRANCE(GREAT_BAY_COAST, 7), true),
+            EXIT(ENTRANCE(TERMINA_FIELD,          2),     ENTRANCE(GREAT_BAY_COAST, 0), true),
+            EXIT(ENTRANCE(ZORA_CAPE,              0),     ENTRANCE(GREAT_BAY_COAST, 1), true),
+            EXIT(ENTRANCE(PINNACLE_ROCK,          0),     ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_ZORA),
+            EXIT(ENTRANCE(FISHERMANS_HUT,         0),     ENTRANCE(GREAT_BAY_COAST, 4), true),
+            EXIT(ENTRANCE(PIRATES_FORTRESS,       0),     ENTRANCE(GREAT_BAY_COAST, 5), CAN_BE_ZORA),
+            EXIT(ENTRANCE(MARINE_RESEARCH_LAB,    0),     ENTRANCE(GREAT_BAY_COAST, 7), true),
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),     ENTRANCE(GREAT_BAY_COAST, 8), true),
+        },
+    } },
+    { RR_ZORA_CAPE, RandoRegion{ .sceneId = SCENE_31MISAKI,
+        .checks = {
+            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || CAN_BE_GORON)),
+            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
+            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
+            CHECK(RC_ZORA_CAPE_WATERFALL_HP,              CAN_BE_ZORA),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_1,        true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_2,        true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST,  1),              ENTRANCE(ZORA_CAPE, 0), true),
+            EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),              ENTRANCE(ZORA_CAPE, 4), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
+            EXIT(ENTRANCE(ZORA_HALL,        0),              ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
+            EXIT(ENTRANCE(ZORA_HALL,        1),              ENTRANCE(ZORA_CAPE, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
 
         },
     } },
