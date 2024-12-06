@@ -327,7 +327,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
         }
-    } }, 
+    } },
+    { RR_GREATBAY_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_CAPE, 5),                 ENTRANCE(FAIRY_FOUNTAIN, 3), true),
+        },
+    } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
             // TODO: Shop prices vs adult wallet?
@@ -548,6 +553,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ),
         },
     } },
+    { RR_WATERFALL_RAPIDS, RandoRegion{ .sceneId = SCENE_35TAKI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_CAPE, 4),                 ENTRANCE(WATERFALL_RAPIDS, 0), true),
+        },
+    } },
     { RR_WOODFALL_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .name = "Woodfall", .sceneId = SCENE_YOUSEI_IZUMI,
         .checks = {
             // TODO: We can't add this till all stray fairies are in the pool
@@ -581,7 +591,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },   
     { RR_ZORA_CAPE, RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || CAN_BE_GORON)),
+            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || CAN_BE_GORON || HAS_ITEM(ITEM_POWDER_KEG))),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
@@ -599,6 +609,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ZORA_HALL,        0),              ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
             EXIT(ENTRANCE(ZORA_HALL,        1),              ENTRANCE(ZORA_CAPE, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),  //This might be a weird edge case since going through the warp does not require a specific form but getting to the warp does without the Owl warp.
             EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),              ENTRANCE(ZORA_CAPE, 7), CAN_BE_HUMAN && CAN_BE_ZORA && CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),                ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || HAS_ITEM(ITEM_POWDER_KEG))),
         },
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DIETY),
@@ -610,7 +621,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_ZORA_HALL, RandoRegion{ .sceneId = SCENE_33ZORACITY,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ZORA_CAPE, 1),                     ENTRANCE(ZORA_HALL, 0), CAN_BE_ZORA),           
-            EXIT(ENTRANCE(ZORA_CAPE, 2),                     ENTRANCE(ZORA_HALL, 1), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY), //This too by extention.
+            EXIT(ENTRANCE(ZORA_CAPE, 2),                     ENTRANCE(ZORA_HALL, 1), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY), //Same as ln. 600 by extention.
             EXIT(ENTRANCE(ZORA_HALL_ROOMS, 0),               ENTRANCE(ZORA_HALL, 6), CAN_BE_ZORA),
             EXIT(ENTRANCE(ZORA_HALL_ROOMS, 1),               ENTRANCE(ZORA_HALL, 5), CAN_BE_ZORA),
             EXIT(ENTRANCE(ZORA_HALL_ROOMS, 2),               ENTRANCE(ZORA_HALL, 3), CAN_BE_ZORA),
