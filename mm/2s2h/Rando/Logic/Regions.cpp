@@ -281,6 +281,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ROMANI_RANCH, 5),             ENTRANCE(DOGGY_RACETRACK, 0), true),
         },
     } },
+    { RR_FISHERMANS_HUT, RandoRegion{ .sceneId = SCENE_FISHERMAN,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 4),             ENTRANCE(FISHERMANS_HUT, 0), true),
+        },
+    } },
     { RR_GORMAN_TRACK, RandoRegion{ .sceneId = SCENE_KOEPONARACE,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MILK_ROAD, 2),                ENTRANCE(GORMAN_TRACK, 3), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA) && CAN_BE_HUMAN),
@@ -315,7 +320,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD,          2),     ENTRANCE(GREAT_BAY_COAST, 0), true),
             EXIT(ENTRANCE(ZORA_CAPE,              0),     ENTRANCE(GREAT_BAY_COAST, 1), true),
-            EXIT(ENTRANCE(PINNACLE_ROCK,          0),     ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_ZORA),
+            EXIT(ENTRANCE(PINNACLE_ROCK,          0),     ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             EXIT(ENTRANCE(FISHERMANS_HUT,         0),     ENTRANCE(GREAT_BAY_COAST, 4), true),
             EXIT(ENTRANCE(PIRATES_FORTRESS,       0),     ENTRANCE(GREAT_BAY_COAST, 5), CAN_BE_ZORA),
             EXIT(ENTRANCE(MARINE_RESEARCH_LAB,    0),     ENTRANCE(GREAT_BAY_COAST, 7), true),
@@ -405,6 +410,27 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+        },
+    } },
+    { RR_PINNACLE_ROCK, RandoRegion{ .sceneId = SCENE_SINKAI,
+        .checks = {
+            CHECK(RC_PINNACLE_ROCK_CHEST_1,     CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_CHEST_2,     CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_1,       CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_2,       CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_3,       CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_4,       CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_5,       CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_6,       CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_7,       CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_8,       CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_9,       CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_10,      CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_11,      CAN_BE_ZORA),
+            //Sitton : Missing HP check to add here later.
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),          ENTRANCE(PINNACLE_ROCK, 0), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
         },
     } },
     { RR_RANCH_BARN, RandoRegion{ .sceneId = SCENE_OMOYA,
@@ -640,8 +666,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
         },
     } },
-    //Unsure if I did these following ZORA_HALL rooms correctly or not, if not please let me know.
+    //Sitton : Unsure if I did these following ZORA_HALL rooms correctly or not, if not please let me know.
     { RR_ZORA_HALL_EVANS_ROOM, RandoRegion{ .sceneId = SCENE_BANDROOM,
+        //Sitton : Missing HP check to add here later.
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ZORA_HALL, 4),                     ENTRANCE(ZORA_HALL_ROOMS, 3), true),
         },
@@ -667,7 +694,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_ZORA_HALL_SCRUB_DEED,          HAS_ITEM(ITEM_DEED_MOUNTAIN) && CAN_BE_GORON),
             CHECK(RC_ZORA_HALL_SCRUB_HP,            Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_DEKU),
-            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEKU),
+            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL, CAN_BE_ZORA),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ZORA_HALL, 3),            ENTRANCE(ZORA_HALL_ROOMS, 2), true),
