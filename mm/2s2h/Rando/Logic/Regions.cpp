@@ -324,6 +324,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_BE_HUMAN || CAN_BE_DIETY)
         },
+        .oneWayEntrances = {
+            ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
+        }
     } }, 
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
@@ -600,6 +603,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DIETY),
         },
+        .oneWayEntrances = {
+            ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
+        }
     } },
     { RR_ZORA_HALL, RandoRegion{ .sceneId = SCENE_33ZORACITY,
         .exits = { //     TO                                     FROM
