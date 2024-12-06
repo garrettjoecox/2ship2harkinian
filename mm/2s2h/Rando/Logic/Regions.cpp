@@ -591,61 +591,120 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },   
     { RR_ZORA_CAPE, RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || CAN_BE_GORON || HAS_ITEM(ITEM_POWDER_KEG))),
+            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY && (CAN_USE_EXPLOSIVE || CAN_BE_GORON || HAS_ITEM(ITEM_POWDER_KEG))),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
             CHECK(RC_ZORA_CAPE_WATERFALL_HP,              CAN_BE_ZORA),
             CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_1,        true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_2,        true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,     CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(GREAT_BAY_COAST,  1),              ENTRANCE(ZORA_CAPE, 0), true),
-            EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),              ENTRANCE(ZORA_CAPE, 4), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
-            EXIT(ENTRANCE(ZORA_HALL,        0),              ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL,        1),              ENTRANCE(ZORA_CAPE, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),  //This might be a weird edge case since going through the warp does not require a specific form but getting to the warp does without the Owl warp.
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),              ENTRANCE(ZORA_CAPE, 7), CAN_BE_HUMAN && CAN_BE_ZORA && CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
-            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),                ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST) || HAS_ITEM(ITEM_POWDER_KEG))),
+            EXIT(ENTRANCE(GREAT_BAY_COAST,  1),           ENTRANCE(ZORA_CAPE, 0), true),
+            EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),           ENTRANCE(ZORA_CAPE, 4), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
+            EXIT(ENTRANCE(ZORA_HALL,        0),           ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN,   3),           ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && (CAN_USE_EXPLOSIVE || HAS_ITEM(ITEM_POWDER_KEG))),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+    } },
+    { RR_ZORA_HALL, RandoRegion{ .sceneId = SCENE_33ZORACITY,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_CAPE,       1),            ENTRANCE(ZORA_HALL, 0), CAN_BE_ZORA),           
+            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 0),            ENTRANCE(ZORA_HALL, 6), CAN_BE_ZORA),
+            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 1),            ENTRANCE(ZORA_HALL, 5), CAN_BE_ZORA),
+            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 2),            ENTRANCE(ZORA_HALL, 3), CAN_BE_ZORA),
+            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 3),            ENTRANCE(ZORA_HALL, 4), CAN_BE_ZORA),
+            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 5),            ENTRANCE(ZORA_HALL, 2), true),
+        },
+    } },
+    { RR_ZORA_HALL_COAST, RandoRegion{ .sceneId = SCENE_31MISAKI, //The Zora Cape Owl statue location.
+        .checks = {
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1,     true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,     true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_HALL,        1),           ENTRANCE(ZORA_CAPE, 2), true),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),           ENTRANCE(ZORA_CAPE, 7), CAN_BE_HUMAN && CAN_BE_ZORA && CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_CAPE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
         },
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DIETY),
         },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
-        }
+        },
     } },
-    { RR_ZORA_HALL, RandoRegion{ .sceneId = SCENE_33ZORACITY,
+    //Unsure if I did these following ZORA_HALL rooms correctly or not, if not please let me know.
+    { RR_ZORA_HALL_EVANS_ROOM, RandoRegion{ .sceneId = SCENE_BANDROOM,
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(ZORA_CAPE, 1),                     ENTRANCE(ZORA_HALL, 0), CAN_BE_ZORA),           
-            EXIT(ENTRANCE(ZORA_CAPE, 2),                     ENTRANCE(ZORA_HALL, 1), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY), //Same as ln. 600 by extention.
-            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 0),               ENTRANCE(ZORA_HALL, 6), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 1),               ENTRANCE(ZORA_HALL, 5), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 2),               ENTRANCE(ZORA_HALL, 3), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 3),               ENTRANCE(ZORA_HALL, 4), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL_ROOMS, 5),               ENTRANCE(ZORA_HALL, 2), true),
-        }
+            EXIT(ENTRANCE(ZORA_HALL, 4),                     ENTRANCE(ZORA_HALL_ROOMS, 3), true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_JAPAS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_LULUS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_MIKAUS_ROOM,    true),
+            CONNECTION(RR_ZORA_HALL_SHOP,           true),
+        },
     } },
-    { RR_ZORA_HALL_ROOMS, RandoRegion{ .sceneId = SCENE_BANDROOM,
+    { RR_ZORA_HALL_JAPAS_ROOM, RandoRegion{ .sceneId = SCENE_BANDROOM,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_HALL, 5),            ENTRANCE(ZORA_HALL_ROOMS, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_EVANS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_LULUS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_MIKAUS_ROOM,    true),
+            CONNECTION(RR_ZORA_HALL_SHOP,           true),
+        },
+    } },
+    { RR_ZORA_HALL_LULUS_ROOM, RandoRegion{ .sceneId = SCENE_BANDROOM,
         .checks = {
-            //Adding CAN_BE_ZORA here since any form can enter the shop but not in Lulu's room.
-            CHECK(RC_ZORA_HALL_SCRUB_DEED,                  HAS_ITEM(ITEM_DEED_MOUNTAIN) && CAN_BE_GORON && CAN_BE_ZORA),
-            CHECK(RC_ZORA_HALL_SCRUB_HP,                    HAS_ITEM(ITEM_DEED_MOUNTAIN) && CAN_BE_GORON && CAN_BE_ZORA && CAN_BE_DEKU),
-            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEKU),
-            CHECK(RC_ZORA_SHOP_ITEM_1,                      true),
-            CHECK(RC_ZORA_SHOP_ITEM_2,                      true),
-            CHECK(RC_ZORA_SHOP_ITEM_3,                      true),
+            CHECK(RC_ZORA_HALL_SCRUB_DEED,          HAS_ITEM(ITEM_DEED_MOUNTAIN) && CAN_BE_GORON),
+            CHECK(RC_ZORA_HALL_SCRUB_HP,            Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_DEKU),
+            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEKU),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(ZORA_HALL, 6),                     ENTRANCE(ZORA_HALL_ROOMS, 0), true),
-            EXIT(ENTRANCE(ZORA_HALL, 5),                     ENTRANCE(ZORA_HALL_ROOMS, 1), true),
-            EXIT(ENTRANCE(ZORA_HALL, 3),                     ENTRANCE(ZORA_HALL_ROOMS, 2), true),
-            EXIT(ENTRANCE(ZORA_HALL, 4),                     ENTRANCE(ZORA_HALL_ROOMS, 3), true),
-            EXIT(ENTRANCE(ZORA_HALL, 2),                     ENTRANCE(ZORA_HALL_ROOMS, 5), true),
-        }, 
+            EXIT(ENTRANCE(ZORA_HALL, 3),            ENTRANCE(ZORA_HALL_ROOMS, 2), true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_EVANS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_JAPAS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_MIKAUS_ROOM,    true),
+            CONNECTION(RR_ZORA_HALL_SHOP,           true),
+        },
+    } },
+    { RR_ZORA_HALL_MIKAUS_ROOM, RandoRegion{ .sceneId = SCENE_BANDROOM,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_HALL, 6),            ENTRANCE(ZORA_HALL_ROOMS, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_EVANS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_JAPAS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_LULUS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_SHOP,           true),
+        },
+    } },
+    { RR_ZORA_HALL_SHOP, RandoRegion{ .sceneId = SCENE_BANDROOM,
+        .checks = {
+            CHECK(RC_ZORA_SHOP_ITEM_1,              true),
+            CHECK(RC_ZORA_SHOP_ITEM_2,              true),
+            CHECK(RC_ZORA_SHOP_ITEM_3,              true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ZORA_HALL, 2),            ENTRANCE(ZORA_HALL_ROOMS, 5), true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_HALL_EVANS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_JAPAS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_LULUS_ROOM,     true),
+            CONNECTION(RR_ZORA_HALL_MIKAUS_ROOM,    true),
+        },
     } },
     { RR_MAX, RandoRegion{ .sceneId = SCENE_MAX,
         .exits = { //     TO                                     FROM
