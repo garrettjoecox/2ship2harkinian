@@ -363,6 +363,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
         }
     } },
+    { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 7),          ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
+        },
+    } },
     { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),  ENTRANCE(MOUNTAIN_SMITHY, 0), true),
