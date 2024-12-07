@@ -623,7 +623,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_ZORA_CAPE, RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
              //Honestly just threw this in since I don't have any grotto checks to reference currently, but will likely end up moving this later to its own area once I do.
-            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN && (CAN_USE_EXPLOSIVE || CAN_BE_GORON)),
+            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_BE_HUMAN && (CAN_USE_EXPLOSIVE || CAN_BE_GORON) || ((CAN_BE_ZORA || CAN_BE_DIETY) && CAN_BE_GORON)),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
