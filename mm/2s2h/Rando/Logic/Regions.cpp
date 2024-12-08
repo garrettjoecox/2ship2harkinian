@@ -370,6 +370,61 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ZORA_CAPE, 5),                 ENTRANCE(FAIRY_FOUNTAIN, 3), true),
         },
     } },
+    { RR_IKANA_CANYON_CAVE, RandoRegion{ .sceneId = SCENE_IKANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_GROTTO, true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(SECRET_SHRINE, 0),                 ENTRANCE(IKANA_CANYON, 12), true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
+        },
+    } },
+    { RR_IKANA_CANYON_LOWER, RandoRegion{ .sceneId = SCENE_IKANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_SCRUB_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_DEKU),
+            CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
+            CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_DIETY),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROAD_TO_IKANA, 1),                 ENTRANCE(IKANA_CANYON, 0), true), 
+            /*              
+                TODO : Sakon's Hideout is heavily flag based so we should check for those. Consider what I have in here now to be loose placeholders.
+                Must NOT have helped the Bomb Shop old lady on this cycle(Kafei does not show up if you do, as Sakon never visits the shop to be followed.)
+                Must have delivered the Letter to Kafei and met Kafei.(Sakon just does not show up otherwise, as odd as that may sound.)
+            */
+            EXIT(ENTRANCE(SAKONS_HIDEOUT, 0),                ENTRANCE(IKANA_CANYON, 6), CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) && Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES)),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_CANYON_CAVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_IKANA_CANYON_UPPER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_ICE) && HAS_MAGIC),
+        },
+    } },
+    { RR_IKANA_CANYON_UPPER, RandoRegion{ .sceneId = SCENE_IKANA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GHOST_HUT, 0),                      ENTRANCE(IKANA_CANYON, 1), true),
+            EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),                ENTRANCE(IKANA_CANYON, 2), CHECK_QUEST_ITEM(QUEST_SONG_STORMS) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && (CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA)),
+            EXIT(ENTRANCE(STONE_TOWER, 0),                    ENTRANCE(IKANA_CANYON, 3), true),
+            EXIT(ENTRANCE(BENEATH_THE_WELL, 0),               ENTRANCE(IKANA_CANYON, 5), true),
+            EXIT(ENTRANCE(IKANA_CASTLE, 1),                   ENTRANCE(IKANA_CANYON, 8), true),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 4),                 ENTRANCE(IKANA_CANYON, 11), true),
+            //These next two are a little weird since they are on the same map, do we maybe split these up?
+            EXIT(ENTRANCE(IKANA_CANYON, 14),                  ENTRANCE(IKANA_CANYON, 13), true),
+            EXIT(ENTRANCE(IKANA_CANYON, 13),                  ENTRANCE(IKANA_CANYON, 14), true),
+        },
+        .connections = {
+            //May consider cutting Deku and Goron from this since getting down as them may be seen as a trick. But its possible and is pretty easy to do.
+            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_GORON && HAS_MAGIC)),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
+            //Entrance #6 is the drop off from the blue warp in the Stone Tower Temple, should we implement this?
+        }
+    } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
             // TODO: Shop prices vs adult wallet?
@@ -813,6 +868,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SNOWHEAD, 3),                          ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_SNOWHEAD)),
             EXIT(ENTRANCE(GREAT_BAY_COAST, 11),                  ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_GREAT_BAY_COAST)),
             EXIT(ENTRANCE(ZORA_CAPE, 6),                         ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_ZORA_CAPE)),
+            EXIT(ENTRANCE(IKANA_CANYON, 4),                      ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_IKANA_CANYON)),
         },
     } },
 };
