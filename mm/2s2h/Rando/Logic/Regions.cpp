@@ -482,6 +482,55 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ROMANI_RANCH, 3),             ENTRANCE(RANCH_HOUSE, 1), true),
         },
     } },
+    { RR_ROAD_TO_IKANA_ABOVE_LEDGE, RandoRegion{ .name = "Above Ledge", .sceneId = SCENE_IKANAMAE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 0),             ENTRANCE(ROAD_TO_IKANA, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, true),
+        },
+    } },
+    { RR_ROAD_TO_IKANA_BEFORE_FENCE, RandoRegion{ .name = "Below Fence", .sceneId = SCENE_IKANAMAE,
+        .checks = {
+            //TODO : Grottos
+            CHECK(RC_ROAD_TO_IKANA_GROTTO, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || CAN_BE_GORON),
+            CHECK(RC_ROAD_TO_IKANA_CHEST, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 4),             ENTRANCE(ROAD_TO_IKANA, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
+        },
+    } },
+    { RR_ROAD_TO_IKANA_BELOW_LEDGE, RandoRegion{ .name = "Below Ledge", .sceneId = SCENE_IKANAMAE,
+        .checks = {
+            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE))),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),             ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, (
+                (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)) ||
+                (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)) //Can use the scarecrow to get across.
+                )),
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_GARO) && HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+    } },
+    { RR_ROAD_TO_IKANA_MID_FENCE, RandoRegion{ .name = "Middle Fence",  .sceneId = SCENE_IKANAMAE,
+        .checks = {
+            // TODO : CAN_PLAY_SCARECROW_SONG?
+            CHECK(RC_ROAD_TO_IKANA_POT, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_BEFORE_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, (
+                (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)) ||
+                (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)) //Can use the scarecrow to get across.
+                )), 
+        },
+    } },
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
