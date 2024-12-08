@@ -912,6 +912,7 @@ typedef enum {
     RI_MASK_BUNNY,
     RI_MASK_CAPTAIN,
     RI_MASK_DEKU,
+    RI_MASK_GARO,
     RI_MASK_GIANT,
     RI_MASK_GORON,
     RI_MASK_GREAT_FAIRY,

@@ -570,7 +570,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
                 (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)) ||
                 (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)) //Can use the scarecrow to get across.
                 )),
-            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_GARO) && HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_GARO) && HAS_ITEM(ITEM_HOOKSHOT)),
         },
     } },
     { RR_ROAD_TO_IKANA_MID_FENCE, RandoRegion{ .name = "Middle Fence",  .sceneId = SCENE_IKANAMAE,
