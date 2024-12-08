@@ -581,24 +581,27 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),             ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
         },
         .connections = {
-            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, (
-                (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)) ||
-                (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)) //Can use the scarecrow to get across.
-                )),
+            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
             CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_GARO) && HAS_ITEM(ITEM_HOOKSHOT)),
+            // TODO : CAN_PLAY_SCARECROW_SONG?
+            CONNECTION(RR_ROAD_TO_IKANA_SCARECROW, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME))
         },
     } },
     { RR_ROAD_TO_IKANA_MID_FENCE, RandoRegion{ .name = "Middle Fence",  .sceneId = SCENE_IKANAMAE,
-        .checks = {
-            // TODO : CAN_PLAY_SCARECROW_SONG?
-            CHECK(RC_ROAD_TO_IKANA_POT, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
-        },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_BEFORE_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
-            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, (
-                (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)) ||
-                (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME)) //Can use the scarecrow to get across.
-                )), 
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA))),
+            // TODO : CAN_PLAY_SCARECROW_SONG?
+            CONNECTION(RR_ROAD_TO_IKANA_SCARECROW, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME))
+        },
+    } },
+    { RR_ROAD_TO_IKANA_SCARECROW, RandoRegion{ .name = "Scarecrow Rock",  .sceneId = SCENE_IKANAMAE,
+        .checks = {
+            CHECK(RC_ROAD_TO_IKANA_POT, true)
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, true),
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, true)
         },
     } },
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
