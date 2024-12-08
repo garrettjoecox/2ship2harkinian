@@ -286,6 +286,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 4),             ENTRANCE(FISHERMANS_HUT, 0), true),
         },
     } },
+    { RR_GHOST_HUT, RandoRegion{ .sceneId = SCENE_TOUGITES,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 1),             ENTRANCE(GHOST_HUT, 0), true),
+        },
+    } },
     { RR_GORMAN_TRACK, RandoRegion{ .sceneId = SCENE_KOEPONARACE,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MILK_ROAD, 2),                ENTRANCE(GORMAN_TRACK, 3), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA) && CAN_BE_HUMAN),
@@ -370,7 +375,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ZORA_CAPE, 5),                 ENTRANCE(FAIRY_FOUNTAIN, 3), true),
         },
     } },
-    { RR_IKANA_CANYON_CAVE, RandoRegion{ .sceneId = SCENE_IKANA,
+    { RR_IKANA_CANYON_CAVE_WATERFALL, RandoRegion{ .name = "Waterfall", .sceneId = SCENE_IKANA,
         .checks = {
             CHECK(RC_IKANA_CANYON_GROTTO, true),
         },
@@ -381,7 +386,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
         },
     } },
-    { RR_IKANA_CANYON_LOWER, RandoRegion{ .sceneId = SCENE_IKANA,
+    { RR_IKANA_CANYON_LOWER, RandoRegion{ .name = "Lower", .sceneId = SCENE_IKANA,
         .checks = {
             CHECK(RC_IKANA_CANYON_SCRUB_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_DEKU),
             CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
@@ -397,11 +402,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SAKONS_HIDEOUT, 0),                ENTRANCE(IKANA_CANYON, 6), CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) && Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES)),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_CAVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_IKANA_CANYON_CAVE_WATERFALL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             CONNECTION(RR_IKANA_CANYON_UPPER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_ICE) && HAS_MAGIC),
         },
     } },
-    { RR_IKANA_CANYON_UPPER, RandoRegion{ .sceneId = SCENE_IKANA,
+    { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                      ENTRANCE(IKANA_CANYON, 1), true),
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),                ENTRANCE(IKANA_CANYON, 2), CHECK_QUEST_ITEM(QUEST_SONG_STORMS) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && (CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA)),
@@ -424,6 +429,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
             //Entrance #6 is the drop off from the blue warp in the Stone Tower Temple, should we implement this?
         }
+    } },
+    { RR_IKANA_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .name = "Ikana", .sceneId = SCENE_YOUSEI_IZUMI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 11),                 ENTRANCE(FAIRY_FOUNTAIN, 4), true),
+        },
     } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
@@ -475,6 +485,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .oneWayEntrances = {
             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
         }
+    } },
+    { RR_MUSIC_BOX_HOUSE, RandoRegion{ .sceneId = SCENE_MUSICHOUSE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 2),                 ENTRANCE(MUSIC_BOX_HOUSE, 0), true),
+        },
     } },
     { RR_PATH_TO_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_13HUBUKINOMITI,
         .exits = { //     TO                                     FROM
@@ -609,6 +624,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(DOGGY_RACETRACK, 0),          ENTRANCE(ROMANI_RANCH, 5), true),
         },
     } },
+    { RR_SAKON_HIDEOUT, RandoRegion{ .sceneId = SCENE_SECOM,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 6),                ENTRANCE(SAKONS_HIDEOUT, 0), true),
+        },
+    } },
     { RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(SNOWHEAD, 2),                 ENTRANCE(FAIRY_FOUNTAIN, 2), true),
@@ -663,6 +683,44 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 10), // From Song of Soaring
         }
+    } },
+    { RR_STONE_TOWER_BOTTOM, RandoRegion{ .name = "Bottom", .sceneId = SCENE_F40,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 3),                ENTRANCE(STONE_TOWER, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_STONE_TOWER_MIDDLE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
+        },
+    } },
+    { RR_STONE_TOWER_MIDDLE, RandoRegion{ .name = "Middle", .sceneId = SCENE_F40,
+        //TODO : Add pot checks here later.
+        .connections = {
+            CONNECTION(RR_STONE_TOWER_BOTTOM, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
+            CONNECTION(RR_STONE_TOWER_TOP, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
+        },
+    } },
+    { RR_STONE_TOWER_TOP, RandoRegion{ .name = "Top", .sceneId = SCENE_F40,
+        //TODO : Add pot checks here later
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(STONE_TOWER_TEMPLE, 0),          ENTRANCE(STONE_TOWER, 2), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
+            EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),        ENTRANCE(STONE_TOWER, 1), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_LIGHT) && HAS_MAGIC && CAN_BE_HUMAN),
+        },
+        .connections = {
+            CONNECTION(RR_STONE_TOWER_MIDDLE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(STONE_TOWER, 3), // From Song of Soaring
+        }
+    } },
+    { RR_STONE_TOWER_INVERTED, RandoRegion{ .sceneId = SCENE_F41,
+        //TODO : Add checks here later
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(STONE_TOWER, 1),                  ENTRANCE(STONE_TOWER_INVERTED, 0), HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_LIGHT) && HAS_MAGIC && CAN_BE_HUMAN),
+            EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),   ENTRANCE(STONE_TOWER_INVERTED, 1), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
     } },
     { RR_SOUTHERN_SWAMP_SOUTH, RandoRegion{ .name = "South Section", .sceneId = SCENE_20SICHITAI,
         .exits = { //     TO                                     FROM
@@ -869,6 +927,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 11),                  ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_GREAT_BAY_COAST)),
             EXIT(ENTRANCE(ZORA_CAPE, 6),                         ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_ZORA_CAPE)),
             EXIT(ENTRANCE(IKANA_CANYON, 4),                      ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_IKANA_CANYON)),
+            EXIT(ENTRANCE(STONE_TOWER, 3),                       ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_STONE_TOWER)),
         },
     } },
 };
