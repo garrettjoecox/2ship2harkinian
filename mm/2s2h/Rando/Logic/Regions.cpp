@@ -464,7 +464,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_BENEATH_THE_GRAVEYARD_HP, CAN_USE_SWORD || CAN_USE_EXPLOSIVE || CAN_BE_GORON),
         },
         .connections = {
-            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || (CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG))),
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE)),
         },
     } },
     { RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, RandoRegion{ .name = "Day 2 Enemy Room", .sceneId = SCENE_HAKASHITA,
@@ -479,7 +479,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_4, true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_BOSS, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || (CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG))),
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_BOSS, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE)),
         },
     } },
     { RR_IKANA_GRAVE_NIGHT_2_ENTRANCE, RandoRegion{ .name = "Day 2 Entrance", .sceneId = SCENE_HAKASHITA,
@@ -993,7 +993,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 1),          ENTRANCE(ZORA_CAPE, 0), true),
             EXIT(ENTRANCE(ZORA_HALL, 0),                ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),         ENTRANCE(ZORA_CAPE, 4), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
-            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),           ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && (CAN_USE_EXPLOSIVE || CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG))),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),           ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && (CAN_USE_EXPLOSIVE || CAN_BE_GORON)),
         },
         .connections = {
             CONNECTION(RR_ZORA_HALL_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
