@@ -5,6 +5,7 @@
  */
 
 #include "z_en_baba.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -271,7 +272,7 @@ void EnBaba_HandleConversation(EnBaba* this, PlayState* play) {
             break;
 
         case 0x2A34:
-            if (INV_CONTENT(ITEM_MASK_BLAST) == ITEM_MASK_BLAST) {
+            if (GameInteractor_Should(VB_HAVE_BLAST_MASK, INV_CONTENT(ITEM_MASK_BLAST) == ITEM_MASK_BLAST)) {
                 this->stateFlags |= BOMB_SHOP_LADY_STATE_END_CONVERSATION;
                 // Thank you
                 this->textId = 0x2A36;
