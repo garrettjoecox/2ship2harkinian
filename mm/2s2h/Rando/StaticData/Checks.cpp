@@ -211,15 +211,15 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_STONE_TOWER_TEMPLE_ENTRANCE_CHEST,                    RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x16,                                                                RI_STONE_TOWER_STRAY_FAIRY),
     RC(RC_STONE_TOWER_TEMPLE_ENTRANCE_SWITCH_CHEST,             RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x12,                                                                RI_STONE_TOWER_STRAY_FAIRY),
     RC(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_HC,                  RCTYPE_FREESTANDING,     SCENE_INISIE_BS,                FLAG_CYCL_SCENE_COLLECTIBLE, 0x1f,                                                                RI_HEART_CONTAINER),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_KEY,                 RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x1e,                                                                RI_STONE_TOWER_BOSS_KEY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_KEY,                 RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x1e,                                                                RI_STONE_TOWER_BOSS_KEY),
     RC(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP,                RCTYPE_FREESTANDING,     SCENE_INISIE_BS,                FLAG_NONE,                   0x00,                                                                RI_REMAINS_TWINMOLD),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_DEATH_ARMOS_CHEST,        RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x05,                                                                RI_STONE_TOWER_SMALL_KEY),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_LOWER_CHEST,         RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x13,                                                                RI_STONE_TOWER_STRAY_FAIRY),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_MIDDLE_CHEST,        RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x04,                                                                RI_STONE_TOWER_SMALL_KEY),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_UPPER_CHEST,         RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x0e,                                                                RI_STONE_TOWER_STRAY_FAIRY),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_CHEST,           RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x10,                                                                RI_STONE_TOWER_STRAY_FAIRY),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_GIANT_MASK,               RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x1a,                                                                RI_MASK_GIANT),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_WIZZROBE_CHEST,           RCTYPE_CHEST,            SCENE_INISIE_R,                 FLAG_CYCL_SCENE_CHEST,       0x11,                                                                RI_STONE_TOWER_STRAY_FAIRY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_DEATH_ARMOS_CHEST,        RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x05,                                                                RI_STONE_TOWER_SMALL_KEY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_LOWER_CHEST,         RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x13,                                                                RI_STONE_TOWER_STRAY_FAIRY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_MIDDLE_CHEST,        RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x04,                                                                RI_STONE_TOWER_SMALL_KEY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_UPPER_CHEST,         RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x0e,                                                                RI_STONE_TOWER_STRAY_FAIRY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_CHEST,           RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x10,                                                                RI_STONE_TOWER_STRAY_FAIRY),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_GIANT_MASK,               RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x1a,                                                                RI_MASK_GIANT),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_WIZZROBE_CHEST,           RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x11,                                                                RI_STONE_TOWER_STRAY_FAIRY),
     RC(RC_STONE_TOWER_TEMPLE_LIGHT_ARROW,                       RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x1b,                                                                RI_ARROW_LIGHT),
     RC(RC_STONE_TOWER_TEMPLE_MAP,                               RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x1d,                                                                RI_STONE_TOWER_MAP),
     RC(RC_STONE_TOWER_TEMPLE_MIRRORS_ROOM_CENTER_CHEST,         RCTYPE_CHEST,            SCENE_INISIE_N,                 FLAG_CYCL_SCENE_CHEST,       0x0f,                                                                RI_STONE_TOWER_STRAY_FAIRY),
@@ -862,9 +862,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
 // a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    if (sceneId != SCENE_INISIE_R) {
-        sceneId = Play_GetOriginalSceneId(sceneId);
-    }
+    sceneId = Play_GetOriginalSceneId(sceneId);
 
     for (auto& [check, data] : Checks) {
         if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
