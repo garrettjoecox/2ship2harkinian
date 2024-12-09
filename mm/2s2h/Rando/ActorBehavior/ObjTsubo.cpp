@@ -43,13 +43,14 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_3;
             }
             if (IS_AT(-1121.0f, -879.0f)) {
-                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_AFTER_PIT_1;
+                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_1;
             }
+            //RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_2 is missing from here.
             if (IS_AT(-1200.0f, -1400.0f)) {
-                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_AFTER_PIT_3;
+                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_3;
             }
             if (IS_AT(-1120.0f, -1400.0f)) {
-                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_AFTER_PIT_4;
+                randoCheckId = RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_4;
             }
             break;
         case SCENE_HAKUGIN_BS:
