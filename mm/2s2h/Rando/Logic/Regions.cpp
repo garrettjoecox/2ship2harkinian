@@ -25,6 +25,7 @@ namespace Logic {
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || (HAS_ITEM(ITEM_MASK_BLAST) && CAN_BE_HUMAN))
+#define CAN_USE_SWORD ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED) || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || CAN_BE_DIETY)
 #define ONE_WAY_EXIT 0
 #define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
 #define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
@@ -404,7 +405,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_IKANA_CANYON_CAVE_WATERFALL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CONNECTION(RR_IKANA_CANYON_UPPER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_ICE) && HAS_MAGIC),
+            CONNECTION(RR_IKANA_CANYON_UPPER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_MAGIC)/* && HAS_ITEM(ITEM_BOW_ICE) */
         },
     } },
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
@@ -430,6 +431,116 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
             //Entrance #6 is the drop off from the blue warp in the Stone Tower Temple, should we implement this?
         }
+    } },
+    { RR_IKANA_GRAVE_NIGHT_1_BOSS, RandoRegion{ .name = "Day 1 Iron Knuckle", .sceneId = SCENE_HAKASHITA,
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_1_ENEMY_ROOM, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_1_ENTRANCE, RandoRegion{ .name = "Day 1 Entrance", .sceneId = SCENE_HAKASHITA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 3),    ENTRANCE(BENEATH_THE_GRAVERYARD, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_1_ENEMY_ROOM, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_1_ENEMY_ROOM, RandoRegion{ .name = "Day 1 Enemy Room", .sceneId = SCENE_HAKASHITA,
+        .checks = {
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_EARLY_1, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_EARLY_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_CHEST, CAN_USE_SWORD || (CAN_BE_HUMAN && (HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE)) || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_1, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_3, true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_1_ENTRANCE, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_1_BOSS, (CAN_BE_HUMAN && ((HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_FIRE) && HAS_MAGIC) || HAS_ITEM(ITEM_DEKU_STICK)))),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_2_BOSS, RandoRegion{ .name = "Day 2 Iron Knuckle", .sceneId = SCENE_HAKASHITA,
+        .checks = {
+            CHECK(RC_BENEATH_THE_GRAVEYARD_HP, CAN_USE_SWORD || CAN_USE_EXPLOSIVE || CAN_BE_GORON),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || (CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG))),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, RandoRegion{ .name = "Day 2 Enemy Room", .sceneId = SCENE_HAKASHITA,
+        .checks = {
+            //Pots here was mislabled as Night_1 pots, please remove this comment during review.
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_1, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_1, true),
+            //AFTER_PIT_2 is not working for some reason, gonna comment it out for now.
+            //CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_3, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_4, true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_BOSS, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || (CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG))),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_2_ENTRANCE, RandoRegion{ .name = "Day 2 Entrance", .sceneId = SCENE_HAKASHITA,
+        .checks = {
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_EARLY, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 2),             ENTRANCE(BENEATH_THE_GRAVERYARD, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVE_NIGHT_2_ENEMY_ROOM, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+        },
+    } },
+    { RR_IKANA_GRAVE_NIGHT_3, RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
+        .checks = {
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_CHEST, CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_1, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_3, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_4, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_5, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_6, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_7, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_8, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_9, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_10, true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 4),             ENTRANCE(DAMPES_HOUSE, 1), true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(DAMPES_HOUSE, 1), //Day 3 grave
+        }
+    } },
+    { RR_IKANA_GRAVEYARD_LOWER, RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
+        .checks = {
+            //TODO : Grotto
+            CHECK(RC_IKANA_GRAVEYARD_GROTTO, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || CAN_BE_GORON)
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROAD_TO_IKANA, 2),             ENTRANCE(IKANA_GRAVEYARD, 0), true),
+            EXIT(ENTRANCE(DAMPES_HOUSE, 1),              ENTRANCE(IKANA_GRAVEYARD, 1), HAS_ITEM(ITEM_MASK_CAPTAIN) && CAN_BE_HUMAN), //Day 3 hole
+            EXIT(ENTRANCE(BENEATH_THE_GRAVERYARD, 0),    ENTRANCE(IKANA_GRAVEYARD, 2), HAS_ITEM(ITEM_MASK_CAPTAIN) && CAN_BE_HUMAN), //Day 2 hole
+            EXIT(ENTRANCE(BENEATH_THE_GRAVERYARD, 1),    ENTRANCE(IKANA_GRAVEYARD, 3), HAS_ITEM(ITEM_MASK_CAPTAIN) && CAN_BE_HUMAN), //Day 1 hole
+            //3rd day hole is oneway
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVEYARD_UPPER, (CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA) && CHECK_QUEST_ITEM(QUEST_SONG_SONATA) && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(IKANA_GRAVEYARD, 4), //Exiting Dampe's house
+        }
+    } },
+    { RR_IKANA_GRAVEYARD_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_BOTI,
+        //Seperating this in case some mad lad wants to add rocksanity later.
+        .checks = {
+            CHECK(RC_IKANA_GRAVEYARD_CAPTAIN_MASK, true)
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVEYARD_LOWER, true)
+        },
     } },
     { RR_IKANA_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .name = "Ikana", .sceneId = SCENE_YOUSEI_IZUMI,
         .exits = { //     TO                                     FROM
@@ -555,52 +666,37 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_ROAD_TO_IKANA_ABOVE_LEDGE, RandoRegion{ .name = "Above Ledge", .sceneId = SCENE_IKANAMAE,
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(IKANA_CANYON, 0),             ENTRANCE(ROAD_TO_IKANA, 1), true),
+            EXIT(ENTRANCE(IKANA_CANYON, 0),            ENTRANCE(ROAD_TO_IKANA, 2), true),
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, true),
         },
     } },
-    { RR_ROAD_TO_IKANA_BEFORE_FENCE, RandoRegion{ .name = "Below Fence", .sceneId = SCENE_IKANAMAE,
-        .checks = {
-            //TODO : Grottos
-            CHECK(RC_ROAD_TO_IKANA_GROTTO, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || CAN_BE_GORON),
-            CHECK(RC_ROAD_TO_IKANA_CHEST, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
-        },
-        .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(TERMINA_FIELD, 4),             ENTRANCE(ROAD_TO_IKANA, 0), true),
-        },
-        .connections = {
-            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
-        },
-    } },
     { RR_ROAD_TO_IKANA_BELOW_LEDGE, RandoRegion{ .name = "Below Ledge", .sceneId = SCENE_IKANAMAE,
         .checks = {
-            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE))),
+            CHECK(RC_ROAD_TO_IKANA_POT, CAN_HOOK_SCARECROW),
+            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE)))
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),             ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            EXIT(ENTRANCE(TERMINA_FIELD, 4),            ENTRANCE(ROAD_TO_IKANA, 0), true),
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),          ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
         },
         .connections = {
-            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
-            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_GARO) && HAS_ITEM(ITEM_HOOKSHOT)),
-            CONNECTION(RR_ROAD_TO_IKANA_SCARECROW, CAN_HOOK_SCARECROW)
+            CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
+            //Adding ITEM_MASK_GARO as a requirement here seems to break seed generation, no clue as to why.
+            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))/*  && HAS_ITEM(ITEM_MASK_GARO)), */
         },
     } },
-    { RR_ROAD_TO_IKANA_MID_FENCE, RandoRegion{ .name = "Middle Fence",  .sceneId = SCENE_IKANAMAE,
-        .connections = {
-            CONNECTION(RR_ROAD_TO_IKANA_BEFORE_FENCE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
-            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA))),
-            CONNECTION(RR_ROAD_TO_IKANA_SCARECROW, CAN_HOOK_SCARECROW)
-        },
-    } },
-    { RR_ROAD_TO_IKANA_SCARECROW, RandoRegion{ .name = "Scarecrow Rock",  .sceneId = SCENE_IKANAMAE,
+    { RR_ROAD_TO_IKANA_FIELD_SIDE, RandoRegion{ .name = "Field Side", .sceneId = SCENE_IKANAMAE,
         .checks = {
-            CHECK(RC_ROAD_TO_IKANA_POT, true)
+            CHECK(RC_ROAD_TO_IKANA_CHEST, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_ROAD_TO_IKANA_GROTTO, (CAN_BE_HUMAN && CAN_USE_EXPLOSIVE) || CAN_BE_GORON)
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 4),            ENTRANCE(ROAD_TO_IKANA, 0), true),
         },
         .connections = {
-            CONNECTION(RR_ROAD_TO_IKANA_MID_FENCE, true),
-            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, true)
+            CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
         },
     } },
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
@@ -688,12 +784,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_STONE_TOWER_BOTTOM, RandoRegion{ .name = "Bottom", .sceneId = SCENE_F40,
         .checks = {
-            // TODO : Go down stone tower backwards and see if non-human forms can get these next two checks.
             CHECK(RC_STONE_TOWER_POT_CLIMB_1, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_STONE_TOWER_POT_CLIMB_2, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(IKANA_CANYON, 3),                ENTRANCE(STONE_TOWER, 0), true),
+            EXIT(ENTRANCE(IKANA_CANYON, 3),              ENTRANCE(STONE_TOWER, 0), true)
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_MIDDLE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
@@ -727,8 +822,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_4, true),
         },
         .exits = { //     TO                                     FROM
+            //Remove the comments for the light arros once it is implemented.
+            EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),        ENTRANCE(STONE_TOWER, 1), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && HAS_ITEM(ITEM_BOW) && /* HAS_ITEM(ITEM_BOW_LIGHT) && */ HAS_MAGIC && CAN_BE_HUMAN),
             EXIT(ENTRANCE(STONE_TOWER_TEMPLE, 0),          ENTRANCE(STONE_TOWER, 2), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && CAN_BE_HUMAN && CAN_BE_GORON && CAN_BE_ZORA),
-            EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),        ENTRANCE(STONE_TOWER, 1), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_LIGHT) && HAS_MAGIC && CAN_BE_HUMAN),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
@@ -741,7 +837,6 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         }
     } },
     { RR_STONE_TOWER_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_F40,
-        // TODO : CAN_PLAY_SCARECROW_SONG?
         .checks = {
             CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_1, CAN_HOOK_SCARECROW),
             CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_2, CAN_HOOK_SCARECROW),
@@ -764,6 +859,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_STONE_TOWER_INVERTED_CHEST_1, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
             CHECK(RC_STONE_TOWER_INVERTED_CHEST_2, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
             CHECK(RC_STONE_TOWER_INVERTED_CHEST_3, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
+            //These pots don't seem to work, no clue why.
             CHECK(RC_STONE_TOWER_INVERTED_POT_1, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
             CHECK(RC_STONE_TOWER_INVERTED_POT_2, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
             CHECK(RC_STONE_TOWER_INVERTED_POT_3, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
@@ -771,9 +867,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_STONE_TOWER_INVERTED_POT_5, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CHECK_QUEST_ITEM(QUEST_SONG_STORMS) || HAS_ITEM(ITEM_SPRING_WATER))),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(STONE_TOWER, 1),                  ENTRANCE(STONE_TOWER_INVERTED, 0), HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOW_LIGHT) && HAS_MAGIC && CAN_BE_HUMAN),
+            //Remove the comments for the light arros once it is implemented.
+            EXIT(ENTRANCE(STONE_TOWER, 1),                   ENTRANCE(STONE_TOWER_INVERTED, 0), HAS_ITEM(ITEM_BOW) && /* HAS_ITEM(ITEM_BOW_LIGHT) && */ HAS_MAGIC && CAN_BE_HUMAN),
             EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),   ENTRANCE(STONE_TOWER_INVERTED, 1), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-        },
+        }
     } },
     { RR_SOUTHERN_SWAMP_SOUTH, RandoRegion{ .name = "South Section", .sceneId = SCENE_20SICHITAI,
         .exits = { //     TO                                     FROM
