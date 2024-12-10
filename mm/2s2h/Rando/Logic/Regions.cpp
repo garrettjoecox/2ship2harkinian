@@ -97,10 +97,17 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 1),       ENTRANCE(TERMINA_FIELD, 9), true),
         },
+        .connections = {
+            CONNECTION(RR_TERMINA_FIELD, CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || HAS_ITEM(ITEM_SPRING_WATER)))
+        }
     } },
     { RR_ASTRAL_OBSERVATORY_PASSAGE, RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
         .checks = {
-            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST, (CAN_BE_HUMAN || CAN_BE_DIETY || CAN_BE_ZORA) && CAN_USE_EXPLOSIVE),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST, CAN_BE_HUMAN && CAN_USE_EXPLOSIVE),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_1, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_2, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_3, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_4, true),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 2),          ENTRANCE(ASTRAL_OBSERVATORY, 0), true),
@@ -109,7 +116,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_ASTRAL_OBSERVATORY, CAN_BE_DEKU && HAS_MAGIC),
         },
     } },
-    { RR_ASTRAL_OBSERVATORY, RandoRegion{ .sceneId = SCENE_TENMON_DAI,
+    { RR_ASTRAL_OBSERVATORY, RandoRegion{ .name = "Inside Astral Observatory", .sceneId = SCENE_TENMON_DAI,
+        .checks = {
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_1, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_2, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_3, true),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 9),            ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
         },
@@ -239,7 +251,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 7),            ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 7),         ENTRANCE(EAST_CLOCK_TOWN, 1), true), // To lower
-            EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 0),       ENTRANCE(EAST_CLOCK_TOWN, 2), true), // TODO: Bombers Code req
+            EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 0),       ENTRANCE(EAST_CLOCK_TOWN, 2), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_GORON), // TODO: Bombers Code req
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 2),         ENTRANCE(EAST_CLOCK_TOWN, 3), true), // To upper
             EXIT(ENTRANCE(TREASURE_CHEST_SHOP, 0),      ENTRANCE(EAST_CLOCK_TOWN, 4), true),
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 1),         ENTRANCE(EAST_CLOCK_TOWN, 5), true),
@@ -611,6 +623,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_INN, RandoRegion{ .sceneId = SCENE_YADOYA,
         .checks = {
             // TODO : Add Couples Mask check here.
+            /*
+                Note to Proxy while testing : For the Short story select the top option, and for the Long story select the bottom option. Just in case you forgot.
+                Please delete this after.
+            */
             CHECK(RC_STOCK_POT_INN_GRANDMA_LONG_STORY, IS_HUMAN || HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GRANDMA_SHORT_STORY, IS_HUMAN || HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA),
@@ -1088,6 +1104,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_TERMINA_FIELD_BEFORE_PATH_TO_MOUNTAIN_VILLAGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)),
             CONNECTION(RR_TERMINA_FIELD_BEFORE_GREAT_BAY_COAST, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA)),
+            CONNECTION(RR_ASTRAL_OBSERVATORY_OUTSIDE, CAN_BE_DEKU)
         },
     } },
     { RR_TOURIST_INFORMATION, RandoRegion{ .sceneId = SCENE_MAP_SHOP,
