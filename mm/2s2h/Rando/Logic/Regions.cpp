@@ -202,6 +202,17 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(IKANA_CANYON, 5),             ENTRANCE(BENEATH_THE_WELL, 0), true),
         },
     } },
+    { RR_BOMB_SHOP, RandoRegion{ .sceneId = SCENE_BOMYA,
+        .checks = {
+            // Attempting to buy anything as Deity softlocks the game
+            CHECK(RC_BOMB_SHOP_ITEM_1, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+            CHECK(RC_BOMB_SHOP_ITEM_2, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+            CHECK(RC_BOMB_SHOP_ITEM_3, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 6),          ENTRANCE(BOMB_SHOP, 0), true),
+        },
+    } },
     { RR_CLOCK_TOWER_INTERIOR, RandoRegion{ .sceneId = SCENE_INSIDETOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
@@ -273,7 +284,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_CLOCK_TOWN_SOUTH_PLATFORM, RandoRegion{ .name = "Clock Tower Platform", .sceneId = SCENE_CLOCKTOWER,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP, true),
+            CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_HUMAN)),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(CLOCK_TOWER_ROOFTOP, 0),               ONE_WAY_EXIT, true),
@@ -285,8 +296,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_CLOCK_TOWN_SOUTH, RandoRegion{ .sceneId = SCENE_CLOCKTOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
-            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
-            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)),
+            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
+            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(CLOCK_TOWER_INTERIOR, 1),     ENTRANCE(SOUTH_CLOCK_TOWN, 0), true),
@@ -571,6 +582,26 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(IKANA_CANYON, 11),            ENTRANCE(FAIRY_FOUNTAIN, 4), true),
         },
     } },
+    { RR_INN, RandoRegion{ .sceneId = SCENE_YADOYA,
+        .checks = {
+            // TODO : Add Couples Mask check here.
+            CHECK(RC_STOCK_POT_INN_GRANDMA_LONG_STORY, IS_HUMAN || HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
+            CHECK(RC_STOCK_POT_INN_GRANDMA_SHORT_STORY, IS_HUMAN || HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
+            CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA),
+            CHECK(RC_STOCK_POT_INN_LETTER_TO_KAFEI, CAN_BE_HUMAN || HAS_ITEM(ITEM_MASK_KAFEIS_MASK)),
+            CHECK(RC_STOCK_POT_INN_ROOM_KEY, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_STOCK_POT_INN_STAFF_ROOM_CHEST, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+            CHECK(RC_STOCK_POT_INN_TOILET_HAND, 
+                Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) || Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) ||
+                Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) || Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) ||
+                Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA) || Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI)
+            ),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 9),            ENTRANCE(STOCK_POT_INN, 0), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA), // From ground floor
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),           ENTRANCE(STOCK_POT_INN, 1), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA), // From upstairs
+        },
+    } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
             // TODO: Shop prices vs adult wallet?
@@ -599,6 +630,16 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),          ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
+        },
+    } },
+    { RR_MAYOR_RESIDENCE, RandoRegion{ .sceneId = SCENE_SONCHONOIE,
+        .checks = {
+            // Adding any checks here seems to break seed generation regardless of the conditions to reach them.
+            //CHECK(RC_MAYORS_OFFICE_HP, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_COUPLE)),
+            //CHECK(RC_MAYORS_OFFICE_KAFEIS_MASK, true)// CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON) // Deity cannot enter the room
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 7),         ENTRANCE(MAYORS_RESIDENCE, 0), true),
         },
     } },
     { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
@@ -995,6 +1036,23 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ),
         },
     } },
+    { RR_TRADING_POST, RandoRegion{ .sceneId = SCENE_8ITEMSHOP,
+        .checks = {
+            CHECK(RC_CLOCK_TOWN_WEST_TRADING_POST_POT, true), //Note : Goron has to sidehop to get up.
+            CHECK(RC_TRADING_POST_SHOP_ITEM_1, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_2, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_3, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_4, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_5, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_6, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_7, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_8, true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 5),  ENTRANCE(TRADING_POST, 0), true),
+        
+        },
+    } }, 
     { RR_WATERFALL_RAPIDS, RandoRegion{ .sceneId = SCENE_35TAKI,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ZORA_CAPE, 4),                ENTRANCE(WATERFALL_RAPIDS, 0), true),

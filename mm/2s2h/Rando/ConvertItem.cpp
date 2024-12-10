@@ -302,10 +302,12 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong. We just simply check the inventory state
         // Masks
+        case RI_MASK_ALL_NIGHT:
         case RI_MASK_BLAST:
         case RI_MASK_BREMEN:
         case RI_MASK_BUNNY:
         case RI_MASK_CAPTAIN:
+        case RI_MASK_COUPLE:
         case RI_MASK_DEKU:
         case RI_MASK_GARO:
         case RI_MASK_GIANT:
