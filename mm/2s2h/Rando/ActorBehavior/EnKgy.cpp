@@ -19,7 +19,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         } else {
             randoRazorSwordSaveCheck.eligible = true;
         }
-        
+
         *should = false;
     });
 
@@ -37,14 +37,14 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.autoFormat = false;
         CustomMessage::Replace(&entry.msg, "your sword", "you");
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
     COND_ID_HOOK(OnOpenText, 0xc3b, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        
+
         RandoSaveCheck& randoRazorSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD];
         if (!randoRazorSwordSaveCheck.obtained) {
             entry.autoFormat = false;
@@ -67,7 +67,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
             RandoSaveCheck& randoGildedSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD];
             std::string itemName = Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].name;
         }
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -92,7 +92,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         finalMsg += "!\xE0\xBF";
         CustomMessage::Replace(&finalMsg, "{itemName}", itemName);
         entry.msg.replace(entry.msg.begin() + 78, entry.msg.end() - 1, finalMsg);
-        
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -100,7 +100,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
     COND_ID_HOOK(OnOpenText, 0xc3e, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg.replace(entry.msg.begin(), entry.msg.end() - 20, "Back for more");
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -108,7 +108,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
     COND_ID_HOOK(OnOpenText, 0xc42, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg.replace(entry.msg.begin(), entry.msg.end() - 2, "Thanks for your business.");
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -116,12 +116,12 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
     COND_ID_HOOK(OnOpenText, 0xc45, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.autoFormat = false;
-        
+
         std::string finalMsg = "Did you bring the \x01gold dust";
         finalMsg += '\x00';
         finalMsg += "?";
         entry.msg.replace(entry.msg.begin(), entry.msg.end() - 2, finalMsg);
-        
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -130,7 +130,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.autoFormat = false;
         entry.msg.replace(entry.msg.begin() + 61, entry.msg.begin() + 138, "");
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -139,7 +139,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.autoFormat = false;
         entry.msg.replace(entry.msg.begin() + 24, entry.msg.end() - 2, "I'm not made of Randomizer Checks!");
-    
+
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
