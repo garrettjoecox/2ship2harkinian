@@ -725,33 +725,33 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_STONE_TOWER_POT_OWL_STATUE_2,                         RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x38,                                                                RI_ARROWS_30),
     RC(RC_STONE_TOWER_POT_OWL_STATUE_3,                         RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x39,                                                                RI_FAIRY_REFILL),
     RC(RC_STONE_TOWER_POT_OWL_STATUE_4,                         RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x3a,                                                                RI_MAGIC_JAR_BIG),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_1,             RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_2,             RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_3,             RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4,             RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1,      RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_2,      RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_1,  RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_2,  RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_SMALL),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_1,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_2,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_3,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_4,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_5,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_6,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_7,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_BOMBS_5),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_8,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_1,    RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_2,    RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_1,     RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x24,                                                                RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_2,     RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x22,                                                                RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_3,     RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_4,     RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x23,                                                                RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_1,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_2,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_BOMBS_5),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_3,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
-    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_5,           RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x21,                                                                RI_FAIRY_REFILL),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_1,             RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_2,             RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_3,             RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4,             RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1,      RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_2,      RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_1,  RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_2,  RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_SMALL),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_1,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_2,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_3,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_4,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_5,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_6,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_7,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_BOMBS_5),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_8,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_1,    RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_2,    RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_1,     RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x24,                                                                RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_2,     RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x22,                                                                RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_3,     RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_4,     RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x23,                                                                RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_1,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_2,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_BOMBS_5),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_3,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
+    RC(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_5,           RCTYPE_POT,              SCENE_INISIE_R,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x21,                                                                RI_FAIRY_REFILL),
     // RC(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1,         RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
     // RC(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_2,         RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
     // RC(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_3,         RCTYPE_POT,              SCENE_INISIE_N,                 FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
@@ -862,10 +862,19 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
 // a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    sceneId = Play_GetOriginalSceneId(sceneId);
-
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag &&
+            (sceneId == SCENE_MAX || data.sceneId == Play_GetOriginalSceneId(sceneId))) {
+            return data;
+        }
+    }
+    return Checks[RC_UNKNOWN];
+}
+
+RandoStaticCheck GetCheckForPot(s32 flag, s16 sceneId) {
+    for (auto& [check, data] : Checks) {
+        if (data.flagType == FLAG_CYCL_SCENE_COLLECTIBLE && data.flag == flag &&
+            (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
             return data;
         }
     }
