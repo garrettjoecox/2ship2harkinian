@@ -307,6 +307,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         case RI_MASK_BUNNY:
         case RI_MASK_CAPTAIN:
         case RI_MASK_DEKU:
+        case RI_MASK_GARO:
         case RI_MASK_GIANT:
         case RI_MASK_GORON:
         case RI_MASK_GREAT_FAIRY:

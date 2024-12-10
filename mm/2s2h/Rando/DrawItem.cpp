@@ -8,6 +8,7 @@ extern "C" {
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_gi_melody/object_gi_melody.h"
 #include "objects/object_gi_hearts/object_gi_hearts.h"
+#include "objects/object_gi_liquid/object_gi_liquid.h"
 }
 
 s32 StrayFairyOverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx,
@@ -115,6 +116,44 @@ void DrawDoubleDefense() {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
+void DrawMilkRefill() {
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+
+    gSPSegment(POLY_OPA_DISP++, 0x08,
+               (uintptr_t)Gfx_TwoTexScroll(gPlayState->state.gfxCtx, G_TX_RENDERTILE, -gPlayState->state.frames,
+                                           gPlayState->state.frames, 32, 32, 1, -gPlayState->state.frames,
+                                           gPlayState->state.frames, 32, 32));
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    // Container Color
+    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(POLY_OPA_DISP++, 200, 200, 200, 255);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiPotionContainerPotDL);
+    // Liquid Color
+    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(POLY_OPA_DISP++, 200, 200, 200, 255);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiPotionContainerLiquidDL);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    // Pattern Color
+    // Milk
+    gDPSetPrimColor(POLY_XLU_DISP++, 0, 0, 13, 33, 255, 255);
+    gDPSetEnvColor(POLY_XLU_DISP++, 100, 100, 255, 255);
+    gDPLoadTextureBlock(POLY_XLU_DISP++, gGiPotionContainerBluePatternTex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 32, 0,
+                        G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_CLAMP, 4, 5, G_TX_NOLOD, G_TX_NOLOD);
+    // Chateau
+    // gDPSetPrimColor(POLY_XLU_DISP++, 0, 0, 250, 225, 78, 255);
+    // gDPSetEnvColor(POLY_XLU_DISP++, 184, 42, 119, 255);
+    // gDPLoadTextureBlock(POLY_XLU_DISP++, gGiPotionContainerRedPatternTex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 32, 0,
+    // G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_CLAMP, 4, 5, G_TX_NOLOD, G_TX_NOLOD);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiPotionContainerPatternDL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
         case RI_SONG_TIME:
@@ -134,6 +173,9 @@ void Rando::DrawItem(RandoItemId randoItemId) {
             break;
         case RI_DOUBLE_DEFENSE:
             DrawDoubleDefense();
+            break;
+        case RI_MILK_REFILL:
+            DrawMilkRefill();
             break;
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:

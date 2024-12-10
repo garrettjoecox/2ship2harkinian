@@ -306,7 +306,8 @@ void EnYb_Talk(EnYb* this, PlayState* play) {
                     Message_CloseTextbox(play);
                     this->actionFunc = EnYb_Idle;
 
-                } else if (INV_CONTENT(ITEM_MASK_KAMARO) == ITEM_MASK_KAMARO) {
+                } else if (GameInteractor_Should(VB_HAVE_KAMAROS_MASK,
+                                                 INV_CONTENT(ITEM_MASK_KAMARO) == ITEM_MASK_KAMARO)) {
                     Message_ContinueTextbox(play, 0x147D); // I am counting on you
                     func_80BFA2FC(play);
 

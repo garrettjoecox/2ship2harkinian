@@ -31,4 +31,7 @@ void Rando::ActorBehavior::InitEnBabaBehavior() {
             RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_NORTH_BOMB_LADY].eligible = true;
         }
     });
+
+    COND_VB_SHOULD(VB_HAVE_BLAST_MASK, IS_RANDO,
+                   { *should = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_NORTH_BOMB_LADY].obtained; });
 }
