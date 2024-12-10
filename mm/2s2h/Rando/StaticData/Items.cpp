@@ -121,6 +121,8 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_STONE_TOWER_MAP,            "the",  "Stone Tower Map",            ITEM_DUNGEON_MAP,                GI_MAP,                      GID_DUNGEON_MAP),
     RI(RI_STONE_TOWER_SMALL_KEY,      "a",    "Stone Tower Small Key",      ITEM_KEY_SMALL,                  GI_KEY_SMALL,                GID_KEY_SMALL),
     RI(RI_STONE_TOWER_STRAY_FAIRY,    "a",    "Stone Tower Stray Fairy",    ITEM_STRAY_FAIRIES,              GI_STRAY_FAIRY,              GID_NONE),
+    RI(RI_SWORD_GILDED,               "the",  "Gilded Sword",               ITEM_SWORD_GILDED,               GI_SWORD_GILDED,             GID_SWORD_GILDED),
+    RI(RI_SWORD_RAZOR,                "the",  "Razor Sword",                ITEM_SWORD_RAZOR,                GI_SWORD_RAZOR,              GID_SWORD_RAZOR),
     RI(RI_WOODFALL_BOSS_KEY,          "the",  "Woodfall Boss Key",          ITEM_KEY_BOSS,                   GI_KEY_BOSS,                 GID_KEY_BOSS),
     RI(RI_WOODFALL_COMPASS,           "the",  "Woodfall Compass",           ITEM_COMPASS,                    GI_COMPASS,                  GID_COMPASS),
     RI(RI_WOODFALL_MAP,               "the",  "Woodfall Map",               ITEM_DUNGEON_MAP,                GI_MAP,                      GID_DUNGEON_MAP),

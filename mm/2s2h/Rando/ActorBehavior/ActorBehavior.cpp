@@ -35,6 +35,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnGirlABehavior();
     Rando::ActorBehavior::InitEnGoBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
+    Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();

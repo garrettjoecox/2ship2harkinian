@@ -6,6 +6,7 @@
 
 #include "z_en_kgy.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -402,11 +403,11 @@ s32 func_80B41460(void) {
 }
 
 s32 func_80B41528(PlayState* play) {
-    if (CUR_FORM_EQUIP(EQUIP_SLOT_B) == ITEM_SWORD_GILDED) {
+    if (GameInteractor_Should(VB_SMITHY_CHECK_FOR_GILDED_SWORD, CUR_FORM_EQUIP(EQUIP_SLOT_B) == ITEM_SWORD_GILDED)) {
         return 0xC4C;
     }
 
-    if (CUR_FORM_EQUIP(EQUIP_SLOT_B) == ITEM_SWORD_RAZOR) {
+    if (GameInteractor_Should(VB_SMITHY_CHECK_FOR_RAZOR_SWORD, CUR_FORM_EQUIP(EQUIP_SLOT_B) == ITEM_SWORD_RAZOR)) {
         return 0xC45;
     }
 
@@ -755,10 +756,12 @@ void func_80B41E18(EnKgy* this, PlayState* play) {
                             play->msgCtx.msgLength = 0;
                             func_80B41368(this, play, 0);
                             this->actor.textId = 0xC43;
-                            CUR_FORM_EQUIP(EQUIP_SLOT_B) = ITEM_NONE;
-                            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
-                            Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
-                            func_80B40C74(play);
+                            if (GameInteractor_Should(VB_SMITHY_START_UPGRADING_SWORD, true, this)) {
+                                CUR_FORM_EQUIP(EQUIP_SLOT_B) = ITEM_NONE;
+                                SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
+                                Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
+                                func_80B40C74(play);
+                            }
                             break;
 
                         case 0xC4D:
