@@ -1057,7 +1057,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             // Great Fairy Sword cannot be used here.
             // Deity cannot do the minigame, and is too tall to go to the hidden back area, but can open it up which is a slight complication for Sword rando.
-            // Sword requirement breaks seed generation for some reason, removing it as a requirement for now.
+            // Sword requirement breaks seed generation for some reason, Attempting to create a RI for it causes the game to crash when added to startingItems, removing it as a requirement for now.
             CHECK(RC_SWORDSMAN_SCHOOL_HP,  CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
             CHECK(RC_SWORDSMAN_SCHOOL_POT_1, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
             CHECK(RC_SWORDSMAN_SCHOOL_POT_2, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
