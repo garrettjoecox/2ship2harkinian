@@ -501,6 +501,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ZORA_CAPE, 5),                 ENTRANCE(FAIRY_FOUNTAIN, 3), true),
         },
     } },
+    { RR_HONEY_AND_DARLING, RandoRegion{ .sceneId = SCENE_BOWLING,
+        .checks = {
+            // TODO : Add checks for all 3 days for this shop.
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 6),      ENTRANCE(HONEY_AND_DARLINGS_SHOP, 0), true),
+        },
+    } },
     { RR_IKANA_CANYON_CAVE, RandoRegion{ .name = "Cave", .sceneId = SCENE_IKANA,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(IKANA_CANYON, 13),            ENTRANCE(IKANA_CANYON, 14), true),
@@ -618,6 +626,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 9),            ENTRANCE(STOCK_POT_INN, 0), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA), // From ground floor
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),           ENTRANCE(STOCK_POT_INN, 1), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA), // From upstairs
+        },
+    } },
+    { RR_LOTTERY_SHOP, RandoRegion{ .sceneId = SCENE_TAKARAKUJI,
+        .checks = {
+            // Are we adding the lotter reward as a check?
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 8),          ENTRANCE(LOTTERY_SHOP, 0), true),
         },
     } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
@@ -1086,6 +1102,22 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ),
         },
     } },
+    { RR_TOWN_SHOOTING_GALLERY, RandoRegion{ .sceneId = SCENE_SYATEKI_MIZU,
+        .checks = {
+            // TODO : Add Bow Capacity upgrade/HP checks here.
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 8),    ENTRANCE(TOWN_SHOOTING_GALLERY, 0), true),
+        },
+    } },
+    { RR_TOWN_DEKU_PLAYGROUND, RandoRegion{ .sceneId = SCENE_DEKUTES,
+        .checks = {
+            // TODO : Add checks for getting best time on all three days/Freestanding items.
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 4),    ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
+        },
+    } },
     { RR_TRADING_POST, RandoRegion{ .sceneId = SCENE_8ITEMSHOP,
         .checks = {
             CHECK(RC_CLOCK_TOWN_WEST_TRADING_POST_POT, true), //Note : Goron has to sidehop to get up.
@@ -1102,7 +1134,15 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 5),  ENTRANCE(TRADING_POST, 0), true),
         
         },
-    } }, 
+    } },
+    { RR_TREASURE_SHOP, RandoRegion{ .sceneId = SCENE_TAKARAYA,
+        .checks = {
+            // TODO : Add check for each form(minus FD)
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 4),   ENTRANCE(TREASURE_CHEST_SHOP, 0), true),
+        },
+    } },
     { RR_WATERFALL_RAPIDS, RandoRegion{ .sceneId = SCENE_35TAKI,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ZORA_CAPE, 4),                ENTRANCE(WATERFALL_RAPIDS, 0), true),
