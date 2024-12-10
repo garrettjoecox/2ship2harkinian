@@ -249,6 +249,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, CAN_BE_ZORA || CAN_BE_HUMAN || CAN_BE_DIETY),
         },
         .exits = { //     TO                                     FROM
+            // FD gets stuck when entering Astral Obervatory from here.
             EXIT(ENTRANCE(TERMINA_FIELD, 7),            ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 7),         ENTRANCE(EAST_CLOCK_TOWN, 1), true), // To lower
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 0),       ENTRANCE(EAST_CLOCK_TOWN, 2), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_GORON), // TODO: Bombers Code req
