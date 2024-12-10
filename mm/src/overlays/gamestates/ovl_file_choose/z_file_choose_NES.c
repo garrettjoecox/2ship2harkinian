@@ -1563,7 +1563,7 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex) {
         }
     }
 
-    if (this->isOwlSave[fileIndex + 2]) {
+    if (GameInteractor_Should(VB_DRAW_FILE_SELECT_EXTRA_INFO_DETAILS, this->isOwlSave[fileIndex + 2], fileIndex)) {
         gDPPipeSync(POLY_OPA_DISP++);
         gDPSetCombineMode(POLY_OPA_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
@@ -1574,7 +1574,10 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex) {
         gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelOwlSaveIconTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 24, 12, 0,
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                             G_TX_NOLOD);
-        gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
+
+        if (GameInteractor_Should(VB_DRAW_FILE_SELECT_OWL_SAVE_ICON, true, fileIndex)) {
+            gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
+        }
 
         gDPPipeSync(POLY_OPA_DISP++);
         gDPSetCombineMode(POLY_OPA_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1753,7 +1756,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
                                 G_TX_NOLOD, G_TX_NOLOD);
             gSP1Quadrangle(POLY_OPA_DISP++, 8, 10, 11, 9, 0);
 
-            if (GameInteractor_Should(VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX, this->isOwlSave[i + 2], i)) {
+            if (GameInteractor_Should(VB_DRAW_FILE_SELECT_SMALL_EXTRA_INFO_BOX, this->isOwlSave[i + 2], i)) {
                 gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[0], sWindowContentColors[1],
                                 sWindowContentColors[2], this->nameBoxAlpha[i]);
                 gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelBlankButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 52, 16, 0,
