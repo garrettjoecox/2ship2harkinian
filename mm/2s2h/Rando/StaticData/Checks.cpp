@@ -862,19 +862,14 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
 // a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag &&
-            (sceneId == SCENE_MAX || data.sceneId == Play_GetOriginalSceneId(sceneId))) {
-            return data;
-        }
+    // Exclude Inverted Stone Tower Temple for collectible flags. Cleared room flags should also be excluded, but there
+    // aren't any checks for that flagType.
+    if (sceneId == SCENE_INISIE_R && flagType != FLAG_CYCL_SCENE_COLLECTIBLE) {
+        sceneId = Play_GetOriginalSceneId(sceneId);
     }
-    return Checks[RC_UNKNOWN];
-}
 
-RandoStaticCheck GetCheckForPot(s32 flag, s16 sceneId) {
     for (auto& [check, data] : Checks) {
-        if (data.flagType == FLAG_CYCL_SCENE_COLLECTIBLE && data.flag == flag &&
-            (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
             return data;
         }
     }

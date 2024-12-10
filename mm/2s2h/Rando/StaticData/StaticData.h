@@ -27,7 +27,6 @@ struct RandoStaticCheck {
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId = SCENE_MAX);
-RandoStaticCheck GetCheckForPot(s32 flag, s16 sceneId = SCENE_MAX);
 RandoCheckId GetCheckIdFromName(const char* name);
 
 struct RandoStaticItem {
