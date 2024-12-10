@@ -258,6 +258,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 3),         ENTRANCE(FAIRY_FOUNTAIN, 0), true),
+            EXIT(ENTRANCE(CURIOSITY_SHOP, 1),           ENTRANCE(LAUNDRY_POOL, 1), Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI))
         },
     } },
     { RR_CLOCK_TOWN_LAUNDRY, RandoRegion{ .sceneId = SCENE_ALLEY,
@@ -342,6 +343,23 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ROMANI_RANCH, 4),             ENTRANCE(CUCCO_SHACK, 0), true),
+        },
+    } },
+    { RR_CURIOSITY_SHOP_BACK, RandoRegion{ .name = "Back", .sceneId = SCENE_AYASHIISHOP,
+        .checks = {
+            // TODO : Add Keaton Mask/Express Letter to Mama checks
+            CHECK(RC_KAFEIS_HIDEOUT_PENDANT_OF_MEMORIES, CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI)),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(LAUNDRY_POOL, 1),         ENTRANCE(CURIOSITY_SHOP, 1), true)
+        },
+    } },
+    { RR_CURIOSITY_SHOP_FRONT, RandoRegion{ .name = "Front", .sceneId = SCENE_AYASHIISHOP,
+        .checks = {
+            // TODO : Add the shop checks
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 4),      ENTRANCE(CURIOSITY_SHOP, 0), true)
         },
     } },
     { RR_DEKU_KINGS_CHAMBER_HOLDING_CELL, RandoRegion{ .name = "Holding Cell", .sceneId = SCENE_DEKU_KING,
@@ -613,6 +631,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 5),  ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0), true),
         },
     } },
+    { RR_MILK_BAR, RandoRegion{ .sceneId = SCENE_MILK_BAR,
+        .checks = {
+            // TODO : Add shop checks/Circus Leader's Mask checks.
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(EAST_CLOCK_TOWN, 11),         ENTRANCE(MILK_BAR, 0), true),
+        },
+    } },
     { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 5),            ENTRANCE(MILK_ROAD, 0), true),
@@ -717,6 +743,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 3),          ENTRANCE(PINNACLE_ROCK, 0), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+    } },
+    { RR_POST_OFFICE, RandoRegion{ .sceneId = SCENE_POSTHOUSE,
+        .checks = {
+            // TODO : Add Heartpiece check
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 7),          ENTRANCE(POST_OFFICE, 0), true),
         },
     } },
     { RR_RANCH_BARN, RandoRegion{ .sceneId = SCENE_OMOYA,
@@ -985,6 +1019,22 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_SWAMP_SPIDER_HOUSE, RandoRegion{ .sceneId = SCENE_KINSTA1,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 8),  ENTRANCE(SWAMP_SPIDER_HOUSE, 0), true),
+        },
+    } },
+    { RR_SWORDSMAN_SCHOOL, RandoRegion{ .sceneId = SCENE_DOUJOU,
+        .checks = {
+            // Great Fairy Sword cannot be used here.
+            // Deity cannot do the minigame, and is too tall to go to the hidden back area, but can open it up which is a slight complication for Sword rando.
+            // Sword requirement breaks seed generation for some reason, removing it as a requirement for now.
+            CHECK(RC_SWORDSMAN_SCHOOL_HP,  CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_1, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_2, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_3, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_4, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_5, CAN_BE_HUMAN),// && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED))),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(WEST_CLOCK_TOWN, 3),       ENTRANCE(SWORDMANS_SCHOOL, 0), true),
         },
     } },
     { RR_TERMINA_FIELD_BEFORE_PATH_TO_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
