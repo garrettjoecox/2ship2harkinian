@@ -29,7 +29,10 @@ namespace Logic {
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
-#define CAN_USE_SWORD ((CAN_BE_HUMAN && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || CAN_BE_DIETY)                                                                                                                 
+#define CAN_USE_SWORD                                                                                             \
+    ((CAN_BE_HUMAN &&                                                                                             \
+      (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || \
+     CAN_BE_DIETY)
 // Be careful here, as some checks require you to play the song as a specific form
 #define CAN_PLAY_SONG(song)                                                   \
     (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song) && \
@@ -50,7 +53,8 @@ namespace Logic {
 // TODO: Move these into a seperate file later?
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
 #define CAN_KILL_DINALFOS (CAN_USE_SWORD || CAN_BE_GORON)
-#define CAN_KILL_WIZZROBE ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_USE_SWORD || CAN_BE_GORON)
+#define CAN_KILL_WIZZROBE \
+    ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_USE_SWORD || CAN_BE_GORON)
 #define CAN_KILL_WART ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
 #define CAN_KILL_GARO_MASTER ((CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)) || CAN_BE_GORON || CAN_USE_SWORD)
 #define CAN_KILL_IRONKNUCKLE (CAN_USE_SWORD || CAN_BE_GORON)
