@@ -246,6 +246,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME, HAS_MAGIC && CAN_BE_DEKU),
             CHECK(RC_CLOCK_TOWER_ROOF_OCARINA, HAS_MAGIC && CAN_BE_DEKU),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_1, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_2, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_3, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_4, true),
         },
         .oneWayEntrances = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
