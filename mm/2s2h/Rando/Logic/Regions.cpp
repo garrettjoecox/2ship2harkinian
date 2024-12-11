@@ -325,6 +325,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
+            CHECK(RC_CLOCK_TOWN_SOUTH_OWL_STATUE,  CAN_BE_HUMAN),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(CLOCK_TOWER_INTERIOR, 1),     ENTRANCE(SOUTH_CLOCK_TOWN, 0), true),
@@ -459,6 +460,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_GREATBAY_COAST_OUTSIDE_LAB, RandoRegion{ .name = "Outside Lab", .sceneId = SCENE_30GYOSON,
         .checks = {
+            CHECK(RC_GREAT_BAY_COAST_OWL_STATUE,    CAN_BE_HUMAN),
             CHECK(RC_GREAT_BAY_COAST_POT_9,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             CHECK(RC_GREAT_BAY_COAST_POT_10,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             CHECK(RC_GREAT_BAY_COAST_POT_11,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
@@ -580,6 +582,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_OWL_STATUE,   CAN_BE_HUMAN),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                      ENTRANCE(IKANA_CANYON, 1), true),
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),                ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
@@ -685,6 +690,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
+        .checks = {
+            CHECK(RC_MILK_ROAD_OWL_STATUE,   CAN_BE_HUMAN),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 5),            ENTRANCE(MILK_ROAD, 0), true),
             EXIT(ENTRANCE(ROMANI_RANCH, 0),             ENTRANCE(MILK_ROAD, 1), true),
@@ -723,6 +731,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
+        .checks = {
+            CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,   CAN_BE_HUMAN),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MOUNTAIN_SMITHY, 0),          ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1), true),
             EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2), true),
@@ -888,6 +899,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_SNOWHEAD_NEAR_PATH, RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
+        .checks = {
+            CHECK(RC_SNOWHEAD_OWL_STATUE,   CAN_BE_HUMAN),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(PATH_TO_SNOWHEAD, 1),         ENTRANCE(SNOWHEAD, 0), true),
         },
@@ -918,6 +932,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_SOUTHERN_SWAMP_NORTH, RandoRegion{ .name = "North Section", .sceneId = SCENE_20SICHITAI,
         .checks = {
             CHECK(RC_SOUTHERN_SWAMP_HP, CAN_BE_DEKU && CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
+            CHECK(RC_SOUTHERN_SWAMP_OWL_STATUE, CAN_BE_HUMAN),
             CHECK(RC_SOUTHERN_SWAMP_SCRUB_DEED, CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
         },
         .exits = { //     TO                                     FROM
@@ -1016,6 +1031,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     // TODO: Probably need to split this up to account for entrance rando later
     { RR_STONE_TOWER_TOP, RandoRegion{ .name = "Top", .sceneId = SCENE_F40,
         .checks = {
+            CHECK(RC_STONE_TOWER_OWL_STATUE, CAN_BE_HUMAN),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_1, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_2, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_3, true),
@@ -1203,6 +1219,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_WOODFALL_ENTRANCE_CHEST, CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             CHECK(RC_WOODFALL_HP_CHEST, CAN_BE_DEKU),
+            CHECK(RC_WOODFALL_OWL_STATUE, CAN_BE_HUMAN),
             CHECK(RC_WOODFALL_NEAR_OWL_CHEST, CAN_BE_DEKU),
         },
         .exits = { //     TO                                     FROM
@@ -1239,6 +1256,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_ZORA_HALL_COAST, RandoRegion{ .name = "Zora Hall Coast", .sceneId = SCENE_31MISAKI,
         .checks = {
+            CHECK(RC_ZORA_CAPE_OWL_STATUE,                CAN_BE_HUMAN),
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1,     true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     true),
