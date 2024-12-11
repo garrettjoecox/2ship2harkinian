@@ -30,9 +30,7 @@ namespace Logic {
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
 #define CAN_USE_SWORD                                                                                              \
-    ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_RAZOR) || HAS_ITEM(ITEM_SWORD_GILDED) || \
-                       HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) ||                                                       \
-     CAN_BE_DIETY)
+    ((CAN_BE_HUMAN && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || CAN_BE_DIETY)
 // Be careful here, as some checks require you to play the song as a specific form
 #define CAN_PLAY_SONG(song)                                                   \
     (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song) && \
@@ -50,6 +48,13 @@ namespace Logic {
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
 #define CAN_GROW_BEAN_PLANT \
     (CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
+// TODO: Move these into a seperate file later?
+// After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
+#define CAN_KILL_DINALFOS ((CAN_BE_DEKU && HAS_MAGIC) || CAN_USE_SWORD || CAN_BE_GORON || CAN_BE_ZORA)
+#define CAN_KILL_WIZZROBE ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_USE_SWORD || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_GORON)
+#define CAN_KILL_WART ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
+#define CAN_KILL_GARO_MASTER ((CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)) || CAN_BE_GORON || CAN_USE_SWORD)
+#define CAN_KILL_IRONKNUCKLE (CAN_USE_SWORD || CAN_BE_GORON)
 
 // TODO: MOVE THIS STUFF OR SOMETHING
 void Flags_SetSceneSwitch(s32 scene, s32 flag) {
@@ -185,8 +190,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_BENEATH_THE_GRAVEYARD_NIGHT_2_BOSS, RandoRegion{ .name = "Night 2 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            // TODO: CAN_KILL_ENEMY(IRON_KNUCKLE)?
-            CHECK(RC_BENEATH_THE_GRAVEYARD_HP, CAN_USE_SWORD || CAN_USE_EXPLOSIVE || CAN_BE_GORON),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_HP, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, true),
@@ -877,10 +881,69 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(IKANA_CANYON, 6),             ENTRANCE(SAKONS_HIDEOUT, 0), true),
         },
     } },
-    { RR_SECRET_SHRINE, RandoRegion{ .sceneId = SCENE_RANDOM,
-        .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(IKANA_CANYON, 12),            ENTRANCE(SECRET_SHRINE, 0), true),
+    { RR_SECRET_SHRINE_12_HEART, RandoRegion{ .name = "12 Heart Room",   .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_WART_CHEST, CAN_KILL_WART),
         },
+        .connections = {
+            CONNECTION(RR_SECRET_SHRINE_MAIN_CENTER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+        }
+    } },
+    { RR_SECRET_SHRINE_16_HEART, RandoRegion{ .name = "16 Heart Room",   .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_GARO_MASTER_CHEST, CAN_KILL_GARO_MASTER),
+        },
+        .connections = {
+            CONNECTION(RR_SECRET_SHRINE_MAIN_CENTER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+        }
+    } },
+    { RR_SECRET_SHRINE_4_HEART, RandoRegion{ .name = "4 Heart Room",  .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_DINALFOS_CHEST, CAN_KILL_DINALFOS),
+        },
+        .connections = {
+            CONNECTION(RR_SECRET_SHRINE_MAIN_CENTER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+        }
+    } },
+    { RR_SECRET_SHRINE_8_HEART, RandoRegion{ .name = "8 Heart Room",  .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_WIZZROBE_CHEST, CAN_KILL_WIZZROBE),
+        },
+        .connections = {
+            CONNECTION(RR_SECRET_SHRINE_MAIN_CENTER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+        }
+    } },
+    { RR_SECRET_SHRINE_MAIN_CENTER, RandoRegion{ .name = "Center Room", .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_HP_CHEST, CAN_KILL_DINALFOS && CAN_KILL_WIZZROBE && CAN_KILL_WART && CAN_KILL_GARO_MASTER),
+            CHECK(RC_SECRET_SHRINE_POT_4, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_5, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_6, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_7, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_8, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_9, CAN_BE_ZORA),
+        },
+        .connections = {
+            // I attempted to make a macro for checking max HP, but it broke seed generation, gonna leave the requirement out for now.
+            CONNECTION(RR_SECRET_SHRINE_12_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+            CONNECTION(RR_SECRET_SHRINE_16_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+            CONNECTION(RR_SECRET_SHRINE_4_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+            CONNECTION(RR_SECRET_SHRINE_8_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+            CONNECTION(RR_SECRET_SHRINE_ENTRANCE, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
+        }
+    } },
+    { RR_SECRET_SHRINE_ENTRANCE, RandoRegion{ .name = "Entrance", .sceneId = SCENE_RANDOM,
+        .checks = {
+            CHECK(RC_SECRET_SHRINE_POT_1, true),
+            CHECK(RC_SECRET_SHRINE_POT_2, true),
+            CHECK(RC_SECRET_SHRINE_POT_3, true),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 12),          ENTRANCE(SECRET_SHRINE, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_SECRET_SHRINE_MAIN_CENTER, CAN_BE_HUMAN && HAS_MAGIC && HAS_ITEM(ITEM_ARROW_LIGHT) && HAS_ITEM(ITEM_BOW))
+        }
     } },
     { RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
         .exits = { //     TO                                     FROM
