@@ -1,6 +1,7 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
+#include "2s2h/Rando/Rando.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -50,6 +51,7 @@ typedef enum {
     DISABLE_FOR_FRAME_ADVANCE_OFF,
     DISABLE_FOR_WARP_POINT_NOT_SET,
     DISABLE_FOR_INTRO_SKIP_OFF,
+    DISABLE_FOR_RANDO,
 } DisableOption;
 
 struct widgetInfo;
@@ -348,7 +350,9 @@ static std::map<DisableOption, disabledInfo> disabledMap = {
         "Warp Point Not Saved" } },
     { DISABLE_FOR_INTRO_SKIP_OFF,
       { [](disabledInfo& info) -> bool { return !CVarGetInteger("gEnhancements.Cutscenes.SkipIntroSequence", 0); },
-        "Intro Skip Not Selected" } }
+        "Intro Skip Not Selected" } },
+    { DISABLE_FOR_RANDO,
+      { [](disabledInfo& info) -> bool { return IS_RANDO; }, "This is incompatible with Randomizer saves" } },
 };
 
 std::unordered_map<int32_t, const char*> menuThemeOptions = {
@@ -1167,8 +1171,16 @@ void AddEnhancements() {
                 "Playing the Song Of Time will not reset the bottles' content.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Consumables", "gEnhancements.Cycle.DoNotResetConsumables",
                 "Playing the Song Of Time will not reset the consumables.", WIDGET_CVAR_CHECKBOX },
-              { "Do not reset Razor Sword", "gEnhancements.Cycle.DoNotResetRazorSword",
-                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.", WIDGET_CVAR_CHECKBOX },
+              { "Do not reset Razor Sword",
+                "gEnhancements.Cycle.DoNotResetRazorSword",
+                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.",
+                WIDGET_CVAR_CHECKBOX,
+                {},
+                nullptr,
+                [](widgetInfo& info) {
+                    if (disabledMap.at(DISABLE_FOR_RANDO).active)
+                        info.activeDisables.push_back(DISABLE_FOR_RANDO);
+                } },
               { "Do not reset Rupees", "gEnhancements.Cycle.DoNotResetRupees",
                 "Playing the Song Of Time will not reset the your rupees.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Time Speed", "gEnhancements.Cycle.DoNotResetTimeSpeed",
@@ -1389,6 +1401,9 @@ void AddEnhancements() {
                 "Fixes a missing gDPSetEnvColor, which causes the ammo count to be "
                 "the wrong color prior to obtaining magic or other conditions.",
                 WIDGET_CVAR_CHECKBOX },
+              { "Fix Epona stealing Sword", "gFixes.FixEponaStealingSword",
+                "This fixes a bug where Epona can steal your sword when you mount her without a bow in your inventory.",
+                WIDGET_CVAR_CHECKBOX },
               { "Fix Fierce Deity Z-Target movement", "gEnhancements.Fixes.FierceDeityZTargetMovement",
                 "Fixes Fierce Deity movement being choppy when Z-targeting", WIDGET_CVAR_CHECKBOX },
               { "Fix Hess and Weirdshot Crash", "gEnhancements.Fixes.HessCrash",
@@ -1437,7 +1452,8 @@ void AddEnhancements() {
     enhancementsSidebar.push_back(
         { "Difficulty Options",
           3,
-          { { { "Disable Takkuri Steal",
+          { {
+              { "Disable Takkuri Steal",
                 "gEnhancements.Cheats.DisableTakkuriSteal",
                 "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other items.",
                 WIDGET_CVAR_CHECKBOX,
@@ -1451,7 +1467,13 @@ void AddEnhancements() {
                 "- Always: Always show the search balls.",
                 WIDGET_CVAR_COMBOBOX,
                 { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
-                  .comboBoxOptions = dekuGuardSearchBallsOptions } } } } });
+                  .comboBoxOptions = dekuGuardSearchBallsOptions } },
+              { "Lower Bank Reward Thresholds", "gEnhancements.DifficultyOptions.LowerBankRewardThresholds",
+                "Reduces the amount of rupees required to receive the rewards from the bank.\n"
+                "From: 200 -> 1000 -> 5000\n"
+                "To:   100 ->  500 -> 1000",
+                WIDGET_CVAR_CHECKBOX },
+          } } });
     enhancementsSidebar.push_back({ "HUD Editor",
                                     1,
                                     { // HUD Editor

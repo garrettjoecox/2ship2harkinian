@@ -699,75 +699,6 @@ RandoCheckId IdentifyPot(Actor* actor) {
             }
             break;
         case SCENE_INISIE_N:
-            if (IS_AT(2070.0f, -1620.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_1;
-            }
-            if (IS_AT(2790.0f, -1620.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_2;
-            }
-            if (IS_AT(2790.0f, -900.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_3;
-            }
-            if (IS_AT(2070.0f, -900.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4;
-            }
-            if (IS_AT(-735.0f, -1305.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1;
-            }
-            if (IS_AT(-735.0f, -1305.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_2;
-            }
-            if (IS_AT(-1605.0f, -1395.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_1;
-            }
-            if (IS_AT(-1605.0f, -1305.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_2;
-            }
-            if (IS_AT(-30.0f, -1995.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_1;
-            }
-            if (IS_AT(-30.0f, -1965.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_2;
-            }
-            if (IS_AT(-30.0f, -1935.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_3;
-            }
-            if (IS_AT(-30.0f, -1905.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_4;
-            }
-            if (IS_AT(30.0f, -1995.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_5;
-            }
-            if (IS_AT(30.0f, -1965.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_6;
-            }
-            if (IS_AT(30.0f, -1935.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_7;
-            }
-            if (IS_AT(30.0f, -1905.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_8;
-            }
-            if (IS_AT(1350.0f, -630.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_1;
-            }
-            if (IS_AT(1230.0f, -630.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_2;
-            }
-            if (IS_AT(735.0f, -1305.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_3;
-            }
-            if (IS_AT(-1290.0f, -510.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_1;
-            }
-            if (IS_AT(-1290.0f, -450.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_2;
-            }
-            if (IS_AT(-1410.0f, -450.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_3;
-            }
-            if (IS_AT(-1410.0f, -510.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4;
-            }
             // if (IS_AT(-30.0f, -1995.0f)) {
             //     randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1;
             // }
@@ -845,6 +776,77 @@ RandoCheckId IdentifyPot(Actor* actor) {
             }
             if (IS_AT(585.0f, -3465.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_WIND_ROOM_4;
+            }
+            break;
+        case SCENE_INISIE_R:
+            if (IS_AT(2070.0f, -1620.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_1;
+            }
+            if (IS_AT(2790.0f, -1620.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_2;
+            }
+            if (IS_AT(2790.0f, -900.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_3;
+            }
+            if (IS_AT(2070.0f, -900.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4;
+            }
+            if (IS_AT(-735.0f, -1305.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1;
+            }
+            if (IS_AT(-735.0f, -1305.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_2;
+            }
+            if (IS_AT(-1605.0f, -1395.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_1;
+            }
+            if (IS_AT(-1605.0f, -1305.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_2;
+            }
+            if (IS_AT(-30.0f, -1995.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_1;
+            }
+            if (IS_AT(-30.0f, -1965.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_2;
+            }
+            if (IS_AT(-30.0f, -1935.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_3;
+            }
+            if (IS_AT(-30.0f, -1905.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_4;
+            }
+            if (IS_AT(30.0f, -1995.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_5;
+            }
+            if (IS_AT(30.0f, -1965.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_6;
+            }
+            if (IS_AT(30.0f, -1935.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_7;
+            }
+            if (IS_AT(30.0f, -1905.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_8;
+            }
+            if (IS_AT(1350.0f, -630.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_1;
+            }
+            if (IS_AT(1230.0f, -630.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_2;
+            }
+            if (IS_AT(735.0f, -1305.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_3;
+            }
+            if (IS_AT(-1290.0f, -510.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_1;
+            }
+            if (IS_AT(-1290.0f, -450.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_2;
+            }
+            if (IS_AT(-1410.0f, -450.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_3;
+            }
+            if (IS_AT(-1410.0f, -510.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4;
             }
             break;
         default:

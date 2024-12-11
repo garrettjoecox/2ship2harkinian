@@ -1,5 +1,6 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Rando/Rando.h"
 
 extern "C" {
 #include <variables.h>
@@ -80,7 +81,7 @@ void RegisterEndOfCycleSaveHooks() {
             }
         }
 
-        if (CVarGetInteger("gEnhancements.Cycle.DoNotResetRazorSword", 0)) {
+        if (CVarGetInteger("gEnhancements.Cycle.DoNotResetRazorSword", 0) || IS_RANDO) {
             u8 curSword =
                 (saveInfoCopy.equips.equipment & gEquipMasks[EQUIP_TYPE_SWORD]) >> gEquipShifts[EQUIP_TYPE_SWORD];
 

@@ -3,5 +3,6 @@
 
 void RegisterCompletedHeartContainerAudio();
 void RegisterFierceDeityZTargetMovement();
+void RegisterFixEponaStealingSword();
 
 #endif // ENHANCEMENTS_FIXES_H

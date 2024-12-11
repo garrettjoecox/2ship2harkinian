@@ -5,6 +5,7 @@
  */
 
 #include "z_en_ginko_man.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -167,18 +168,24 @@ void EnGinkoMan_DepositDialogue(EnGinkoMan* this, PlayState* play) {
             break;
 
         case 0x45A:
-            if ((HS_GET_BANK_RUPEES() >= 200) && (this->previousBankValue < 200) &&
-                !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_40)) {
+            if (GameInteractor_Should(VB_PASS_FIRST_BANK_THRESHOLD,
+                                      (HS_GET_BANK_RUPEES() >= 200) && (this->previousBankValue < 200) &&
+                                          !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_40),
+                                      this)) {
                 SET_WEEKEVENTREG(WEEKEVENTREG_59_40);
                 Message_StartTextbox(play, 0x45B, &this->actor);
                 this->curTextId = 0x45B;
-            } else if ((HS_GET_BANK_RUPEES() >= 1000) && (this->previousBankValue < 1000) &&
+            } else if (GameInteractor_Should(VB_PASS_INTEREST_BANK_THRESHOLD,
+                                             (HS_GET_BANK_RUPEES() >= 1000) && (this->previousBankValue < 1000),
+                                             this) &&
                        !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_80)) {
                 SET_WEEKEVENTREG(WEEKEVENTREG_59_80);
                 Message_StartTextbox(play, 0x45C, &this->actor);
                 this->curTextId = 0x45C;
-            } else if (HS_GET_BANK_RUPEES() >= 5000) {
-                if ((this->previousBankValue < 5000) && !CHECK_WEEKEVENTREG(WEEKEVENTREG_60_01)) {
+            } else if (GameInteractor_Should(VB_PASS_SECOND_BANK_THRESHOLD, HS_GET_BANK_RUPEES() >= 5000, this)) {
+                if (GameInteractor_Should(VB_PASS_SECOND_BANK_THRESHOLD_ALT,
+                                          (this->previousBankValue < 5000) && !CHECK_WEEKEVENTREG(WEEKEVENTREG_60_01),
+                                          this)) {
                     SET_WEEKEVENTREG(WEEKEVENTREG_60_01);
                     Message_StartTextbox(play, 0x45D, &this->actor);
                     this->curTextId = 0x45D;
@@ -539,6 +546,10 @@ void EnGinkoMan_SetupBankAward(EnGinkoMan* this) {
 }
 
 void EnGinkoMan_BankAward(EnGinkoMan* this, PlayState* play) {
+    if (!GameInteractor_Should(VB_BANKER_GIVE_REWARD, true, this)) {
+        return;
+    }
+
     if (Actor_HasParent(&this->actor, play)) {
         // Parent is the player when starting to receive the award
         this->actor.parent = NULL;

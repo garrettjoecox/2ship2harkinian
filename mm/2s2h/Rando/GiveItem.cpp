@@ -107,6 +107,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
         case RI_PROGRESSIVE_BOMB_BAG:
+        case RI_PROGRESSIVE_SWORD:
+        case RI_PROGRESSIVE_WALLET:
             Rando::GiveItem(Rando::ConvertItem(randoItemId));
             break;
         case RI_GS_TOKEN_SWAMP:
@@ -156,6 +158,18 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             break;
         case RI_POWDER_KEG:
             Flags_SetWeekEventReg(WEEKEVENTREG_HAS_POWDERKEG_PRIVILEGES);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_SWORD_GILDED:
+        case RI_SWORD_KOKIRI:
+        case RI_SWORD_RAZOR:
+            if (STOLEN_ITEM_1 == ITEM_SWORD_KOKIRI || STOLEN_ITEM_1 == ITEM_SWORD_RAZOR) {
+                SET_STOLEN_ITEM_1(STOLEN_ITEM_NONE);
+            }
+            if (STOLEN_ITEM_2 == ITEM_SWORD_KOKIRI || STOLEN_ITEM_2 == ITEM_SWORD_RAZOR) {
+                SET_STOLEN_ITEM_2(STOLEN_ITEM_NONE);
+            }
+
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
         case RI_NONE:

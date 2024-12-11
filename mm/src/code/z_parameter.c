@@ -3170,7 +3170,9 @@ void Interface_UpdateButtonsPart1(PlayState* play) {
 
                             if (play->bButtonAmmoPlusOne >= 2) {
                                 Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
-                            } else if (gSaveContext.save.saveInfo.inventory.items[SLOT_BOW] == ITEM_NONE) {
+                            } else if (GameInteractor_Should(VB_CLEAR_B_BUTTON_FOR_HORSEBACK,
+                                                             gSaveContext.save.saveInfo.inventory.items[SLOT_BOW] ==
+                                                                 ITEM_NONE)) {
                                 BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) = ITEM_NONE;
                             } else {
                                 Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
@@ -3595,7 +3597,10 @@ u8 Item_GiveImpl(PlayState* play, u8 item) {
     } else if ((item >= ITEM_SWORD_KOKIRI) && (item <= ITEM_SWORD_GILDED)) {
         SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, item - ITEM_SWORD_KOKIRI + EQUIP_VALUE_SWORD_KOKIRI);
         CUR_FORM_EQUIP(EQUIP_SLOT_B) = item;
-        Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
+        // 2S2H [Randomizer] Added a nullptr check so that we can call this function outside of gameplay for logic
+        if (gPlayState != NULL) {
+            Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
+        }
         if (item == ITEM_SWORD_RAZOR) {
             gSaveContext.save.saveInfo.playerData.swordHealth = 100;
         }

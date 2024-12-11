@@ -38,6 +38,7 @@ void InitEnhancements() {
     RegisterFierceDeityZTargetMovement();
     RegisterTwoHandedSwordSpinAttack();
     RegisterCompletedHeartContainerAudio();
+    RegisterFixEponaStealingSword();
 
     // Graphics
     RegisterDisableBlackBars();
@@ -87,6 +88,7 @@ void InitEnhancements() {
     RegisterTimeMovesWhenYouMove();
 
     // Difficulty Options
+    RegisterCustomBankRewardThresholds();
     RegisterDisableTakkuriSteal();
     RegisterShowDekuGuardSearchBalls();
 

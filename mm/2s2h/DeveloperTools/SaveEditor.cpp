@@ -1025,12 +1025,16 @@ void NextQuestInSlot(QuestItem slot) {
     } else if (slot == QUEST_SWORD) {
         uint32_t currentSword = GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD);
         if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_GILDED) {
-            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_KOKIRI);
+            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
         } else {
             SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, currentSword + 1);
         }
-        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) =
-            ITEM_SWORD_KOKIRI + GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) - EQUIP_VALUE_SWORD_KOKIRI;
+        if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_NONE) {
+            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_NONE;
+        } else {
+            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) =
+                ITEM_SWORD_KOKIRI + GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) - EQUIP_VALUE_SWORD_KOKIRI;
+        }
         if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_RAZOR) {
             gSaveContext.save.saveInfo.playerData.swordHealth = 100;
         }
@@ -1154,12 +1158,16 @@ void DrawQuestStatusTab() {
                            ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1),
                            ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1));
     } else {
+        int swordValue = GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD);
+        if (swordValue == EQUIP_VALUE_SWORD_NONE) {
+            swordValue = EQUIP_VALUE_SWORD_KOKIRI;
+        }
         ImTextureID swordTextureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(
-            (const char*)
-                gItemIcons[ITEM_SWORD_KOKIRI + GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) - EQUIP_VALUE_SWORD_KOKIRI]);
+            (const char*)gItemIcons[ITEM_SWORD_KOKIRI + swordValue - EQUIP_VALUE_SWORD_KOKIRI]);
+
         if (ImGui::ImageButton(std::to_string(ITEM_SWORD_KOKIRI).c_str(), swordTextureId,
                                ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1),
-                               ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1))) {
+                               ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) ? 1 : 0.4f))) {
             NextQuestInSlot(QUEST_SWORD);
         }
     }
