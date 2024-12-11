@@ -23,6 +23,10 @@ void ApplyNoLogicToSaveContext() {
             continue;
         }
 
+        if (randoStaticCheck.randoCheckType == RCTYPE_OWL && RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO) {
+            continue;
+        }
+
         if (randoStaticCheck.randoCheckType == RCTYPE_POT && RANDO_SAVE_OPTIONS[RO_SHUFFLE_POTS] == RO_GENERIC_NO) {
             continue;
         }

@@ -1,0 +1,19 @@
+#ifndef RANDO_ObjWarpstone_H
+#define RANDO_ObjWarpstone_H
+
+void ObjWarpstone_ActivateStatue(u8 refId);
+
+typedef enum {
+    WARPSTONE_GREAT_BAY_COAST,
+    WARPSTONE_ZORA_CAPE,
+    WARPSTONE_SNOWHEAD,
+    WARPSTONE_MOUNTAIN_VILLAGE,
+    WARPSTONE_CLOCK_TOWN_SOUTH,
+    WARPSTONE_MILK_ROAD,
+    WARPSTONE_WOODFALL,
+    WARPSTONE_SOUTHERN_SWAMP,
+    WARPSTONE_IKANA_CANYON,
+    WARPSTONE_STONE_TOWER,
+};
+
+#endif // RANDO_ObjWarpstone_H

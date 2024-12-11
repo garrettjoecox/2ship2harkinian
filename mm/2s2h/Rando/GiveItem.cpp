@@ -1,6 +1,8 @@
 #include "Rando/Rando.h"
 #include <libultraship/libultraship.h>
 
+#include "2s2h/Rando/ActorBehavior/ObjWarpstone.h"
+
 extern "C" {
 #include "variables.h"
 #include "functions.h"
@@ -171,6 +173,36 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             }
 
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_OWL_CLOCK_TOWN_SOUTH:
+            ObjWarpstone_ActivateStatue(WARPSTONE_CLOCK_TOWN_SOUTH);
+            break;
+        case RI_OWL_GREAT_BAY_COAST:
+            ObjWarpstone_ActivateStatue(WARPSTONE_GREAT_BAY_COAST);
+            break;
+        case RI_OWL_IKANA_CANYON:
+            ObjWarpstone_ActivateStatue(WARPSTONE_IKANA_CANYON);
+            break;
+        case RI_OWL_MILK_ROAD:
+            ObjWarpstone_ActivateStatue(WARPSTONE_MILK_ROAD);
+            break;
+        case RI_OWL_MOUNTAIN_VILLAGE:
+            ObjWarpstone_ActivateStatue(WARPSTONE_MOUNTAIN_VILLAGE);
+            break;
+        case RI_OWL_SNOWHEAD:
+            ObjWarpstone_ActivateStatue(WARPSTONE_SNOWHEAD);
+            break;
+        case RI_OWL_SOUTHERN_SWAMP:
+            ObjWarpstone_ActivateStatue(WARPSTONE_SOUTHERN_SWAMP);
+            break;
+        case RI_OWL_STONE_TOWER:
+            ObjWarpstone_ActivateStatue(WARPSTONE_STONE_TOWER);
+            break;
+        case RI_OWL_WOODFALL:
+            ObjWarpstone_ActivateStatue(WARPSTONE_WOODFALL);
+            break;
+        case RI_OWL_ZORA_CAPE:
+            ObjWarpstone_ActivateStatue(WARPSTONE_ZORA_CAPE);
             break;
         case RI_NONE:
             break;

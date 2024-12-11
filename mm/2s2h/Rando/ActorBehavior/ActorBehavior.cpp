@@ -54,6 +54,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();
+    Rando::ActorBehavior::InitObjWarpstoneBehavior();
 
     COND_HOOK(ShouldVanillaBehavior, IS_RANDO, MiscVanillaBehaviorHandler);
 }

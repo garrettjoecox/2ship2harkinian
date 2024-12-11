@@ -28,6 +28,7 @@ void InitEnItem00Behavior();
 void InitEnKgyBehavior();
 void InitEnKnightBehavior();
 void InitEnMaYtoBehavior();
+void InitObjWarpstoneBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();

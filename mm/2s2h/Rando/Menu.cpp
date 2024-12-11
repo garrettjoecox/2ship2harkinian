@@ -49,6 +49,7 @@ void Rando::DrawMenu() {
             if (CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, RO_LOGIC_NO_LOGIC) != RO_LOGIC_VANILLA) {
                 UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
                                         Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
+                UIWidgets::CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Pots", Rando::StaticData::Options[RO_SHUFFLE_POTS].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
             }

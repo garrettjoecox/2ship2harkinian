@@ -9,6 +9,7 @@ extern "C" {
 #include "objects/object_gi_melody/object_gi_melody.h"
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 #include "objects/object_gi_liquid/object_gi_liquid.h"
+#include "objects/object_sek/object_sek.h"
 }
 
 s32 StrayFairyOverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx,
@@ -154,6 +155,12 @@ void DrawMilkRefill() {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
+void DrawOwlStatue() {
+    Matrix_Scale(0.01f, 0.01f, 0.01f, MTXMODE_APPLY);
+    Matrix_Translate(0, -3000, 0, MTXMODE_APPLY);
+    Gfx_DrawDListOpa(gPlayState, (Gfx*)gOwlStatueOpenedDL);
+}
+
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
         case RI_SONG_TIME:
@@ -176,6 +183,18 @@ void Rando::DrawItem(RandoItemId randoItemId) {
             break;
         case RI_MILK_REFILL:
             DrawMilkRefill();
+            break;
+        case RI_OWL_CLOCK_TOWN_SOUTH:
+        case RI_OWL_GREAT_BAY_COAST:
+        case RI_OWL_IKANA_CANYON:
+        case RI_OWL_MILK_ROAD:
+        case RI_OWL_MOUNTAIN_VILLAGE:
+        case RI_OWL_SNOWHEAD:
+        case RI_OWL_SOUTHERN_SWAMP:
+        case RI_OWL_STONE_TOWER:
+        case RI_OWL_WOODFALL:
+        case RI_OWL_ZORA_CAPE:
+            DrawOwlStatue();
             break;
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:

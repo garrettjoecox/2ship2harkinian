@@ -394,11 +394,13 @@ u16 D_801F6AF0;
 u8 D_801F6AF2;
 
 void Sram_ActivateOwl(u8 owlId) {
-    gSaveContext.save.saveInfo.playerData.owlActivationFlags =
-        ((void)0, gSaveContext.save.saveInfo.playerData.owlActivationFlags) | (u16)gBitFlags[owlId];
+    if (GameInteractor_Should(VB_OWL_STATUE_ACTIVATE, true, owlId)) {
+        gSaveContext.save.saveInfo.playerData.owlActivationFlags =
+            ((void)0, gSaveContext.save.saveInfo.playerData.owlActivationFlags) | (u16)gBitFlags[owlId];
 
-    if (gSaveContext.save.saveInfo.playerData.unk_20 == 0xFF) {
-        gSaveContext.save.saveInfo.playerData.unk_20 = owlId;
+        if (gSaveContext.save.saveInfo.playerData.unk_20 == 0xFF) {
+            gSaveContext.save.saveInfo.playerData.unk_20 = owlId;
+        }
     }
 }
 
