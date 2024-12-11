@@ -20,7 +20,6 @@ RandoRegionId GetRegionIdFromEntrance(s32 entrance);
 void ApplyGlitchlessLogicToSaveContext();
 void ApplyNoLogicToSaveContext();
 
-
 struct RandoEvent {
     std::function<void()> onApply;
     std::function<void()> onRemove;
