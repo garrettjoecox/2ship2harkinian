@@ -5,6 +5,7 @@
  */
 
 #include "z_en_ginko_man.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -539,22 +540,26 @@ void EnGinkoMan_SetupBankAward(EnGinkoMan* this) {
 }
 
 void EnGinkoMan_BankAward(EnGinkoMan* this, PlayState* play) {
-    if (Actor_HasParent(&this->actor, play)) {
-        // Parent is the player when starting to receive the award
-        this->actor.parent = NULL;
-        EnGinkoMan_SetupBankAward2(this);
-    } else if (this->curTextId == 0x45B) {
-        if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_10_08)) {
-            Actor_OfferGetItem(&this->actor, play, GI_WALLET_ADULT + CUR_UPG_VALUE(UPG_WALLET), 500.0f, 100.0f);
+    if (GameInteractor_Should(VB_BANKER_GIVE_REWARD, true, this)) {
+        if (Actor_HasParent(&this->actor, play)) {
+            // Parent is the player when starting to receive the award
+            this->actor.parent = NULL;
+            EnGinkoMan_SetupBankAward2(this);
+        } else if (this->curTextId == 0x45B) {
+            if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_10_08)) {
+                Actor_OfferGetItem(&this->actor, play, GI_WALLET_ADULT + CUR_UPG_VALUE(UPG_WALLET), 500.0f, 100.0f);
+            } else {
+                Actor_OfferGetItem(&this->actor, play, GI_RUPEE_BLUE, 500.0f, 100.0f);
+            }
+        } else if (this->curTextId == 0x45C) {
+            Actor_OfferGetItem(&this->actor, play, GI_RUPEE_BLUE, 500.0f, 100.0f);
+        } else if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_59_08)) {
+            Actor_OfferGetItem(&this->actor, play, GI_HEART_PIECE, 500.0f, 100.0f);
         } else {
             Actor_OfferGetItem(&this->actor, play, GI_RUPEE_BLUE, 500.0f, 100.0f);
         }
-    } else if (this->curTextId == 0x45C) {
-        Actor_OfferGetItem(&this->actor, play, GI_RUPEE_BLUE, 500.0f, 100.0f);
-    } else if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_59_08)) {
-        Actor_OfferGetItem(&this->actor, play, GI_HEART_PIECE, 500.0f, 100.0f);
     } else {
-        Actor_OfferGetItem(&this->actor, play, GI_RUPEE_BLUE, 500.0f, 100.0f);
+        EnGinkoMan_SetupIdle(this);
     }
 }
 

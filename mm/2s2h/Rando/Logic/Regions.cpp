@@ -25,6 +25,7 @@ namespace Logic {
     (IS_HUMAN || (IS_DEITY && HAS_ITEM(ITEM_MASK_FIERCE_DEITY)) || (IS_ZORA && HAS_ITEM(ITEM_MASK_ZORA)) || \
      (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
+#define HAS_UPGRADE(upg) (GET_CUR_UPG_VALUE(upg))
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
 #define CAN_USE_SWORD                                                                                              \
@@ -311,6 +312,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_CLOCK_TOWN_WEST, RandoRegion{ .sceneId = SCENE_ICHIBA,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET, true),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_HP, true),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, true),
             CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAMARO)),
         },
         .exits = { //     TO                                     FROM
@@ -602,6 +606,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
+        .checks = {
+        CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD, HAS_UPGRADE(UPG_WALLET)),
+        CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, HAS_ITEM(ITEM_GOLD_DUST) && RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD].obtained)
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),  ENTRANCE(MOUNTAIN_SMITHY, 0), true),
         },
