@@ -26,6 +26,7 @@ namespace Logic {
 #define CAN_BE_HUMAN                                                                                        \
     (IS_HUMAN || (IS_DEITY && HAS_ITEM(ITEM_MASK_FIERCE_DEITY)) || (IS_ZORA && HAS_ITEM(ITEM_MASK_ZORA)) || \
      (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
+#define CHECK_MAX_HP(TARGET_HP) ((TARGET_HP * 16) <= gSaveContext.save.saveInfo.playerData.healthCapacity)
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
@@ -927,11 +928,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_SECRET_SHRINE_POT_9, CAN_BE_ZORA),
         },
         .connections = {
-            // I attempted to make a macro for checking max HP, but it broke seed generation, gonna leave the requirement out for now.
-            CONNECTION(RR_SECRET_SHRINE_12_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
-            CONNECTION(RR_SECRET_SHRINE_16_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
-            CONNECTION(RR_SECRET_SHRINE_4_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
-            CONNECTION(RR_SECRET_SHRINE_8_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),
+            // The CHECK_MAX_HP macro sometimes causes seed generaiton fails, I believe this is due to not enough HP being in the pool
+            // For now ill just comment out the macro call. Have confirmed lowering the checked count does get around generation however.
+            CONNECTION(RR_SECRET_SHRINE_12_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),// && CHECK_MAX_HP(12)),
+            CONNECTION(RR_SECRET_SHRINE_16_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),// && CHECK_MAX_HP(16)),
+            CONNECTION(RR_SECRET_SHRINE_4_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),// && CHECK_MAX_HP(4)),
+            CONNECTION(RR_SECRET_SHRINE_8_HEART, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA),// && CHECK_MAX_HP(8)),
             CONNECTION(RR_SECRET_SHRINE_ENTRANCE, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
         }
     } },
