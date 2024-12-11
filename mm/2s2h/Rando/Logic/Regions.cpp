@@ -1094,8 +1094,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_TERMINA_FIELD, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
         .checks = {
             CHECK(RC_TERMINA_FIELD_KAMARO, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_HEALING)),
+            CHECK(RC_TERMINA_FIELD_POT, CAN_GROW_BEAN_PLANT),
             CHECK(RC_TERMINA_FIELD_TALL_GRASS_CHEST, true),
-            CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT),
+            CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
             CHECK(RC_TERMINA_FIELD_WATER_CHEST, CAN_BE_ZORA),
         },
         .exits = { //     TO                                     FROM
