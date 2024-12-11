@@ -3,6 +3,7 @@
 
 extern "C" {
 #include "variables.h"
+#include "overlays/actors/ovl_En_Mk/z_en_mk.h"
 }
 
 // This is kind of a catch-all for things that are simple enough to not need their own file.
@@ -16,6 +17,10 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
             break;
         case VB_MSG_SCRIPT_DEL_ITEM:
             *should = false;
+            break;
+        case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
+            *should = false;
+            RANDO_SAVE_CHECKS[RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA].eligible = true;
             break;
     }
 }

@@ -141,6 +141,7 @@ typedef enum {
     VB_SMITHY_CHECK_FOR_RAZOR_SWORD,
     VB_SMITHY_CHECK_FOR_GILDED_SWORD,
     VB_HAVE_BLAST_MASK,
+    VB_GIVE_NEW_WAVE_BOSSA_NOVA,
 } GIVanillaBehavior;
 
 typedef enum {

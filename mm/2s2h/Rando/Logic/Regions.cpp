@@ -597,6 +597,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         }
     } },
     { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
+        .checks {
+            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),          ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
         },
