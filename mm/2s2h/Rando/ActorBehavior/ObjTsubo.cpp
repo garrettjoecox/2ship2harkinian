@@ -791,7 +791,7 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(2070.0f, -900.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4;
             }
-            if (IS_AT(-735.0f, -1305.0f)) {
+            if (IS_AT(-735.0f, -1215.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1;
             }
             if (IS_AT(-735.0f, -1305.0f)) {
