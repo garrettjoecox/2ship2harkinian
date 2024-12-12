@@ -24,6 +24,7 @@ void InitEnGinkoBehavior();
 void InitEnGirlABehavior();
 void InitEnGoBehavior();
 void InitEnGsBehavior();
+void InitEnHgBehavior();
 void InitEnItem00Behavior();
 void InitEnKgyBehavior();
 void InitEnKnightBehavior();

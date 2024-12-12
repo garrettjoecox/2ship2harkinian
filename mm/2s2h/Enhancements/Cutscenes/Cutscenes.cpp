@@ -27,6 +27,7 @@ void RegisterCutscenes() {
     RegisterSkipGiantsChamber();
     RegisterSkipHealingDarmani();
     RegisterSkipHealingMikau();
+    RegisterSkipHealingPamelasFather();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();

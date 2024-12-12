@@ -29,6 +29,7 @@ void RegisterSkipBossCutscenes();
 void RegisterSkipGiantsChamber();
 void RegisterSkipHealingDarmani();
 void RegisterSkipHealingMikau();
+void RegisterSkipHealingPamelasFather();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();
