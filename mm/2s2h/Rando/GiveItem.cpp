@@ -172,6 +172,23 @@ void Rando::GiveItem(RandoItemId randoItemId) {
 
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_CLOCK_TOWN_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_CLOCK_TOWN);
+            break;
+        case RI_WOODFALL_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_WOODFALL);
+            break;
+        case RI_GREAT_BAY_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_GREAT_BAY);
+            break;
+        case RI_ROMANI_RANCH_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_ROMANI_RANCH);
+            break;
+        case RI_SNOWHEAD_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_SNOWHEAD);
+            break;
+        case RI_STONE_TOWER_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_STONE_TOWER);
         case RI_NONE:
             break;
         default:
