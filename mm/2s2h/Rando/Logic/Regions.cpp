@@ -30,8 +30,8 @@ namespace Logic {
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
 #define CAN_HOOK_SCARECROW (CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
-#define CAN_USE_SWORD                                                                                             \
-    ((CAN_BE_HUMAN &&                                                                                             \
+#define CAN_USE_SWORD                                                                                               \
+    ((CAN_BE_HUMAN &&                                                                                               \
       ((GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || \
      CAN_BE_DEITY)
 // Be careful here, as some checks require you to play the song as a specific form
