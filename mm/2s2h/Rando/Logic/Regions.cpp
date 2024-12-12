@@ -21,7 +21,7 @@ namespace Logic {
 #define HAS_ITEM(item) (INV_CONTENT(item) == item)
 #define CAN_BE_DEKU (IS_DEKU || HAS_ITEM(ITEM_MASK_DEKU))
 #define CAN_BE_ZORA (IS_ZORA || HAS_ITEM(ITEM_MASK_ZORA))
-#define CAN_BE_DIETY (IS_DEITY || HAS_ITEM(ITEM_MASK_FIERCE_DEITY))
+#define CAN_BE_DEITY (IS_DEITY || HAS_ITEM(ITEM_MASK_FIERCE_DEITY))
 #define CAN_BE_GORON (IS_GORON || HAS_ITEM(ITEM_MASK_GORON))
 #define CAN_BE_HUMAN                                                                                        \
     (IS_HUMAN || (IS_DEITY && HAS_ITEM(ITEM_MASK_FIERCE_DEITY)) || (IS_ZORA && HAS_ITEM(ITEM_MASK_ZORA)) || \
@@ -33,7 +33,7 @@ namespace Logic {
 #define CAN_USE_SWORD                                                                                             \
     ((CAN_BE_HUMAN &&                                                                                             \
       ((GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI) || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY))) || \
-     CAN_BE_DIETY)
+     CAN_BE_DEITY)
 // Be careful here, as some checks require you to play the song as a specific form
 #define CAN_PLAY_SONG(song)                                                   \
     (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song) && \
@@ -267,11 +267,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_CLOCK_TOWN_EAST, RandoRegion{ .sceneId = SCENE_TOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU), // Same check in two places, is this okay?
-            CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, CAN_BE_ZORA || CAN_BE_HUMAN || CAN_BE_DIETY),
+            CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, CAN_BE_ZORA || CAN_BE_HUMAN || CAN_BE_DEITY),
         },
         .exits = { //     TO                                     FROM
             // FD gets stuck when entering Astral Obervatory from here.
-            EXIT(ENTRANCE(TERMINA_FIELD, 7),            ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            EXIT(ENTRANCE(TERMINA_FIELD, 7),            ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 7),         ENTRANCE(EAST_CLOCK_TOWN, 1), true), // To lower
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 0),       ENTRANCE(EAST_CLOCK_TOWN, 2), CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_GORON), // TODO: Bombers Code req
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 2),         ENTRANCE(EAST_CLOCK_TOWN, 3), true), // To upper
@@ -297,7 +297,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_CLOCK_TOWN_LAUNDRY, RandoRegion{ .sceneId = SCENE_ALLEY,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, true),
-            CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 6),         ENTRANCE(LAUNDRY_POOL, 0), true),
@@ -306,11 +306,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_CLOCK_TOWN_NORTH, RandoRegion{ .sceneId = SCENE_BACKTOWN,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA),
-            CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA),
+            CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(TERMINA_FIELD, 8),            ENTRANCE(NORTH_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            EXIT(ENTRANCE(TERMINA_FIELD, 8),            ENTRANCE(NORTH_CLOCK_TOWN, 0), CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 5),          ENTRANCE(NORTH_CLOCK_TOWN, 1), true),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 4),         ENTRANCE(NORTH_CLOCK_TOWN, 2), true),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 0),           ENTRANCE(NORTH_CLOCK_TOWN, 3), true),
@@ -332,11 +332,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
-            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
+            CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY)) || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(CLOCK_TOWER_INTERIOR, 1),     ENTRANCE(SOUTH_CLOCK_TOWN, 0), true),
-            EXIT(ENTRANCE(TERMINA_FIELD, 6),            ENTRANCE(SOUTH_CLOCK_TOWN, 1), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            EXIT(ENTRANCE(TERMINA_FIELD, 6),            ENTRANCE(SOUTH_CLOCK_TOWN, 1), CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 3),          ENTRANCE(SOUTH_CLOCK_TOWN, 2), true), // To upper
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 2),          ENTRANCE(SOUTH_CLOCK_TOWN, 3), true), // To upper
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 2),         ENTRANCE(SOUTH_CLOCK_TOWN, 4), true),
@@ -345,11 +345,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 1),          ENTRANCE(SOUTH_CLOCK_TOWN, 7), true), // To lower
         },
         .connections = {
-            CONNECTION(RR_CLOCK_TOWN_SOUTH_PLATFORM, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR))),
+            CONNECTION(RR_CLOCK_TOWN_SOUTH_PLATFORM, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY || (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR))),
             CONNECTION(RR_MAX, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
@@ -363,7 +363,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAMARO)),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(TERMINA_FIELD, 0),            ENTRANCE(WEST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            EXIT(ENTRANCE(TERMINA_FIELD, 0),            ENTRANCE(WEST_CLOCK_TOWN, 0), CAN_BE_DEITY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 5),         ENTRANCE(WEST_CLOCK_TOWN, 1), true), // To lower
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 3),         ENTRANCE(WEST_CLOCK_TOWN, 2), true), // To upper
             EXIT(ENTRANCE(SWORDMANS_SCHOOL, 0),         ENTRANCE(WEST_CLOCK_TOWN, 3), true),
@@ -467,19 +467,19 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_GREATBAY_COAST_OUTSIDE_LAB, RandoRegion{ .name = "Outside Lab", .sceneId = SCENE_30GYOSON,
         .checks = {
-            CHECK(RC_GREAT_BAY_COAST_POT_9,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_10,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_11,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_12,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_GREAT_BAY_COAST_POT_9,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_10,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_11,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_12,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MARINE_RESEARCH_LAB, 0),      ENTRANCE(GREAT_BAY_COAST, 7), true),
         },
         .connections = {
-            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
@@ -491,7 +491,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_GREAT_BAY_COAST_POT_2, true),
         },
         .connections = {
-            CONNECTION(RR_GREATBAY_COAST_PIRATES_COVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_GREATBAY_COAST_PIRATES_COVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 12), // From being captured in Pirate Fortress Moat
@@ -501,17 +501,17 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             // TODO: CAN_PLAY_SCARECROW_SONG?
             CHECK(RC_GREAT_BAY_COAST_HP,            CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT),
-            CHECK(RC_GREAT_BAY_COAST_POT_5,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_6,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_7,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CHECK(RC_GREAT_BAY_COAST_POT_8,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_GREAT_BAY_COAST_POT_5,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_6,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_7,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CHECK(RC_GREAT_BAY_COAST_POT_8,         CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_1,   HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_2,   HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_3,   HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
         },
         .connections = {
-            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CONNECTION(RR_GREATBAY_COAST_OUTSIDE_PIRATES_FORTRESS, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CONNECTION(RR_GREATBAY_COAST_OUTSIDE_PIRATES_FORTRESS, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
     } },
     { RR_GREATBAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
@@ -523,14 +523,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 2),            ENTRANCE(GREAT_BAY_COAST, 0), true),
             EXIT(ENTRANCE(ZORA_CAPE, 0),                ENTRANCE(GREAT_BAY_COAST, 1), true),
-            EXIT(ENTRANCE(PINNACLE_ROCK, 0),            ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            EXIT(ENTRANCE(PINNACLE_ROCK, 0),            ENTRANCE(GREAT_BAY_COAST, 3), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
             EXIT(ENTRANCE(FISHERMANS_HUT, 0),           ENTRANCE(GREAT_BAY_COAST, 4), true),
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 0),ENTRANCE(GREAT_BAY_COAST, 5), CAN_BE_ZORA),
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),   ENTRANCE(GREAT_BAY_COAST, 8), true),
         },
         .connections = {
-            CONNECTION(RR_GREATBAY_COAST_PIRATES_COVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
-            CONNECTION(RR_GREATBAY_COAST_OUTSIDE_LAB, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_GREATBAY_COAST_PIRATES_COVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
+            CONNECTION(RR_GREATBAY_COAST_OUTSIDE_LAB, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         }
     } },
     { RR_GREATBAY_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
@@ -558,7 +558,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_IKANA_CANYON_SCRUB_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA && CAN_BE_DEKU),
             CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
-            CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_DIETY),
+            CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_DEITY),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 1),            ENTRANCE(IKANA_CANYON, 0), true), 
@@ -568,10 +568,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
                 Must have delivered the Letter to Kafei and met Kafei.(Sakon just does not show up otherwise, as odd as that may sound.)
             */
             EXIT(ENTRANCE(SAKONS_HIDEOUT, 0),           ENTRANCE(IKANA_CANYON, 6), CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI)),
-            EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 9),  ONE_WAY_EXIT, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY),
+            EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 9),  ONE_WAY_EXIT, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DEITY),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_UNDER_WATERFALL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_IKANA_CANYON_UNDER_WATERFALL, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
             CONNECTION(RR_IKANA_CANYON_UPPER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_MAGIC && HAS_ITEM(ITEM_ARROW_ICE))
         },
     } },
@@ -584,7 +584,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SECRET_SHRINE, 0),            ENTRANCE(IKANA_CANYON, 12), true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
+            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY)
         },
     } },
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
@@ -599,10 +599,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             // May consider cutting Deku and Goron from this since getting down as them may be seen as a trick. But its possible and is pretty easy to do.
-            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_GORON && HAS_MAGIC)),
+            CONNECTION(RR_IKANA_CANYON_LOWER, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_ZORA || CAN_BE_DEITY || (CAN_BE_GORON && HAS_MAGIC)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
@@ -652,7 +652,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_STOCK_POT_INN_GRANDMA_SHORT_STORY, IS_HUMAN && HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST, (CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA) && Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY)),
             CHECK(RC_STOCK_POT_INN_LETTER_TO_KAFEI, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAFEIS_MASK)),
-            CHECK(RC_STOCK_POT_INN_ROOM_KEY, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_STOCK_POT_INN_ROOM_KEY, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA || CAN_BE_DEITY),
             CHECK(RC_STOCK_POT_INN_STAFF_ROOM_CHEST, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
             CHECK(RC_STOCK_POT_INN_TOILET_HAND, 
                 Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) || Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) ||
@@ -700,7 +700,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GORMAN_TRACK, 0),             ENTRANCE(MILK_ROAD, 3), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
@@ -740,7 +740,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
@@ -799,7 +799,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             // TODO: Missing HP check to add here later.
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),          ENTRANCE(PINNACLE_ROCK, 0), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),          ENTRANCE(PINNACLE_ROCK, 0), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
     } },
     { RR_POST_OFFICE, RandoRegion{ .sceneId = SCENE_POSTHOUSE,
@@ -835,7 +835,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC /* && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE)) */),
         },
         .exits = { //     TO                                     FROM
-            EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),          ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)
+            EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),          ENTRANCE(ROAD_TO_IKANA, 2), CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY)
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, CAN_RIDE_EPONA),
@@ -963,7 +963,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SNOWHEAD_NEAR_TEMPLE, CAN_BE_GORON && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(SNOWHEAD, 3), // From Song of Soaring
@@ -998,7 +998,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SOUTHERN_SWAMP_SOUTH, (Flags_GetSceneSwitch(SCENE_20SICHITAI, 1) || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE))),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CAN_BE_HUMAN || CAN_BE_DIETY),
+            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CAN_BE_HUMAN || CAN_BE_DEITY),
             EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
         },
         .oneWayEntrances = {
@@ -1024,7 +1024,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_INVERTED_UPPER, CAN_GROW_BEAN_PLANT),
-            CONNECTION(RR_STONE_TOWER_INVERTED_NEAR_TEMPLE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_STONE_TOWER_INVERTED_NEAR_TEMPLE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
     } },
     { RR_STONE_TOWER_INVERTED_NEAR_TEMPLE, RandoRegion{ .sceneId = SCENE_F41,
@@ -1032,7 +1032,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0), ENTRANCE(STONE_TOWER_INVERTED, 1), true),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_INVERTED_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_STONE_TOWER_INVERTED_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
     } },
     { RR_STONE_TOWER_INVERTED_UPPER, RandoRegion{ .sceneId = SCENE_F41,
@@ -1097,7 +1097,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_HUMAN),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), CAN_BE_HUMAN || CAN_BE_DIETY)
+            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), CAN_BE_HUMAN || CAN_BE_DEITY)
         },
         .oneWayEntrances = {
             ENTRANCE(STONE_TOWER, 3), // From Song of Soaring
@@ -1302,7 +1302,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),           ENTRANCE(ZORA_CAPE, 5), CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
         },
         .connections = {
-            CONNECTION(RR_ZORA_HALL_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_ZORA_HALL_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
     } },
     { RR_ZORA_HALL_COAST, RandoRegion{ .name = "Zora Hall Coast", .sceneId = SCENE_31MISAKI,
@@ -1317,10 +1317,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),         ENTRANCE(ZORA_CAPE, 7), CAN_BE_HUMAN && CAN_BE_ZORA && CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .connections = {
-            CONNECTION(RR_ZORA_CAPE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CONNECTION(RR_ZORA_CAPE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DEITY),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DIETY),
+            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_BE_HUMAN || CAN_BE_DEITY),
         },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
