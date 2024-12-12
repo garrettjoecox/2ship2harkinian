@@ -7,6 +7,10 @@
 #include <sstream>
 #include <cstring>
 
+extern "C" {
+s16 Play_GetOriginalSceneId(s16 sceneId);
+}
+
 bool showLogic = false;
 bool hideCollected = false;
 bool expandHeaders = true;
@@ -38,7 +42,7 @@ void initializeSceneChecks() {
             continue;
         }
 
-        SceneId sceneId = randoStaticCheck.sceneId;
+        SceneId sceneId = (SceneId)Play_GetOriginalSceneId(randoStaticCheck.sceneId);
         sceneChecks[sceneId].push_back(randoStaticCheck.randoCheckId);
     }
 
@@ -240,7 +244,7 @@ void Init() {
     }
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
         if (scrollToCurrentScene) {
-            scrollToTargetScene = sceneId;
+            scrollToTargetScene = Play_GetOriginalSceneId(sceneId);
             scrollToTargetEntrance = gSaveContext.save.entrance;
         }
     });
