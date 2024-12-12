@@ -868,25 +868,19 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
 // a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    // Exclude converting Inverted Stone Tower Temple for collectible flags. Cleared room flags should also be excluded,
-    // but there aren't any checks for that flagType.
-    if (!(sceneId == SCENE_INISIE_R && flagType == FLAG_CYCL_SCENE_COLLECTIBLE)) {
-        sceneId = Play_GetOriginalSceneId(sceneId);
+    s32 checkSceneId = Play_GetOriginalSceneId(sceneId);
+
+    // Inverted Stone Tower Temple saves its own collectible and cleared_room flags
+    // Collectible flags greater than 0x1F (ie not collectible[0]) aren't save and can be reused across 2-scene scenes
+    // Both cases shouldn't convert to OriginalSceneId
+    if (flagType == FLAG_CYCL_SCENE_COLLECTIBLE) {
+        if (sceneId == SCENE_INISIE_R || flag > 0x1F) {
+            checkSceneId = sceneId;
+        }
     }
 
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
-            return data;
-        }
-    }
-    return Checks[RC_UNKNOWN];
-}
-
-// Does not use original sceneId
-// A FLAG_CYCL_SCENE_COLLECTIBLE greater than 0x1F doesn't get saved, and thus can be duplicated across the 2-state scenes
-RandoStaticCheck GetCheckForPot(s32 flag, s16 sceneId) {
-        for (auto& [check, data] : Checks) {
-        if (data.flagType == FLAG_CYCL_SCENE_COLLECTIBLE && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == checkSceneId)) {
             return data;
         }
     }
