@@ -808,7 +808,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .oneWayEntrances = {
-            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_INT_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_INT_SEWERS_POSTGATE"
+            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
         }
     } },
     { RR_PIRATES_FORTRESS_MOAT_PLATFORM, RandoRegion{ .name = "Platform", .sceneId = SCENE_TORIDE,
@@ -819,7 +819,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_LOWER, CAN_BE_HUMAN || CAN_BE_ZORA),
         },
     } },
-    { RR_PIRATES_FORTRESS_INT_SEWERS_PREGATE, RandoRegion{ .name = "Sewers Pregate", .sceneId = SCENE_PIRATE,
+    { RR_PIRATES_FORTRESS_SEWERS_PREGATE, RandoRegion{ .name = "Sewers Pregate", .sceneId = SCENE_PIRATE,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_1, CAN_BE_ZORA),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2, CAN_BE_ZORA),
@@ -833,10 +833,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3),    ONE_WAY_EXIT, CAN_BE_HUMAN || CAN_BE_ZORA)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_INT_SEWERS_POSTGATE, (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
+            CONNECTION(RR_PIRATES_FORTRESS_SEWERS_POSTGATE, (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
         }
     } },
-    { RR_PIRATES_FORTRESS_INT_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
+    { RR_PIRATES_FORTRESS_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
         .checks = {
             // SEWERS_POT_WATERWAY_1 incorrectly triggers INTERIOR_POT_GUARDED_1, commenting it out for now.
             //CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, CAN_BE_HUMAN || CAN_BE_ZORA),
@@ -846,10 +846,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3),    ONE_WAY_EXIT, CAN_BE_HUMAN || CAN_BE_ZORA)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_INT_TELESCOPE_ROOM, (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
+            CONNECTION(RR_PIRATES_FORTRESS_TELESCOPE_ROOM, (CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || CAN_BE_ZORA)
         }
     } },
-    { RR_PIRATES_FORTRESS_INT_TELESCOPE_ROOM, RandoRegion{ .name = "Telescope Room", .sceneId = SCENE_PIRATE,
+    { RR_PIRATES_FORTRESS_TELESCOPE_ROOM, RandoRegion{ .name = "Telescope Room", .sceneId = SCENE_PIRATE,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_1, true),
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_2, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA),
@@ -859,7 +859,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10), (CAN_BE_HUMAN && (HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW))) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_INT_SEWERS_POSTGATE, true)
+            CONNECTION(RR_PIRATES_FORTRESS_SEWERS_POSTGATE, true)
         }
     } },
     { RR_PIRATES_FORTRESS_MOAT_HIGHER, RandoRegion{ .name = "Higher", .sceneId = SCENE_TORIDE,
