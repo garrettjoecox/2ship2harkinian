@@ -393,10 +393,10 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_WOODFALL_TEMPLE_POT_MAZE_2;
             }
             if (IS_AT(-120.0f, -2220.0f)) {
-                randoCheckId = RC_WOODFALL_TEMPLE_POT_PREBOSS_1;
+                randoCheckId = RC_WOODFALL_TEMPLE_POT_PRE_BOSS_1;
             }
             if (IS_AT(120.0f, -2220.0f)) {
-                randoCheckId = RC_WOODFALL_TEMPLE_POT_PREBOSS_2;
+                randoCheckId = RC_WOODFALL_TEMPLE_POT_PRE_BOSS_2;
             }
             if (IS_AT(1335.0f, 585.0f)) {
                 randoCheckId = RC_WOODFALL_TEMPLE_POT_WATER_ROOM_1;
@@ -791,7 +791,7 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(2070.0f, -900.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4;
             }
-            if (IS_AT(-735.0f, -1305.0f)) {
+            if (IS_AT(-735.0f, -1215.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1;
             }
             if (IS_AT(-735.0f, -1305.0f)) {
