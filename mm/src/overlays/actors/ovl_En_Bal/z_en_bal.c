@@ -6,6 +6,7 @@
 
 #include "z_en_bal.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -834,7 +835,8 @@ void EnBal_TryPurchaseMap(EnBal* this, PlayState* play) {
                 Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, TINGLE_ANIM_TALK);
                 Message_StartTextbox(play, 0x1D0A, &this->picto.actor);
                 this->textId = 0x1D0A;
-            } else if (EnBal_CheckIfMapUnlocked(this, play)) {
+            } else if ((GameInteractor_Should(VB_ALREADY_HAVE_TINGLE_MAP, EnBal_CheckIfMapUnlocked(this, play), this,
+                                              price))) {
                 // Can't buy map because player already has it
                 Audio_PlaySfx(NA_SE_SY_ERROR);
                 Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, TINGLE_ANIM_TALK);
@@ -846,11 +848,13 @@ void EnBal_TryPurchaseMap(EnBal* this, PlayState* play) {
                 Rupees_ChangeBy(-price);
                 Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, TINGLE_ANIM_MAGIC_REVERSE);
                 this->forceEyesShut = true;
-                Message_StartTextbox(play, 0x1D0B, &this->picto.actor);
-                this->textId = 0x1D0B;
-                EnBal_UnlockSelectedAreaMap(this);
-                player->stateFlags1 |= PLAYER_STATE1_20;
-                EnBal_SetupOfferGetItem(this);
+                if (GameInteractor_Should(VB_TINGLE_GIVE_MAP_UNLOCK, true, this)) {
+                    Message_StartTextbox(play, 0x1D0B, &this->picto.actor);
+                    this->textId = 0x1D0B;
+                    EnBal_UnlockSelectedAreaMap(this);
+                    player->stateFlags1 |= PLAYER_STATE1_20;
+                    EnBal_SetupOfferGetItem(this);
+                }
             }
         } else {
             // Cancel

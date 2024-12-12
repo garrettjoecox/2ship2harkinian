@@ -50,6 +50,8 @@ namespace Logic {
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
 #define CAN_GROW_BEAN_PLANT \
     (CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
+#define CAN_USE_PROJECTILE \
+    ((CAN_BE_HUMAN && (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT))) || (CAN_BE_DEKU && HAS_MAGIC) || (CAN_BE_ZORA))
 
 // TODO: MOVE THIS STUFF OR SOMETHING
 void Flags_SetSceneSwitch(s32 scene, s32 flag) {
@@ -300,6 +302,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 8),            ENTRANCE(NORTH_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -463,6 +467,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_GREAT_BAY_COAST_POT_10,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             CHECK(RC_GREAT_BAY_COAST_POT_11,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
             CHECK(RC_GREAT_BAY_COAST_POT_12,        CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_1,  CAN_USE_PROJECTILE),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_2,  CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MARINE_RESEARCH_LAB, 0),      ENTRANCE(GREAT_BAY_COAST, 7), true),
@@ -580,6 +586,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_1,  CAN_USE_PROJECTILE),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_2,  CAN_USE_PROJECTILE),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                      ENTRANCE(IKANA_CANYON, 1), true),
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),                ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
@@ -685,6 +695,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
+        .checks = {
+            CHECK(RC_MILK_ROAD_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_MILK_ROAD_TINGLE_MAP_2, CAN_USE_PROJECTILE),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 5),            ENTRANCE(MILK_ROAD, 0), true),
             EXIT(ENTRANCE(ROMANI_RANCH, 0),             ENTRANCE(MILK_ROAD, 1), true),
@@ -747,6 +761,17 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 3),            ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), true),
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6),  ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), true),
+        },
+    } },
+    { RR_TWIN_ISLANDS, RandoRegion{ .sceneId = SCENE_17SETUGEN,
+        .checks = {
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_2, CAN_USE_PROJECTILE),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(GORON_RACETRACK, 0),          ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 2), true),
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2),  ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 1), true),
+            EXIT(ENTRANCE(GORON_VILLAGE_WINTER, 0),     ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), true),
         },
     } },
     { RR_PATH_TO_SNOWHEAD_LOWER, RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -849,6 +874,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 1),            ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),

@@ -33,6 +33,7 @@ void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitEnStoneheishiBehavior();
 void InitEnBabaBehavior();
+void InitEnBalBehavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();
 void InitEnMnkBehavior();

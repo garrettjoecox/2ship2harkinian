@@ -285,25 +285,25 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_WOODFALL_TEMPLE);
         case RI_WOODFALL_COMPASS:
             return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_WOODFALL_TEMPLE);
-        case RI_WOODFALL_MAP:
+        case RI_WOODFALL_TEMPLE_MAP:
             return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_WOODFALL_TEMPLE);
         case RI_SNOWHEAD_BOSS_KEY:
             return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
         case RI_SNOWHEAD_COMPASS:
             return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
-        case RI_SNOWHEAD_MAP:
+        case RI_SNOWHEAD_TEMPLE_MAP:
             return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
         case RI_GREAT_BAY_BOSS_KEY:
             return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
         case RI_GREAT_BAY_COMPASS:
             return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
-        case RI_GREAT_BAY_MAP:
+        case RI_GREAT_BAY_TEMPLE_MAP:
             return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
         case RI_STONE_TOWER_BOSS_KEY:
             return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         case RI_STONE_TOWER_COMPASS:
             return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
-        case RI_STONE_TOWER_MAP:
+        case RI_STONE_TOWER_TEMPLE_MAP:
             return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong.
