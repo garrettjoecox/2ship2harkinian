@@ -73,8 +73,10 @@ std::string LogicString(std::string condition) {
     return condition;
 }
 
-#define EVENT(onApply, onRemove, condition) \
-    { [] { return onApply; }, [] { return onRemove; }, [] { return condition; }, LogicString(#condition) }
+#define EVENT(onApply, onRemove, condition)                                                                \
+    {                                                                                                      \
+        [] { return onApply; }, [] { return onRemove; }, [] { return condition; }, LogicString(#condition) \
+    }
 #define EXIT(toEntrance, fromEntrance, condition)                           \
     {                                                                       \
         toEntrance, {                                                       \
