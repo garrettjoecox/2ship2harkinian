@@ -46,6 +46,17 @@ namespace Logic {
 #define CAN_GET_SPRING_WATER                                                  \
     (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
+#define CAN_GET_HOT_SPRING_WATER (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
+#define CAN_GET_BUGS (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS)) // We will need this for Swamp Skulltula house checks, and later for misc bean patch items if we do those.
+#define CAN_GET_FISH (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_FISH)) // We will need this for the HP in Greatbay Lab.
+#define CAN_GET_SEAHORSE                                                                                   \
+    (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SEAHORSE) && HAS_ITEM(ITEM_PICTOGRAPH_BOX) && \
+     RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE)
+#define CAN_GET_EGGS                                                          \
+    (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_1) && \
+     Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_2) &&               \
+     Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_3) &&               \
+     Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_4) && RANDO_INF_HAS_ACCESS_TO_PINNACLE_EGGS)
 #define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
 // TODO: Move these into a seperate file later?
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
@@ -413,6 +424,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 2),                  ENTRANCE(DEKU_KINGS_CHAMBER, 0), true),
         },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), true)
+        }
     } },
     { RR_DEKU_PALACE_INSIDE, RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
         .checks = {
@@ -466,6 +480,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 3),      ENTRANCE(GORON_GRAVERYARD, 0), true),
         },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER), true)
+        },
     } },
     { RR_GREATBAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
         .checks = {
@@ -498,7 +515,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),       ENTRANCE(GREAT_BAY_COAST, 8), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), true)
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
@@ -564,7 +582,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_IKANA_CANYON_LOWER, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), true)
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
@@ -625,6 +644,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 9),              ENTRANCE(STOCK_POT_INN, 0), true), // From ground floor
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),             ENTRANCE(STOCK_POT_INN, 1), true), // From upstairs
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS), true),
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_FISH), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_FISH), true),
         },
     } },
     { RR_LOTTERY_SHOP, RandoRegion{ .sceneId = SCENE_TAKARAKUJI,
@@ -747,7 +770,15 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
         },
     } },
-    { RR_PINNACLE_ROCK, RandoRegion{ .sceneId = SCENE_SINKAI,
+    { RR_PINNACLE_ROCK_ENTRANCE, RandoRegion{ .sceneId = SCENE_SINKAI,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_INNER, CAN_GET_SEAHORSE && CAN_BE_ZORA)
+        }
+    } },
+    { RR_PINNACLE_ROCK_INNER, RandoRegion{ .sceneId = SCENE_SINKAI,
         // Maybe we split this up into two areas, one requiring sea horse to get to the other.
         // (Without seahorse should be considered a trick)
         .checks = {
@@ -766,9 +797,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PINNACLE_ROCK_POT_11,      CAN_BE_ZORA),
             // TODO: Missing HP check to add here later.
         },
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_ENTRANCE, true)
         },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_PINNACLE_EGGS), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_PINNACLE_EGGS), true)
+        }
     } },
     { RR_PIRATES_FORTRESS_CAPTAIN_ROOM_UPPER, RandoRegion{ .name = "Captain Room Upper", .sceneId = SCENE_PIRATE,
         // TODO : If NTSC JP 1.0 support is added we should add a connection here to RR_PIRATES_FORTRESS_CAPTAIN_ROOM and a unique flag to check for it...or ignore it and let the player go the long way around
@@ -791,6 +825,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 1),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0), true),
         },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_1), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_1), true)
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_3_GUARD_ROOM, RandoRegion{ .name = "3 Guard Room", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -801,6 +838,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD, true),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         }
     } },
     { RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM, RandoRegion{ .name = "Chest Egg Room", .sceneId = SCENE_PIRATE,
@@ -815,7 +855,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_2), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_2), true)
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, RandoRegion{ .name = "Green Guard Room", .sceneId = SCENE_PIRATE,
         .exits = { //     TO                                         FROM
@@ -832,6 +875,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         }
     } },
     { RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, RandoRegion{ .name = "Maze Room", .sceneId = SCENE_PIRATE,
@@ -840,6 +886,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, true),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         }
     } },
     { RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, RandoRegion{ .name = "Orange Guard Room", .sceneId = SCENE_PIRATE,
@@ -865,7 +914,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, true),
-        }
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_3), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_3), true)
+        },
     } },
     { RR_PIRATES_FORTRESS_LEFT_PLATFORM, RandoRegion{ .name = "Left Platform", .sceneId = SCENE_KAIZOKU,
         // The drop down from the LEFT_CLAM_EGG_ROOM
@@ -900,6 +952,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         },
         .oneWayEntrances = {
             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
@@ -943,6 +998,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         }
     } },
     { RR_PIRATES_FORTRESS_PALAZA_RIGHT_EXIT, RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
@@ -990,6 +1048,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
                 (HAS_ITEM(ITEM_DEKU_NUT) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_MASK_STONE)) ||
                 (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA
             )),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE), true)
         }
     } },
     { RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM, RandoRegion{ .name = "Right Clam Room", .sceneId = SCENE_PIRATE,
@@ -1004,7 +1065,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_4), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_PIRATE_EGG_4), true)
+        },
     } },
     { RR_PIRATES_FORTRESS_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -1112,6 +1176,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .events = {
             EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
+            EVENT(Flags_SetRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), Flags_ClearRandoInf(RANDO_INF_CAN_TAKE_PICTURE_OF_TINGLE_OR_DEKU_KING), true)
         },
     } },
     { RR_ROMANI_RANCH, RandoRegion{ .sceneId = SCENE_F01,
@@ -1469,6 +1534,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_SWAMP_SPIDER_HOUSE, RandoRegion{ .sceneId = SCENE_KINSTA1,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 8),      ENTRANCE(SWAMP_SPIDER_HOUSE, 0), true),
+        },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS), true),
         },
     } },
     { RR_SWORDSMAN_SCHOOL, RandoRegion{ .sceneId = SCENE_DOUJOU,
