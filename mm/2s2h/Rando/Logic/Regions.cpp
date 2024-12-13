@@ -47,8 +47,12 @@ namespace Logic {
     (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
 #define CAN_GET_HOT_SPRING_WATER (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
-#define CAN_GET_BUGS (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS)) // We will need this for Swamp Skulltula house checks, and later for misc bean patch items if we do those.
-#define CAN_GET_FISH (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_FISH)) // We will need this for the HP in Greatbay Lab.
+#define CAN_GET_BUGS \
+    (HAS_BOTTLE &&   \
+     Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_BUGS)) // We will need this for Swamp Skulltula house checks, and later
+                                                      // for misc bean patch items if we do those.
+#define CAN_GET_FISH \
+    (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_FISH)) // We will need this for the HP in Greatbay Lab.
 #define CAN_GET_SEAHORSE                                                                                   \
     (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SEAHORSE) && HAS_ITEM(ITEM_PICTOGRAPH_BOX) && \
      RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE)
