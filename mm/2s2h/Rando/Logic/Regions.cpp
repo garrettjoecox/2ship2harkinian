@@ -468,6 +468,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 4),              ENTRANCE(FISHERMANS_HUT, 0), true),
         },
+        .events = {
+            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SEAHORSE), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SEAHORSE), true)
+        }
     } },
     { RR_GHOST_HUT, RandoRegion{ .sceneId = SCENE_TOUGITES,
         .exits = { //     TO                                         FROM
