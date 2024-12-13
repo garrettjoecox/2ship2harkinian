@@ -316,7 +316,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             return !CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG);
         case RI_REMAINS_TWINMOLD:
             return !CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD);
-        case RI_SONG_BOSSA_NOVA:
+        case RI_SONG_NOVA:
             return !CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA);
         case RI_SONG_ELEGY:
             return !CHECK_QUEST_ITEM(QUEST_SONG_ELEGY);

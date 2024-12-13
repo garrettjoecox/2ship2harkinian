@@ -31,7 +31,7 @@ void ApplyGlitchlessLogicToSaveContext() {
     // section.
     std::vector<RandoItemId> startingItems = {
         RI_SONG_EPONA,  RI_ARROW_FIRE,         RI_POWDER_KEG,  RI_MASK_GORON,     RI_DEED_MOUNTAIN, RI_MAGIC_BEAN,
-        RI_SONG_STORMS, RI_SONG_BOSSA_NOVA,    RI_MASK_GARO,   RI_SONG_ELEGY,     RI_ARROW_LIGHT,   RI_ARROW_ICE,
+        RI_SONG_STORMS, RI_SONG_NOVA,          RI_MASK_GARO,   RI_SONG_ELEGY,     RI_ARROW_LIGHT,   RI_ARROW_ICE,
         RI_LENS,        RI_BLUE_POTION_REFILL, RI_MASK_COUPLE, RI_MASK_ALL_NIGHT, RI_SONG_LULLABY,  RI_DEKU_STICK,
         RI_DEKU_NUT,
     };

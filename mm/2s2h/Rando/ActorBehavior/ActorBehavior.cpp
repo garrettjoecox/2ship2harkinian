@@ -49,6 +49,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnRzBehavior();
+    Rando::ActorBehavior::InitEnMkBehavior();
     Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();

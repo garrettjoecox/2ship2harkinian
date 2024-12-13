@@ -20,6 +20,7 @@ void SkipClockTowerSkullKidEncounter();
 void RegisterSkipLearningElegyOfEmptiness();
 void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
+void RegisterSkipLearningNewWaveBossaNova();
 void RegisterSkipSongOfTimeCutscene();
 void RegisterSkipMilkRunCutscenes();
 void RegisterSkipBombBagTheftCutscene();

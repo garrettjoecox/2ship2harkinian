@@ -35,6 +35,7 @@ void InitEnStoneheishiBehavior();
 void InitEnBabaBehavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();
+void InitEnMkBehavior();
 void InitEnMnkBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();

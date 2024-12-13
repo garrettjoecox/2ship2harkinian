@@ -18,6 +18,7 @@ void RegisterCutscenes() {
     RegisterSkipLearningElegyOfEmptiness();
     RegisterSkipLearningSongOfHealing();
     RegisterSkipLearningSongOfTime();
+    RegisterSkipLearningNewWaveBossaNova();
     RegisterSkipSongOfTimeCutscene();
     RegisterSkipMilkRunCutscenes();
     RegisterSkipBombBagTheftCutscene();
