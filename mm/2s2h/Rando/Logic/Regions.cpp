@@ -1008,8 +1008,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_PIRATES_FORTRESS_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
         .checks = {
-            // SEWERS_POT_WATERWAY_1 incorrectly triggers INTERIOR_POT_GUARDED_1, commenting it out for now.
-            //CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, true),
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_2, true),
         },
         .exits = { //     TO                                         FROM

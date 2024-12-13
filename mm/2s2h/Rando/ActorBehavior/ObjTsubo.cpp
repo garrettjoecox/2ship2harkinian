@@ -314,6 +314,14 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_MOON_TRIAL_LINK_POT_8;
             }
             break;
+        case SCENE_PIRATE:
+            if (IS_AT(4020.0f, -1860.0f)) {
+                randoCheckId = RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1;
+            }
+            if (IS_AT(1920.0f, -640.0f)) {
+                randoCheckId = RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1;
+            }
+            break;
         case SCENE_REDEAD:
             if (IS_AT(1620.0f, -960.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_BIG_POE_1;
