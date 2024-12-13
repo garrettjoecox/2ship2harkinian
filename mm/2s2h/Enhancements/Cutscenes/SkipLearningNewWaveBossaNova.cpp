@@ -32,8 +32,7 @@ void RegisterSkipLearningNewWaveBossaNova() {
                             [](Actor* actor, PlayState* play) {
                                 Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
                                 Rando::DrawItem(RI_SONG_NOVA);
-                        } 
-                    });
+                            } });
                 }
                 SET_WEEKEVENTREG(WEEKEVENTREG_20_40);
                 *should = false;
