@@ -5,6 +5,7 @@
  */
 
 #include "z_en_hg.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_100000 | ACTOR_FLAG_2000000)
 
@@ -400,7 +401,7 @@ void EnHg_WaitForPlayerAction(EnHg* this, PlayState* play) {
 
     if (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) {
         if ((play->msgCtx.lastPlayedSong == OCARINA_SONG_HEALING) && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)) {
-            if (INV_CONTENT(ITEM_MASK_GIBDO) == ITEM_MASK_GIBDO) {
+            if (GameInteractor_Should(VB_HAVE_HEALED_PAMELAS_FATHER, INV_CONTENT(ITEM_MASK_GIBDO) == ITEM_MASK_GIBDO)) {
                 this->csIdIndex = HG_CS_SONG_OF_HEALING;
             } else {
                 this->csIdIndex = HG_CS_GET_MASK;

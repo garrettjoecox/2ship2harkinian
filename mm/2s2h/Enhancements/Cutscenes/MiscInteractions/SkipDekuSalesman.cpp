@@ -1,5 +1,6 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "functions.h"
@@ -12,36 +13,36 @@ void func_80BEF83C(EnAkindonuts* enAkindonuts, PlayState* play);
 void CutsceneManager_End();
 }
 
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipMiscInteractions"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 void RegisterSkipDekuSalesman() {
     // prevents him from doing his "fly in" animation
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
-        ACTOR_EN_SELLNUTS, [](Actor* actor, bool* should) {
-            if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-                !CHECK_WEEKEVENTREG(WEEKEVENTREG_73_04)) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_73_04);
-            }
-        });
+    COND_ID_HOOK(ShouldActorInit, ACTOR_EN_SELLNUTS, CVAR, [](Actor* actor, bool* should) {
+        if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_73_04)) {
+            SET_WEEKEVENTREG(WEEKEVENTREG_73_04);
+        }
+    });
 
     // Kills him when he's about to pop out of the ground for his exit animation
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_EN_SELLNUTS, [](Actor* actor) {
+    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_SELLNUTS, CVAR, [](Actor* actor) {
         EnSellnuts* enSellnuts = (EnSellnuts*)actor;
 
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-            enSellnuts->actionFunc == func_80ADC118 && enSellnuts->unk_34A < 40) {
+        if (enSellnuts->actionFunc == func_80ADC118 && enSellnuts->unk_34A < 40) {
             CutsceneManager_End();
             Actor_Kill(&enSellnuts->actor);
         }
     });
 
     // Kills him when he's about to pop out of the ground for his exit animation
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
-        ACTOR_EN_AKINDONUTS, [](Actor* actor) {
-            EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
+    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_AKINDONUTS, CVAR, [](Actor* actor) {
+        EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
 
-            if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-                enAkindonuts->actionFunc == func_80BEF83C && enAkindonuts->unk_33A < 40) {
-                CutsceneManager_End();
-                Actor_Kill(&enAkindonuts->actor);
-            }
-        });
+        if (enAkindonuts->actionFunc == func_80BEF83C && enAkindonuts->unk_33A < 40) {
+            CutsceneManager_End();
+            Actor_Kill(&enAkindonuts->actor);
+        }
+    });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipDekuSalesman, { CVAR_NAME });

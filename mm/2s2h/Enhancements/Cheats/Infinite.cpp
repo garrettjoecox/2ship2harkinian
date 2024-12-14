@@ -1,30 +1,42 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
+
+extern "C" {
 #include "variables.h"
+}
 
-void RegisterInfiniteCheats() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameStateUpdate>([]() {
-        if (gPlayState == nullptr)
-            return;
-
-        if (CVarGetInteger("gCheats.InfiniteHealth", 0)) {
+static RegisterShipInitFunc healthInitFunc(
+    []() {
+        COND_HOOK(OnGameStateUpdate, CVarGetInteger("gCheats.InfiniteHealth", 0), []() {
             gSaveContext.save.saveInfo.playerData.health = gSaveContext.save.saveInfo.playerData.healthCapacity;
-        }
+        });
+    },
+    { "gCheats.InfiniteHealth" });
 
-        if (CVarGetInteger("gCheats.InfiniteMagic", 0)) {
+static RegisterShipInitFunc magicInitFunc(
+    []() {
+        COND_HOOK(OnGameStateUpdate, CVarGetInteger("gCheats.InfiniteMagic", 0), []() {
             uint8_t magicLevel = gSaveContext.save.saveInfo.playerData.magicLevel;
             if (magicLevel == 1) {
                 gSaveContext.save.saveInfo.playerData.magic = MAGIC_NORMAL_METER;
             } else if (magicLevel == 2) {
                 gSaveContext.save.saveInfo.playerData.magic = MAGIC_DOUBLE_METER;
             }
-        }
+        });
+    },
+    { "gCheats.InfiniteMagic" });
 
-        if (CVarGetInteger("gCheats.InfiniteRupees", 0)) {
-            gSaveContext.save.saveInfo.playerData.rupees = CUR_CAPACITY(UPG_WALLET);
-        }
+static RegisterShipInitFunc rupeesInitFunc(
+    []() {
+        COND_HOOK(OnGameStateUpdate, CVarGetInteger("gCheats.InfiniteRupees", 0),
+                  []() { gSaveContext.save.saveInfo.playerData.rupees = CUR_CAPACITY(UPG_WALLET); });
+    },
+    { "gCheats.InfiniteRupees" });
 
-        if (CVarGetInteger("gCheats.InfiniteConsumables", 0)) {
+static RegisterShipInitFunc consumeablesInitFunc(
+    []() {
+        COND_HOOK(OnGameStateUpdate, CVarGetInteger("gCheats.InfiniteConsumables", 0), []() {
             if (INV_CONTENT(ITEM_BOW) == ITEM_BOW) {
                 AMMO(ITEM_BOW) = CUR_CAPACITY(UPG_QUIVER);
             }
@@ -52,6 +64,6 @@ void RegisterInfiniteCheats() {
             if (INV_CONTENT(ITEM_POWDER_KEG) == ITEM_POWDER_KEG) {
                 AMMO(ITEM_POWDER_KEG) = 1;
             }
-        }
-    });
-}
+        });
+    },
+    { "gCheats.InfiniteConsumables" });

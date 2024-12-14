@@ -1,18 +1,20 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "variables.h"
 #include "functions.h"
 #include "assets/interface/week_static/week_static.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
-extern PlayState* gPlayState;
-extern SaveContext gSaveContext;
 
 Gfx* Gfx_DrawTexRect4b(Gfx* gfx, TexturePtr texture, s32 fmt, s16 textureWidth, s16 textureHeight, s16 rectLeft,
                        s16 rectTop, s16 rectWidth, s16 rectHeight, s32 cms, s32 masks, s32 rects, u16 dsdx, u16 dtdy);
 }
+
+#define CVAR_NAME "gEnhancements.Songs.BetterSongOfDoubleTime"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 static bool activelyChangingTime = false;
 static u16 originalTime = CLOCK_TIME(0, 0);
@@ -122,27 +124,25 @@ void DrawTextRec(f32 x, f32 y, f32 z, s32 s, s32 t, f32 dx, f32 dy) {
 }
 
 void RegisterBetterSongOfDoubleTime() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
+    COND_HOOK(OnSceneInit, CVAR, [](s8 sceneId, s8 spawnNum) {
         // In case we didn't properly reset this variable
         activelyChangingTime = false;
         originalTime = CLOCK_TIME(0, 0);
         originalDay = 0;
     });
 
-    REGISTER_VB_SHOULD(VB_DISPLAY_SONG_OF_DOUBLE_TIME_PROMPT, {
-        if (CVarGetInteger("gEnhancements.Songs.BetterSongOfDoubleTime", 0)) {
-            *should = false;
-            gPlayState->msgCtx.ocarinaMode = OCARINA_MODE_PROCESS_DOUBLE_TIME;
-            activelyChangingTime = true;
-            originalTime = gSaveContext.save.time;
-            originalDay = gSaveContext.save.day;
+    COND_VB_SHOULD(VB_DISPLAY_SONG_OF_DOUBLE_TIME_PROMPT, CVAR, {
+        *should = false;
+        gPlayState->msgCtx.ocarinaMode = OCARINA_MODE_PROCESS_DOUBLE_TIME;
+        activelyChangingTime = true;
+        originalTime = gSaveContext.save.time;
+        originalDay = gSaveContext.save.day;
 
-            onPlayerUpdateHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
-                ACTOR_PLAYER, OnPlayerUpdate);
-        }
+        onPlayerUpdateHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
+            ACTOR_PLAYER, OnPlayerUpdate);
     });
 
-    REGISTER_VB_SHOULD(VB_PREVENT_CLOCK_DISPLAY, {
+    COND_VB_SHOULD(VB_PREVENT_CLOCK_DISPLAY, CVAR, {
         if (!activelyChangingTime) {
             return;
         }
@@ -163,3 +163,5 @@ void RegisterBetterSongOfDoubleTime() {
         CLOSE_DISPS(gPlayState->state.gfxCtx);
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterBetterSongOfDoubleTime, { CVAR_NAME });

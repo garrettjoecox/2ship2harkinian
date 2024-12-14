@@ -1,5 +1,6 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
@@ -11,8 +12,11 @@ extern u16 D_80AF343C[];
 extern s16 sInDungeonScene;
 }
 
+#define CVAR_NAME "gEnhancements.Songs.PauseOwlWarp"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 extern "C" bool PauseOwlWarp_IsOwlWarpEnabled() {
-    return CVarGetInteger("gEnhancements.Songs.PauseOwlWarp", 0) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) &&
+    return CVAR && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) &&
            gSaveContext.save.saveInfo.playerData.owlActivationFlags != 0 &&
            gPlayState->pauseCtx.debugEditor == DEBUG_EDITOR_NONE;
 }
@@ -191,9 +195,11 @@ void HandlePauseOwlWarp(PauseContext* pauseCtx) {
 }
 
 void RegisterPauseOwlWarp() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnKaleidoUpdate>([](PauseContext* pauseCtx) {
+    COND_HOOK(OnKaleidoUpdate, CVAR, [](PauseContext* pauseCtx) {
         if (!sInDungeonScene && PauseOwlWarp_IsOwlWarpEnabled() && CHECK_QUEST_ITEM(QUEST_SONG_SOARING)) {
             HandlePauseOwlWarp(pauseCtx);
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterPauseOwlWarp, { CVAR_NAME });

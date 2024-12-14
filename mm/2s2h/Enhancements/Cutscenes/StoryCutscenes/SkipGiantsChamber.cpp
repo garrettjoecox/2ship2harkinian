@@ -1,12 +1,17 @@
+#include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/Rando/Rando.h"
-#include <libultraship/libultraship.h>
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "global.h"
+#include "variables.h"
+#include "functions.h"
 }
+
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 /*
  * Utility function made common so that rando actor behavior can access it while also doing other things. Mimics the
@@ -123,9 +128,8 @@ void RegisterSkipGiantsChamber() {
      * a song tutorial prompt. The other cutscenes do not, but it might seem weird to force the skip for only the first
      * one and not others.
      */
-    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
-        if (gSaveContext.save.entrance == ENTRANCE(GIANTS_CHAMBER, 0) &&
-            (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) || IS_RANDO)) {
+    COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVAR || IS_RANDO, {
+        if (gSaveContext.save.entrance == ENTRANCE(GIANTS_CHAMBER, 0)) {
             /*
              * The warp gate processing silently queues up an event transition with information for the particular
              * area the player is in (Woodfall, Great Bay, etc.). This is necessary because the previous scene's
@@ -146,13 +150,13 @@ void RegisterSkipGiantsChamber() {
     });
 
     // Handle Giants' Chamber cutscene skip for non-rando. Rando has its own skip with additional check processing.
-    REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, {
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) && !IS_RANDO) {
-            GetItemId* item = va_arg(args, GetItemId*);
-            Actor* actor = va_arg(args, Actor*);
-            if (actor->id == ACTOR_DOOR_WARP1) {
-                HandleGiantsCutsceneSkip();
-            }
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, CVAR && !IS_RANDO, {
+        GetItemId* item = va_arg(args, GetItemId*);
+        Actor* actor = va_arg(args, Actor*);
+        if (actor->id == ACTOR_DOOR_WARP1) {
+            HandleGiantsCutsceneSkip();
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipGiantsChamber, { CVAR_NAME, "IS_RANDO" });

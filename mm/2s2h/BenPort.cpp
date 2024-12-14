@@ -60,6 +60,7 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/ShipUtils.h"
+#include "2s2h/ShipInit.hpp"
 
 // Resource Types/Factories
 #include "resource/type/Blob.h"
@@ -656,6 +657,7 @@ extern "C" void InitOTR() {
     GameInteractor::Instance = new GameInteractor();
     LoadGuiTextures();
     BenGui::SetupGuiElements();
+    ShipInit::InitAll();
     InitEnhancements();
     InitDeveloperTools();
     Rando::Init();

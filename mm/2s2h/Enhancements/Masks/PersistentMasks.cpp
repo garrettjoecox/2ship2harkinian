@@ -1,23 +1,22 @@
 #include <libultraship/bridge.h>
-#include <spdlog/spdlog.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "z64.h"
-#include "z64player.h"
-#include "functions.h"
-#include "macros.h"
-#include "gfx.h"
+#include "variables.h"
 #include "src/overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 #include "assets/interface/parameter_static/parameter_static.h"
 
 void func_8082E1F0(Player* player, u16 sfxId);
 void Player_DrawBunnyHood(PlayState* play);
-extern PlayState* gPlayState;
 extern const char* D_801C0B20[28];
-extern SaveContext gSaveContext;
 }
+
+#define CVAR_NAME "gEnhancements.Masks.PersistentBunnyHood.Enabled"
+#define STATE_CVAR_NAME "gEnhancements.Masks.PersistentBunnyHood.State"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define STATE_CVAR CVarGetInteger(STATE_CVAR_NAME, 0)
 
 void UpdatePersistentMasksState() {
     static Vtx* persistentMasksVtx;
@@ -26,15 +25,15 @@ void UpdatePersistentMasksState() {
     GameInteractor::Instance->UnregisterGameHook<GameInteractor::BeforeKaleidoDrawPage>(beforePageDrawHook);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnPlayerPostLimbDraw>(onPlayerPostLimbDrawHook);
 
-    if (!CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
-        CVarClear("gEnhancements.Masks.PersistentBunnyHood.State");
+    if (!CVAR) {
+        CVarClear(STATE_CVAR_NAME);
         return;
     }
 
     // If the mask is equipped, unequip it
     if (gSaveContext.save.equippedMask == PLAYER_MASK_BUNNY) {
         gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
-        CVarSetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 1);
+        CVarSetInteger(STATE_CVAR_NAME, 1);
 
         if (gPlayState != NULL) {
             Player* player = GET_PLAYER(gPlayState);
@@ -45,15 +44,14 @@ void UpdatePersistentMasksState() {
 
     // If they don't have the mask, clear the state
     if (INV_CONTENT(ITEM_MASK_BUNNY) != ITEM_MASK_BUNNY) {
-        CVarClear("gEnhancements.Masks.PersistentBunnyHood.State");
+        CVarClear(STATE_CVAR_NAME);
     }
 
     // This hook draws the mask on the players head when it's active and they aren't in first person
     onPlayerPostLimbDrawHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnPlayerPostLimbDraw>(
         PLAYER_LIMB_HEAD, [](Player* player, s32 limbIndex) {
             // Ensure they aren't in first person
-            if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0) &&
-                !(player->stateFlags1 & PLAYER_STATE1_100000)) {
+            if (STATE_CVAR && !(player->stateFlags1 & PLAYER_STATE1_100000)) {
                 OPEN_DISPS(gPlayState->state.gfxCtx);
                 Matrix_Push();
                 Player_DrawBunnyHood(gPlayState);
@@ -118,7 +116,7 @@ void UpdatePersistentMasksState() {
                 persistentMasksVtx[i + 0].v.cn[3] = persistentMasksVtx[i + 1].v.cn[3] =
                     persistentMasksVtx[i + 2].v.cn[3] = persistentMasksVtx[i + 3].v.cn[3] = pauseCtx->alpha;
 
-                if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
+                if (STATE_CVAR) {
                     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 100, 200, 255, 255);
                     gSPVertex(POLY_OPA_DISP++, (uintptr_t)persistentMasksVtx, 4, 0);
                     POLY_OPA_DISP = Gfx_DrawTexQuadIA8(POLY_OPA_DISP, (TexturePtr)gEquippedItemOutlineTex, 32, 32, 0);
@@ -133,38 +131,34 @@ void RegisterPersistentMasks() {
     UpdatePersistentMasksState();
 
     // Easiest way to handle things like loading into a different file, debug warping, etc.
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>(
-        [](s8 sceneId, s8 spawnNum) { UpdatePersistentMasksState(); });
+    COND_HOOK(OnSceneInit, CVAR, [](s8 sceneId, s8 spawnNum) { UpdatePersistentMasksState(); });
 
     // Speed the player up when the bunny hood state is active
-    REGISTER_VB_SHOULD(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, {
+    COND_VB_SHOULD(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, CVAR, {
         // But don't speed up if the player is non-human and controller input is being overriden for cutscenes/minigames
-        if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0) &&
-            (GET_PLAYER_FORM == PLAYER_FORM_HUMAN || gPlayState->actorCtx.unk268 == 0)) {
+        if (STATE_CVAR && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN || gPlayState->actorCtx.unk268 == 0)) {
             *should = true;
         }
     });
 
     // Overrides allowing them to equip a mask while transformed
-    REGISTER_VB_SHOULD(VB_USE_ITEM_CONSIDER_LINK_HUMAN, {
+    COND_VB_SHOULD(VB_USE_ITEM_CONSIDER_LINK_HUMAN, CVAR, {
         PlayerItemAction* itemAction = va_arg(args, PlayerItemAction*);
-        if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0) &&
-            *itemAction == PLAYER_IA_MASK_BUNNY) {
+        if (*itemAction == PLAYER_IA_MASK_BUNNY) {
             *should = true;
         }
     });
 
     // When they do equip the mask, prevent it and instead set our state
-    REGISTER_VB_SHOULD(VB_USE_ITEM_EQUIP_MASK, {
+    COND_VB_SHOULD(VB_USE_ITEM_EQUIP_MASK, CVAR, {
         PlayerMask* maskId = va_arg(args, PlayerMask*);
         Player* player = GET_PLAYER(gPlayState);
 
-        if (*maskId == PLAYER_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
+        if (*maskId == PLAYER_MASK_BUNNY) {
             *should = false;
 
-            CVarSetInteger("gEnhancements.Masks.PersistentBunnyHood.State",
-                           !CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0));
-            if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
+            CVarSetInteger(STATE_CVAR_NAME, !STATE_CVAR);
+            if (STATE_CVAR) {
                 func_8082E1F0(player, NA_SE_PL_CHANGE_ARMS);
             } else {
                 func_8082E1F0(player, NA_SE_PL_TAKE_OUT_SHIELD);
@@ -174,38 +168,34 @@ void RegisterPersistentMasks() {
 
     // Prevent the "equipped" white border from being drawn so ours shows instead (ours was drawn before it, so it's
     // underneath)
-    REGISTER_VB_SHOULD(VB_DRAW_ITEM_EQUIPPED_OUTLINE, {
+    COND_VB_SHOULD(VB_DRAW_ITEM_EQUIPPED_OUTLINE, CVAR, {
         ItemId* itemId = va_arg(args, ItemId*);
-        if (*itemId == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
+        if (*itemId == ITEM_MASK_BUNNY && STATE_CVAR) {
             *should = false;
         }
     });
 
     // Typically when you are in a transformation all masks are dimmed on the C-Buttons
-    REGISTER_VB_SHOULD(VB_ITEM_BE_RESTRICTED, {
+    COND_VB_SHOULD(VB_ITEM_BE_RESTRICTED, CVAR, {
         ItemId* itemId = va_arg(args, ItemId*);
-        if (*itemId == ITEM_MASK_BUNNY && CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0)) {
+        if (*itemId == ITEM_MASK_BUNNY) {
             *should = false;
         }
     });
 
     // Override "A" press behavior on kaleido scope to toggle the mask state
-    REGISTER_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, {
+    COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, CVAR, {
         ItemId itemId = (ItemId)*va_arg(args, u16*);
-        if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.Enabled", 0) && itemId == ITEM_MASK_BUNNY) {
+        if (itemId == ITEM_MASK_BUNNY) {
             *should = false;
-            CVarSetInteger("gEnhancements.Masks.PersistentBunnyHood.State",
-                           !CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0));
-            if (CVarGetInteger("gEnhancements.Masks.PersistentBunnyHood.State", 0)) {
+            CVarSetInteger(STATE_CVAR_NAME, !STATE_CVAR);
+            if (STATE_CVAR) {
                 Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_DOWN);
             } else {
                 Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_UP);
             }
-        } else if (CVarGetInteger("gEnhancements.Masks.PersistentGreatFairyMask.Enabled", 0) &&
-                   itemId == ITEM_MASK_GREAT_FAIRY) {
-            *should = false;
-            CVarSetInteger("gEnhancements.Masks.PersistentGreatFairyMask.State",
-                           !CVarGetInteger("gEnhancements.Masks.PersistentGreatFairyMask.State", 0));
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterPersistentMasks, { CVAR_NAME });

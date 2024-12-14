@@ -5,12 +5,16 @@
 #include "Rando/MiscBehavior/MiscBehavior.h"
 #include "Rando/Spoiler/Spoiler.h"
 #include "Rando/CheckTracker/CheckTracker.h"
+#include "2s2h/ShipInit.hpp"
 
 // When a save is loaded, we want to unregister all hooks and re-register them if it's a rando save
 void OnSaveLoadHandler(s16 fileNum) {
     Rando::MiscBehavior::OnFileLoad();
     Rando::ActorBehavior::OnFileLoad();
     Rando::CheckTracker::OnFileLoad();
+
+    // Re-initalizes enhancements that are effected by the save being rando or not
+    ShipInit::Init("IS_RANDO");
 }
 
 // Entry point for the module, run once on game boot

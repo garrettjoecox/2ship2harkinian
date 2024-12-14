@@ -1,18 +1,19 @@
 #include <libultraship/bridge.h>
-#include "GameInteractor/GameInteractor.h"
-#include "Enhancements/Enhancements.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Enhancements/Enhancements.h"
+#include "2s2h/ShipInit.hpp"
 
-extern "C" {
-#include <z64save.h>
-}
+#define CVAR_NAME "gEnhancements.Minigames.CremiaHugs"
+#define CVAR CVarGetInteger(CVAR_NAME, CREMIA_REWARD_RANDOM)
 
 void RegisterCremiaHugs() {
-    REGISTER_VB_SHOULD(VB_PLAY_CREMIA_HUG_CUTSCENE, {
-        uint8_t selectedOption = CVarGetInteger("gEnhancements.Minigames.CremiaHugs", 0);
-        if (selectedOption == CREMIA_REWARD_ALWAYS_HUG) {
+    COND_VB_SHOULD(VB_PLAY_CREMIA_HUG_CUTSCENE, CVAR != CREMIA_REWARD_RANDOM, {
+        if (CVAR == CREMIA_REWARD_ALWAYS_HUG) {
             *should = true;
-        } else if (selectedOption == CREMIA_REWARD_ALWAYS_RUPEE) {
+        } else if (CVAR == CREMIA_REWARD_ALWAYS_RUPEE) {
             *should = false;
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterCremiaHugs, { CVAR_NAME });

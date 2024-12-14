@@ -882,9 +882,15 @@ void DrawItemsAndMasksTab() {
                                 msg += Rando::StaticData::Items[randoItemId].article;
                             }
 
+                            std::string itemName = Rando::StaticData::Items[randoItemId].name;
+                            if (randoItemId == RI_JUNK) {
+                                randoItemId = Rando::CurrentJunkItem();
+                                itemName += std::string(" (") + Rando::StaticData::Items[randoItemId].name + ")";
+                            }
+
                             CustomMessage::Entry entry = {
                                 .textboxType = 2,
-                                .msg = msg + " " + Rando::StaticData::Items[randoItemId].name + "!",
+                                .msg = msg + " " + itemName + "!",
                             };
                             if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
                                 entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
@@ -904,7 +910,7 @@ void DrawItemsAndMasksTab() {
                                     .itemIcon =
                                         itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
                                     .message = msg,
-                                    .suffix = Rando::StaticData::Items[randoItemId].name,
+                                    .suffix = itemName,
                                 });
                             }
                             Rando::GiveItem(randoItemId);

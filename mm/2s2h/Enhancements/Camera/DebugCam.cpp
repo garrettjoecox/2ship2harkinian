@@ -1,10 +1,11 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 #include "CameraUtils.h"
 
 extern "C" {
-#include <macros.h>
-#include <functions.h>
+#include "macros.h"
+#include "functions.h"
 extern PlayState* gPlayState;
 extern PlayState* sCamPlayState;
 extern f32 Camera_ScaledStepToCeilF(f32 target, f32 cur, f32 stepScale, f32 minDiff);
@@ -213,41 +214,26 @@ void Camera_DebugCam(Camera* camera) {
     *eye = *eyeNext;
 }
 
-static HOOK_ID freeCamVBHookId = 0;
-static HOOK_ID freeCamDisableInputsId = 0;
-
 void RegisterDebugCam() {
     sDebugCamRefreshParams = true;
 
-    if (freeCamVBHookId) {
-        GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(freeCamVBHookId);
-        freeCamVBHookId = 0;
-    }
+    COND_VB_SHOULD(VB_USE_CUSTOM_CAMERA, CVarGetInteger("gEnhancements.Camera.DebugCam.Enable", 0), {
+        Camera* camera = va_arg(args, Camera*);
+        Camera_DebugCam(camera);
+        *should = false;
+    });
 
-    if (freeCamDisableInputsId) {
-        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPassPlayerInputs>(freeCamDisableInputsId);
-        freeCamDisableInputsId = 0;
-    }
-
-    if (CVarGetInteger("gEnhancements.Camera.DebugCam.Enable", 0)) {
-        freeCamVBHookId = REGISTER_VB_SHOULD(VB_USE_CUSTOM_CAMERA, {
-            Camera* camera = va_arg(args, Camera*);
-            Camera_DebugCam(camera);
-            *should = false;
-        });
-
-        freeCamDisableInputsId =
-            GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPassPlayerInputs>([](Input* input) {
-                s32 controllerPort =
-                    CVarGetInteger("gEnhancements.Camera.DebugCam.Port", CAMERA_DEBUG_DEFAULT_PORT) - 1;
-                if (controllerPort > 3 || controllerPort < 0) {
-                    controllerPort = CAMERA_DEBUG_DEFAULT_PORT - 1;
-                    CVarSetInteger("gEnhancements.Camera.DebugCam.Port", CAMERA_DEBUG_DEFAULT_PORT);
-                }
-                if (controllerPort == 0) {
-                    // Disable Link Inputs
-                    memset(input, 0, sizeof(Input));
-                }
-            });
-    }
+    COND_HOOK(OnPassPlayerInputs, CVarGetInteger("gEnhancements.Camera.DebugCam.Enable", 0), [](Input* input) {
+        s32 controllerPort = CVarGetInteger("gEnhancements.Camera.DebugCam.Port", CAMERA_DEBUG_DEFAULT_PORT) - 1;
+        if (controllerPort > 3 || controllerPort < 0) {
+            controllerPort = CAMERA_DEBUG_DEFAULT_PORT - 1;
+            CVarSetInteger("gEnhancements.Camera.DebugCam.Port", CAMERA_DEBUG_DEFAULT_PORT);
+        }
+        if (controllerPort == 0) {
+            // Disable Link Inputs
+            memset(input, 0, sizeof(Input));
+        }
+    });
 }
+
+static RegisterShipInitFunc initFunc(RegisterDebugCam, { "gEnhancements.Camera.DebugCam.Enable" });

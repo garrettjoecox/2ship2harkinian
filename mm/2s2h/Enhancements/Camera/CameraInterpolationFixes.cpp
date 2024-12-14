@@ -1,11 +1,10 @@
-#include "Camera.h"
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 #include "CameraUtils.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 
 extern "C" {
-#include <z64.h>
 #include "macros.h"
 #include "functions.h"
 extern PlayState* gPlayState;
@@ -104,6 +103,8 @@ bool Camera_ShouldInterpolateDist(Camera* camera) {
 }
 
 void RegisterCameraInterpolationFixes() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::AfterCameraUpdate>(
-        [](Camera* camera) { FrameInterpolation_ShouldInterpolateFrame(Camera_ShouldInterpolateDist(camera)); });
+    COND_HOOK(AfterCameraUpdate, true,
+              [](Camera* camera) { FrameInterpolation_ShouldInterpolateFrame(Camera_ShouldInterpolateDist(camera)); });
 }
+
+static RegisterShipInitFunc initFunc(RegisterCameraInterpolationFixes, {});

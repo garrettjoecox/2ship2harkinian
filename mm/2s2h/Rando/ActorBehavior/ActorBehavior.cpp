@@ -8,13 +8,12 @@ extern "C" {
 // This is kind of a catch-all for things that are simple enough to not need their own file.
 void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
     switch (id) {
-        case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
-            *should = false;
-            break;
         case VB_MADAME_AROMA_ASK_FOR_HELP:
             *should = !CHECK_WEEKEVENTREG(WEEKEVENTREG_BOMBERS_NOTEBOOK_EVENT_RECEIVED_KAFEIS_MASK);
             break;
+        case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
         case VB_MSG_SCRIPT_DEL_ITEM:
+        case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
             *should = false;
             break;
     }
@@ -38,6 +37,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnGinkoBehavior();
     Rando::ActorBehavior::InitEnGirlABehavior();
     Rando::ActorBehavior::InitEnGoBehavior();
+    Rando::ActorBehavior::InitEnHgBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
     Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
@@ -46,7 +46,9 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
+    Rando::ActorBehavior::InitEnSyatekiManBehavior();
     Rando::ActorBehavior::InitEnBabaBehavior();
+    Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnMnkBehavior();

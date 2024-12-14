@@ -1,5 +1,6 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "functions.h"
@@ -9,13 +10,15 @@ extern "C" {
 #include "overlays/actors/ovl_En_Bji_01/z_en_bji_01.h"
 }
 
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipMiscInteractions"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 static int frames = 0;
 
 void RegisterSkipFallingMoonsTear() {
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_EN_BJI_01, [](Actor* actor) {
+    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_BJI_01, CVAR, [](Actor* actor) {
         EnBji01* bji = (EnBji01*)actor;
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-            bji->actor.playerHeightRel >= -350.0f && !CHECK_WEEKEVENTREG(WEEKEVENTREG_74_80)) {
+        if (bji->actor.playerHeightRel >= -350.0f && !CHECK_WEEKEVENTREG(WEEKEVENTREG_74_80)) {
             // Normally set in the cutscene
             SET_WEEKEVENTREG(WEEKEVENTREG_17_10);
             SET_WEEKEVENTREG(WEEKEVENTREG_74_80);
@@ -39,3 +42,5 @@ void RegisterSkipFallingMoonsTear() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipFallingMoonsTear, { CVAR_NAME });

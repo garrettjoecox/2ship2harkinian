@@ -1,13 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-void Register3DItemDrops();
-void Register3DSClock();
-void RegisterDisableBlackBars();
 void MotionBlur_RenderMenuOptions();
-void RegisterPlayAsKafei();
-void RegisterTextBasedClock();
-void RegisterHyruleWarriorsStyledLink();
 
 #ifdef __cplusplus
 #include <libultraship/libultraship.h>

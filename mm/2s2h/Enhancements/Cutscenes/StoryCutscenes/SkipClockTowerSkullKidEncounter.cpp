@@ -1,16 +1,16 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
-#include "Rando/Rando.h"
-#include "Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/Rando/Rando.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "z64.h"
+#include "variables.h"
+#include "functions.h"
 #include "overlays/actors/ovl_Dm_Stk/z_dm_stk.h"
 #include "overlays/actors/ovl_Dm_Char02/z_dm_char02.h"
 #include "objects/object_stk2/object_stk2.h"
 
-extern SaveContext gSaveContext;
-extern PlayState* gPlayState;
 extern f32 sBgmEnemyDistSq;
 void DmStk_ClockTower_StartIntroCutsceneVersion1(DmStk* dmstk, PlayState* play);
 void DmStk_ClockTower_StartIntroCutsceneVersion2(DmStk* dmstk, PlayState* play);
@@ -19,19 +19,18 @@ void DmStk_ClockTower_Idle(DmStk* dmstk, PlayState* play);
 void DmStk_ChangeAnim(DmStk* dmstk, PlayState* play, SkelAnime* skelAnime, AnimationInfo* animInfo, u16 animIndex);
 }
 
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 AnimationInfo moonLoop = { (AnimationHeader*)&gSkullKidCallDownMoonLoopAnim, 1.0f, 0.0f, -1.0f, ANIMMODE_LOOP, 0.0f };
 AnimationInfo armsCrossedLoop = {
     (AnimationHeader*)&gSkullKidFloatingArmsCrossedAnim, 1.0f, 0.0f, -1.0f, ANIMMODE_LOOP, 0.0f
 };
 
 // Skips the interaction with Skull Kid at the Clock Tower, both with and without the ocarina
-void SkipClockTowerSkullKidEncounter() {
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_DM_STK, [](Actor* actor) {
+void RegisterSkipClockTowerSkullKidEncounter() {
+    COND_ID_HOOK(OnActorInit, ACTOR_DM_STK, CVAR, [](Actor* actor) {
         DmStk* dmstk = (DmStk*)actor;
-
-        if (!CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
-            return;
-        }
 
         dmstk->actor.world.pos.y += 100.0f;
 
@@ -49,14 +48,12 @@ void SkipClockTowerSkullKidEncounter() {
         }
     });
 
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_DM_CHAR02, [](Actor* actor) {
+    COND_ID_HOOK(OnActorInit, ACTOR_DM_CHAR02, CVAR, [](Actor* actor) {
         DmChar02* dmChar02 = (DmChar02*)actor;
-
-        if (!CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
-            return;
-        }
 
         // Raise it so that it's not visible and cannot be collected until skull kid is hit
         dmChar02->actor.world.pos.y += 100.0f;
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipClockTowerSkullKidEncounter, { CVAR_NAME });

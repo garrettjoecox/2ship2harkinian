@@ -1,12 +1,12 @@
-#include "libultraship/libultraship.h"
+#include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "z64.h"
-#include "functions.h"
-extern PlayState* gPlayState;
+#include "variables.h"
 #include "objects/object_link_child/object_link_child.h"
 #include "objects/object_test3/object_test3.h"
+
 void ResourceMgr_PatchGfxByName(const char* path, const char* patchName, int index, Gfx instruction);
 void ResourceMgr_UnpatchGfxByName(const char* path, const char* patchName);
 extern TexturePtr sPlayerEyesTextures[PLAYER_FORM_MAX][PLAYER_EYES_MAX];
@@ -16,8 +16,11 @@ extern TexturePtr sPlayerMouthTextures[PLAYER_FORM_MAX][PLAYER_MOUTH_MAX];
 static SkeletonHeader gLinkHumanSkelBackup;
 static SkeletonHeader gKafeiSkelBackup;
 
+#define CVAR_NAME "gModes.PlayAsKafei"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 void UpdatePlayAsKafei() {
-    if (CVarGetInteger("gModes.PlayAsKafei", 0)) {
+    if (CVAR) {
         auto gLinkHumanSkelResource = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(gLinkHumanSkel);
         SkeletonHeader* gLinkHumanSkelPtr = (SkeletonHeader*)gLinkHumanSkelResource->GetRawPointer();
         memcpy(gLinkHumanSkelPtr, &gKafeiSkelBackup, sizeof(SkeletonHeader));
@@ -64,6 +67,14 @@ void UpdatePlayAsKafei() {
 }
 
 void RegisterPlayAsKafei() {
+    // Even though this isn't run when a cvar is changed, it can still run if ShipInit::InitAll(); is called again,
+    // likely in the case of setting a preset or something. So we need to make sure this only runs once.
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+    initialized = true;
+
     auto gLinkHumanSkelResource = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(gLinkHumanSkel);
     auto gKafeiSkelResource = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(gKafeiSkel);
 
@@ -77,3 +88,6 @@ void RegisterPlayAsKafei() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayDestroy>([]() { UpdatePlayAsKafei(); });
 }
+
+// We only want this running at boot, we don't want this running when the cvar is changed, only on scene destroy
+static RegisterShipInitFunc initFunc(RegisterPlayAsKafei, {});

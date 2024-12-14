@@ -1,15 +1,17 @@
-#include <libultraship/libultraship.h>
-#include "BenPort.h"
+#include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Enhancements/Enhancements.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include <variables.h>
-#include <functions.h>
+#include "variables.h"
 }
 
+#define CVAR_NAME "gCheats.TempleTimeStop"
+#define CVAR CVarGetInteger(CVAR_NAME, TIME_STOP_OFF)
+
 void RegisterTimeStopInTemples() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::AfterRoomSceneCommands>([](s16 sceneId, s8 roomNum) {
+    COND_HOOK(AfterRoomSceneCommands, CVAR != TIME_STOP_OFF, [](s16 sceneId, s8 roomNum) {
         uint8_t selectedOption = CVarGetInteger("gCheats.TempleTimeStop", TIME_STOP_OFF);
 
         switch (selectedOption) {
@@ -63,3 +65,5 @@ void RegisterTimeStopInTemples() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterTimeStopInTemples, { CVAR_NAME });

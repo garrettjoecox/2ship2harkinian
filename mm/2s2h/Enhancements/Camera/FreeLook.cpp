@@ -1,10 +1,11 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 #include "CameraUtils.h"
 
 extern "C" {
-#include <macros.h>
-#include <functions.h>
+#include "macros.h"
+#include "functions.h"
 extern PlayState* gPlayState;
 extern PlayState* sCamPlayState;
 extern f32 Camera_ScaledStepToCeilF(f32 target, f32 cur, f32 stepScale, f32 minDiff);
@@ -154,46 +155,31 @@ bool Camera_CanFreeLook(Camera* camera) {
     return sCanFreeLook;
 }
 
-static HOOK_ID freeLookCameraSettingChangeHookId = 0;
-static HOOK_ID freeLookCameraVBHookId = 0;
-
 void RegisterCameraFreeLook() {
-    if (freeLookCameraVBHookId) {
-        GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(
-            freeLookCameraVBHookId);
-        freeLookCameraVBHookId = 0;
-    }
+    COND_VB_SHOULD(VB_USE_CUSTOM_CAMERA, CVarGetInteger("gEnhancements.Camera.FreeLook.Enable", 0), {
+        Camera* camera = va_arg(args, Camera*);
+        switch (sCameraSettings[camera->setting].cameraModes[camera->mode].funcId) {
+            case CAM_FUNC_NORMAL0:
+            case CAM_FUNC_NORMAL1:
+            case CAM_FUNC_NORMAL3:
+            case CAM_FUNC_NORMAL4:
+            case CAM_FUNC_JUMP2:
+            case CAM_FUNC_JUMP3:
+            case CAM_FUNC_BATTLE1:
+            case CAM_FUNC_UNIQUE2:
+            case CAM_FUNC_UNIQUE3:
+                if (Camera_CanFreeLook(camera)) {
+                    Camera_FreeLook(camera);
+                    *should = false;
+                }
+                break;
+            default:
+                break;
+        }
+    });
 
-    if (freeLookCameraSettingChangeHookId) {
-        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnCameraChangeModeFlags>(
-            freeLookCameraSettingChangeHookId);
-        freeLookCameraSettingChangeHookId = 0;
-    }
-
-    if (CVarGetInteger("gEnhancements.Camera.FreeLook.Enable", 0)) {
-        freeLookCameraVBHookId = REGISTER_VB_SHOULD(VB_USE_CUSTOM_CAMERA, {
-            Camera* camera = va_arg(args, Camera*);
-            switch (sCameraSettings[camera->setting].cameraModes[camera->mode].funcId) {
-                case CAM_FUNC_NORMAL0:
-                case CAM_FUNC_NORMAL1:
-                case CAM_FUNC_NORMAL3:
-                case CAM_FUNC_NORMAL4:
-                case CAM_FUNC_JUMP2:
-                case CAM_FUNC_JUMP3:
-                case CAM_FUNC_BATTLE1:
-                case CAM_FUNC_UNIQUE2:
-                case CAM_FUNC_UNIQUE3:
-                    if (Camera_CanFreeLook(camera)) {
-                        Camera_FreeLook(camera);
-                        *should = false;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        });
-        freeLookCameraSettingChangeHookId =
-            GameInteractor::Instance->RegisterGameHook<GameInteractor::OnCameraChangeModeFlags>(
-                [](Camera* camera) { UpdateFreeLookState(camera); });
-    }
+    COND_HOOK(OnCameraChangeModeFlags, CVarGetInteger("gEnhancements.Camera.FreeLook.Enable", 0),
+              [](Camera* camera) { UpdateFreeLookState(camera); });
 }
+
+static RegisterShipInitFunc initFunc(RegisterCameraFreeLook, { "gEnhancements.Camera.FreeLook.Enable" });

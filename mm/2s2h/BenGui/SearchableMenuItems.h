@@ -907,7 +907,7 @@ void AddEnhancements() {
                 "stick in the controller config menu, and map the camera stick to the right stick.",
                 WIDGET_CVAR_CHECKBOX,
                 {},
-                [](widgetInfo& info) { RegisterCameraFreeLook(); },
+                nullptr,
                 [](widgetInfo& info) {
                     if (disabledMap.at(DISABLE_FOR_DEBUG_CAM_ON).active)
                         info.activeDisables.push_back(DISABLE_FOR_DEBUG_CAM_ON);
@@ -945,7 +945,7 @@ void AddEnhancements() {
                 "Enables free camera control.",
                 WIDGET_CVAR_CHECKBOX,
                 {},
-                ([](widgetInfo& info) { RegisterDebugCam(); }),
+                nullptr,
                 [](widgetInfo& info) {
                     if (disabledMap.at(DISABLE_FOR_FREE_LOOK_ON).active) {
                         info.activeDisables.push_back(DISABLE_FOR_FREE_LOOK_ON);
@@ -1020,12 +1020,9 @@ void AddEnhancements() {
               { "Infinite Rupees", "gCheats.InfiniteRupees", "Always have a full Wallet.", WIDGET_CVAR_CHECKBOX, {} },
               { "Infinite Consumables", "gCheats.InfiniteConsumables",
                 "Always have max Consumables, you must have collected the consumables first.", WIDGET_CVAR_CHECKBOX },
-              { "Longer Deku Flower Glide",
-                "gCheats.LongerFlowerGlide",
+              { "Longer Deku Flower Glide", "gCheats.LongerFlowerGlide",
                 "Allows Deku Link to glide longer, no longer dropping after a certain distance.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { RegisterLongerFlowerGlide(); } },
+                WIDGET_CVAR_CHECKBOX },
               { "No Clip", "gCheats.NoClip", "Allows Link to phase through collision.", WIDGET_CVAR_CHECKBOX },
               { "Unbreakable Razor Sword", "gCheats.UnbreakableRazorSword",
                 "Allows to Razor Sword to be used indefinitely without dulling its blade.", WIDGET_CVAR_CHECKBOX },
@@ -1033,12 +1030,8 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Hookshot Anywhere", "gCheats.HookshotAnywhere", "Allows most surfaces to be hookshot-able",
                 WIDGET_CVAR_CHECKBOX },
-              { "Moon Jump on L",
-                "gCheats.MoonJumpOnL",
-                "Holding L makes you float into the air.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { RegisterMoonJumpOnL(); } },
+              { "Moon Jump on L", "gCheats.MoonJumpOnL", "Holding L makes you float into the air.",
+                WIDGET_CVAR_CHECKBOX },
               { "Elegy of Emptiness Anywhere", "gCheats.ElegyAnywhere", "Allows Elegy of Emptiness outside of Ikana",
                 WIDGET_CVAR_CHECKBOX },
               { "Stop Time in Dungeons",
@@ -1055,12 +1048,9 @@ void AddEnhancements() {
         { "Gameplay",
           3,
           { { { .widgetName = "Player", .widgetType = WIDGET_SEPARATOR_TEXT },
-              { "Fast Deku Flower Launch",
-                "gEnhancements.Player.FastFlowerLaunch",
+              { "Fast Deku Flower Launch", "gEnhancements.Player.FastFlowerLaunch",
                 "Speeds up the time it takes to be able to get maximum height from launching out of a deku flower",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                ([](widgetInfo& info) { RegisterFastFlowerLaunch(); }) },
+                WIDGET_CVAR_CHECKBOX },
               { "Instant Putaway", "gEnhancements.Player.InstantPutaway",
                 "Allows Link to instantly puts away held item without waiting.", WIDGET_CVAR_CHECKBOX },
               { "Fierce Deity Putaway", "gEnhancements.Player.FierceDeityPutaway",
@@ -1085,12 +1075,9 @@ void AddEnhancements() {
                 "-Rupee: Get the rupee reward",
                 WIDGET_CVAR_COMBOBOX,
                 { .comboBoxOptions = cremiaRewardOptions } },
-              { "Skip Powder Keg Certification",
-                "gEnhancements.Minigames.PowderKegCertification",
+              { "Skip Powder Keg Certification", "gEnhancements.Minigames.PowderKegCertification",
                 "Skips requiring to take the Powder Keg Test before being given the Certification.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                ([](widgetInfo& info) { RegisterPowderKegCertification(); }) },
+                WIDGET_CVAR_CHECKBOX },
               { "Cucco Shack Cucco Count",
                 "gEnhancements.Minigames.CuccoShackCuccoCount",
                 "Choose how many cuccos you need to raise to make Grog happy.",
@@ -1117,12 +1104,8 @@ void AddEnhancements() {
                 "When acquired, places the Keaton and Fierce Deity masks on Link similarly to how he wears them in "
                 "Hyrule Warriors",
                 WIDGET_CVAR_CHECKBOX },
-              { "Time Moves when you Move",
-                "gModes.TimeMovesWhenYouMove",
-                "Time only moves when Link is not standing still.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                ([](widgetInfo& info) { RegisterTimeMovesWhenYouMove(); }) },
+              { "Time Moves when you Move", "gModes.TimeMovesWhenYouMove",
+                "Time only moves when Link is not standing still.", WIDGET_CVAR_CHECKBOX },
               { "Mirrored World",
                 "gModes.MirroredWorld.Mode",
                 "Mirrors the world horizontally.",
@@ -1263,12 +1246,7 @@ void AddEnhancements() {
                                     disabledMap.at(DISABLE_FOR_MOTION_BLUR_OFF).active;
                 } },
               { .widgetName = "Other", .widgetType = WIDGET_SEPARATOR_TEXT },
-              { "3D Item Drops",
-                "gEnhancements.Graphics.3DItemDrops",
-                "Makes item drops 3D",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { Register3DItemDrops(); } },
+              { "3D Item Drops", "gEnhancements.Graphics.3DItemDrops", "Makes item drops 3D", WIDGET_CVAR_CHECKBOX },
               { "Authentic Logo", "gEnhancements.Graphics.AuthenticLogo",
                 "Hide the game version and build details and display the authentic "
                 "model and texture on the boot logo start screen",
@@ -1313,13 +1291,10 @@ void AddEnhancements() {
                 "Removes the delay when using transformation masks.", WIDGET_CVAR_CHECKBOX },
               { "Fierce Deity's Mask Anywhere", "gEnhancements.Masks.FierceDeitysAnywhere",
                 "Allow using Fierce Deity's mask outside of boss rooms.", WIDGET_CVAR_CHECKBOX },
-              { "Persistent Bunny Hood",
-                "gEnhancements.Masks.PersistentBunnyHood.Enabled",
+              { "Persistent Bunny Hood", "gEnhancements.Masks.PersistentBunnyHood.Enabled",
                 "Permanently toggle a speed boost from the bunny hood by pressing "
                 "'A' on it in the mask menu.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { UpdatePersistentMasksState(); } },
+                WIDGET_CVAR_CHECKBOX },
               { "No Blast Mask Cooldown", "gEnhancements.Masks.NoBlastMaskCooldown",
                 "Eliminates the Cooldown between Blast Mask usage.", WIDGET_CVAR_CHECKBOX } },
             // Song Enhancements
@@ -1348,12 +1323,8 @@ void AddEnhancements() {
                 "Prevent dropping inputs when playing the ocarina quickly.", WIDGET_CVAR_CHECKBOX },
               { "Skip Scarecrow Song", "gEnhancements.Playback.SkipScarecrowSong",
                 "Pierre appears when the Ocarina is pulled out.", WIDGET_CVAR_CHECKBOX },
-              { "Faster Song Playback",
-                "gEnhancements.Songs.FasterSongPlayback",
-                "Speeds up the playback of songs.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { RegisterFasterSongPlayback(); } } } } });
+              { "Faster Song Playback", "gEnhancements.Songs.FasterSongPlayback", "Speeds up the playback of songs.",
+                WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Time Savers",
           3,
@@ -1440,25 +1411,19 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Tatl ISG", "gEnhancements.Restorations.TatlISG", "Restores Navi ISG from OoT, but now with Tatl.",
                 WIDGET_CVAR_CHECKBOX },
-              { "Woodfall Mountain Appearance",
-                "gEnhancements.Restorations.WoodfallMountainAppearance",
+              { "Woodfall Mountain Appearance", "gEnhancements.Restorations.WoodfallMountainAppearance",
                 "Restores the appearance of Woodfall mountain to not look poisoned "
                 "when viewed from Termina Field after clearing Woodfall Temple\n\n"
                 "Requires a scene reload to take effect",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { RegisterWoodfallMountainAppearance(); } } } } });
+                WIDGET_CVAR_CHECKBOX } } } });
 
     enhancementsSidebar.push_back(
         { "Difficulty Options",
           3,
           { {
-              { "Disable Takkuri Steal",
-                "gEnhancements.Cheats.DisableTakkuriSteal",
+              { "Disable Takkuri Steal", "gEnhancements.Cheats.DisableTakkuriSteal",
                 "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other items.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                [](widgetInfo& info) { RegisterDisableTakkuriSteal(); } },
+                WIDGET_CVAR_CHECKBOX },
               { "Deku Guard Search Balls",
                 "gEnhancements.Cheats.DekuGuardSearchBalls",
                 "Choose when to show the Deku Palace Guards' search balls\n"

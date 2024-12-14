@@ -63,9 +63,34 @@ static std::vector<RandoItemId> junkItems = {
     RI_BOMBS_5,
     RI_DEKU_NUT,
     RI_DEKU_STICK,
+    // Refill
+    RI_RED_POTION_REFILL,
+    RI_GREEN_POTION_REFILL,
+    RI_BLUE_POTION_REFILL,
+    RI_MILK_REFILL,
     // Misc
     RI_RECOVERY_HEART,
+    RI_NONE,
 };
+
+// Pick a random junk item every 3 seconds
+RandoItemId Rando::CurrentJunkItem() {
+    static RandoItemId lastJunkItem = RI_UNKNOWN;
+    static u32 lastChosenAt = 0;
+    if (gPlayState != NULL && ABS(gPlayState->gameplayFrames - lastChosenAt) > 10) {
+        lastChosenAt = gPlayState->gameplayFrames;
+        lastJunkItem = RI_UNKNOWN;
+    }
+
+    while (lastJunkItem == RI_UNKNOWN) {
+        RandoItemId randJunkItem = junkItems[rand() % junkItems.size()];
+        if (Rando::IsItemObtainable(randJunkItem)) {
+            lastJunkItem = randJunkItem;
+        }
+    }
+
+    return lastJunkItem;
+}
 
 bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId) {
     bool hasObtainedCheck = false;
@@ -156,7 +181,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             } else if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
                 return false;
             }
-            break;
+            return true;
         case RI_BOW:
             if (CUR_UPG_VALUE(UPG_QUIVER) >= 1) {
                 return false;
@@ -316,7 +341,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             return !CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG);
         case RI_REMAINS_TWINMOLD:
             return !CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD);
-        case RI_SONG_BOSSA_NOVA:
+        case RI_SONG_NOVA:
             return !CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA);
         case RI_SONG_ELEGY:
             return !CHECK_QUEST_ITEM(QUEST_SONG_ELEGY);
@@ -388,7 +413,7 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 }
                 // Shouldn't happen, just in case
                 assert(false);
-                return RI_RUPEE_BLUE;
+                return RI_JUNK;
             case RI_PROGRESSIVE_BOW:
                 if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
                     return RI_BOW;
@@ -399,7 +424,7 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 }
                 // Shouldn't happen, just in case
                 assert(false);
-                return RI_RUPEE_BLUE;
+                return RI_JUNK;
             case RI_PROGRESSIVE_MAGIC:
                 if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
                     return RI_SINGLE_MAGIC;
@@ -408,7 +433,7 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 }
                 // Shouldn't happen, just in case
                 assert(false);
-                return RI_RUPEE_BLUE;
+                return RI_JUNK;
             case RI_PROGRESSIVE_WALLET:
                 if (CUR_UPG_VALUE(UPG_WALLET) == 0) {
                     return RI_WALLET_ADULT;
@@ -417,7 +442,7 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 }
                 // Shouldn't happen, just in case
                 assert(false);
-                return RI_RUPEE_BLUE;
+                return RI_JUNK;
             case RI_PROGRESSIVE_SWORD:
                 if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_NONE &&
                     (STOLEN_ITEM_1 < ITEM_SWORD_KOKIRI) && (STOLEN_ITEM_2 < ITEM_SWORD_KOKIRI)) {
@@ -431,18 +456,13 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 }
                 // Shouldn't happen, just in case
                 assert(false);
-                return RI_RUPEE_BLUE;
+                return RI_JUNK;
             default:
                 break;
         }
 
         return randoItemId;
     } else {
-        if (randoCheckId != RC_UNKNOWN) {
-            Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + randoCheckId);
-            return ConvertItem(junkItems[Ship_Random(0, junkItems.size() - 1)]);
-        } else {
-            return RI_RUPEE_BLUE;
-        }
+        return RI_JUNK;
     }
 }

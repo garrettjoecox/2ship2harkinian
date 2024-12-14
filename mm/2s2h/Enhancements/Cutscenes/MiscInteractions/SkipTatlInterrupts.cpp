@@ -1,21 +1,19 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
-
-#define ELFMSG3_GET_SWITCH_FLAG(thisx) (((thisx)->params & 0x7F00) >> 8)
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "z64.h"
-extern PlayState* gPlayState;
-extern SaveContext gSaveContext;
-extern u32 gBitFlags[];
-void Flags_SetWeekEventReg(s32 flag);
-void Flags_SetSwitch(PlayState* play, s32 flag);
-void Actor_Kill(Actor* actor);
+#include "variables.h"
+#include "functions.h"
+#include "overlays/actors/ovl_Elf_Msg3/z_elf_msg3.h"
 }
+
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipMiscInteractions"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipTatlInterrupts() {
     // First time entering Clock Town Interupt
-    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
+    COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVAR, {
         if (gSaveContext.save.entrance == ENTRANCE(SOUTH_CLOCK_TOWN, 0) && gSaveContext.save.cutsceneIndex == 0 &&
             !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_04) &&
             CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0)) {
@@ -24,7 +22,7 @@ void RegisterSkipTatlInterrupts() {
     });
 
     // General interupt
-    REGISTER_VB_SHOULD(VB_TATL_INTERUPT_MSG3, {
+    COND_VB_SHOULD(VB_TATL_INTERUPT_MSG3, CVAR, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
@@ -36,7 +34,7 @@ void RegisterSkipTatlInterrupts() {
     });
 
     // General interupt 2 (the flags were directly copied from the original code)
-    REGISTER_VB_SHOULD(VB_TATL_INTERUPT_MSG6, {
+    COND_VB_SHOULD(VB_TATL_INTERUPT_MSG6, CVAR, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
@@ -84,3 +82,5 @@ void RegisterSkipTatlInterrupts() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipTatlInterrupts, { CVAR_NAME });

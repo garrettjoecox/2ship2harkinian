@@ -317,6 +317,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_CLOCK_TOWN_NORTH, RandoRegion{ .sceneId = SCENE_BACKTOWN,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_2, CAN_USE_PROJECTILE),
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, true),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
         },
@@ -467,7 +469,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 3),      ENTRANCE(GORON_GRAVERYARD, 0), true),
         },
     } },
-    { RR_GREATBAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
+    { RR_GREAT_BAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
         .checks = {
             CHECK(RC_GREAT_BAY_COAST_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_GREAT_BAY_COAST_MIKAU, CAN_PLAY_SONG(HEALING)),
@@ -487,6 +489,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_1, HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_2, HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_3, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 2),                ENTRANCE(GREAT_BAY_COAST, 0), true),
@@ -505,9 +509,127 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(GREAT_BAY_COAST, 12), // From being captured in Pirate Fortress Moat
         },
     } },
-    { RR_GREATBAY_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
+    { RR_GREAT_BAY_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 5),                    ENTRANCE(FAIRY_FOUNTAIN, 3), true),
+        },
+    } },
+    { RR_GREAT_BAY_TEMPLE_BOSS_ROOM, RandoRegion{ .sceneId = SCENE_SEA_BS,
+        .checks = {
+            // TODO: CAN_KILL_BOSS(Gyorg)?
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_HC, CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_WARP, CAN_BE_ZORA && HAS_MAGIC),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(ZORA_CAPE, 9),                             ONE_WAY_EXIT, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(GYORGS_LAIR, 0), // Great Bay Temple Pre Boss Room
+        },
+    } },
+    // TODO: Split this up into regions
+    { RR_GREAT_BAY_TEMPLE, RandoRegion{ .sceneId = SCENE_SEA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_TEMPLE_BABA_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_KEY, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_UNDERWATER, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_ENTRANCE_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GREEN_PIPE_1_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GREEN_PIPE_2_LOWER_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GREEN_PIPE_2_UPPER_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GREEN_PIPE_3_CHEST, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_ICE_ARROW, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_MAP, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_CENTRAL_ROOM_BARREL, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_CENTRAL_ROOM_UNDERWATER_POT, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_COMPASS_ROOM_POT, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_GREEN_PIPE_3_BARREL, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_MAP_ROOM_POT, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_PRE_BOSS_ABOVE_WATER, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_PRE_BOSS_UNDERWATER, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_WATER_WHEEL_PLATFORM, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_WATER_WHEEL_SKULLTULA, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_WARP, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_10, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_11, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_12, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_5, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_6, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_7, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_8, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_9, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_CENTRAL_ROOM_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_CENTRAL_ROOM_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_SURFACE_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_SURFACE_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_SURFACE_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_SURFACE_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_WATER_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_WATER_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_COMPASS_ROOM_WATER_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_1_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_1_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_1_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_1_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_5, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_6, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_7, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_8, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_3_LOWER, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_3_UPPER_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_3_UPPER_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_SURFACE_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_SURFACE_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_SURFACE_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_5, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_6, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_7, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_8, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_5, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_6, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_7, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_8, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_RED_PIPE_BEFORE_WART_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_RED_PIPE_BEFORE_WART_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_RED_PIPE_BEFORE_WART_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_RED_PIPE_BEFORE_WART_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_1, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_2, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_3, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_4, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_5, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_6, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_7, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_WART_8, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(ZORA_CAPE, 7),                    ENTRANCE(GREAT_BAY_TEMPLE, 1), true),
+            EXIT(ENTRANCE(GYORGS_LAIR, 0),                           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE)),
         },
     } },
     { RR_HONEY_AND_DARLING, RandoRegion{ .sceneId = SCENE_BOWLING,
@@ -552,6 +674,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
         .checks = {
             CHECK(RC_IKANA_CANYON_OWL_STATUE, CAN_USE_SWORD),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),
@@ -568,7 +692,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
-            // TODO: Do we need one way entrance for blue warp from Stone Tower Temple?
+            ENTRANCE(IKANA_CANYON, 15), // From Stone Tower Temple Blue Warp
         }
     } },
     { RR_IKANA_CASTLE, RandoRegion{ .sceneId = SCENE_CASTLE,
@@ -647,6 +771,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
+        .checks = {
+            // TODO: eggs
+            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),              ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
         },
@@ -671,6 +799,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
         .checks = {
             CHECK(RC_MILK_ROAD_OWL_STATUE, CAN_USE_SWORD),
+            CHECK(RC_MILK_ROAD_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_MILK_ROAD_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 5),                ENTRANCE(MILK_ROAD, 0), true),
@@ -717,6 +847,17 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_MUSIC_BOX_HOUSE, RandoRegion{ .sceneId = SCENE_MUSICHOUSE,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 2),                 ENTRANCE(MUSIC_BOX_HOUSE, 0), true),
+        },
+    } },
+    { RR_PATH_TO_GORON_VILLAGE, RandoRegion{ .sceneId = SCENE_17SETUGEN,
+        .checks = {
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_2, CAN_USE_PROJECTILE),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2),  ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), true),
+            EXIT(ENTRANCE(GORON_VILLAGE_WINTER, 0),     ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 1), true),
+            EXIT(ENTRANCE(GORON_RACETRACK, 0),          ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 2), HAS_ITEM(ITEM_POWDER_KEG) && CAN_BE_GORON),
         },
     } },
     { RR_PATH_TO_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_13HUBUKINOMITI,
@@ -1104,6 +1245,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_1, CAN_USE_PROJECTILE),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 1),                ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
@@ -1515,7 +1658,16 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_STONE_TOWER_INVERTED_NEAR_TEMPLE, RandoRegion{ .sceneId = SCENE_F41,
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),  ENTRANCE(STONE_TOWER_INVERTED, 1), true),
+            EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),  ENTRANCE(STONE_TOWER_INVERTED, 1), (
+                // TODO: THIS IS TEMPORARY. Once stone tower is properly split up, this will be replaced with a proper logic check.
+                CAN_BE_ZORA && CAN_BE_DEKU && CAN_BE_GORON &&
+                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
+                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(ELEGY)
+                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
+                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
+                // all key locations are logically accessible we can re-add this check.
+                /* && KEY_COUNT(STONE_TOWER_TEMPLE) >= 4 */
+            )),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_INVERTED_LOWER, true),
@@ -1557,12 +1709,114 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
     } },
+    { RR_STONE_TOWER_TEMPLE_BOSS_ROOM, RandoRegion{ .sceneId = SCENE_INISIE_BS,
+        .checks = {
+            // TODO: CAN_KILL_BOSS(Twinmold)?
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_HC, HAS_MAGIC),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP, HAS_MAGIC),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(IKANA_CANYON, 15),                         ONE_WAY_EXIT, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(TWINMOLDS_LAIR, 0), // Stone Tower Temple Pre Boss Room
+        },
+    } },
     { RR_STONE_TOWER_TEMPLE_INVERTED, RandoRegion{ .sceneId = SCENE_INISIE_R,
+        .checks = {
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_HC, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_KEY, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_DEATH_ARMOS_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_LOWER_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_MIDDLE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_UPPER_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_GIANT_MASK, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_WIZZROBE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_GOMESS_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_MAZE_SIDE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_POE_WIZZROBE_SIDE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_5, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_6, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_7, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_PRE_BOSS_8, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_BRIDGE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_UPDRAFTS_LEDGE_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_POT_WIZZROBE_5, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(STONE_TOWER_INVERTED, 1),         ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0), true),
+            EXIT(ENTRANCE(TWINMOLDS_LAIR, 0),                        ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_STONE_TOWER_TEMPLE)),
         },
     } },
     { RR_STONE_TOWER_TEMPLE, RandoRegion{ .sceneId = SCENE_INISIE_N,
+        .checks = {
+            CHECK(RC_STONE_TOWER_TEMPLE_BEFORE_WATER_BRIDGE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_ACROSS_WATER_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_SUN_BLOCK_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_COMPASS, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_SWITCH_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_LIGHT_ARROW, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_MAP, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_MIRRORS_ROOM_CENTER_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_MIRRORS_ROOM_RIGHT_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_UNDER_WEST_GARDEN_LAVA_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_UNDER_WEST_GARDEN_LEDGE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_WATER_BRIDGE_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_WATER_SUN_SWITCH_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_WIND_ROOM_JAIL_CHEST, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_WIND_ROOM_LEDGE_CHEST, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_2, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_3, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_4, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_5, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_6, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_7, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_8, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_1, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_2, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_4, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_MIRROR_ROOM_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_MIRROR_ROOM_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_BRIDGE_1, true),
+            // CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_BRIDGE_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_UNDERWATER_LOWER_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_UNDERWATER_LOWER_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_UNDERWATER_LOWER_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_UNDERWATER_UPPER_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WATER_ROOM_UNDERWATER_UPPER_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WIND_ROOM_1, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WIND_ROOM_2, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WIND_ROOM_3, true),
+            CHECK(RC_STONE_TOWER_TEMPLE_POT_WIND_ROOM_4, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(STONE_TOWER, 2),                  ENTRANCE(STONE_TOWER_TEMPLE, 0), true),
         },
@@ -1578,7 +1832,16 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),         ENTRANCE(STONE_TOWER, 1), CAN_PLAY_SONG(ELEGY) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_LIGHT) && HAS_MAGIC),
-            EXIT(ENTRANCE(STONE_TOWER_TEMPLE, 0),           ENTRANCE(STONE_TOWER, 2), CAN_PLAY_SONG(ELEGY) && CAN_BE_GORON && CAN_BE_ZORA),
+            EXIT(ENTRANCE(STONE_TOWER_TEMPLE, 0),           ENTRANCE(STONE_TOWER, 2), (
+                // TODO: THIS IS TEMPORARY. Once stone tower is properly split up, this will be replaced with a proper logic check.
+                CAN_BE_ZORA && CAN_BE_DEKU && CAN_BE_GORON &&
+                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
+                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(ELEGY)
+                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
+                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
+                // all key locations are logically accessible we can re-add this check.
+                /* && KEY_COUNT(STONE_TOWER_TEMPLE) >= 4 */
+            )),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
@@ -1608,6 +1871,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_SWAMP_SHOOTING_GALLERY, RandoRegion{ .sceneId = SCENE_SYATEKI_MORI,
+        .checks = {
+            CHECK(RC_SWAMP_SHOOTING_GALLERY_HIGH_SCORE, HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_SWAMP_SHOOTING_GALLERY_PERFECT_SCORE, HAS_ITEM(ITEM_BOW)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2),       ENTRANCE(SWAMP_SHOOTING_GALLERY, 0), true),
         },
@@ -1691,7 +1958,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_TOWN_SHOOTING_GALLERY, RandoRegion{ .sceneId = SCENE_SYATEKI_MIZU,
         .checks = {
-            // TODO : Add Bow Capacity upgrade/HP checks here.
+            CHECK(RC_CLOCK_TOWN_EAST_SHOOTING_GALLERY_HIGH_SCORE, HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_CLOCK_TOWN_EAST_SHOOTING_GALLERY_PERFECT_SCORE, HAS_ITEM(ITEM_BOW)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 8),              ENTRANCE(TOWN_SHOOTING_GALLERY, 0), true),
@@ -1950,13 +2218,23 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), true),
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),             ENTRANCE(ZORA_CAPE, 4), HAS_ITEM(ITEM_HOOKSHOT)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),               ENTRANCE(ZORA_CAPE, 5), HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && CAN_PLAY_SONG(BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),             ENTRANCE(ZORA_CAPE, 7), (
+                // TODO: THIS IS TEMPORARY. Once great bay is properly split up, this will be replaced with a proper logic check.
+                CAN_BE_ZORA && CAN_BE_DEKU &&
+                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
+                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(BOSSA_NOVA)
+                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
+                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
+                // all key locations are logically accessible we can re-add this check.
+                /* && KEY_COUNT(GREAT_BAY_TEMPLE) >= 1 */
+            )),
         },
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
         },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
+            ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
         },
     } },
     { RR_ZORA_HALL_EVANS_ROOM, RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,

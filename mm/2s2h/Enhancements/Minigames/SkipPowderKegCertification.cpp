@@ -1,12 +1,16 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "overlays/actors/ovl_En_Go/z_en_go.h"
 }
 
+#define CVAR_NAME "gEnhancements.Minigames.PowderKegCertification"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 void RegisterPowderKegCertification() {
-    COND_VB_SHOULD(VB_EXEC_MSG_EVENT, CVarGetInteger("gEnhancements.Minigames.PowderKegCertification", 0), {
+    COND_VB_SHOULD(VB_EXEC_MSG_EVENT, CVAR, {
         u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
@@ -22,13 +26,14 @@ void RegisterPowderKegCertification() {
     });
 
     // "Looks like you succeeded..."
-    COND_ID_HOOK(OnOpenText, 0xc86, CVarGetInteger("gEnhancements.Minigames.PowderKegCertification", 0),
-                 [](u16* textId, bool* loadFromMessageTable) {
-                     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-                     // entry.autoFormat = false;
-                     entry.msg = "Take one on the house, don't tell your parents.";
+    COND_ID_HOOK(OnOpenText, 0xc86, CVAR, [](u16* textId, bool* loadFromMessageTable) {
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        // entry.autoFormat = false;
+        entry.msg = "Take one on the house, don't tell your parents.";
 
-                     CustomMessage::LoadCustomMessageIntoFont(entry);
-                     *loadFromMessageTable = false;
-                 });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 }
+
+static RegisterShipInitFunc initFunc(RegisterPowderKegCertification, { CVAR_NAME });

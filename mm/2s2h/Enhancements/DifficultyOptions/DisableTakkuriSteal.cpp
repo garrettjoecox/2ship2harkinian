@@ -1,14 +1,12 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
+
+#define CVAR_NAME "gEnhancements.Cheats.DisableTakkuriSteal"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterDisableTakkuriSteal() {
-    static HOOK_ID thiefBirdStealHookID = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(thiefBirdStealHookID);
-    thiefBirdStealHookID = 0;
-
-    if (!CVarGetInteger("gEnhancements.Cheats.DisableTakkuriSteal", 0)) {
-        return;
-    }
-
-    thiefBirdStealHookID = REGISTER_VB_SHOULD(VB_THIEF_BIRD_STEAL, { *should = false; });
+    COND_VB_SHOULD(VB_THIEF_BIRD_STEAL, CVAR, { *should = false; });
 }
+
+static RegisterShipInitFunc initFunc(RegisterDisableTakkuriSteal, { CVAR_NAME });

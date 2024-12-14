@@ -1,16 +1,14 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "Enhancements/Enhancements.h"
+#include "2s2h/ShipInit.hpp"
 
-extern "C" {
-#include "variables.h"
-}
+#define CVAR_NAME "gEnhancements.Cheats.DekuGuardSearchBalls"
+#define CVAR CVarGetInteger(CVAR_NAME, DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY)
 
 void RegisterShowDekuGuardSearchBalls() {
-    REGISTER_VB_SHOULD(VB_DEKU_GUARD_SHOW_SEARCH_BALLS, {
-        uint8_t selectedOption =
-            CVarGetInteger("gEnhancements.Cheats.DekuGuardSearchBalls", DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY);
-        switch (selectedOption) {
+    COND_VB_SHOULD(VB_DEKU_GUARD_SHOW_SEARCH_BALLS, CVAR != DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY, {
+        switch (CVAR) {
             case DEKU_GUARD_SEARCH_BALLS_NEVER:
                 *should = false;
                 break;
@@ -20,3 +18,5 @@ void RegisterShowDekuGuardSearchBalls() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterShowDekuGuardSearchBalls, { CVAR_NAME });

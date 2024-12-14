@@ -172,6 +172,30 @@ void Rando::GiveItem(RandoItemId randoItemId) {
 
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_TINGLE_MAP_CLOCK_TOWN:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_CLOCK_TOWN);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_CLOCK_TOWN);
+            break;
+        case RI_TINGLE_MAP_WOODFALL:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_WOODFALL);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_WOODFALL);
+            break;
+        case RI_TINGLE_MAP_GREAT_BAY:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_SNOWHEAD);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_SNOWHEAD);
+            break;
+        case RI_TINGLE_MAP_ROMANI_RANCH:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_ROMANI_RANCH);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_ROMANI_RANCH);
+            break;
+        case RI_TINGLE_MAP_SNOWHEAD:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_GREAT_BAY);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_GREAT_BAY);
+            break;
+        case RI_TINGLE_MAP_STONE_TOWER:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_STONE_TOWER);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_STONE_TOWER);
+            break;
         case RI_OWL_CLOCK_TOWN_SOUTH:
             Sram_ActivateOwl(OWL_WARP_CLOCK_TOWN);
             break;
@@ -202,6 +226,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_OWL_ZORA_CAPE:
             Sram_ActivateOwl(OWL_WARP_ZORA_CAPE);
             break;
+        case RI_JUNK:
         case RI_NONE:
             break;
         default:

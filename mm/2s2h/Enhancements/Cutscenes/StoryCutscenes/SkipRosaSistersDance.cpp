@@ -1,8 +1,9 @@
-#include <libultraship/libultraship.h>
+#include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "overlays/actors/ovl_En_Rz/z_en_rz.h"
@@ -10,8 +11,11 @@ void func_80BFC270(EnRz* enRz, PlayState* play);
 void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 }
 
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 void RegisterSkipRosaSistersDance() {
-    REGISTER_VB_SHOULD(VB_START_CUTSCENE, {
+    COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
         s16* csId = va_arg(args, s16*);
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             // West Clock Town
@@ -58,3 +62,5 @@ void RegisterSkipRosaSistersDance() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipRosaSistersDance, { CVAR_NAME });

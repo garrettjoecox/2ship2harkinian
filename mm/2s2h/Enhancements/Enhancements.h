@@ -1,22 +1,8 @@
 #ifndef ENHANCEMENTS_H
 #define ENHANCEMENTS_H
 
-#include "Camera/Camera.h"
-#include "Cheats/Cheats.h"
-#include "Cutscenes/Cutscenes.h"
 #include "Cycle/Cycle.h"
-#include "Dialogue/Dialogue.h"
-#include "Equipment/Equipment.h"
-#include "Fixes/Fixes.h"
-#include "Graphics/Graphics.h"
-#include "Masks/Masks.h"
-#include "Minigames/Minigames.h"
-#include "Modes/Modes.h"
-#include "Player/Player.h"
-#include "Restorations/Restorations.h"
 #include "Saving/SavingEnhancements.h"
-#include "Songs/Songs.h"
-#include "DifficultyOptions/DifficultyOptions.h"
 
 enum AlwaysWinDoggyRaceOptions {
     ALWAYS_WIN_DOGGY_RACE_OFF,
@@ -48,14 +34,7 @@ enum DekuGuardSearchBallsOptions {
     DEKU_GUARD_SEARCH_BALLS_ALWAYS,
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+// Old Entry Point
 void InitEnhancements();
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // ENHANCEMENTS_H

@@ -1,10 +1,12 @@
 #include <libultraship/bridge.h>
-#include "GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
+
+#define CVAR_NAME "gCheats.HookshotAnywhere"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterHookshotAnywhere() {
-    REGISTER_VB_SHOULD(VB_BE_HOOKSHOT_SURFACE, {
-        if (CVarGetInteger("gCheats.HookshotAnywhere", 0)) {
-            *should = true;
-        }
-    });
+    COND_VB_SHOULD(VB_BE_HOOKSHOT_SURFACE, CVAR, { *should = true; });
 }
+
+static RegisterShipInitFunc initFunc(RegisterHookshotAnywhere, { CVAR_NAME });

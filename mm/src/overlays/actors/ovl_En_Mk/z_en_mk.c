@@ -5,6 +5,7 @@
  */
 
 #include "z_en_mk.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -417,7 +418,9 @@ void func_80959E18(EnMk* this, PlayState* play) {
         if (GET_PLAYER_FORM == PLAYER_FORM_ZORA) {
             this->actor.csId = this->csIdList[0];
             SET_WEEKEVENTREG(WEEKEVENTREG_20_40);
-            Item_Give(play, ITEM_SONG_NOVA);
+            if (GameInteractor_Should(VB_GIVE_NEW_WAVE_BOSSA_NOVA, true, this)) {
+                Item_Give(play, ITEM_SONG_NOVA);
+            }
         } else {
             this->actor.csId = this->csIdList[1];
         }

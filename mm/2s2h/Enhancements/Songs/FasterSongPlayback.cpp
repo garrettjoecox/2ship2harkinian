@@ -1,5 +1,6 @@
+#include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
-#include "libultraship/libultraship.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "variables.h"
@@ -7,24 +8,19 @@ extern "C" {
 extern u8 sPlaybackState;
 }
 
+#define CVAR_NAME "gEnhancements.Songs.FasterSongPlayback"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
+
 void RegisterFasterSongPlayback() {
-    static uint32_t onPlayerUpdate = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(onPlayerUpdate);
-
-    onPlayerUpdate = 0;
-
-    if (!CVarGetInteger("gEnhancements.Songs.FasterSongPlayback", 0)) {
-        return;
-    }
-
-    onPlayerUpdate =
-        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER, [](Actor* actor) {
-            if (gPlayState->msgCtx.msgMode >= MSGMODE_SONG_PLAYED && gPlayState->msgCtx.msgMode <= MSGMODE_17) {
-                if (gPlayState->msgCtx.stateTimer > 1) {
-                    gPlayState->msgCtx.stateTimer = 1;
-                }
-                gPlayState->msgCtx.ocarinaSongEffectActive = 0;
-                sPlaybackState = 0;
+    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, CVAR, [](Actor* actor) {
+        if (gPlayState->msgCtx.msgMode >= MSGMODE_SONG_PLAYED && gPlayState->msgCtx.msgMode <= MSGMODE_17) {
+            if (gPlayState->msgCtx.stateTimer > 1) {
+                gPlayState->msgCtx.stateTimer = 1;
             }
-        });
+            gPlayState->msgCtx.ocarinaSongEffectActive = 0;
+            sPlaybackState = 0;
+        }
+    });
 }
+
+static RegisterShipInitFunc initFunc(RegisterFasterSongPlayback, { CVAR_NAME });

@@ -1,30 +1,25 @@
-#include "libultraship/libultraship.h"
+#include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "macros.h"
-#include "z64.h"
-extern PlayState* gPlayState;
-extern SaveContext gSaveContext;
+#include "variables.h"
 }
 
-static HOOK_ID onActorUpdateHookId = 0;
+#define CVAR_NAME "gModes.TimeMovesWhenYouMove"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterTimeMovesWhenYouMove() {
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(onActorUpdateHookId);
-    onActorUpdateHookId = 0;
     gSaveContext.save.timeSpeedOffset = 0;
 
-    if (CVarGetInteger("gModes.TimeMovesWhenYouMove", 0)) {
-        onActorUpdateHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
-            ACTOR_PLAYER, [](Actor* actor) {
-                Player* player = GET_PLAYER(gPlayState);
+    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, CVAR, [](Actor* actor) {
+        Player* player = GET_PLAYER(gPlayState);
 
-                gSaveContext.save.timeSpeedOffset = -R_TIME_SPEED;
-                if (player->linearVelocity != 0) {
-                    gSaveContext.save.timeSpeedOffset =
-                        CLAMP(player->linearVelocity / 2 - R_TIME_SPEED, -R_TIME_SPEED, 10);
-                }
-            });
-    }
+        gSaveContext.save.timeSpeedOffset = -R_TIME_SPEED;
+        if (player->linearVelocity != 0) {
+            gSaveContext.save.timeSpeedOffset = CLAMP(player->linearVelocity / 2 - R_TIME_SPEED, -R_TIME_SPEED, 10);
+        }
+    });
 }
+
+static RegisterShipInitFunc initFunc(RegisterTimeMovesWhenYouMove, { CVAR_NAME });

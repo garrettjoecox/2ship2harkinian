@@ -1,23 +1,25 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
-#include "z64.h"
-void Flags_SetWeekEventReg(s32 flag);
-extern SaveContext gSaveContext;
-extern PlayState* gPlayState;
+#include "variables.h"
+#include "functions.h"
 }
+
+#define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipClockTowerOpen() {
     // This will handle skipping if you are around the Clock Town area, but not directly in south clock town
-    REGISTER_VB_SHOULD(VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE, {
+    COND_VB_SHOULD(VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE, CVAR, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0)) {
             *should = false;
         }
     });
 
     // This will handle skipping if you are directly in South Clock Town
-    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
+    COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVAR, {
         if ((gSaveContext.save.entrance == ENTRANCE(SOUTH_CLOCK_TOWN, 0) ||
              gSaveContext.save.entrance == ENTRANCE(TERMINA_FIELD, 0)) &&
             gSaveContext.save.cutsceneIndex == 0xFFF1 &&
@@ -36,3 +38,5 @@ void RegisterSkipClockTowerOpen() {
         }
     });
 }
+
+static RegisterShipInitFunc initFunc(RegisterSkipClockTowerOpen, { CVAR_NAME });

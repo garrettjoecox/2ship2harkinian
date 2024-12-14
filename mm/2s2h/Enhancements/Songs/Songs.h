@@ -1,13 +1,6 @@
 #ifndef SONGS_H
 #define SONGS_H
 
-void RegisterBetterSongOfDoubleTime();
-void RegisterEnableSunsSong();
-void RegisterFasterSongPlayback();
-void RegisterZoraEggCount();
-void RegisterPauseOwlWarp();
-void RegisterSkipScarecrowSong();
-
 #ifdef __cplusplus
 extern "C" {
 #endif

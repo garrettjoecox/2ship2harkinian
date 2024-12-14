@@ -1,9 +1,8 @@
 #include <libultraship/bridge.h>
-
 #include "2s2h/BenGui/UIWidgets.hpp"
 
 extern "C" {
-#include "z64.h"
+#include "variables.h"
 }
 
 const char* motionBlurOptions[] = { "Dynamic (default)", "Always Off", "Always On" };

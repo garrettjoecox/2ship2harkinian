@@ -1,5 +1,5 @@
 #include "ActorBehavior.h"
-#include "2s2h/Enhancements/Cutscenes/Cutscenes.h"
+#include "2s2h/Enhancements/Cutscenes/StoryCutscenes/SkipGiantsChamber.h"
 #include <libultraship/libultraship.h>
 
 extern "C" {

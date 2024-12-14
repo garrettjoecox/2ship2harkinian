@@ -276,6 +276,7 @@ bool CVarCheckbox(const char* label, const char* cvarName, const CheckboxOptions
     if (Checkbox(label, &value, options)) {
         CVarSetInteger(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        ShipInit::Init(cvarName);
         dirty = true;
     }
     return dirty;
@@ -344,7 +345,6 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
             *value -= options.step;
             if (*value < min)
                 *value = min;
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
             dirty = true;
         }
         ImGui::SameLine(0, 3.0f);
@@ -353,7 +353,6 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
     }
     if (ImGui::SliderScalar(invisibleLabel, ImGuiDataType_S32, value, &min, &max, options.format, options.flags)) {
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
         dirty = true;
     }
     if (options.showButtons) {
@@ -363,7 +362,6 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
             *value += options.step;
             if (*value > max)
                 *value = max;
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
             dirty = true;
         }
     }
@@ -387,6 +385,7 @@ bool CVarSliderInt(const char* label, const char* cvarName, int32_t min, int32_t
     if (SliderInt(label, &value, min, max, options)) {
         CVarSetInteger(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        ShipInit::Init(cvarName);
         dirty = true;
     }
     return dirty;
@@ -456,7 +455,6 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
         if (Button("-", { .color = options.color, .size = Sizes::Inline }) && *value > min) {
             *value -= options.step;
             ClampFloat(value, min, max, options.step);
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
             dirty = true;
         }
         ImGui::SameLine(0, 3.0f);
@@ -468,7 +466,6 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
                             options.format, options.flags)) {
         *value = options.isPercentage ? valueToDisplay / 100.0f : valueToDisplay;
         ClampFloat(value, min, max, options.step);
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
         dirty = true;
     }
     if (options.showButtons) {
@@ -477,7 +474,6 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
         if (Button("+", { .color = options.color, .size = Sizes::Inline }) && *value < max) {
             *value += options.step;
             ClampFloat(value, min, max, options.step);
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
             dirty = true;
         }
     }
@@ -501,6 +497,7 @@ bool CVarSliderFloat(const char* label, const char* cvarName, float min, float m
     if (SliderFloat(label, &value, min, max, options)) {
         CVarSetFloat(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        ShipInit::Init(cvarName);
         dirty = true;
     }
     return dirty;
@@ -518,6 +515,7 @@ bool CVarColorPicker(const char* label, const char* cvarName, Color_RGBA8 defaul
         color.a = (uint8_t)(colorVec.w * 255.0f);
         CVarSetColor(cvarName, color);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        ShipInit::Init(cvarName);
         changed = true;
     }
     PopStyleCombobox();

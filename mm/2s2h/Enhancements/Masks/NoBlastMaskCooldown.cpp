@@ -1,10 +1,12 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
+
+#define CVAR_NAME "gEnhancements.Masks.NoBlastMaskCooldown"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterNoBlastMaskCooldown() {
-    REGISTER_VB_SHOULD(VB_SET_BLAST_MASK_COOLDOWN_TIMER, {
-        if (CVarGetInteger("gEnhancements.Masks.NoBlastMaskCooldown", 0)) {
-            *should = false;
-        }
-    });
+    COND_VB_SHOULD(VB_SET_BLAST_MASK_COOLDOWN_TIMER, CVAR, { *should = false; });
 }
+
+static RegisterShipInitFunc initFunc(RegisterNoBlastMaskCooldown, { CVAR_NAME });
