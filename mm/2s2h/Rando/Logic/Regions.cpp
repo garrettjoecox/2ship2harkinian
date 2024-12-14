@@ -1483,6 +1483,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_SWAMP_SHOOTING_GALLERY, RandoRegion{ .sceneId = SCENE_SYATEKI_MORI,
+        .checks = {
+            CHECK(RC_SWAMP_SHOOTING_GALLERY_HIGH_SCORE, HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_SWAMP_SHOOTING_GALLERY_PERFECT_SCORE, HAS_ITEM(ITEM_BOW)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2),       ENTRANCE(SWAMP_SHOOTING_GALLERY, 0), true),
         },
@@ -1566,7 +1570,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_TOWN_SHOOTING_GALLERY, RandoRegion{ .sceneId = SCENE_SYATEKI_MIZU,
         .checks = {
-            // TODO : Add Bow Capacity upgrade/HP checks here.
+            CHECK(RC_CLOCK_TOWN_EAST_SHOOTING_GALLERY_HIGH_SCORE, HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_CLOCK_TOWN_EAST_SHOOTING_GALLERY_PERFECT_SCORE, HAS_ITEM(ITEM_BOW)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 8),              ENTRANCE(TOWN_SHOOTING_GALLERY, 0), true),
