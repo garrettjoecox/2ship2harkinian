@@ -156,7 +156,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             } else if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
                 return false;
             }
-            break;
+            return true;
         case RI_BOW:
             if (CUR_UPG_VALUE(UPG_QUIVER) >= 1) {
                 return false;

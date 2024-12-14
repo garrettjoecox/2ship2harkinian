@@ -33,6 +33,7 @@ void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitEnStoneheishiBehavior();
+void InitEnSyatekiManBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
 void InitEnYbBehavior();
