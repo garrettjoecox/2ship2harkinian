@@ -1010,7 +1010,8 @@ void func_8096A38C(EnJs* this, PlayState* play) {
                         break;
 
                     case 0x2207:
-                        if (GameInteractor_Should(VB_GIVE_FIERCE_DEITY_MASK, INV_CONTENT(ITEM_MASK_FIERCE_DEITY) == ITEM_MASK_FIERCE_DEITY)) {
+                        if (GameInteractor_Should(VB_GIVE_FIERCE_DEITY_MASK,
+                                                  INV_CONTENT(ITEM_MASK_FIERCE_DEITY) == ITEM_MASK_FIERCE_DEITY)) {
                             Message_ContinueTextbox(play, 0x2208);
                             func_809696EC(this, 0);
                         } else {

@@ -69,7 +69,6 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 player->exchangeItemAction = PLAYER_IA_MINUS1;
                 Player_TalkWithPlayer(gPlayState, actor);
                 break;
-            
         }
     });
 }
