@@ -1362,8 +1362,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_ROMANI_RANCH, RandoRegion{ .sceneId = SCENE_F01,
         .checks = {
-            // TODO:
-            // CHECK(RC_ROMANI_RANCH_EPONAS_SONG, CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG) && HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_ROMANI_RANCH_EPONAS_SONG, CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MILK_ROAD, 1),                    ENTRANCE(ROMANI_RANCH, 0), true),

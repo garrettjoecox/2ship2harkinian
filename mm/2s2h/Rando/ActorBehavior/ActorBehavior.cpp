@@ -11,6 +11,9 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_MADAME_AROMA_ASK_FOR_HELP:
             *should = !CHECK_WEEKEVENTREG(WEEKEVENTREG_BOMBERS_NOTEBOOK_EVENT_RECEIVED_KAFEIS_MASK);
             break;
+        case VB_GIVE_ITEM_FROM_MALON:
+            *should = CHECK_QUEST_ITEM(QUEST_SONG_EPONA);
+            break;
         case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
         case VB_MSG_SCRIPT_DEL_ITEM:
         case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
@@ -44,6 +47,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnItem00Behavior();
     Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
+    Rando::ActorBehavior::InitEnMa4Behavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();

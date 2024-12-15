@@ -99,6 +99,9 @@ void DrawSong(RandoItemId randoItemId) {
         case RI_SONG_OATH:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 0, 98, 255);
             break;
+        case RI_SONG_EPONA:
+            gDPSetEnvColor(POLY_XLU_DISP++, 146, 87, 49, 255);
+            break;
         case RI_SONG_NOVA:
             gDPSetEnvColor(POLY_XLU_DISP++, 20, 20, 255, 255);
             break;
@@ -183,6 +186,7 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_SONG_ELEGY:
         case RI_SONG_LULLABY:
         case RI_SONG_OATH:
+        case RI_SONG_EPONA:
         case RI_SONG_NOVA:
             DrawSong(randoItemId);
             break;
