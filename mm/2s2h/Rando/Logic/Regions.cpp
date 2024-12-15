@@ -88,6 +88,73 @@ void Flags_UnsetSceneClear(s32 scene, s32 roomNumber) {
     gSaveContext.cycleSceneFlags[scene].clearedRoom &= ~(1 << roomNumber);
 }
 
+s32 Cutscene_CountNormalMasks(void) {
+    s32 count = 0;
+
+    if (INV_CONTENT(ITEM_MASK_TRUTH) == ITEM_MASK_TRUTH) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_KAFEIS_MASK) == ITEM_MASK_KAFEIS_MASK) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_ALL_NIGHT) == ITEM_MASK_ALL_NIGHT) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_BUNNY) == ITEM_MASK_BUNNY) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_KEATON) == ITEM_MASK_KEATON) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_GARO) == ITEM_MASK_GARO) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_ROMANI) == ITEM_MASK_ROMANI) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_CIRCUS_LEADER) == ITEM_MASK_CIRCUS_LEADER) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_POSTMAN) == ITEM_MASK_POSTMAN) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_COUPLE) == ITEM_MASK_COUPLE) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_GREAT_FAIRY) == ITEM_MASK_GREAT_FAIRY) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_GIBDO) == ITEM_MASK_GIBDO) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_DON_GERO) == ITEM_MASK_DON_GERO) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_KAMARO) == ITEM_MASK_KAMARO) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_CAPTAIN) == ITEM_MASK_CAPTAIN) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_STONE) == ITEM_MASK_STONE) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_BREMEN) == ITEM_MASK_BREMEN) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_BLAST) == ITEM_MASK_BLAST) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_SCENTS) == ITEM_MASK_SCENTS) {
+        count++;
+    }
+    if (INV_CONTENT(ITEM_MASK_GIANT) == ITEM_MASK_GIANT) {
+        count++;
+    }
+
+    return count;
+}
+
 std::string LogicString(std::string condition) {
     if (condition == "true")
         return "";
@@ -287,6 +354,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWER_ROOF_POT_2, true),
             CHECK(RC_CLOCK_TOWER_ROOF_POT_3, true),
             CHECK(RC_CLOCK_TOWER_ROOF_POT_4, true),
+        },
+        .exits = {
+            EXIT(ENTRANCE(THE_MOON, 0),                 ONE_WAY_EXIT, CAN_PLAY_SONG(OATH)),
         },
         .oneWayEntrances = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
@@ -831,6 +901,89 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .oneWayEntrances = {
             ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
         }
+    } },
+    { RR_MOON, RandoRegion{ .sceneId = SCENE_SOUGEN,
+    // TO-DO: Mask requirements per Trial [Deku:1/1 | Goron:2/2 | Zora:3/3 | Link:4/4]
+        .checks = {
+            CHECK(RC_MOON_FIERCE_DEITY_MASK, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(CLOCK_TOWER_ROOFTOP, 0),                   ONE_WAY_EXIT, true),
+            EXIT(ENTRANCE(MOON_DEKU_TRIAL, 0),              ENTRANCE(THE_MOON, 0), true),
+            EXIT(ENTRANCE(MOON_GORON_TRIAL, 0),             ENTRANCE(THE_MOON, 0), true),
+            EXIT(ENTRANCE(MOON_LINK_TRIAL, 0),              ENTRANCE(THE_MOON, 0), true),
+            EXIT(ENTRANCE(MOON_ZORA_TRIAL, 0),              ENTRANCE(THE_MOON, 0), true),
+            EXIT(ENTRANCE(MAJORAS_LAIR, 0),                          ONE_WAY_EXIT, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(THE_MOON, 0),
+        },
+    } },
+    { RR_MOON_DEKU_TRIAL, RandoRegion{ .sceneId = SCENE_LAST_DEKU,
+        .checks = {
+            CHECK(RC_MOON_TRIAL_DEKU_HP, CAN_BE_DEKU),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(THE_MOON, 0),                     ENTRANCE(MOON_DEKU_TRIAL, 0), true),
+            EXIT(ENTRANCE(THE_MOON, 0),                     ONE_WAY_EXIT, CAN_BE_DEKU), // Exit from Mask NPC
+        },
+    } },
+    { RR_MOON_GORON_TRIAL, RandoRegion{ .sceneId = SCENE_LAST_GORON,
+        .checks = {
+            CHECK(RC_MOON_TRIAL_GORON_HP, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_EARLY_1, true),
+            CHECK(RC_MOON_TRIAL_GORON_POT_EARLY_2, true),
+            CHECK(RC_MOON_TRIAL_GORON_POT_EARLY_3, true),
+            CHECK(RC_MOON_TRIAL_GORON_POT_EARLY_4, true),
+            CHECK(RC_MOON_TRIAL_GORON_POT_1, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_10, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_11, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_2, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_3, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_4, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_5, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_6, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_7, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_8, CAN_BE_GORON && HAS_MAGIC),
+            CHECK(RC_MOON_TRIAL_GORON_POT_9, CAN_BE_GORON && HAS_MAGIC),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(THE_MOON, 0),                     ENTRANCE(MOON_GORON_TRIAL, 0), true),
+            EXIT(ENTRANCE(THE_MOON, 0),                     ONE_WAY_EXIT, CAN_BE_GORON && HAS_MAGIC), // Exit from Mask NPC
+        },
+    } },
+    { RR_MOON_LINK_TRIAL, RandoRegion{ .sceneId = SCENE_LAST_LINK,
+        .checks = {
+            CHECK(RC_MOON_TRIAL_LINK_GARO_MASTER_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_MOON_TRIAL_LINK_HP, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOMBCHU) && HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_MOON_TRIAL_LINK_IRON_KNUCKLE_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_MOON_TRIAL_LINK_POT_1, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_2, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_3, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_4, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_5, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_6, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_7, true),
+            CHECK(RC_MOON_TRIAL_LINK_POT_8, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(THE_MOON, 0),                     ENTRANCE(MOON_LINK_TRIAL, 0), true),
+            EXIT(ENTRANCE(THE_MOON, 0),                     ONE_WAY_EXIT, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOMBCHU) && HAS_ITEM(ITEM_BOW)), // Exit from Mask NPC
+        },
+    } },
+    { RR_MOON_MAJORAS_LAIR, RandoRegion{ .sceneId = SCENE_LAST_BS,
+        .oneWayEntrances = {
+            ENTRANCE(MAJORAS_LAIR, 0),
+        },
+    } },
+    { RR_MOON_ZORA_TRIAL, RandoRegion{ .sceneId = SCENE_LAST_ZORA,
+        .checks = {
+            CHECK(RC_MOON_TRIAL_ZORA_HP, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(THE_MOON, 0),                     ENTRANCE(MOON_ZORA_TRIAL, 0), true),
+            EXIT(ENTRANCE(THE_MOON, 0),                     ONE_WAY_EXIT, true), // Exit from Mask NPC
+        },
     } },
     { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
         .checks = {

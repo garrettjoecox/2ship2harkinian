@@ -152,6 +152,7 @@ typedef enum {
     VB_TINGLE_GIVE_MAP_UNLOCK,
     VB_OWL_STATUE_ACTIVATE,
     VB_HAVE_HEALED_PAMELAS_FATHER,
+    VB_GIVE_FIERCE_DEITY_MASK,
 } GIVanillaBehavior;
 
 typedef enum {

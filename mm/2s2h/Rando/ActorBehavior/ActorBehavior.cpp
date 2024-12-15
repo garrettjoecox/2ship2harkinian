@@ -16,6 +16,9 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
             *should = false;
             break;
+        case VB_GIVE_FIERCE_DEITY_MASK:
+            *should = RANDO_SAVE_CHECKS[RC_MOON_FIERCE_DEITY_MASK].obtained;
+            break;
     }
 }
 

@@ -58,6 +58,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
             case ACTOR_EN_DT:
                 actor->textId = 0x2AD1;
                 [[fallthrough]];
+            case ACTOR_EN_JS:
             case ACTOR_EN_KENDO_JS:
             case ACTOR_EN_GURUGURU:
             case ACTOR_EN_HS:
@@ -68,6 +69,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 player->exchangeItemAction = PLAYER_IA_MINUS1;
                 Player_TalkWithPlayer(gPlayState, actor);
                 break;
+            
         }
     });
 }
