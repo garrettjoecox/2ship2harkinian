@@ -564,9 +564,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             // During First Day a NPC Goron can open the door to the the Shrine
             EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 1),     ENTRANCE(GORON_VILLAGE_WINTER, 0), true),
             EXIT(ENTRANCE(GORON_SHRINE, 0),                     ENTRANCE(GORON_VILLAGE_WINTER, 2), true),
-            // Lone Peak Shrine behaves differently from Grottos despite sharing a map. Seems okay to add here.
-            EXIT(ENTRANCE(GROTTOS, 16),                         ENTRANCE(GORON_VILLAGE_WINTER, 3), true)
         },
+        .connections = {
+            CONNECTION(RR_LONE_PEAK_SHRINE_ENTRANCE, true)
+        }
     } },
     { RR_GREAT_BAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
         .checks = {
@@ -850,7 +851,16 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),             ENTRANCE(STOCK_POT_INN, 1), true), // From upstairs
         },
     } },
+    { RR_LONE_PEAK_SHRINE_ENTRANCE, RandoRegion{ .name = "Lone Peak Entrance", .sceneId = SCENE_11GORONNOSATO,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(GROTTOS, 16),               ENTRANCE(GORON_VILLAGE_WINTER, 3), true)
+        },
+        .connections = {
+            CONNECTION(RR_GORON_VILLAGE, HAS_MAGIC && HAS_ITEM(ITEM_LENS_OF_TRUTH))
+        }
+    } },
     { RR_LONE_PEAK_SHRINE, RandoRegion{ .name = "Lone Peak", .sceneId = SCENE_KAKUSIANA,
+        // Lone Peak Shrine behaves differently from Grottos despite sharing a map. Seems okay to add here.
         .checks = {
             CHECK(RC_LONE_PEAK_SHRINE_BOULDER_CHEST, CAN_USE_EXPLOSIVE),
             CHECK(RC_LONE_PEAK_SHRINE_INVISIBLE_CHEST, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),
