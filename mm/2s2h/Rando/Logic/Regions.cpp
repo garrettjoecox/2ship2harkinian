@@ -437,6 +437,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_DEKU_SHRINE, RandoRegion{ .sceneId = SCENE_DANPEI,
+        .checks = {
+            // Commenting out checks because I'm not sure on the logic. 
+            // Glitchless logic doesn't finish when uncommented
+            // CHECK(RC_DEKU_SHRINE_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            // CHECK(RC_DEKU_SHRINE_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
         },

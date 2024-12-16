@@ -21,6 +21,14 @@ RandoCheckId IdentifyPot(Actor* actor) {
     RandoCheckId randoCheckId = RC_UNKNOWN;
 
     switch (gPlayState->sceneId) {
+        case SCENE_DANPEI:
+            if (IS_AT(1881.0f, 980.0f)) {
+                randoCheckId = RC_DEKU_SHRINE_POT_1;
+            }
+            if (IS_AT(2373.0f, 0.0f)) {
+                randoCheckId = RC_DEKU_SHRINE_POT_2;
+            }
+            break;
         case SCENE_F40:
             if (IS_AT(1204.0f, 1871.0f)) {
                 randoCheckId = RC_STONE_TOWER_POT_HIGHER_SCARECROW_2;
