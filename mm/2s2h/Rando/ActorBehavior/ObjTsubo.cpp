@@ -745,6 +745,12 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(45.0f, -690.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_1;
             }
+            if (IS_AT(-45.0f, -690.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_2;
+            }
+            if (IS_AT(-1275.0f, -1395.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_1;
+            }
             if (IS_AT(-1275.0f, -1305.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_2;
             }
@@ -754,10 +760,13 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(-1425.0f, -1305.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_4;
             }
+            if (IS_AT(-1275.0f, -705.0f)) {
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_1;
+            }
             if (IS_AT(-1275.0f, -615.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_2;
             }
-            if (IS_AT(1425.0f, -705.0f)) {
+            if (IS_AT(-1425.0f, -705.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_LAVA_ROOM_AFTER_BLOCK_3;
             }
             if (IS_AT(-1425.0f, -615.0f)) {
