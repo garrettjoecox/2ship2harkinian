@@ -476,6 +476,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_GORMAN_TRACK, RandoRegion{ .sceneId = SCENE_KOEPONARACE,
+        .checks = {
+            // TODO : Uncomment this out once the Alien section is implemented.
+            //CHECK(RC_CREMIA_ESCORT, CHECK_WEEKEVENTREG(WEEKEVENTREG_DEFENDED_AGAINST_THEM))
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MILK_ROAD, 2),                    ENTRANCE(GORMAN_TRACK, 3), CAN_PLAY_SONG(EPONA)),
             EXIT(ENTRANCE(MILK_ROAD, 3),                    ENTRANCE(GORMAN_TRACK, 0), true),
