@@ -318,6 +318,9 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(4020.0f, -1860.0f)) {
                 randoCheckId = RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1;
             }
+            if (IS_AT(2040.0f, -1380.0f)) {
+                randoCheckId = RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2;
+            }
             if (IS_AT(1920.0f, -640.0f)) {
                 randoCheckId = RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1;
             }

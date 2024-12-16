@@ -1024,7 +1024,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2, CAN_BE_ZORA),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_3, CAN_BE_ZORA),
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_1, true),
-            // RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2 seems to be missing, the pot next to the above pot.
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2, true),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_HP, true)
         },
         .exits = { //     TO                                         FROM
