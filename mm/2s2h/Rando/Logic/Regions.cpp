@@ -28,6 +28,7 @@ namespace Logic {
      (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
 #define CHECK_MAX_HP(TARGET_HP) ((TARGET_HP * 16) <= gSaveContext.save.saveInfo.playerData.healthCapacity)
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
+#define HAS_ALL_MOON_MASKS (MoonMaskCount())
 #define CAN_HOOK_SCARECROW (HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE ((HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
 #define CAN_USE_HUMAN_SWORD (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI)
@@ -87,6 +88,20 @@ void Flags_SetSceneClear(s32 scene, s32 roomNumber) {
 void Flags_UnsetSceneClear(s32 scene, s32 roomNumber) {
     gSaveContext.cycleSceneFlags[scene].clearedRoom &= ~(1 << roomNumber);
 }
+
+bool MoonMaskCount() {
+    uint32_t count = 0;
+    for (int i = ITEM_MASK_TRUTH; i <= ITEM_MASK_GIANT; i++) {
+        if (INV_CONTENT(i) == i) {
+            count++;
+        }
+    }
+    if (count == 20) {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 std::string LogicString(std::string condition) {
     if (condition == "true")
@@ -838,7 +853,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_MOON, RandoRegion{ .sceneId = SCENE_SOUGEN,
     // TO-DO: Mask requirements per Trial [Deku:1/1 | Goron:2/2 | Zora:3/3 | Link:4/4]
         .checks = {
-            CHECK(RC_MOON_FIERCE_DEITY_MASK, true),
+            CHECK(RC_MOON_FIERCE_DEITY_MASK, HAS_ALL_MOON_MASKS),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(CLOCK_TOWER_ROOFTOP, 0),                   ONE_WAY_EXIT, true),
