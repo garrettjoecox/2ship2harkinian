@@ -46,6 +46,9 @@ namespace Logic {
 #define CAN_GET_SPRING_WATER                                                  \
     (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
+#define CAN_ACCESS_SEAHORSE                                                                 \
+    (HAS_ITEM(ITEM_PICTOGRAPH_BOX) && HAS_BOTTLE && RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE && \
+     RANDO_INF_HAS_ACCESS_SEAHORSE)
 #define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
 // TODO: Move these into a seperate file later?
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
@@ -468,6 +471,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_FISHERMANS_HUT, RandoRegion{ .sceneId = SCENE_FISHERMAN,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 4),              ENTRANCE(FISHERMANS_HUT, 0), true),
+        },
+        .events = {
+            EVENT_RANDOINF("Can access seahorse", RANDO_INF_HAS_ACCESS_SEAHORSE, true),
         },
     } },
     { RR_GHOST_HUT, RandoRegion{ .sceneId = SCENE_TOUGITES,
@@ -905,7 +911,15 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
         },
     } },
-    { RR_PINNACLE_ROCK, RandoRegion{ .sceneId = SCENE_SINKAI,
+    { RR_PINNACLE_ROCK_ENTRANCE, RandoRegion{ .name = "Entrance", .sceneId = SCENE_SINKAI,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_INNER, CAN_ACCESS_SEAHORSE && CAN_BE_ZORA)
+        }
+    } },
+    { RR_PINNACLE_ROCK_INNER, RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
         // Maybe we split this up into two areas, one requiring sea horse to get to the other.
         // (Without seahorse should be considered a trick)
         .checks = {
@@ -924,9 +938,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PINNACLE_ROCK_POT_11,      CAN_BE_ZORA),
             // TODO: Missing HP check to add here later.
         },
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
-        },
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_ENTRANCE, true)
+        }
     } },
     { RR_PIRATES_FORTRESS_CAPTAIN_ROOM_UPPER, RandoRegion{ .name = "Captain Room Upper", .sceneId = SCENE_PIRATE,
         // TODO : If NTSC JP 1.0 support is added we should add a connection here to RR_PIRATES_FORTRESS_CAPTAIN_ROOM and a unique flag to check for it...or ignore it and let the player go the long way around
@@ -959,7 +973,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM, RandoRegion{ .name = "Chest Egg Room", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -990,7 +1007,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, RandoRegion{ .name = "Maze Room", .sceneId = SCENE_PIRATE,
         .exits = { //     TO                                         FROM
@@ -998,7 +1018,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, RandoRegion{ .name = "Orange Guard Room", .sceneId = SCENE_PIRATE,
         .connections = {
@@ -1059,6 +1082,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
         .oneWayEntrances = {
             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
         }
@@ -1101,7 +1127,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_PALAZA_RIGHT_EXIT, RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
         // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PALAZA
@@ -1130,7 +1159,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_PALAZA, RandoRegion{ .name = "Palaza", .sceneId = SCENE_KAIZOKU,
         .checks = {
@@ -1148,7 +1180,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
                 (HAS_ITEM(ITEM_DEKU_NUT) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_MASK_STONE)) ||
                 (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA
             )),
-        }
+        },
+        .events = {
+            EVENT_RANDOINF("Can take picture of Pirate", RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM, RandoRegion{ .name = "Right Clam Room", .sceneId = SCENE_PIRATE,
         .checks = {

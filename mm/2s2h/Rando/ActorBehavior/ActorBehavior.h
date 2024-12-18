@@ -38,6 +38,8 @@ void InitEnSyatekiManBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
 void InitEnTest5Behavior();
+void InitEnKaizokuBehavior();
+void InitEnTsnBehavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();
 void InitEnMnkBehavior();

@@ -1,8 +1,6 @@
 #include "ActorBehavior.h"
-#include <libultraship/libultraship.h>
 
 extern "C" {
-#include "variables.h"
 void Flags_SetRandoInf(s32 flag);
 }
 
