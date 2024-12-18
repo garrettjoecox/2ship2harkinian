@@ -8,5 +8,5 @@ void Flags_SetRandoInf(s32 flag);
 // is purely to drive the live updating check tracker, it has no effect on actual gameplay.
 void Rando::ActorBehavior::InitEnTsnBehavior() {
     COND_ID_HOOK(OnActorInit, ACTOR_EN_TSN, IS_RANDO,
-                 [](Actor* actor) { Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_SEAHORSE); });
+                 [](Actor* actor) { Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SEAHORSE); });
 }

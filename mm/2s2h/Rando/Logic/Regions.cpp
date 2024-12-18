@@ -46,9 +46,9 @@ namespace Logic {
 #define CAN_GET_SPRING_WATER                                                  \
     (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
-#define CAN_ACCESS_SEAHORSE                                                                 \
+#define CAN_GET_SEAHORSE                                                                 \
     (HAS_ITEM(ITEM_PICTOGRAPH_BOX) && HAS_BOTTLE && RANDO_INF_CAN_TAKE_PICTURE_OF_PIRATE && \
-     RANDO_INF_HAS_ACCESS_SEAHORSE)
+     RANDO_INF_HAS_ACCESS_TO_SEAHORSE)
 #define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
 // TODO: Move these into a seperate file later?
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
@@ -473,7 +473,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 4),              ENTRANCE(FISHERMANS_HUT, 0), true),
         },
         .events = {
-            EVENT_RANDOINF("Can access seahorse", RANDO_INF_HAS_ACCESS_SEAHORSE, true),
+            EVENT_RANDOINF("Can access seahorse", RANDO_INF_HAS_ACCESS_TO_SEAHORSE, true),
         },
     } },
     { RR_GHOST_HUT, RandoRegion{ .sceneId = SCENE_TOUGITES,
@@ -795,8 +795,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
         .checks = {
-            // TODO: eggs
-            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+            // TODO: Temp solution for MVP. Once entrance rando is added figure out how to factor Zora Eggs in logic properly.
+            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_BOTTLE && HAS_ITEM(ITEM_HOOKSHOT) && HAS_MAGIC && CAN_USE_HUMAN_SWORD && CAN_GET_SEAHORSE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),              ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
@@ -916,7 +916,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
         },
         .connections = {
-            CONNECTION(RR_PINNACLE_ROCK_INNER, CAN_ACCESS_SEAHORSE && CAN_BE_ZORA)
+            CONNECTION(RR_PINNACLE_ROCK_INNER, CAN_GET_SEAHORSE && CAN_BE_ZORA)
         }
     } },
     { RR_PINNACLE_ROCK_INNER, RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
