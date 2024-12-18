@@ -920,8 +920,6 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         }
     } },
     { RR_PINNACLE_ROCK_INNER, RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
-        // Maybe we split this up into two areas, one requiring sea horse to get to the other.
-        // (Without seahorse should be considered a trick)
         .checks = {
             CHECK(RC_PINNACLE_ROCK_CHEST_1,     CAN_BE_ZORA),
             CHECK(RC_PINNACLE_ROCK_CHEST_2,     CAN_BE_ZORA && HAS_MAGIC),
