@@ -54,7 +54,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnTest5Behavior();
-    Rando::ActorBehavior::InitEnKaizokuBehavior();
+    Rando::ActorBehavior::InitEnGe2Behavior();
     Rando::ActorBehavior::InitEnTsnBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnRzBehavior();
