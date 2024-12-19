@@ -17,15 +17,14 @@ void RegisterSkipTatlInterrupts() {
     // First time entering Clock Town Interupt
     COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVAR, {
         if (gSaveContext.save.entrance == ENTRANCE(SOUTH_CLOCK_TOWN, 0) && gSaveContext.save.cutsceneIndex == 0 &&
-            !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_04) &&
-            CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0)) {
+            !CHECK_WEEKEVENTREG(WEEKEVENTREG_59_04)) {
             Flags_SetWeekEventReg(WEEKEVENTREG_59_04);
         }
     });
 
     // General Interupt
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG, CVAR, {
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+        if (*should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
             if (ELFMSG_GET_SWITCH_FLAG(actor) != 0x7F) {
@@ -37,7 +36,7 @@ void RegisterSkipTatlInterrupts() {
 
     // General interupt (3)
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG3, CVAR, {
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+        if (*should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
             if (ELFMSG3_GET_SWITCH_FLAG(actor) != 0x7F) {
@@ -49,7 +48,7 @@ void RegisterSkipTatlInterrupts() {
 
     // General interupt (4)
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG4, CVAR, {
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+        if (*should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
             if (ELFMSG4_GET_SWITCH_FLAG(actor) != 0x7F) {
@@ -61,7 +60,7 @@ void RegisterSkipTatlInterrupts() {
 
     // General interupt (6) (the flags were directly copied from the original code)
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG6, CVAR, {
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+        if (*should) {
             Actor* actor = va_arg(args, Actor*);
             *should = false;
             switch (actor->textId) {
