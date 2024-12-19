@@ -5,7 +5,9 @@
 extern "C" {
 #include "variables.h"
 #include "functions.h"
+#include "overlays/actors/ovl_Elf_Msg/z_elf_msg.h"
 #include "overlays/actors/ovl_Elf_Msg3/z_elf_msg3.h"
+#include "overlays/actors/ovl_Elf_Msg4/z_elf_msg4.h"
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipMiscInteractions"
@@ -21,7 +23,19 @@ void RegisterSkipTatlInterrupts() {
         }
     });
 
-    // General interupt
+    // General Interupt
+    COND_VB_SHOULD(VB_TATL_INTERUPT_MSG, CVAR, {
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+            Actor* actor = va_arg(args, Actor*);
+            *should = false;
+            if (ELFMSG_GET_SWITCH_FLAG(actor) != 0x7F) {
+                Flags_SetSwitch(gPlayState, ELFMSG_GET_SWITCH_FLAG(actor));
+            }
+            Actor_Kill(actor);
+        }
+    });
+
+    // General interupt (3)
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG3, CVAR, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
@@ -33,7 +47,19 @@ void RegisterSkipTatlInterrupts() {
         }
     });
 
-    // General interupt 2 (the flags were directly copied from the original code)
+    // General interupt (4)
+    COND_VB_SHOULD(VB_TATL_INTERUPT_MSG4, CVAR, {
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
+            Actor* actor = va_arg(args, Actor*);
+            *should = false;
+            if (ELFMSG4_GET_SWITCH_FLAG(actor) != 0x7F) {
+                Flags_SetSwitch(gPlayState, ELFMSG4_GET_SWITCH_FLAG(actor));
+            }
+            Actor_Kill(actor);
+        }
+    });
+
+    // General interupt (6) (the flags were directly copied from the original code)
     COND_VB_SHOULD(VB_TATL_INTERUPT_MSG6, CVAR, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && *should) {
             Actor* actor = va_arg(args, Actor*);
