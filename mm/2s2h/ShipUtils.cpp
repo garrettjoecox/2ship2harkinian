@@ -143,7 +143,11 @@ std::string convertEnumToReadableName(const std::string& input) {
     for (auto& w : words) {
         std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
         if (!w.empty()) {
-            w[0] = std::toupper(w[0]);
+            if (w == "hp") {
+                w = "HP";
+            } else {
+                w[0] = std::toupper(w[0]);
+            }
         }
     }
 
