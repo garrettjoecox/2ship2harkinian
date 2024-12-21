@@ -14,8 +14,7 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipStoppingMoon() {
-    // Forced on for rando for now
-    COND_VB_SHOULD(VB_START_CUTSCENE, CVAR || IS_RANDO, {
+    COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
         s16* csId = va_arg(args, s16*);
         if (gPlayState->sceneId == SCENE_OKUJOU) {
             if (*csId == 12) {
@@ -36,4 +35,4 @@ void RegisterSkipStoppingMoon() {
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipStoppingMoon, { CVAR_NAME, "IS_RANDO" });
+static RegisterShipInitFunc initFunc(RegisterSkipStoppingMoon, { CVAR_NAME });
