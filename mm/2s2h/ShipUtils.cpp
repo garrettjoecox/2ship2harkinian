@@ -8,6 +8,12 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost_custom/container_hash/hash_32.hpp>
 
+// Image Icons
+#include "assets/interface/parameter_static/parameter_static.h"
+#include "assets/archives/icon_item_24_static/icon_item_24_static_yar.h"
+#include "assets/archives/schedule_dma_static/schedule_dma_static_yar.h"
+#include "assets/interface/icon_item_field_static/icon_item_field_static.h"
+
 extern "C" {
 #include "macros.h"
 #include "z64.h"
@@ -27,6 +33,13 @@ extern TexturePtr gBombersNotebookPhotos[24];
 
 std::unordered_map<s16, const char*> sceneNames = {
 #include "tables/scene_table.h"
+};
+
+std::vector<const char*> checkTrackerTextures = {
+    gRupeeCounterIconTex,
+    gStrayFairyGreatBayIconTex,
+    gQuestIconGoldSkulltulaTex,
+    gWorldMapOwlFaceTex,
 };
 
 #undef DEFINE_SCENE
@@ -116,6 +129,10 @@ void LoadGuiTextures() {
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
     for (TexturePtr entry : gBombersNotebookPhotos) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
+    for (auto& entry : checkTrackerTextures) {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
