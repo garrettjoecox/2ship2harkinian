@@ -338,6 +338,7 @@ typedef struct RandoSaveCheck {
     bool shuffled;
     bool eligible;
     bool obtained;
+    bool skipped;
     u16 price; // Only applicable for shops/merchants
 } RandoSaveCheck;
 
