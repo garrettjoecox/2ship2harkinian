@@ -10,7 +10,6 @@ namespace ActorBehavior {
 void Init();
 void OnFileLoad();
 
-
 void InitGbGoronOyuBehavior();
 void InitDoorWarp1VBehavior();
 void InitDmChar05Behavior();
