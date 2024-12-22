@@ -140,8 +140,31 @@ void LoadGuiTextures() {
 }
 
 std::string convertEnumToReadableName(const std::string& input) {
+    std::vector<std::string> sceneRemovalList = {
+        "Ancient Castle Of Ikana",  "Astral Observatory",   "Beneath The Graveyard",    "Beneath The Well",
+        "Bomb Shop",                "Clock Tower Interior", "Clock Tower Roof",         "Clock Town East",
+        "Clock Town Laundry",       "Clock Town North",     "Clock Town South",         "Clock Town West",
+        "Deku Palace",              "Deku Shrine",          "Doggy Racetrack",          "Giants Chamber",
+        "Goron Graveyard",          "Goron Racetrack",      "Goron Shop",               "Goron Shrine",
+        "Goron Village",            "Great Bay Coast",      "Great Bay Temple",         "Hags Potion Shop",
+        "Ikana Canyon",             "Ikana Graveyard",      "Kafeis Hideout",           "Lone Peak Shrine",
+        "Mayors Office",            "Milk Road",            "Moon Trial",               "Mountain Village",
+        "Mountain Village Smithy",  "Music Box",            "Ocean Skulltula",          "Ocean Spider House",
+        "Path To Snowhead",         "Pinnacle Rock",        "Pirate Fortress",          "Road To Ikana",
+        "Road To Southern Swamp",   "Romani Ranch",         "Sakon Hideout",            "Secret Shrine",
+        "Snowhead Temple",          "Southern Swamp",       "Stock Pot Inn",            "Stone Tower Temple",
+        "Swamp Shooting Gallery",   "Swamp Skulltula",      "Swamp Spider House",       "Swordsman School",
+        "Termina Field",            "Trading Post Shop",    "Twin Islands",             "Woodfall Temple",
+        "Woods Of Mystery",         "Zora Cape",            "Zora Hall",                "Zora Shop",
+        "Clock Town",               "Ikana",                "Great Bay",                "Woodfall",
+        "Snowhead",                 "Stone Tower"
+    };
+
+
+
     std::string result;
     std::string content = input;
+    std::string tempResult;
 
     // Step 1: Remove "RC_" prefix if present
     const std::string prefix = "RC_";
@@ -171,11 +194,34 @@ std::string convertEnumToReadableName(const std::string& input) {
 
     // Step 4: Join the words with spaces
     for (size_t i = 0; i < words.size(); ++i) {
-        result += words[i];
+        tempResult += words[i];
         if (i < words.size() - 1) {
+            tempResult += " ";
+        }
+    }
+
+    // Step 5: Filter out scene names
+    for (const auto& sceneName : sceneRemovalList) {
+        size_t pos = tempResult.find(sceneName);
+        if (pos != std::string::npos) {
+            tempResult.erase(pos, sceneName.length());
+        }
+    }
+
+    // Step 6: Remove extra spaces caused by erasure
+    std::istringstream cleanStream(tempResult);
+    std::vector<std::string> cleanWords;
+    while (cleanStream >> word) {
+        cleanWords.push_back(word);
+    }
+
+    for (size_t i = 0; i < cleanWords.size(); ++i) {
+        result += cleanWords[i];
+        if (i < cleanWords.size() - 1) {
             result += " ";
         }
     }
+
 
     return result;
 }
