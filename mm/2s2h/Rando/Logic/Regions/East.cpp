@@ -86,21 +86,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, HAS_MAGIC && HAS_ITEM(ITEM_LENS_OF_TRUTH)),
         },
     };
-    Regions[RR_BENEATH_THE_WELL_ENTRANCE] = RandoRegion{ .name = "Entrace", .sceneId = SCENE_REDEAD,
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(IKANA_CANYON, 5),                 ENTRANCE(BENEATH_THE_WELL, 0), true),
-        },
-        .connections = {
-            CONNECTION(RR_BENEATH_THE_WELL_THREE_SPIKED_BARS, RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL] && HAS_ITEM(ITEM_MASK_GIBDO)),
-            CONNECTION(RR_BENEATH_THE_WELL_FREEZARD_ROOM, RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL] && HAS_ITEM(ITEM_MASK_GIBDO))
-        },
-    };
-    Regions[RR_BENEATH_THE_WELL_THREE_SPIKED_BARS] = RandoRegion{ .name = "Three Spikes Room", .sceneId = SCENE_REDEAD,
-        .connections = {
-            CONNECTION(RR_BENEATH_THE_WELL_ENTRANCE, true),
-            CONNECTION(RR_BENEATH_THE_WELL_TWO_SPIKED_BARS, CAN_GET_SPRING_WATER && HAS_ITEM(ITEM_MASK_GIBDO))
-        },
-    };
     Regions[RR_GHOST_HUT] = RandoRegion{ .sceneId = SCENE_TOUGITES,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 1),                 ENTRANCE(GHOST_HUT, 0), true),
@@ -148,7 +133,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),
-            EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
+            EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)), // TODO: Logic cannot get past this. Maybe replace with a event later?
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
         },
@@ -166,6 +151,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE] = RandoRegion{ .sceneId = SCENE_CASTLE,
         .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(BENEATH_THE_WELL, 1),             ENTRANCE(IKANA_CASTLE, 0), true),
             EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
         },
     };
@@ -176,7 +162,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 2),                ENTRANCE(IKANA_GRAVEYARD, 0), true),
-            EXIT(ENTRANCE(DAMPES_HOUSE, 0),                          ONE_WAY_EXIT, HAS_ITEM(ITEM_MASK_CAPTAIN)), // Day 3 hole
+            EXIT(ENTRANCE(DAMPES_HOUSE, 0),                 ONE_WAY_EXIT, HAS_ITEM(ITEM_MASK_CAPTAIN)), // Day 3 hole
             EXIT(ENTRANCE(BENEATH_THE_GRAVERYARD, 0),       ENTRANCE(IKANA_GRAVEYARD, 2), HAS_ITEM(ITEM_MASK_CAPTAIN)), // Day 2 hole
             EXIT(ENTRANCE(BENEATH_THE_GRAVERYARD, 1),       ENTRANCE(IKANA_GRAVEYARD, 3), HAS_ITEM(ITEM_MASK_CAPTAIN)), // Day 1 hole
         },
