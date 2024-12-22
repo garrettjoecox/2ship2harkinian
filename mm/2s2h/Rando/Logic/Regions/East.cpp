@@ -119,10 +119,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 9),               ONE_WAY_EXIT, true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_MAGIC && HAS_ITEM(ITEM_ARROW_ICE))
+            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_MAGIC_ARROW(ICE))
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, HAS_BOTTLE && (CUR_UPG_VALUE(UPG_WALLET) >= 1)),
+            EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, HAS_BOTTLE),
         },
     };
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,

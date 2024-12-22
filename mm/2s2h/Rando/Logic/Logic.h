@@ -82,6 +82,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 #define CAN_USE_PROJECTILE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
 #define CAN_GET_SPRING_WATER \
     (HAS_BOTTLE && RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER] || RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER])
+#define CHECK_BOTTLE_CONTENT(bottleObj) (HAS_BOTTLE && RANDO_ACCESS[RANDO_ACCESS_##bottleObj])
 #define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
 #define CAN_USE_MAGIC_ARROW(arrowType) (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_##arrowType) && HAS_MAGIC)
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.

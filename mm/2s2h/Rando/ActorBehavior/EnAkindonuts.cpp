@@ -1,5 +1,6 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include <iostream>
 
 extern "C" {
 #include "variables.h"
@@ -13,25 +14,8 @@ void func_80BEEFA8(EnAkindonuts* enAkindonuts, PlayState* play);
 // This handles the checks for the business scrubs in the Southern Swamp, Goron Village, Zora Hall, and Ikana Canyon.
 // Also sets flags for inf bean access and inf blue potion access.
 void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_AKINDONUTS, IS_RANDO, [](Actor* actor) {
-        EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
-        switch (ENAKINDONUTS_GET_3(&enAkindonuts->actor)) {
-            case 0:
-                if (!RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL]) {
-                    RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL]++;
-                }
-                break;
-            case 3:
-                if (!RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL]) {
-                    RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL]++;
-                }
-                break;
-        }
-    });
-
     COND_ID_HOOK(OnActorUpdate, ACTOR_EN_AKINDONUTS, IS_RANDO, [](Actor* actor) {
         EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
-
         if (enAkindonuts->actionFunc == func_80BEF360) {
             if (enAkindonuts->unk_32C & 0x40) {
                 bool triggered_check = false;
@@ -41,6 +25,9 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
                             Flags_SetRandoInf(RANDO_INF_PURCHASED_BEANS_FROM_SOUTHERN_SWAMP_SCRUB);
                             Rupees_ChangeBy(enAkindonuts->unk_364);
                             triggered_check = true;
+                            if (!RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL]) {
+                                RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL]++;
+                            }
                         }
                         break;
                     case 1:
@@ -62,6 +49,9 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
                             Flags_SetRandoInf(RANDO_INF_PURCHASED_POTION_FROM_IKANA_CANYON_SCRUB);
                             Rupees_ChangeBy(enAkindonuts->unk_364);
                             triggered_check = true;
+                            if (!RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL]) {
+                                RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL]++;
+                            }
                         }
                         break;
                 }

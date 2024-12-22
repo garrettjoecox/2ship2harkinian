@@ -171,7 +171,7 @@ static RegisterShipInitFunc initFunc([]() {
         .events = {
             EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
             EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
-            EVENT_ACCESS(RANDO_ACCESS_BEANS_REFILL, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_BE_DEKU)
+            EVENT_ACCESS(RANDO_ACCESS_BEANS_REFILL, true)
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana
