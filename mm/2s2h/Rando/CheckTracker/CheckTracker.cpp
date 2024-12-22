@@ -54,17 +54,17 @@ std::vector<SceneId> sortedSceneIds;
 std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
 std::vector<std::pair<const char*, ImVec4>> checkTypeIconMap = {
-    /*RCTYPE_UNKNOWN*/      { gItemIconBombersNotebookTex,  {1, 1, 1, 1} },
-    /*RCTYPE_CHEST*/        { gItemIconBombersNotebookTex,  {1, 1, 1, 1} },
-    /*RCTYPE_COW*/          { gItemIconRomaniMaskTex,       {1, 1, 1, 1} },
-    /*RCTYPE_FREESTANDING*/ { gItemIconBombersNotebookTex,  {1, 1, 1, 1} },
-    /*RCTYPE_NPC*/          { gItemIconBombersNotebookTex,  {1, 1, 1, 1} },
-    /*RCTYPE_OWL*/          { gWorldMapOwlFaceTex,          {1, 1, 1, 1} },
-    /*RCTYPE_POT*/          { gItemIconBombersNotebookTex,  {1, 1, 1, 1} },
-    /*RCTYPE_SHOP*/         { gRupeeCounterIconTex,         {0.78f, 1, 0.39f, 1} },
-    /*RCTYPE_SKULL_TOKEN*/  { gQuestIconGoldSkulltulaTex,   {1, 1, 1, 1} },
-    /*RCTYPE_SONG*/         { gItemIconSongNoteTex,         {1, 1, 1, 1} },
-    /*RCTYPE_STRAY_FAIRY*/  { gStrayFairyGreatBayIconTex,   {1, 1, 1, 1} },
+    /*RCTYPE_UNKNOWN*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_CHEST*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_COW*/ { gItemIconRomaniMaskTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_FREESTANDING*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_NPC*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_OWL*/ { gWorldMapOwlFaceTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_POT*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_SHOP*/ { gRupeeCounterIconTex, { 0.78f, 1, 0.39f, 1 } },
+    /*RCTYPE_SKULL_TOKEN*/ { gQuestIconGoldSkulltulaTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_SONG*/ { gItemIconSongNoteTex, { 1, 1, 1, 1 } },
+    /*RCTYPE_STRAY_FAIRY*/ { gStrayFairyGreatBayIconTex, { 1, 1, 1, 1 } },
 };
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
@@ -78,13 +78,32 @@ uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
     return collected;
 }
 
+std::string totalChecksFound() {
+    std::string totalChecks;
+    uint32_t collected = 0;
+    uint32_t totalShuffled = 0;
+    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
+            collected++;
+        }
+        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
+            totalShuffled++;
+        }
+    }
+    totalChecks = std::to_string(collected);
+    totalChecks += "/";
+    totalChecks += std::to_string(totalShuffled);
+    return totalChecks;
+}
+
 ImTextureID setCheckTypeTextureProperties(RandoCheckId randoCheckId) {
     ImTextureID textureId = 0;
     RandoCheckType checkType = Rando::StaticData::Checks[randoCheckId].randoCheckType;
-    textureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(
-            checkTypeIconMap[checkType].first);
-    imageSize = checkType == RCTYPE_SONG ? ImVec2(12.0f, 16.0f) : 
-                checkType == RCTYPE_OWL ? ImVec2(16.0f, 9.0f) : ImVec2(16.0f, 16.0f);
+    textureId =
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(checkTypeIconMap[checkType].first);
+    imageSize = checkType == RCTYPE_SONG  ? ImVec2(14.0f, 18.0f)
+                : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
+                                          : ImVec2(18.0f, 18.0f);
     colorFilter = checkTypeIconMap[Rando::StaticData::Checks[randoCheckId].randoCheckType].second;
     return textureId;
 }
@@ -123,15 +142,14 @@ void CheckTrackerDrawLogicalList() {
     Rando::Logic::FindReachableRegions(RR_MAX, reachableRegions);
     // Get connected regions from current entrance (TODO: Make this optional)
     Rando::Logic::FindReachableRegions(Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance),
-                                        reachableRegions);
+                                       reachableRegions);
 
     std::vector<RandoRegionId> sortedRegionIds;
     for (auto& regionId : reachableRegions) {
         sortedRegionIds.push_back(regionId);
     }
     std::sort(sortedRegionIds.begin(), sortedRegionIds.end(), [](RandoRegionId a, RandoRegionId b) {
-        return betterSceneIndex[Rando::Logic::Regions[a].sceneId] <
-                betterSceneIndex[Rando::Logic::Regions[b].sceneId];
+        return betterSceneIndex[Rando::Logic::Regions[a].sceneId] < betterSceneIndex[Rando::Logic::Regions[b].sceneId];
     });
 
     for (RandoRegionId regionId : sortedRegionIds) {
@@ -182,8 +200,7 @@ void CheckTrackerDrawLogicalList() {
                 regionName += randoRegion.name;
             }
 
-            regionName +=
-                " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(availableChecks.size()) + ")";
+            regionName += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(availableChecks.size()) + ")";
 
             ImGui::PushID(regionId);
             ImGui::Separator();
@@ -194,7 +211,7 @@ void CheckTrackerDrawLogicalList() {
             if (ImGui::CollapsingHeader(regionName.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Indent(20.0f);
                 if (ImGui::BeginTable("Check Tracker", 2)) {
-                    ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 14.0f);
+                    ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 16.0f);
                     ImGui::TableSetupColumn("Check");
                     ImGui::TableNextColumn();
                     for (auto& [name, accessLogicString] : availableEvents) {
@@ -209,15 +226,15 @@ void CheckTrackerDrawLogicalList() {
                         auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
                         ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
-                                                                                        : UIWidgets::Colors::White);
+                                                                                     : UIWidgets::Colors::White);
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                             ImGui::BeginGroup();
                             float cursorPosY = ImGui::GetCursorPosY();
                             if (Rando::StaticData::Checks[checkId].randoCheckType == RCTYPE_OWL) {
                                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3.5f);
                             }
-                            ImGui::Image(setCheckTypeTextureProperties(checkId), imageSize, ImVec2(0, 0),
-                                ImVec2(1, 1), colorFilter);
+                            ImGui::Image(setCheckTypeTextureProperties(checkId), imageSize, ImVec2(0, 0), ImVec2(1, 1),
+                                         colorFilter);
                             ImGui::TableNextColumn();
                             ImGui::SetCursorPosY(cursorPosY);
                             ImGui::Text("%s", readableCheckNames[checkId].c_str());
@@ -288,9 +305,8 @@ void CheckTrackerDrawNonLogicalList() {
         std::string headerText = Ship_GetSceneName(sceneId);
         headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(unfilteredChecks.size()) + ")";
 
-        ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == unfilteredChecks.size()
-                                                 ? UIWidgets::Colors::LightGreen
-                                                 : UIWidgets::Colors::White);
+        ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == unfilteredChecks.size() ? UIWidgets::Colors::LightGreen
+                                                                                         : UIWidgets::Colors::White);
 
         if (sExpandedHeadersState != sExpandedHeadersToggle) {
             ImGui::SetNextItemOpen(sExpandedHeadersToggle);
@@ -298,24 +314,24 @@ void CheckTrackerDrawNonLogicalList() {
         if (ImGui::CollapsingHeader(headerText.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Indent(20.0f);
             if (ImGui::BeginTable("Check Tracker", 2)) {
-                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 14.0f);
+                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 16.0f);
                 ImGui::TableSetupColumn("Check");
                 ImGui::TableNextColumn();
                 for (auto& randoCheckId : checks) {
                     Rando::StaticData::RandoStaticCheck& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                     RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
-                                                        : randoSaveCheck.skipped ? UIWidgets::Colors::Indigo 
-                                                        : UIWidgets::Colors::White);
-                    
+                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained  ? UIWidgets::Colors::LightGreen
+                                                         : randoSaveCheck.skipped ? UIWidgets::Colors::Indigo
+                                                                                  : UIWidgets::Colors::White);
+
                     if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                         ImGui::BeginGroup();
                         float cursorPosY = ImGui::GetCursorPosY();
                         if (Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_OWL) {
                             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3.5f);
                         }
-                        ImGui::Image(setCheckTypeTextureProperties(randoCheckId), imageSize, ImVec2(0, 0),
-                            ImVec2(1, 1), colorFilter);
+                        ImGui::Image(setCheckTypeTextureProperties(randoCheckId), imageSize, ImVec2(0, 0), ImVec2(1, 1),
+                                     colorFilter);
                         ImGui::TableNextColumn();
 
                         ImGui::SetCursorPosY(cursorPosY);
@@ -331,8 +347,9 @@ void CheckTrackerDrawNonLogicalList() {
                         ImGui::SameLine();
                         ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 0));
                         ImGui::EndGroup();
-                        ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
-                               ImGui::IsItemHovered() ? IM_COL32(255, 255, 0, 128) : IM_COL32(255, 255, 255, 0));
+                        ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImGui::IsItemHovered()
+                                                                              ? IM_COL32(255, 255, 0, 128)
+                                                                              : IM_COL32(255, 255, 255, 0));
                         if (ImGui::IsItemClicked()) {
                             randoSaveCheck.skipped = !randoSaveCheck.skipped;
                         }
@@ -362,12 +379,14 @@ void Window::DrawElement() {
     }
 
     UIWidgets::PushStyleCombobox();
-    sCheckTrackerFilter.Draw("##filter", ImGui::GetContentRegionAvail().x);
+    sCheckTrackerFilter.Draw("##filter", (ImGui::GetContentRegionAvail().x - 150.0f));
     UIWidgets::PopStyleCombobox();
     if (!sCheckTrackerFilter.IsActive()) {
         ImGui::SameLine(18.0f);
         ImGui::Text("Search");
     }
+    ImGui::SameLine(ImGui::GetContentRegionAvail().x - 125.0f);
+    ImGui::Text("Total: %s", totalChecksFound().c_str());
 
     ImGui::BeginChild("Checks", ImVec2(0, 0));
     if (CVAR_SHOW_LOGIC) {
