@@ -46,25 +46,22 @@ static s32 sScrollToTargetScene = -1;
 static s32 sScrollToTargetEntrance = -1;
 static ImGuiTextFilter sCheckTrackerFilter;
 
-static ImVec2 imageSize;
-static ImVec4 colorFilter;
-
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
 std::vector<SceneId> sortedSceneIds;
 std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
-std::vector<std::pair<const char*, ImVec4>> checkTypeIconMap = {
-    /*RCTYPE_UNKNOWN*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_CHEST*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_COW*/ { gItemIconRomaniMaskTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_FREESTANDING*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_NPC*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_OWL*/ { gWorldMapOwlFaceTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_POT*/ { gItemIconBombersNotebookTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_SHOP*/ { gRupeeCounterIconTex, { 0.78f, 1, 0.39f, 1 } },
-    /*RCTYPE_SKULL_TOKEN*/ { gQuestIconGoldSkulltulaTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_SONG*/ { gItemIconSongNoteTex, { 1, 1, 1, 1 } },
-    /*RCTYPE_STRAY_FAIRY*/ { gStrayFairyGreatBayIconTex, { 1, 1, 1, 1 } },
+std::vector<const char*> checkTypeIconList = {
+    /*RCTYPE_UNKNOWN*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_CHEST*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
+    /*RCTYPE_FREESTANDING*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_OWL*/ gWorldMapOwlFaceTex,
+    /*RCTYPE_POT*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_SHOP*/ gRupeeCounterIconTex,
+    /*RCTYPE_SKULL_TOKEN*/ gQuestIconGoldSkulltulaTex,
+    /*RCTYPE_SONG*/ gItemIconSongNoteTex,
+    /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
 };
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
@@ -96,16 +93,14 @@ std::string totalChecksFound() {
     return totalChecks;
 }
 
-ImTextureID setCheckTypeTextureProperties(RandoCheckId randoCheckId) {
-    ImTextureID textureId = 0;
+void DrawCheckTypeIcon(RandoCheckId randoCheckId) {
     RandoCheckType checkType = Rando::StaticData::Checks[randoCheckId].randoCheckType;
-    textureId =
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(checkTypeIconMap[checkType].first);
-    imageSize = checkType == RCTYPE_SONG  ? ImVec2(14.0f, 18.0f)
-                : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
-                                          : ImVec2(18.0f, 18.0f);
-    colorFilter = checkTypeIconMap[Rando::StaticData::Checks[randoCheckId].randoCheckType].second;
-    return textureId;
+    ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(checkTypeIconList[checkType]),
+                 checkType == RCTYPE_SONG  ? ImVec2(14.0f, 18.0f)
+                 : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
+                                           : ImVec2(18.0f, 18.0f),
+                 ImVec2(0, 0), ImVec2(1, 1),
+                 checkType == RCTYPE_SHOP ? ImVec4(0.78f, 1, 0.39f, 1) : ImVec4(1, 1, 1, 1));
 }
 
 void initializeSceneChecks() {
@@ -230,11 +225,10 @@ void CheckTrackerDrawLogicalList() {
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                             ImGui::BeginGroup();
                             float cursorPosY = ImGui::GetCursorPosY();
-                            if (Rando::StaticData::Checks[checkId].randoCheckType == RCTYPE_OWL) {
+                            if (randoStaticCheck.randoCheckType == RCTYPE_OWL) {
                                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3.5f);
                             }
-                            ImGui::Image(setCheckTypeTextureProperties(checkId), imageSize, ImVec2(0, 0), ImVec2(1, 1),
-                                         colorFilter);
+                            DrawCheckTypeIcon(checkId);
                             ImGui::TableNextColumn();
                             ImGui::SetCursorPosY(cursorPosY);
                             ImGui::Text("%s", readableCheckNames[checkId].c_str());
@@ -330,8 +324,7 @@ void CheckTrackerDrawNonLogicalList() {
                         if (Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_OWL) {
                             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3.5f);
                         }
-                        ImGui::Image(setCheckTypeTextureProperties(randoCheckId), imageSize, ImVec2(0, 0), ImVec2(1, 1),
-                                     colorFilter);
+                        DrawCheckTypeIcon(randoCheckId);
                         ImGui::TableNextColumn();
 
                         ImGui::SetCursorPosY(cursorPosY);

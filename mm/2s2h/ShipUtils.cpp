@@ -35,15 +35,16 @@ std::unordered_map<s16, const char*> sceneNames = {
 #include "tables/scene_table.h"
 };
 
-std::vector<const char*> checkTrackerTextures = {
+#undef DEFINE_SCENE
+#undef DEFINE_SCENE_UNSET
+
+// These textures are not in existing lists that we iterate over.
+std::vector<const char*> miscellaneousTextures = {
     gRupeeCounterIconTex,
     gStrayFairyGreatBayIconTex,
     gQuestIconGoldSkulltulaTex,
     gWorldMapOwlFaceTex,
 };
-
-#undef DEFINE_SCENE
-#undef DEFINE_SCENE_UNSET
 
 extern "C" const char* Ship_GetSceneName(s16 sceneId) {
     if (sceneNames.contains(sceneId)) {
@@ -132,7 +133,7 @@ void LoadGuiTextures() {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
-    for (auto& entry : checkTrackerTextures) {
+    for (auto& entry : miscellaneousTextures) {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
