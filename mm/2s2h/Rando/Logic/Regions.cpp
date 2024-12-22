@@ -763,7 +763,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_HONEY_AND_DARLING, RandoRegion{ .sceneId = SCENE_BOWLING,
         .checks = {
-            // TODO : Add checks for all 3 days for this shop.
+            CHECK(RC_CLOCK_TOWN_EAST_HONEY_DARLING_ALL_DAYS, HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_BOMBCHU) && HAS_ITEM(ITEM_BOMB)),
+            CHECK(RC_CLOCK_TOWN_EAST_HONEY_DARLING_DAY_1, HAS_ITEM(ITEM_BOMBCHU)),
+            CHECK(RC_CLOCK_TOWN_EAST_HONEY_DARLING_DAY_2, HAS_ITEM(ITEM_BOMB)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 6),              ENTRANCE(HONEY_AND_DARLINGS_SHOP, 0), true),

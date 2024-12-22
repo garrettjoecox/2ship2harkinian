@@ -158,6 +158,8 @@ typedef enum {
     VB_MALON_CONSIDER_EPONA_SONG_GIVEN,
     VB_GIVE_ITEM_FROM_MALON,
     VB_DOOR_HEALTH_CHECK_FAIL,
+    VB_GIVE_ANY_DAY_REWARD,
+    VB_GIVE_ALL_DAYS_REWARD,
 } GIVanillaBehavior;
 
 typedef enum {
