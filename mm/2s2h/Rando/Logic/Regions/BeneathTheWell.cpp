@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_ACCESS(RANDO_ACCESS_STICK_AMMO, RANDO_ACCESS[RANDO_ACCESS_STICK_AMMO]),
         }
     };
-    Regions[RR_BENEATH_THE_WELL_BACK_EXIT] = RandoRegion{ .name = "Mirror Shield Room", .sceneId = SCENE_REDEAD,
+    Regions[RR_BENEATH_THE_WELL_BACK_EXIT] = RandoRegion{ .name = "Back Exit", .sceneId = SCENE_REDEAD,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CASTLE, 0),                 ENTRANCE(BENEATH_THE_WELL, 1), true),
         },
