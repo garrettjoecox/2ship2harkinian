@@ -15,6 +15,9 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 3),      ENTRANCE(GORON_GRAVERYARD, 0), true),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_HOT_SPRING_WATER, HAS_BOTTLE),
+        },
     };
     Regions[RR_GORON_SHRINE] = RandoRegion{ .sceneId = SCENE_16GORON_HOUSE,
         .checks = {

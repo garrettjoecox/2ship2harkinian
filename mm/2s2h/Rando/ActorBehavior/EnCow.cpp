@@ -58,6 +58,14 @@ RandoCheckId IdentifyCow(Actor* actor) {
 }
 
 void Rando::ActorBehavior::InitEnCowBehavior() {
+    // When EnCow is initialized this means the player should now be considered to have access to Milk. This flag
+    // is purely to drive the live updating check tracker, it has no effect on actual gameplay.
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_COW, IS_RANDO, [](Actor* actor) {
+        if (!RANDO_ACCESS[RANDO_ACCESS_MILK]) {
+            RANDO_ACCESS[RANDO_ACCESS_MILK]++;
+        }
+    });
+
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_COW, IS_RANDO, {
         // Original Should is the Range check, if it fails just Return.
         Actor* actor = va_arg(args, Actor*);

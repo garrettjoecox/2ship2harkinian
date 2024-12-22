@@ -145,8 +145,10 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 
 // TODO: This is for sure not the right place for these
 inline std::string randoAccessName[RANDO_ACCESS_MAX] = {
-    "Access To Hot Spring Water", "Access To Nut Ammo",   "Access To Pirate Picture", "Access To Seahorse",
-    "Access To Spring Water",     "Access To Stick Ammo", "Access To Zora Egg",
+    "Access To Hot Spring Water", "Access To Nut Ammo",     "Access To Pirate Picture",
+    "Access To Seahorse",         "Access To Spring Water", "Access To Stick Ammo",
+    "Access To Zora Egg",         "Access To Fish",         "Access To Bugs",
+    "Access To Big Poe",          "Access to Milk"
 };
 
 inline void Flags_SetSceneSwitch(s32 scene, s32 flag) {

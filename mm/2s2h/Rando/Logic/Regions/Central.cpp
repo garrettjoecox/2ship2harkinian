@@ -227,6 +227,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 9),              ENTRANCE(STOCK_POT_INN, 0), true), // From ground floor
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),             ENTRANCE(STOCK_POT_INN, 1), true), // From upstairs
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_FISH, HAS_BOTTLE),
+            EVENT_ACCESS(RANDO_ACCESS_BUGS, HAS_BOTTLE)
+        },
     };
     Regions[RR_LOTTERY_SHOP] = RandoRegion{ .sceneId = SCENE_TAKARAKUJI,
         .checks = {

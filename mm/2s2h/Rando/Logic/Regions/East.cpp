@@ -86,9 +86,19 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, HAS_MAGIC && HAS_ITEM(ITEM_LENS_OF_TRUTH)),
         },
     };
-    Regions[RR_BENEATH_THE_WELL] = RandoRegion{ .sceneId = SCENE_REDEAD,
+    Regions[RR_BENEATH_THE_WELL_ENTRANCE] = RandoRegion{ .name = "Entrace", .sceneId = SCENE_REDEAD,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 5),                 ENTRANCE(BENEATH_THE_WELL, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_BENEATH_THE_WELL_THREE_SPIKED_BARS, RANDO_ACCESS[RANDO_ACCESS_BLUE_POTION_REFILL] && HAS_ITEM(ITEM_MASK_GIBDO)),
+            CONNECTION(RR_BENEATH_THE_WELL_FREEZARD_ROOM, RANDO_ACCESS[RANDO_ACCESS_BEANS_REFILL] && HAS_ITEM(ITEM_MASK_GIBDO))
+        },
+    };
+    Regions[RR_BENEATH_THE_WELL_THREE_SPIKED_BARS] = RandoRegion{ .name = "Three Spikes Room", .sceneId = SCENE_REDEAD,
+        .connections = {
+            CONNECTION(RR_BENEATH_THE_WELL_ENTRANCE, true),
+            CONNECTION(RR_BENEATH_THE_WELL_TWO_SPIKED_BARS, CAN_GET_SPRING_WATER && HAS_ITEM(ITEM_MASK_GIBDO))
         },
     };
     Regions[RR_GHOST_HUT] = RandoRegion{ .sceneId = SCENE_TOUGITES,
@@ -125,6 +135,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_MAGIC && HAS_ITEM(ITEM_ARROW_ICE))
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, HAS_BOTTLE && (CUR_UPG_VALUE(UPG_WALLET) >= 1)),
         },
     };
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,

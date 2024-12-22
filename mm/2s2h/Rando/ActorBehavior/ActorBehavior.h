@@ -10,6 +10,8 @@ namespace ActorBehavior {
 void Init();
 void OnFileLoad();
 
+
+void InitGbGoronOyuBehavior();
 void InitDoorWarp1VBehavior();
 void InitDmChar05Behavior();
 void InitDmHinaBehavior();
@@ -19,6 +21,7 @@ void InitEnBoxBehavior();
 void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
+void InitEnFishBehavior();
 void InitEnGe2Behavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();
@@ -26,6 +29,7 @@ void InitEnGirlABehavior();
 void InitEnGoBehavior();
 void InitEnGsBehavior();
 void InitEnHgBehavior();
+void InitEnInsectBehavior();
 void InitEnItem00Behavior();
 void InitEnKgyBehavior();
 void InitEnKnightBehavior();
@@ -38,6 +42,7 @@ void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
+void InitEnBigPoBehavior();
 void InitEnTest5Behavior();
 void InitEnTsnBehavior();
 void InitEnYbBehavior();

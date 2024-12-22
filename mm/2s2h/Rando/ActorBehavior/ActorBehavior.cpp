@@ -31,6 +31,7 @@ void Rando::ActorBehavior::Init() {
 }
 
 void Rando::ActorBehavior::OnFileLoad() {
+    Rando::ActorBehavior::InitGbGoronOyuBehavior();
     Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitDmChar05Behavior();
     Rando::ActorBehavior::InitDmHinaBehavior();
@@ -40,8 +41,10 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
+    Rando::ActorBehavior::InitEnFishBehavior();
     Rando::ActorBehavior::InitEnGe2Behavior();
     Rando::ActorBehavior::InitEnGgBehavior();
+    Rando::ActorBehavior::InitEnInsectBehavior();
     Rando::ActorBehavior::InitEnGinkoBehavior();
     Rando::ActorBehavior::InitEnGirlABehavior();
     Rando::ActorBehavior::InitEnGoBehavior();
@@ -58,6 +61,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
+    Rando::ActorBehavior::InitEnBigPoBehavior();
     Rando::ActorBehavior::InitEnTest5Behavior();
     Rando::ActorBehavior::InitEnTsnBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
