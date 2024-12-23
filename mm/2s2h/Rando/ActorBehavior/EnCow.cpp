@@ -82,12 +82,18 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         }
 
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (randoSaveCheck.eligible) {
+        if (!randoSaveCheck.obtained) {
+            if (randoSaveCheck.eligible) {
+                *should = true;
+                return;
+            }
+            randoSaveCheck.eligible = true;
+            *should = false;
+        } else {
+            // If check is already obtained returning to default behavior.
             *should = true;
-            return;
+            gPlayState->msgCtx.songPlayed = 0;
         }
-        randoSaveCheck.eligible = true;
-        *should = false;
     });
 
     COND_VB_SHOULD(VB_COW_CONSIDER_EPONAS_SONG_PLAYED, IS_RANDO, {
