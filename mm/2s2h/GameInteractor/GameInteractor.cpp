@@ -437,13 +437,12 @@ void ProcessEvents(Actor* actor) {
         gPlayState->transitionType = e->transitionType;
         GameInteractor::Instance->currentEvent = GIEventNone{};
     } else if (auto e = std::get_if<GIEventRespawn>(&nextEvent)) {
-        // Only trigger if currently in the entrance/room where the event was triggered.
+        // Only trigger if currently in the entrance/room associated to event
         if (gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance == e->entrance &&
             gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex == e->roomIndex) {
             gPlayState->nextEntrance = gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance;
             gPlayState->transitionTrigger = TRANS_TRIGGER_START;
             gPlayState->transitionType = TRANS_TYPE_INSTANT;
-            // gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex
             gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.x = e->posX;
             gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.y = e->posY;
             gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.z = e->posZ;
