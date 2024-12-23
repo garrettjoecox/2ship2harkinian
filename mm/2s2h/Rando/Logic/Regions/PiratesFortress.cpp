@@ -1,0 +1,321 @@
+#include <libultraship/libultraship.h>
+#include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
+
+#include "2s2h/Rando/Logic/Logic.h"
+
+using namespace Rando::Logic;
+
+// clang-format off
+static RegisterShipInitFunc initFunc([]() {
+    Regions[RR_PIRATES_FORTRESS_CAPTAIN_ROOM_UPPER] = RandoRegion{ .name = "Captain Room Upper", .sceneId = SCENE_PIRATE,
+        // TODO : If NTSC JP 1.0 support is added we should add a connection here to RR_PIRATES_FORTRESS_CAPTAIN_ROOM and a unique flag to check for it...or ignore it and let the player go the long way around
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BEEHIVE_1, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BEEHIVE_2, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 2),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1), true),
+        },
+        .events = {
+            EVENT_WEEKEVENTREG("Hit Beehive", WEEKEVENTREG_83_02, HAS_ITEM(ITEM_BOW)),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_CAPTAIN_ROOM] = RandoRegion{ .name = "Captain Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            // TODO: Zora Egg Here
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_HOOKSHOT, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02))
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 1),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_3_GUARD_ROOM] = RandoRegion{ .name = "3 Guard Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SILVER_RUPEE_CHEST, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 3),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 2), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM] = RandoRegion{ .name = "Chest Egg Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_AQUARIUM, HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_CHEST_AQUARIUM_1, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_CHEST_AQUARIUM_2, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_CHEST_AQUARIUM_3, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 8),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD] = RandoRegion{ .name = "Green Guard Room", .sceneId = SCENE_PIRATE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 5),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 4), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, CAN_USE_SWORD || CAN_BE_ZORA),
+            CONNECTION(RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM, CAN_USE_SWORD || CAN_BE_ZORA),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_LINE_GUARD] = RandoRegion{ .name = "Line Guard Room", .sceneId = SCENE_PIRATE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 7),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD] = RandoRegion{ .name = "Maze Room", .sceneId = SCENE_PIRATE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 5),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 4), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD] = RandoRegion{ .name = "Orange Guard Room", .sceneId = SCENE_PIRATE,
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_LINE_GUARD, (CAN_USE_SWORD || CAN_BE_ZORA)),
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM, (CAN_USE_SWORD || CAN_BE_ZORA)),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD] = RandoRegion{ .name = "Purple Guard Room", .sceneId = SCENE_PIRATE,
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_3_GUARD_ROOM, (CAN_USE_SWORD || CAN_BE_ZORA)),
+            CONNECTION(RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, (CAN_USE_SWORD || CAN_BE_ZORA)),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM] = RandoRegion{ .name = "Left Clam Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_2, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 4),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 3), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_LEFT_PLATFORM] = RandoRegion{ .name = "Left Platform", .sceneId = SCENE_KAIZOKU,
+        // The drop down from the LEFT_CLAM_EGG_ROOM
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 3),    ENTRANCE(PIRATES_FORTRESS, 4), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_MOAT_HIGHER] = RandoRegion{ .name = "Higher", .sceneId = SCENE_TORIDE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 0),             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 1), true),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10),   ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_MOAT_LOWER, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 4), // From being captured in the inner part of Pirate Fortress
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_MOAT_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_TORIDE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_ENTRANCE_CHEST_1, CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_ENTRANCE_CHEST_2, CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_ENTRANCE_CHEST_3, CAN_BE_ZORA),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 5),              ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 0), CAN_BE_ZORA),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 9),    ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 2), CAN_BE_ZORA && CAN_BE_GORON),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_MOAT_PLATFORM] = RandoRegion{ .name = "Platform", .sceneId = SCENE_TORIDE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 12),            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 5), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_MOAT_LOWER, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_LEFT_EXIT] = RandoRegion{ .name = "Left Side Exit", .sceneId = SCENE_KAIZOKU,
+        // The doorway when exiting the CHEST_EGG_ROOM, one way jump down to PALAZA
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 8), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER] = RandoRegion{ .name = "Palaza Left Lower", .sceneId = SCENE_KAIZOKU,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 7), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_UPPER, HAS_ITEM(ITEM_HOOKSHOT))
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_LEFT_UPPER] = RandoRegion{ .name = "Palaza Left Upper", .sceneId = SCENE_KAIZOKU,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_1, true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_2, true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_3, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 2),    ENTRANCE(PIRATES_FORTRESS, 3), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_RIGHT_EXIT] = RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
+        // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PALAZA
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 6), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_RIGHT] = RandoRegion{ .name = "Right Side", .sceneId = SCENE_KAIZOKU,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_UPPER_CHEST, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 12), true),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 4),    ENTRANCE(PIRATES_FORTRESS, 5), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA_TOWER] = RandoRegion{ .name = "Palaza Tower", .sceneId = SCENE_KAIZOKU,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1),    ENTRANCE(PIRATES_FORTRESS, 2), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_PALAZA] = RandoRegion{ .name = "Palaza", .sceneId = SCENE_KAIZOKU,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_LOWER_CHEST, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0),    ENTRANCE(PIRATES_FORTRESS, 1), true),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 1),    ENTRANCE(PIRATES_FORTRESS, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA_RIGHT, HAS_ITEM(ITEM_HOOKSHOT)),
+            // Outside of using Stones Mask you have to deal with this guard in some way.
+            CONNECTION(RR_PIRATES_FORTRESS_PALAZA_TOWER, (
+                (HAS_ITEM(ITEM_DEKU_NUT) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_MASK_STONE)) ||
+                (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA
+            )),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM] = RandoRegion{ .name = "Right Clam Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_1, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_2, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_3, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS, 6),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 5), true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
+    };
+    Regions[RR_PIRATES_FORTRESS_SEWERS_POSTGATE] = RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_2, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3),             ONE_WAY_EXIT, true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_TELESCOPE_ROOM, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_SEWERS_PREGATE] = RandoRegion{ .name = "Sewers Pregate", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_1, CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2, CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_3, CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_1, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_HP, true)
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 2),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 9), CAN_BE_ZORA),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3),             ONE_WAY_EXIT, true)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_SEWERS_POSTGATE, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
+        }
+    };
+    Regions[RR_PIRATES_FORTRESS_TELESCOPE_ROOM] = RandoRegion{ .name = "Telescope Room", .sceneId = SCENE_PIRATE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_1, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_2, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_3, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10), CAN_USE_PROJECTILE)
+        },
+        .connections = {
+            CONNECTION(RR_PIRATES_FORTRESS_SEWERS_POSTGATE, true)
+        }
+    };
+}, {});
+// clang-format on

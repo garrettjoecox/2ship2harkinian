@@ -1,14 +1,16 @@
 #ifndef RANDO_LOGIC_H
 #define RANDO_LOGIC_H
 
-#include <unordered_map>
-#include <set>
+#include <libultraship/bridge.h>
 #include "Rando/Rando.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
+#include <unordered_map>
+#include <set>
+
 extern "C" {
-#include "z64item.h"
-#include "z64scene.h"
+#include "functions.h"
+#include "variables.h"
 }
 
 namespace Rando {
@@ -46,6 +48,145 @@ struct RandoRegion {
 };
 
 extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
+
+// TODO: This may not stay here
+#define IS_DEKU (GET_PLAYER_FORM == PLAYER_FORM_DEKU)
+#define IS_ZORA (GET_PLAYER_FORM == PLAYER_FORM_ZORA)
+#define IS_DEITY (GET_PLAYER_FORM == PLAYER_FORM_FIERCE_DEITY)
+#define IS_GORON (GET_PLAYER_FORM == PLAYER_FORM_GORON)
+#define IS_HUMAN (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)
+#define HAS_ITEM(item) (INV_CONTENT(item) == item)
+#define CAN_BE_DEKU (IS_DEKU || HAS_ITEM(ITEM_MASK_DEKU))
+#define CAN_BE_ZORA (IS_ZORA || HAS_ITEM(ITEM_MASK_ZORA))
+#define CAN_BE_DEITY (IS_DEITY || HAS_ITEM(ITEM_MASK_FIERCE_DEITY))
+#define CAN_BE_GORON (IS_GORON || HAS_ITEM(ITEM_MASK_GORON))
+#define CAN_BE_HUMAN                                                                                        \
+    (IS_HUMAN || (IS_DEITY && HAS_ITEM(ITEM_MASK_FIERCE_DEITY)) || (IS_ZORA && HAS_ITEM(ITEM_MASK_ZORA)) || \
+     (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
+#define CHECK_MAX_HP(TARGET_HP) ((TARGET_HP * 16) <= gSaveContext.save.saveInfo.playerData.healthCapacity)
+#define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
+#define CAN_HOOK_SCARECROW (HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
+#define CAN_USE_EXPLOSIVE ((HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
+#define CAN_USE_HUMAN_SWORD (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI)
+#define CAN_USE_SWORD (CAN_USE_HUMAN_SWORD || HAS_ITEM(ITEM_SWORD_GREAT_FAIRY) || CAN_BE_DEITY)
+// Be careful here, as some checks require you to play the song as a specific form
+#define CAN_PLAY_SONG(song) (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song))
+#define CAN_RIDE_EPONA (CAN_PLAY_SONG(EPONA))
+#define ONE_WAY_EXIT -1
+#define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
+#define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
+#define CLEAR_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags &= ~(1 << owlId))
+#define HAS_BOTTLE_ITEM(item) (Inventory_HasItemInBottle(item))
+// TODO: Maybe not reliable because of theif bird stealing bottle
+#define HAS_BOTTLE (INV_CONTENT(ITEM_BOTTLE) != ITEM_NONE)
+#define CAN_USE_PROJECTILE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
+#define CAN_GET_SPRING_WATER \
+    (HAS_BOTTLE && RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER] || RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER])
+#define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
+// After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
+#define CAN_KILL_DINALFOS (CAN_USE_SWORD || CAN_BE_GORON)
+#define CAN_KILL_WIZZROBE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_USE_SWORD || CAN_BE_GORON)
+#define CAN_KILL_WART (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
+#define CAN_KILL_GARO_MASTER (HAS_ITEM(ITEM_BOW) || CAN_BE_GORON || CAN_USE_SWORD)
+#define CAN_KILL_IRONKNUCKLE (CAN_USE_SWORD || CAN_BE_GORON)
+#define CAN_KILL_BAT \
+    (CAN_USE_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE || CAN_BE_GORON || CAN_BE_ZORA)
+#define CAN_LIGHT_TORCH_NEAR_ANOTHER \
+    (HAS_ITEM(ITEM_DEKU_STICK) || (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC))
+#define KEY_COUNT(dungeon) (gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_##dungeon])
+#define CAN_AFFORD(rc)                                                                                                \
+    ((RANDO_SAVE_CHECKS[rc].price < 100) || (RANDO_SAVE_CHECKS[rc].price <= 200 && CUR_UPG_VALUE(UPG_WALLET) >= 1) || \
+     (CUR_UPG_VALUE(UPG_WALLET) >= 2))
+
+#define EVENT(name, isApplied, onApply, onRemove, condition)                                                       \
+    {                                                                                                              \
+        name, [] { return isApplied; }, [] { return onApply; }, [] { return onRemove; }, [] { return condition; }, \
+            LogicString(#condition)                                                                                \
+    }
+#define EXIT(toEntrance, fromEntrance, condition)                           \
+    {                                                                       \
+        toEntrance, {                                                       \
+            fromEntrance, [] { return condition; }, LogicString(#condition) \
+        }                                                                   \
+    }
+#define CONNECTION(region, condition)                         \
+    {                                                         \
+        region, {                                             \
+            [] { return condition; }, LogicString(#condition) \
+        }                                                     \
+    }
+#define CHECK(check, condition)                               \
+    {                                                         \
+        check, {                                              \
+            [] { return condition; }, LogicString(#condition) \
+        }                                                     \
+    }
+#define EVENT_OWL_WARP(owlId)                                                                                         \
+    {                                                                                                                 \
+        "Owl Statue", [] { return CAN_OWL_WARP(owlId); }, [] { SET_OWL_WARP(owlId); }, [] { CLEAR_OWL_WARP(owlId); }, \
+            [] { return RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD; },              \
+            "CAN_USE_SWORD"                                                                                           \
+    }
+#define EVENT_WEEKEVENTREG(name, flag, condition)                                               \
+    {                                                                                           \
+        name, [] { return CHECK_WEEKEVENTREG(flag); }, [] { SET_WEEKEVENTREG(flag); },          \
+            [] { CLEAR_WEEKEVENTREG(flag); }, [] { return condition; }, LogicString(#condition) \
+    }
+#define EVENT_RANDOINF(name, flag, condition)                                                    \
+    {                                                                                            \
+        name, [] { return Flags_GetRandoInf(flag); }, [] { Flags_SetRandoInf(flag); },           \
+            [] { Flags_ClearRandoInf(flag); }, [] { return condition; }, LogicString(#condition) \
+    }
+#define EVENT_ACCESS(flag, condition)                                                               \
+    {                                                                                               \
+        randoAccessName[flag], [] { return RANDO_ACCESS[flag] > 0; }, [] { RANDO_ACCESS[flag]++; }, \
+            [] { RANDO_ACCESS[flag]--; }, [] { return condition; }, LogicString(#condition)         \
+    }
+
+// TODO: This is for sure not the right place for these
+inline std::string randoAccessName[RANDO_ACCESS_MAX] = {
+    "Access To Hot Spring Water", "Access To Nut Ammo",   "Access To Pirate Picture", "Access To Seahorse",
+    "Access To Spring Water",     "Access To Stick Ammo", "Access To Zora Egg",
+};
+
+inline void Flags_SetSceneSwitch(s32 scene, s32 flag) {
+    gSaveContext.cycleSceneFlags[scene].switch0 |= (1 << flag);
+}
+
+inline void Flags_ClearSceneSwitch(s32 scene, s32 flag) {
+    gSaveContext.cycleSceneFlags[scene].switch0 &= ~(1 << flag);
+}
+
+inline bool Flags_GetSceneSwitch(s32 scene, s32 flag) {
+    if (gPlayState != NULL && gPlayState->sceneId == scene) {
+        return (gPlayState->actorCtx.sceneFlags.switches[0] >> flag) & 1;
+    }
+
+    return (gSaveContext.cycleSceneFlags[scene].switch0 >> flag) & 1;
+}
+
+inline bool Flags_GetSceneClear(s32 scene, s32 roomNumber) {
+    if (gPlayState != NULL && gPlayState->sceneId == scene) {
+        return (gPlayState->actorCtx.sceneFlags.clearedRoom & (1 << roomNumber));
+    }
+
+    return (gSaveContext.cycleSceneFlags[scene].clearedRoom & (1 << roomNumber));
+}
+
+inline void Flags_SetSceneClear(s32 scene, s32 roomNumber) {
+    gSaveContext.cycleSceneFlags[scene].clearedRoom |= (1 << roomNumber);
+}
+
+inline void Flags_UnsetSceneClear(s32 scene, s32 roomNumber) {
+    gSaveContext.cycleSceneFlags[scene].clearedRoom &= ~(1 << roomNumber);
+}
+
+inline std::string LogicString(std::string condition) {
+    if (condition == "true")
+        return "";
+
+    return condition;
+}
 
 } // namespace Logic
 
