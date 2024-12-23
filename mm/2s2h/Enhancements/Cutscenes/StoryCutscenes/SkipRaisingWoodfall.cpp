@@ -21,22 +21,15 @@ void RegisterSkipRaisingWoodfall() {
                 *should = false;
 
                 // Need to reload the scene after WEEKEVENTREG_12_20 gets set for the temple to be up.
-                // Based on WarpPoint.cpp
                 Player* player = GET_PLAYER(gPlayState);
-
-                gPlayState->nextEntrance = ENTRANCE(WOODFALL, 0);
-                gPlayState->transitionTrigger = TRANS_TRIGGER_START;
-                gPlayState->transitionType = TRANS_TYPE_INSTANT;
-
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance = ENTRANCE(WOODFALL, 0);
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex = 0;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.x = player->actor.world.pos.x;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.y = player->actor.world.pos.y;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.z = player->actor.world.pos.z;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = player->actor.shape.rot.y;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].playerParams = PLAYER_PARAMS(0xFF, PLAYER_INITMODE_D);
-                gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK_FAST;
-                gSaveContext.respawnFlag = -8;
+                GameInteractor::Instance->events.emplace_back(GIEventRespawn{
+                    .entrance = gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance,
+                    .roomIndex = gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex,
+                    .posX = player->actor.world.pos.x,
+                    .posY = player->actor.world.pos.y,
+                    .posZ = player->actor.world.pos.z,
+                    .yaw = player->actor.shape.rot.y,
+                });
             }
         }
     });

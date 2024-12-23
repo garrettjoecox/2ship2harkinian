@@ -245,13 +245,15 @@ struct GIEventTransition {
 };
 
 struct GIEventRespawn {
+    u16 entrance;
+    u8 roomIndex;
     f32 posX;
     f32 posY;
     f32 posZ;
     s16 yaw;
 };
 
-typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTransition> GIEvent;
+typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTransition, GIEventRespawn> GIEvent;
 
 class GameInteractor {
   public:

@@ -22,23 +22,14 @@ void RegisterSkipWakingAndRidingTurtle() {
                 *should = false;
 
                 // Need to reload scene. Position is where Link ends up after CS
-                // Differences from no skip: Camera ends up behind Link, Lulu is gone
-                // Based on WarpPoint.cpp
-                Player* player = GET_PLAYER(gPlayState);
-
-                gPlayState->nextEntrance = ENTRANCE(ZORA_CAPE, 2);
-                gPlayState->transitionTrigger = TRANS_TRIGGER_START;
-                gPlayState->transitionType = TRANS_TYPE_INSTANT;
-
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance = ENTRANCE(ZORA_CAPE, 2);
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex = 0;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.x = -5525.0f;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.y = 14.0f;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.z = 1548.0f;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = -16384;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].playerParams = PLAYER_PARAMS(0xFF, PLAYER_INITMODE_D);
-                gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK_FAST;
-                gSaveContext.respawnFlag = -8;
+                GameInteractor::Instance->events.emplace_back(GIEventRespawn{
+                    .entrance = gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance,
+                    .roomIndex = gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex,
+                    .posX = -5525.0f,
+                    .posY = 14.0f,
+                    .posZ = 1548.0f,
+                    .yaw = -16384,
+                });
             }
             // 13 is turtle leaving zora cape first time, 15 is subsequent times
             if (*csId == 13 || *csId == 15) {
