@@ -21,6 +21,7 @@ void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnFishBehavior();
+void InitEnFuBehavior();
 void InitEnGe2Behavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();

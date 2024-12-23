@@ -29,7 +29,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-        if (!randoSaveCheck.shuffled) {
+        if (!randoSaveCheck.shuffled || Flags_GetCollectible(gPlayState, randoStaticCheck.flag)) {
             return;
         }
 
@@ -41,8 +41,8 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
             randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
-                RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                randoSaveCheck.eligible = true;
+                auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
+                Flags_SetCollectible(play, randoStaticCheck.flag);
             },
             [](Actor* actor, PlayState* play) {
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];

@@ -55,6 +55,7 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_CHEST*/ gItemIconBombersNotebookTex,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
     /*RCTYPE_FREESTANDING*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_MINIGAME*/ gItemIconBombersNotebookTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
     /*RCTYPE_OWL*/ gWorldMapOwlFaceTex,
     /*RCTYPE_POT*/ gItemIconBombersNotebookTex,
@@ -163,15 +164,19 @@ void CheckTrackerDrawLogicalList() {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
             auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
             if (randoSaveCheck.shuffled && accessLogicFunc.first()) {
-                if (!sCheckTrackerFilter.PassFilter(readableCheckNames[randoCheckId].c_str())) {
-                    continue;
-                }
-
                 if (randoSaveCheck.obtained) {
                     obtainedCheckSum++;
                     if (CVAR_HIDE_COLLECTED) {
                         continue;
                     }
+                }
+
+                if (randoSaveCheck.skipped && CVAR_HIDE_SKIPPED) {
+                    continue;
+                }
+
+                if (!sCheckTrackerFilter.PassFilter(readableCheckNames[randoCheckId].c_str())) {
+                    continue;
                 }
 
                 availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
@@ -210,18 +215,24 @@ void CheckTrackerDrawLogicalList() {
                     ImGui::TableSetupColumn("Check");
                     ImGui::TableNextColumn();
                     for (auto& [name, accessLogicString] : availableEvents) {
+                        if (name.find("Access To") != std::string::npos) {
+                            continue;
+                        }
+                        ImGui::TableNextColumn();
                         ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::White);
                         ImGui::Text("%s (Event)", name.c_str());
                         if (accessLogicString != "") {
                             UIWidgets::Tooltip(accessLogicString.c_str());
                         }
                         ImGui::PopStyleColor();
+                        ImGui::TableNextColumn();
                     }
                     for (auto& [checkId, accessLogicString] : availableChecks) {
                         auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
-                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
-                                                                                     : UIWidgets::Colors::White);
+                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained  ? UIWidgets::Colors::LightGreen
+                                                             : randoSaveCheck.skipped ? UIWidgets::Colors::Indigo
+                                                                                      : UIWidgets::Colors::White);
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                             ImGui::BeginGroup();
                             float cursorPosY = ImGui::GetCursorPosY();
@@ -237,13 +248,18 @@ void CheckTrackerDrawLogicalList() {
                             }
                             if (randoSaveCheck.obtained) {
                                 ImGui::SameLine(0, 25.0f);
-                                ImGui::Text("%s", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
-                            }
-                            if (randoSaveCheck.skipped) {
+                                ImGui::Text("(%s)", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
+                            } else if (randoSaveCheck.skipped) {
                                 ImGui::SameLine(0, 25.0f);
                                 ImGui::Text("(Skipped)");
                             }
                             ImGui::EndGroup();
+                            ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImGui::IsItemHovered()
+                                                                                  ? IM_COL32(255, 255, 0, 128)
+                                                                                  : IM_COL32(255, 255, 255, 0));
+                            if (ImGui::IsItemClicked()) {
+                                randoSaveCheck.skipped = !randoSaveCheck.skipped;
+                            }
                             ImGui::TableNextColumn();
                         }
                         ImGui::PopStyleColor();
@@ -274,6 +290,10 @@ void CheckTrackerDrawNonLogicalList() {
                 if (CVAR_HIDE_COLLECTED) {
                     continue;
                 }
+            }
+
+            if (RANDO_SAVE_CHECKS[checkId].skipped && CVAR_HIDE_SKIPPED) {
+                continue;
             }
 
             if (!sCheckTrackerFilter.PassFilter(readableCheckNames[checkId].c_str())) {
@@ -332,8 +352,7 @@ void CheckTrackerDrawNonLogicalList() {
                         if (randoSaveCheck.obtained) {
                             ImGui::SameLine(0, 25.0f);
                             ImGui::Text("(%s)", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
-                        }
-                        if (randoSaveCheck.skipped) {
+                        } else if (randoSaveCheck.skipped) {
                             ImGui::SameLine(0, 25.0f);
                             ImGui::Text("(Skipped)");
                         }
