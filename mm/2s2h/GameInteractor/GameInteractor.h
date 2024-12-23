@@ -244,6 +244,13 @@ struct GIEventTransition {
     u8 transitionType;
 };
 
+struct GIEventRespawn {
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    s16 yaw;
+};
+
 typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTransition> GIEvent;
 
 class GameInteractor {

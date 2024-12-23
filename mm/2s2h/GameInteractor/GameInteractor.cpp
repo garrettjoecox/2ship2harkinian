@@ -436,7 +436,20 @@ void ProcessEvents(Actor* actor) {
         gPlayState->transitionTrigger = e->transitionTrigger;
         gPlayState->transitionType = e->transitionType;
         GameInteractor::Instance->currentEvent = GIEventNone{};
-    } else if (auto e = std::get_if<GIEventSpawnActor>(&nextEvent)) {
+    } else if (auto e = std::get_if<GIEventRespawn>(&nextEvent)) {
+        gPlayState->nextEntrance = gSaveContext.respawn[RESPAWN_MODE_DOWN].entrance;
+        gPlayState->transitionTrigger = TRANS_TRIGGER_START;
+        gPlayState->transitionType = TRANS_TYPE_INSTANT;
+        gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.x = e->posX;
+        gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.y = e->posY;
+        gSaveContext.respawn[RESPAWN_MODE_DOWN].pos.z = e->posZ;
+        gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = e->yaw;
+        gSaveContext.respawn[RESPAWN_MODE_DOWN].playerParams = PLAYER_PARAMS(0xFF, PLAYER_INITMODE_D);
+        gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK_FAST;
+        gSaveContext.respawnFlag = -8;
+        GameInteractor::Instance->currentEvent = GIEventNone{};
+    }  
+    else if (auto e = std::get_if<GIEventSpawnActor>(&nextEvent)) {
         // if true, the coordinates are made relative to the player's position and rotation, 0 rotation is facing the
         // same direction as the player, x+ is to the players right, y+ is up, z+ is in front of the player
         if (e->relativeCoords) {
