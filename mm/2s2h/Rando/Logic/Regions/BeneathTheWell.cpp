@@ -40,6 +40,12 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_BENEATH_THE_WELL_BIG_POE_ROOM] = RandoRegion{ .name = "Big Poe Room", .sceneId = SCENE_REDEAD,
+        .checks = {
+            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_1, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_2, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_3, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_4, true),
+        },
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_RIGHT_FIRE_KEESE, true),
         },
@@ -124,7 +130,8 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_FREEZARD_ROOM, true),
             CONNECTION(RR_BENEATH_THE_WELL_BIG_POE_ROOM, HAS_ITEM(ITEM_BOMB) && HAS_ITEM(ITEM_MASK_GIBDO)),
-            CONNECTION(RR_BENEATH_THE_WELL_COW_ROOM, CHECK_BOTTLE_CONTENT(HOT_SPRING_WATER) && HAS_ITEM(ITEM_MASK_GIBDO))
+            // Hot Spring Water in logic is currently broken, can be obtained in the same dungeon in a different room so for now ill just check for bottle
+            CONNECTION(RR_BENEATH_THE_WELL_COW_ROOM, HAS_BOTTLE && HAS_ITEM(ITEM_MASK_GIBDO)) // CHECK_BOTTLE_CONTENT(HOT_SPRING_WATER)
         },
         .events = {
             EVENT_ACCESS(RANDO_ACCESS_BUGS, HAS_ITEM(ITEM_BOW)),
@@ -141,7 +148,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_BENEATH_THE_WELL_THREE_SPIKED_BARS] = RandoRegion{ .name = "Three Spikes Room", .sceneId = SCENE_REDEAD,
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_ENTRANCE, true),
-            CONNECTION(RR_BENEATH_THE_WELL_TWO_SPIKED_BARS, CAN_GET_SPRING_WATER && HAS_ITEM(ITEM_MASK_GIBDO)),
+            // Spring Water in logic is currently broken, can be obtained in the same room so for now ill just check for bottle
+            CONNECTION(RR_BENEATH_THE_WELL_TWO_SPIKED_BARS, HAS_BOTTLE && HAS_ITEM(ITEM_MASK_GIBDO)), //CAN_GET_SPRING_WATER
             CONNECTION(RR_BENEATH_THE_WELL_DEXIHAND_ROOM, CHECK_BOTTLE_CONTENT(FISH) && HAS_ITEM(ITEM_MASK_GIBDO))
         },
         .events = {
