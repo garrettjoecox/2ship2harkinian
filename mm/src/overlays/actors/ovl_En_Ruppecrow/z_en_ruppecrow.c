@@ -6,6 +6,7 @@
 
 #include "z_en_ruppecrow.h"
 #include "objects/object_crow/object_crow.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_4000)
 
@@ -275,8 +276,32 @@ void EnRuppecrow_SpawnRupee(EnRuppecrow* this, PlayState* play) {
         xOffset = 0.0f;
     }
 
-    if (EnRuppecrow_CanSpawnBlueRupees(play) && (this->rupeeIndex % 5) == 4) {
-        if (this->rupeeIndex == 19) {
+    if (GameInteractor_Should(VB_GUAY_DROP_RUPEE, false, this)) {
+        if (EnRuppecrow_CanSpawnBlueRupees(play) && (this->rupeeIndex % 5) == 4) {
+            if (this->rupeeIndex == 19) {
+                rupee = (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00,
+                                               this->actor.world.pos.x + xOffset, this->actor.world.pos.y,
+                                               this->actor.world.pos.z, 0x0, 0x0, 0x0, ITEM00_RUPEE_RED);
+                this->rupees[rupeeIndex] = rupee;
+                this->rupees[rupeeIndex]->actor.gravity = -5.0f;
+                this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
+                Actor_PlaySfx(&this->actor, NA_SE_EV_RUPY_FALL);
+                rupee = this->rupees[rupeeIndex];
+                rupee->unk152 = 60;
+                this->rupees[rupeeIndex]->actor.flags |= ACTOR_FLAG_10;
+            } else {
+                rupee = (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00,
+                                               this->actor.world.pos.x + xOffset, this->actor.world.pos.y,
+                                               this->actor.world.pos.z, 0x0, 0x0, 0x0, ITEM00_RUPEE_BLUE);
+                this->rupees[rupeeIndex] = rupee;
+                this->rupees[rupeeIndex]->actor.gravity = -5.0f;
+                this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
+                Actor_PlaySfx(&this->actor, NA_SE_EV_RUPY_FALL);
+                rupee = this->rupees[rupeeIndex];
+                rupee->unk152 = 60;
+                this->rupees[rupeeIndex]->actor.flags |= ACTOR_FLAG_10;
+            }
+        } else if (this->rupeeIndex == 19) {
             rupee = (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00, this->actor.world.pos.x + xOffset,
                                            this->actor.world.pos.y, this->actor.world.pos.z, 0x0, 0x0, 0x0,
                                            ITEM00_RUPEE_RED);
@@ -290,7 +315,7 @@ void EnRuppecrow_SpawnRupee(EnRuppecrow* this, PlayState* play) {
         } else {
             rupee = (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00, this->actor.world.pos.x + xOffset,
                                            this->actor.world.pos.y, this->actor.world.pos.z, 0x0, 0x0, 0x0,
-                                           ITEM00_RUPEE_BLUE);
+                                           ITEM00_RUPEE_GREEN);
             this->rupees[rupeeIndex] = rupee;
             this->rupees[rupeeIndex]->actor.gravity = -5.0f;
             this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
@@ -299,28 +324,6 @@ void EnRuppecrow_SpawnRupee(EnRuppecrow* this, PlayState* play) {
             rupee->unk152 = 60;
             this->rupees[rupeeIndex]->actor.flags |= ACTOR_FLAG_10;
         }
-    } else if (this->rupeeIndex == 19) {
-        rupee =
-            (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00, this->actor.world.pos.x + xOffset,
-                                   this->actor.world.pos.y, this->actor.world.pos.z, 0x0, 0x0, 0x0, ITEM00_RUPEE_RED);
-        this->rupees[rupeeIndex] = rupee;
-        this->rupees[rupeeIndex]->actor.gravity = -5.0f;
-        this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
-        Actor_PlaySfx(&this->actor, NA_SE_EV_RUPY_FALL);
-        rupee = this->rupees[rupeeIndex];
-        rupee->unk152 = 60;
-        this->rupees[rupeeIndex]->actor.flags |= ACTOR_FLAG_10;
-    } else {
-        rupee =
-            (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00, this->actor.world.pos.x + xOffset,
-                                   this->actor.world.pos.y, this->actor.world.pos.z, 0x0, 0x0, 0x0, ITEM00_RUPEE_GREEN);
-        this->rupees[rupeeIndex] = rupee;
-        this->rupees[rupeeIndex]->actor.gravity = -5.0f;
-        this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
-        Actor_PlaySfx(&this->actor, NA_SE_EV_RUPY_FALL);
-        rupee = this->rupees[rupeeIndex];
-        rupee->unk152 = 60;
-        this->rupees[rupeeIndex]->actor.flags |= ACTOR_FLAG_10;
     }
 
     this->rupeeIndex++;
