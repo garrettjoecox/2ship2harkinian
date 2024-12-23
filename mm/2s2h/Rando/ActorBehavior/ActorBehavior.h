@@ -31,6 +31,7 @@ void InitEnKgyBehavior();
 void InitEnKnightBehavior();
 void InitEnMa4Behavior();
 void InitEnMaYtoBehavior();
+void InitEnLiftNutsBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
