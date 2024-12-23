@@ -11,7 +11,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_MOON] = RandoRegion{ .sceneId = SCENE_SOUGEN,
         .checks = {
 			// TO-DO: Has all Masks that account for current inventory as well as previously traded.
-			CHECK(RC_MOON_FIERCE_DEITY_MASK, true),
+			CHECK(RC_MOON_FIERCE_DEITY_MASK, HAS_MOON_MASKS(20)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(CLOCK_TOWER_ROOFTOP, 0),                   ONE_WAY_EXIT, true),
