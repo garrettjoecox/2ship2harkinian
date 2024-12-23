@@ -29,6 +29,7 @@ void InitEnHgBehavior();
 void InitEnItem00Behavior();
 void InitEnKgyBehavior();
 void InitEnKnightBehavior();
+void InitEnKujiyaBehavior();
 void InitEnMa4Behavior();
 void InitEnMaYtoBehavior();
 void InitEnOsnBehavior();

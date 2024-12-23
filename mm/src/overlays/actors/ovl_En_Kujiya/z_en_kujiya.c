@@ -8,6 +8,7 @@
 
 #include "z_en_kujiya.h"
 #include "objects/object_kujiya/object_kujiya.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_CANT_LOCK_ON)
 
@@ -221,7 +222,7 @@ void EnKujiya_SetupGivePrize(EnKujiya* this) {
 }
 
 void EnKujiya_GivePrize(EnKujiya* this, PlayState* play) {
-    if (Actor_HasParent(&this->actor, play)) {
+    if (GameInteractor_Should(VB_GIVE_LOTTERY_WINNINGS, Actor_HasParent(&this->actor, play), this)) {
         EnKujiya_SetupFinishGivePrize(this);
     } else {
         Actor_OfferGetItem(&this->actor, play, GI_RUPEE_PURPLE, 500.0f, 100.0f);
