@@ -55,6 +55,7 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_CHEST*/ gItemIconBombersNotebookTex,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
     /*RCTYPE_FREESTANDING*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_MINIGAME*/ gItemIconBombersNotebookTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
     /*RCTYPE_OWL*/ gWorldMapOwlFaceTex,
     /*RCTYPE_POT*/ gItemIconBombersNotebookTex,
