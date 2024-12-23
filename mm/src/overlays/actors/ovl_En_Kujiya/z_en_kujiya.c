@@ -171,8 +171,10 @@ void EnKujiya_ChooseNextDialogue(EnKujiya* this, PlayState* play) {
 
             case 0x2B66:
                 Message_CloseTextbox(play);
-                EnKujiya_SetupGivePrize(this);
-                EnKujiya_GivePrize(this, play);
+                if (GameInteractor_Should(VB_GIVE_LOTTERY_WINNINGS, true, this)) {
+                    EnKujiya_SetupGivePrize(this);
+                    EnKujiya_GivePrize(this, play);
+                }
                 break;
 
             default:
@@ -222,7 +224,7 @@ void EnKujiya_SetupGivePrize(EnKujiya* this) {
 }
 
 void EnKujiya_GivePrize(EnKujiya* this, PlayState* play) {
-    if (GameInteractor_Should(VB_GIVE_LOTTERY_WINNINGS, Actor_HasParent(&this->actor, play), this)) {
+    if (Actor_HasParent(&this->actor, play)) {
         EnKujiya_SetupFinishGivePrize(this);
     } else {
         Actor_OfferGetItem(&this->actor, play, GI_RUPEE_PURPLE, 500.0f, 100.0f);
