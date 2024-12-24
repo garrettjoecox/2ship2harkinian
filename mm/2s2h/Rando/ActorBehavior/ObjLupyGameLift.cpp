@@ -36,9 +36,6 @@ void Gamelupy_RandoDrawFunc(Actor* actor, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[IdentifyGameLupy(actor)];
 
-    float x = actor->home.pos.x;
-    float z = actor->home.pos.z;
-
     Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
@@ -52,5 +49,17 @@ void Rando::ActorBehavior::InitObjLupyGameLiftBehavior() {
         }
 
         enGamelupy->actor.draw = Gamelupy_RandoDrawFunc;
+    });
+
+    COND_ID_HOOK(OnActorKill, ACTOR_EN_GAMELUPY, IS_RANDO, [](Actor* actor) {
+        if (gPlayState->sceneId != SCENE_DEKUTES) {
+            return;
+        }
+
+        RandoCheckId randoCheckId = IdentifyGameLupy(actor);
+
+        if (!RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+            RANDO_SAVE_CHECKS[randoCheckId].eligible = true;
+        }
     });
 }
