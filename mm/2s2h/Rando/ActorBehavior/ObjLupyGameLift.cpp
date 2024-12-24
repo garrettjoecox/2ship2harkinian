@@ -9,102 +9,48 @@ extern "C" {
 #include "overlays/actors/ovl_En_Gamelupy/z_en_gamelupy.h"
 }
 
-int32_t DetermineLupyIndex() {
-    int32_t index = 0;
+#define IS_AT(xx, zz) (actor->home.pos.x == xx && actor->home.pos.z == zz)
 
-    ActorListEntry item00List = gPlayState->actorCtx.actorLists[ACTORCAT_MISC];
-    Actor* currentActor = item00List.first;
-    for (int i = 0; i <= item00List.length; i++) {
-        if (currentActor == nullptr) {
-            continue;
-        }
-        if (currentActor->id == ACTOR_EN_ITEM00) {
-            index++;
-        }
-        currentActor->next;
-    }
-
-    return index;
-}
-
-RandoCheckId IdentifyGameLupy() {
+RandoCheckId IdentifyGameLupy(Actor* actor) {
     RandoCheckId randoCheckId = RC_UNKNOWN;
 
-    switch (DetermineLupyIndex()) {
-        case 0:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_1;
-            break;
-        case 2:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_2;
-            break;
-        case 3:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_3;
-            break;
-        case 4:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_4;
-            break;
-        case 5:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_5;
-            break;
-        case 6:
-            randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_6;
-            break;
-        default:
-            break;
+    if (IS_AT(-100.0f, 150.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_1;
+    } else if (IS_AT(100.0f, -50.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_2;
+    } else if (IS_AT(-200.0f, -250.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_3;
+    } else if (IS_AT(200.0f, 350.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_4;
+    } else if (IS_AT(-500.0f, 350.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_5;
+    } else if (IS_AT(500.0f, -250.0f)) {
+        randoCheckId = RC_DEKU_PLAYGROUND_RUPEE_6;
     }
 
     return randoCheckId;
 }
 
+void Gamelupy_RandoDrawFunc(Actor* actor, PlayState* play) {
+    EnGamelupy* enGamelupy = (EnGamelupy*)actor;
+
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[IdentifyGameLupy(actor)];
+
+    float x = actor->home.pos.x;
+    float z = actor->home.pos.z;
+
+    Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
+    Rando::DrawItem(randoSaveCheck.randoItemId);
+}
+
 void Rando::ActorBehavior::InitObjLupyGameLiftBehavior() {
-    COND_VB_SHOULD(VB_SPAWN_GAMELUPY, IS_RANDO, {
-        ObjLupygamelift* refActor = va_arg(args, ObjLupygamelift*);
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_GAMELUPY, IS_RANDO, [](Actor* actor) {
+        EnGamelupy* enGamelupy = (EnGamelupy*)actor;
 
-        RandoCheckId randoCheckId = IdentifyGameLupy();
-
-        EnItem00* gamelupy = CustomItem::Spawn(
-            refActor->dyna.actor.world.pos.x, refActor->dyna.actor.world.pos.y, refActor->dyna.actor.world.pos.z, 0,
-            CustomItem::KILL_ON_TOUCH | CustomItem::APPLY_GRAVITY, randoCheckId,
-            [](Actor* actor, PlayState* play) { RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM].eligible = true; },
-            [](Actor* actor, PlayState* play) {
-                auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
-            });
-
-        *should = false;
-    });
-
-    COND_ID_HOOK(OnActorKill, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor) {
         if (gPlayState->sceneId != SCENE_DEKUTES) {
             return;
         }
 
-        ActorListEntry npcList = gPlayState->actorCtx.actorLists[ACTORCAT_NPC];
-        Actor* currentActor = npcList.first;
-        for (int i = 0; i <= npcList.length; i++) {
-            if (currentActor == nullptr) {
-                continue;
-            }
-            if (currentActor->id == ACTOR_EN_LIFT_NUTS && currentActor->params == 1791) {
-                EnLiftNuts* refActor = (EnLiftNuts*)currentActor;
-                *refActor->minigameScore = (ENGAMELUPY_POINTS * 6);
-                break;
-            }
-            currentActor->next;
-        }
-    });
-
-    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor) {
-        if (gPlayState->sceneId != SCENE_DEKUTES) {
-            return;
-        }
-
-        Actor* liftActor = Actor_FindNearby(gPlayState, actor, ACTOR_OBJ_LUPYGAMELIFT, ACTORCAT_BG, 100.0f);
-
-        if (liftActor != nullptr) {
-            ObjLupygamelift* refActor = (ObjLupygamelift*)liftActor;
-            actor->world.pos.y = refActor->dyna.actor.world.pos.y + 10.0f;
-        }
+        enGamelupy->actor.draw = Gamelupy_RandoDrawFunc;
     });
 }

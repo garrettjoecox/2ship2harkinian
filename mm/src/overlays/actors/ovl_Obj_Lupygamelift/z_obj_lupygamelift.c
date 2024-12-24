@@ -81,10 +81,10 @@ void ObjLupygamelift_Init(Actor* thisx, PlayState* play) {
     } else {
         params = 0;
     }
-    if (GameInteractor_Should(VB_SPAWN_GAMELUPY, true, this)) {
-        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_GAMELUPY, this->dyna.actor.home.pos.x, this->dyna.actor.home.pos.y,
-                    this->dyna.actor.home.pos.z, 0, 0, 0, params);
-    }
+    // if (GameInteractor_Should(VB_SPAWN_GAMELUPY, true, this)) {
+    Actor_Spawn(&play->actorCtx, play, ACTOR_EN_GAMELUPY, this->dyna.actor.home.pos.x, this->dyna.actor.home.pos.y,
+                this->dyna.actor.home.pos.z, 0, 0, 0, params);
+    //}
     func_80AF04BC(this);
 }
 

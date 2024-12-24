@@ -57,10 +57,6 @@ void CustomItem00_Init(Actor* actor, PlayState* play) {
         actor->world.rot.y = Rand_ZeroOne() * 40000.0f;
     }
 
-    if (CUSTOM_ITEM_FLAGS & CustomItem::APPLY_GRAVITY) {
-        actor->gravity = -1.4f;
-    }
-
     enItem00->unk152 = -1;
 }
 
