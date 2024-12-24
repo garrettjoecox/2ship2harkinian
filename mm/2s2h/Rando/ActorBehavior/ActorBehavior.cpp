@@ -60,6 +60,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
+    Rando::ActorBehavior::InitEnGamelupyBehavior();
     Rando::ActorBehavior::InitEnTest5Behavior();
     Rando::ActorBehavior::InitEnTsnBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
@@ -67,7 +68,6 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
-    Rando::ActorBehavior::InitObjLupyGameLiftBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();
     Rando::ActorBehavior::InitObjWarpstoneBehavior();

@@ -6,7 +6,6 @@
 
 #include "z_obj_lupygamelift.h"
 #include "objects/object_raillift/object_raillift.h"
-#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 

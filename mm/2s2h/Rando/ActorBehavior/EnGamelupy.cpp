@@ -4,8 +4,6 @@
 
 extern "C" {
 #include "variables.h"
-#include "overlays/actors/ovl_En_Lift_Nuts/z_en_lift_nuts.h"
-#include "overlays/actors/ovl_Obj_Lupygamelift/z_obj_lupygamelift.h"
 #include "overlays/actors/ovl_En_Gamelupy/z_en_gamelupy.h"
 }
 
@@ -40,7 +38,7 @@ void Gamelupy_RandoDrawFunc(Actor* actor, PlayState* play) {
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
-void Rando::ActorBehavior::InitObjLupyGameLiftBehavior() {
+void Rando::ActorBehavior::InitEnGamelupyBehavior() {
     COND_ID_HOOK(OnActorInit, ACTOR_EN_GAMELUPY, IS_RANDO, [](Actor* actor) {
         EnGamelupy* enGamelupy = (EnGamelupy*)actor;
 

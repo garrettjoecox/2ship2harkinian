@@ -46,7 +46,7 @@ void InitEnRzBehavior();
 void InitEnMnkBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();
-void InitObjLupyGameLiftBehavior();
+void InitEnGamelupyBehavior();
 void InitObjMoonStoneBehavior();
 void InitObjTsuboBehavior();
 void InitObjWarpstoneBehavior();
