@@ -69,6 +69,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORMAN_TRACK] = RandoRegion{ .sceneId = SCENE_KOEPONARACE,
         .checks = {
+            CHECK(RC_GORMAN_TRACK_GARO_MASK, CAN_PLAY_SONG(EPONA)),
             // TODO : Uncomment this out once the Alien section is implemented.
             //CHECK(RC_CREMIA_ESCORT, CHECK_WEEKEVENTREG(WEEKEVENTREG_DEFENDED_AGAINST_THEM))
         },
