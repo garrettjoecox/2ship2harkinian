@@ -317,7 +317,12 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TOWN_DEKU_PLAYGROUND] = RandoRegion{ .sceneId = SCENE_DEKUTES,
         .checks = {
-            // TODO : Add checks for getting best time on all three days/Freestanding items.
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_1, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_2, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_3, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_4, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_5, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_RUPEE_6, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 4),             ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),

@@ -59,6 +59,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 actor->textId = 0x2AD1;
                 [[fallthrough]];
             case ACTOR_EN_KENDO_JS:
+            case ACTOR_EN_LIFT_NUTS:
             case ACTOR_EN_GURUGURU:
             case ACTOR_EN_HS:
                 *should = false;

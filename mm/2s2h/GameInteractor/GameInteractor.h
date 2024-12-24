@@ -160,6 +160,7 @@ typedef enum {
     VB_DOOR_HEALTH_CHECK_FAIL,
     VB_GIVE_HONEY_DARLING_REWARD,
     VB_GS_CONTINUE_TEXTBOX,
+    VB_SPAWN_GAMELUPY,
 } GIVanillaBehavior;
 
 typedef enum {

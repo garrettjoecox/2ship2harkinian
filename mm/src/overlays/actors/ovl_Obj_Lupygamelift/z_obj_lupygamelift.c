@@ -6,6 +6,7 @@
 
 #include "z_obj_lupygamelift.h"
 #include "objects/object_raillift/object_raillift.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
@@ -80,8 +81,10 @@ void ObjLupygamelift_Init(Actor* thisx, PlayState* play) {
     } else {
         params = 0;
     }
-    Actor_Spawn(&play->actorCtx, play, ACTOR_EN_GAMELUPY, this->dyna.actor.home.pos.x, this->dyna.actor.home.pos.y,
-                this->dyna.actor.home.pos.z, 0, 0, 0, params);
+    if (GameInteractor_Should(VB_SPAWN_GAMELUPY, true, this)) {
+        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_GAMELUPY, this->dyna.actor.home.pos.x, this->dyna.actor.home.pos.y,
+                    this->dyna.actor.home.pos.z, 0, 0, 0, params);
+    }
     func_80AF04BC(this);
 }
 
