@@ -150,12 +150,6 @@ static RegisterShipInitFunc initFunc([]() {
             ENTRANCE(IKANA_CANYON, 15), // From Stone Tower Temple Blue Warp
         }
     };
-    Regions[RR_IKANA_CASTLE] = RandoRegion{ .sceneId = SCENE_CASTLE,
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(BENEATH_THE_WELL, 1),             ENTRANCE(IKANA_CASTLE, 0), true),
-            EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
-        },
-    };
     Regions[RR_IKANA_GRAVEYARD_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
         .checks = {
             // TODO : Grotto
