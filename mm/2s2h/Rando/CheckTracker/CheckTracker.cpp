@@ -189,7 +189,11 @@ void CheckTrackerDrawLogicalList() {
             }
 
             if (!event.isApplied() && event.condition()) {
-                availableEvents.push_back({ event.name, event.conditionString });
+                if (event.applyWhenAccessible) {
+                    event.onApply();
+                } else {
+                    availableEvents.push_back({ event.name, event.conditionString });
+                }
             }
         }
 
@@ -215,9 +219,6 @@ void CheckTrackerDrawLogicalList() {
                     ImGui::TableSetupColumn("Check");
                     ImGui::TableNextColumn();
                     for (auto& [name, accessLogicString] : availableEvents) {
-                        if (name.find("Access To") != std::string::npos) {
-                            continue;
-                        }
                         ImGui::TableNextColumn();
                         ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::White);
                         ImGui::Text("%s (Event)", name.c_str());

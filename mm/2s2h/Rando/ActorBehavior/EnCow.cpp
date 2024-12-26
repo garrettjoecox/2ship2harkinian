@@ -74,7 +74,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
         }
 
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (randoSaveCheck.eligible) {
+        if (!randoSaveCheck.shuffled || randoSaveCheck.obtained) {
             *should = true;
             return;
         }
