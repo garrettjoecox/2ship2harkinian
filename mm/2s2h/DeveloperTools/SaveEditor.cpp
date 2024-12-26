@@ -576,15 +576,6 @@ void DrawGeneralTab() {
                         { .color = UIWidgets::Colors::Gray });
     ImGui::EndGroup();
 
-    ImGui::SeparatorText("Moon Masks");
-    UIWidgets::DrawFlagArray8("0", gSaveContext.masksGivenOnMoon[0]);
-    UIWidgets::DrawFlagArray8("1", gSaveContext.masksGivenOnMoon[1]);
-    UIWidgets::DrawFlagArray8("2", gSaveContext.masksGivenOnMoon[2]);
-    // for (int i = 0; i <= 26; i++) {
-    //     ImGui::Text("Bit %s: %s", std::to_string(i).c_str(),
-    //     std::to_string(gSaveContext.masksGivenOnMoon[i]).c_str());
-    // }
-
     ImGui::PopItemWidth();
     ImGui::EndChild();
     ImGui::PopStyleVar(2);
