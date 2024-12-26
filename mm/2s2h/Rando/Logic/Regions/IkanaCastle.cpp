@@ -13,7 +13,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) && (CAN_USE_HUMAN_SWORD || CAN_BE_GORON || CAN_USE_PROJECTILE)),
+            CONNECTION(RR_IKANA_CASTLE_COURTYARD, CAN_USE_MAGIC_ARROW(LIGHT) || ((GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) && (CAN_USE_HUMAN_SWORD || CAN_BE_GORON || CAN_USE_PROJECTILE))),
         },
     };
     Regions[RR_IKANA_CASTLE_COURTYARD] = RandoRegion{ .name = "Courtyard", .sceneId = SCENE_CASTLE,
@@ -25,7 +25,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CASTLE, 3),                 ENTRANCE(IKANA_CASTLE, 2), true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)),
+            CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT)),
         },
     };
     Regions[RR_IKANA_CASTLE_MAIN_ROOM] = RandoRegion{ .name = "Main Room", .sceneId = SCENE_CASTLE,
