@@ -34,12 +34,12 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_2, true)
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(IKANA_CASTLE, 2),             ENTRANCE(IKANA_CASTLE, 3), true),
-            EXIT(ENTRANCE(IGOS_DU_IKANAS_LAIR, 0),      ENTRANCE(IKANA_CASTLE, 6), CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x05) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
+            EXIT(ENTRANCE(IKANA_CASTLE, 2),             ENTRANCE(IKANA_CASTLE, 3), true)
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_CEILING_ROOM, CAN_USE_MAGIC_ARROW(FIRE)),
             CONNECTION(RR_IKANA_CASTLE_FLOORMASTER_ROOM, CAN_USE_MAGIC_ARROW(FIRE)),
+            CONNECTION(RR_IKANA_CASTLE_BEFORE_THRONE, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x05) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CASTLE, 4), // From Inner Roof Powder Keg Hole
@@ -77,28 +77,21 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_IKANA_CASTLE_OUTER_ROOF] = RandoRegion{ .name = "Outer Roof", .sceneId = SCENE_CASTLE,
-        .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_THIRD_ROOM_1, CAN_BE_DEKU || CAN_USE_PROJECTILE),
-        },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_BUBBLE_ROOM , true),
             CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, true)
         },
         .events = {
             EVENT( // Opening sunlight in the right side of Ikana Castle
-                "Open Sunlight for Ikana Castle Right Room", 
-                Flags_GetSceneSwitch(SCENE_CASTLE, 0x07), 
-                Flags_SetSceneSwitch(SCENE_CASTLE, 0x07), 
-                Flags_ClearSceneSwitch(SCENE_CASTLE, 0x07), 
+                "Open Sunlight for Ikana Castle Right Room",
+                Flags_GetSceneSwitch(SCENE_CASTLE, 0x07),
+                Flags_SetSceneSwitch(SCENE_CASTLE, 0x07),
+                Flags_ClearSceneSwitch(SCENE_CASTLE, 0x07),
                 true
             ),
         }
     };
     Regions[RR_IKANA_CASTLE_FLOORMASTER_ROOM] = RandoRegion{ .name = "Floormaster Room", .sceneId = SCENE_CASTLE,
-        .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_2, true)
-        },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, true),
             CONNECTION(RR_IKANA_CASTLE_WIZZROBE_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x07) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR))),
@@ -108,10 +101,6 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_IKANA_CASTLE_WIZZROBE_ROOM] = RandoRegion{ .name = "Wizzrobe Room", .sceneId = SCENE_CASTLE,
-        .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_2, true)
-        },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_FLOORMASTER_ROOM, CAN_KILL_WIZZROBE),
             CONNECTION(RR_IKANA_CASTLE_REDEAD_WALKWAY, CAN_KILL_WIZZROBE)
@@ -138,11 +127,19 @@ static RegisterShipInitFunc initFunc([]() {
         .events = {
             EVENT( // Opening sunlight in the main room of Ikana Castle
                 "Open Sunlight for Ikana Castle Main Room", 
-                Flags_GetSceneSwitch(SCENE_CASTLE, 0x05), 
-                Flags_SetSceneSwitch(SCENE_CASTLE, 0x05), 
+                Flags_GetSceneSwitch(SCENE_CASTLE, 0x05),
+                Flags_SetSceneSwitch(SCENE_CASTLE, 0x05),
                 Flags_ClearSceneSwitch(SCENE_CASTLE, 0x05), 
                 true
             ),
+        }
+    };
+    Regions[RR_IKANA_CASTLE_BEFORE_THRONE] = RandoRegion{ .name = "Before Throne Room", .sceneId = SCENE_CASTLE,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(IGOS_DU_IKANAS_LAIR, 0),      ENTRANCE(IKANA_CASTLE, 6), true)
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x05) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
         }
     };
     Regions[RR_IKANA_CASTLE_THRONE_ROOM] = RandoRegion{ .name = "Throne Room", .sceneId = SCENE_IKNINSIDE,
@@ -158,7 +155,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_8, true),
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(IKANA_CASTLE, 6),      ENTRANCE(IGOS_DU_IKANAS_LAIR, 0), CAN_USE_MAGIC_ARROW(LIGHT))
+            EXIT(ENTRANCE(IKANA_CASTLE, 6),      ENTRANCE(IGOS_DU_IKANAS_LAIR, 0), true)
         }
     };
 }, {});
