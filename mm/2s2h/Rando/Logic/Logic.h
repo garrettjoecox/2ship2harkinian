@@ -67,6 +67,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
      (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
 #define CHECK_MAX_HP(TARGET_HP) ((TARGET_HP * 16) <= gSaveContext.save.saveInfo.playerData.healthCapacity)
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
+#define HAS_MOON_MASKS(target) (MoonMaskCount() >= target)
 #define CAN_HOOK_SCARECROW (HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE ((HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
 #define CAN_USE_HUMAN_SWORD (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI)
@@ -184,6 +185,16 @@ inline std::string LogicString(std::string condition) {
         return "";
 
     return condition;
+}
+
+inline uint32_t MoonMaskCount() {
+    uint32_t count = 0;
+    for (int i = ITEM_MASK_TRUTH; i <= ITEM_MASK_GIANT; i++) {
+        if (INV_CONTENT(i) == i) {
+            count++;
+        }
+    }
+    return count;
 }
 
 } // namespace Logic
