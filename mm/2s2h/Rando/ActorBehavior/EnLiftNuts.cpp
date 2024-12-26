@@ -16,7 +16,10 @@ void Rando::ActorBehavior::InitEnLiftNutsBehavior() {
             return;
         }
 
-        if (!RANDO_SAVE_CHECKS[RC_DEKU_PLAYGROUND_ANY_DAY].obtained) {
+        if ((CURRENT_DAY == 3 && 
+             (!CHECK_WEEKEVENTREG(WEEKEVENTREG_WON_DEKU_PLAYGROUND_DAY_1) ||
+              !CHECK_WEEKEVENTREG(WEEKEVENTREG_WON_DEKU_PLAYGROUND_DAY_2))) || 
+            (CURRENT_DAY == 2 || CURRENT_DAY == 1)) {
             RANDO_SAVE_CHECKS[RC_DEKU_PLAYGROUND_ANY_DAY].eligible = true;
         }
 
