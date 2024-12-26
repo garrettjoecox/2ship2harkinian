@@ -13,7 +13,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_VALUE_SHIELD_MIRROR) >= 2)),
+            CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_VALUE_SHIELD_MIRROR) >= 2) && (CAN_USE_HUMAN_SWORD || CAN_BE_GORON || CAN_USE_PROJECTILE)),
         },
     };
     Regions[RR_IKANA_CASTLE_COURTYARD] = RandoRegion{ .name = "Courtyard", .sceneId = SCENE_CASTLE,
