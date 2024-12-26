@@ -14,7 +14,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Should this be a check?
-            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE]),
+            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
         },
     };
     Regions[RR_GREAT_BAY_COAST] = RandoRegion{ .sceneId = SCENE_30GYOSON,
@@ -169,6 +169,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 3),                    ENTRANCE(ZORA_HALL_ROOMS, 2), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GREEN_POTION_REFILL, CAN_BE_ZORA),
         },
     };
     Regions[RR_ZORA_HALL_MIKAUS_ROOM] = RandoRegion{ .name = "Mikau's Room", .sceneId = SCENE_BANDROOM,

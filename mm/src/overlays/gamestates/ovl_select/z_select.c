@@ -47,6 +47,7 @@ void MapSelect_LoadGame(MapSelectState* this, u32 entrance, s32 spawn) {
     CLEAR_EVENTINF(EVENTINF_41);
     CLEAR_EVENTINF(EVENTINF_TRIGGER_DAYTELOP);
     gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
+    memset(gSaveContext.masksGivenOnMoon, 0, 27);
     // #endregion
 
     gSaveContext.buttonStatus[EQUIP_SLOT_B] = BTN_ENABLED;

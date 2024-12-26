@@ -156,6 +156,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_SOUTHERN_SWAMP_HP, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
             CHECK(RC_SOUTHERN_SWAMP_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
+            CHECK(RC_SOUTHERN_SWAMP_SCRUB_BEANS, CAN_BE_DEKU),
             CHECK(RC_SOUTHERN_SWAMP_OWL_STATUE, CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
@@ -170,6 +171,7 @@ static RegisterShipInitFunc initFunc([]() {
         .events = {
             EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
             EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
+            EVENT_ACCESS(RANDO_ACCESS_BEANS_REFILL, CAN_BE_DEKU && HAS_ITEM(ITEM_MAGIC_BEANS)),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana

@@ -86,11 +86,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, HAS_MAGIC && HAS_ITEM(ITEM_LENS_OF_TRUTH)),
         },
     };
-    Regions[RR_BENEATH_THE_WELL] = RandoRegion{ .sceneId = SCENE_REDEAD,
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(IKANA_CANYON, 5),                 ENTRANCE(BENEATH_THE_WELL, 0), true),
-        },
-    };
     Regions[RR_GHOST_HUT] = RandoRegion{ .sceneId = SCENE_TOUGITES,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 1),                 ENTRANCE(GHOST_HUT, 0), true),
@@ -124,7 +119,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 9),               ONE_WAY_EXIT, true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_BOW) && HAS_MAGIC && HAS_ITEM(ITEM_ARROW_ICE))
+            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_MAGIC_ARROW(ICE))
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, CUR_UPG_VALUE(UPG_WALLET) >= 1),
         },
     };
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
@@ -138,6 +136,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
+            EXIT(ENTRANCE(IKANA_CANYON, 14),                ENTRANCE(IKANA_CANYON, 13), true), // Cave
         },
         .connections = {
             // May consider cutting Deku and Goron from this since getting down as them may be seen as a trick. But its possible and is pretty easy to do.
@@ -153,6 +152,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE] = RandoRegion{ .sceneId = SCENE_CASTLE,
         .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(BENEATH_THE_WELL, 1),             ENTRANCE(IKANA_CASTLE, 0), true),
             EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
         },
     };
@@ -188,6 +188,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_MUSIC_BOX_HOUSE] = RandoRegion{ .sceneId = SCENE_MUSICHOUSE,
+        .checks = {
+            CHECK(RC_MUSIC_BOX_HOUSE_FATHER, CAN_PLAY_SONG(HEALING)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 2),                 ENTRANCE(MUSIC_BOX_HOUSE, 0), true),
         },
