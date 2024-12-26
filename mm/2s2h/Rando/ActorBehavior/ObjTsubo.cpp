@@ -603,28 +603,28 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_1_4;
             }
             if (IS_AT(-479.0f, 2141.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_1;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_1;
             }
             if (IS_AT(-524.0f, 2141.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_2;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_2;
             }
             if (IS_AT(-391.0f, 1959.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_3;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_3;
             }
             if (IS_AT(-436.0f, 1959.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_4;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_4;
             }
             if (IS_AT(-391.0f, 1810.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_5;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_5;
             }
             if (IS_AT(-436.0f, 1810.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_6;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_6;
             }
             if (IS_AT(-524.0f, 1628.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_7;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_7;
             }
             if (IS_AT(-479.0f, 1628.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_8;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_8;
             }
             if (IS_AT(2970.0f, 1020.0f)) {
                 randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_3_UPPER_1;
@@ -657,28 +657,28 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_GREAT_BAY_TEMPLE_POT_MAP_ROOM_WATER_8;
             }
             if (IS_AT(2835.0f, -555.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_1;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_1;
             }
             if (IS_AT(2835.0f, -495.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_2;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_2;
             }
             if (IS_AT(2745.0f, -495.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_3;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_3;
             }
             if (IS_AT(2745.0f, -555.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_4;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_4;
             }
             if (IS_AT(2730.0f, -975.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_5;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_5;
             }
             if (IS_AT(2775.0f, -975.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_6;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_6;
             }
             if (IS_AT(3555.0f, -720.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_7;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_7;
             }
             if (IS_AT(3555.0f, -675.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_PRE_BOSS_8;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_GREEN_PIPE_2_8;
             }
             if (IS_AT(-1530.0f, 60.0f)) {
                 randoCheckId = RC_GREAT_BAY_TEMPLE_POT_RED_PIPE_BEFORE_WART_1;
