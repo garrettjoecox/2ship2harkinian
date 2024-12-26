@@ -315,7 +315,7 @@ void EnRuppecrow_SpawnRupee(EnRuppecrow* this, PlayState* play) {
         } else {
             rupee = (EnItem00*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ITEM00, this->actor.world.pos.x + xOffset,
                                            this->actor.world.pos.y, this->actor.world.pos.z, 0x0, 0x0, 0x0,
-                                           ITEM00_RUPEE_GREEN);
+                                           ITEM00_RUPEE_BLUE);
             this->rupees[rupeeIndex] = rupee;
             this->rupees[rupeeIndex]->actor.gravity = -5.0f;
             this->rupees[rupeeIndex]->actor.velocity.y = 0.0f;
