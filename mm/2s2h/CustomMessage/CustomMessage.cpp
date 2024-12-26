@@ -31,6 +31,15 @@ void CustomMessage::Replace(std::string* msg, const std::string& placeholder, co
     }
 }
 
+void CustomMessage::ReplaceColorChars(std::string* msg) {
+    std::string white = "\x00";
+    white += '\x00';
+    CustomMessage::Replace(msg, "%r", "\x01");
+    CustomMessage::Replace(msg, "%w", white);
+    CustomMessage::Replace(msg, "%y", "\x04");
+    CustomMessage::Replace(msg, "%g", "\x02");
+}
+
 void CustomMessage::AddLineBreaks(std::string* msg) {
     const float MAX_TEXTBOX_WIDTH = 300.0f;
     const int MAX_LINES_PER_PAGE = 4;
@@ -121,6 +130,7 @@ void CustomMessage::LoadCustomMessageIntoFont(CustomMessage::Entry entry) {
 
     if (entry.autoFormat) {
         CustomMessage::AddLineBreaks(&entry.msg);
+        CustomMessage::ReplaceColorChars(&entry.msg);
         CustomMessage::EnsureMessageEnd(&entry.msg);
         CustomMessage::Replace(&entry.msg, "\n", "\x11");
     }

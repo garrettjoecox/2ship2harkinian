@@ -19,6 +19,7 @@ void InitEnBoxBehavior();
 void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
+void InitEnFuBehavior();
 void InitEnGe2Behavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();
