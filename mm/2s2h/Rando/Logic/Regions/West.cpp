@@ -14,7 +14,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Should this be a check?
-            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE]),
+            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
         },
     };
     Regions[RR_GREAT_BAY_COAST] = RandoRegion{ .sceneId = SCENE_30GYOSON,
@@ -131,16 +131,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), true),
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),             ENTRANCE(ZORA_CAPE, 4), HAS_ITEM(ITEM_HOOKSHOT)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),               ENTRANCE(ZORA_CAPE, 5), HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),             ENTRANCE(ZORA_CAPE, 7), (
-                // TODO: THIS IS TEMPORARY. Once great bay is properly split up, this will be replaced with a proper logic check.
-                CAN_BE_ZORA && CAN_BE_DEKU &&
-                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
-                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(BOSSA_NOVA)
-                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-                // all key locations are logically accessible we can re-add this check.
-                /* && KEY_COUNT(GREAT_BAY_TEMPLE) >= 1 */
-            )),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
         },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_ZORA_CAPE),
@@ -169,6 +160,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 3),                    ENTRANCE(ZORA_HALL_ROOMS, 2), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GREEN_POTION_REFILL, CAN_BE_ZORA),
         },
     };
     Regions[RR_ZORA_HALL_MIKAUS_ROOM] = RandoRegion{ .name = "Mikau's Room", .sceneId = SCENE_BANDROOM,
