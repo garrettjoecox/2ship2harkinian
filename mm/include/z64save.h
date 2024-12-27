@@ -1615,12 +1615,15 @@ typedef enum {
 
 #define GET_WEEKEVENTREG_HORSE_RACE_STATE (WEEKEVENTREG(92) & WEEKEVENTREG_HORSE_RACE_STATE_MASK)
 
-#define SET_WEEKEVENTREG_HORSE_RACE_STATE(state)                                                                       \
-    {                                                                                                                  \
-        WEEKEVENTREG(92) &= (u8)~WEEKEVENTREG_HORSE_RACE_STATE_MASK;                                                    \
-        WEEKEVENTREG(92) = WEEKEVENTREG(92) | (u8)((WEEKEVENTREG(92) & ~WEEKEVENTREG_HORSE_RACE_STATE_MASK) | (state)); \
-    }                                                                                                                  \
-    (void)0
+// #region 2S2H Originally these flags were all set with macros, for the port we want them to be in functions so we can hook into them
+#define SET_WEEKEVENTREG_HORSE_RACE_STATE(state) (Flags_SetWeekEventRegHorseRace(state))
+// #endregion
+    //                                                                    \
+    // {                                                                                                                  
+    //     WEEKEVENTREG(92) &= (u8)~WEEKEVENTREG_HORSE_RACE_STATE_MASK;                                                    
+    //     WEEKEVENTREG(92) = WEEKEVENTREG(92) | (u8)((WEEKEVENTREG(92) & ~WEEKEVENTREG_HORSE_RACE_STATE_MASK) | (state)); 
+    // }                                                                                                                  
+    // (void)0
 
 #define GET_WEEKEVENTREG_DOG_RACE_TEXT(index, baseTextId)                         \
     (index % 2) ? (baseTextId + (((WEEKEVENTREG(42 + (index / 2))) & 0xF0) >> 4)) \

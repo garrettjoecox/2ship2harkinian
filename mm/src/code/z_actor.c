@@ -904,6 +904,15 @@ void Flags_ClearWeekEventReg(s32 flag) {
     }
 }
 
+void Flags_SetWeekEventRegHorseRace(u8 state) {
+    u8 previousState = GET_WEEKEVENTREG_HORSE_RACE_STATE;
+    WEEKEVENTREG(92) &= (u8)~WEEKEVENTREG_HORSE_RACE_STATE_MASK;                                                    
+    WEEKEVENTREG(92) = WEEKEVENTREG(92) | (u8)((WEEKEVENTREG(92) & ~WEEKEVENTREG_HORSE_RACE_STATE_MASK) | (state));
+    if (previousState != state) {
+        GameInteractor_ExecuteOnFlagSet(FLAG_WEEK_EVENT_REG_HORSE_RACE, state);
+    } 
+}
+
 void Flags_SetEventInf(s32 flag) {
     u8 previouslyOff = !CHECK_EVENTINF(flag);
     gSaveContext.eventInf[(flag) >> 4] |= (1 << ((flag)&0xF));
