@@ -50,7 +50,10 @@ void Rando::DrawMenu() {
                 UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
                                         Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
-                UIWidgets::CVarCheckbox("Shuffle Pots", Rando::StaticData::Options[RO_SHUFFLE_POTS].cvar);
+                UIWidgets::CVarCheckbox("Shuffle Mundane Checks", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar);
+                UIWidgets::Tooltip(
+                    "This will shuffle freestanding rupees and drops from pots, crates, etc. Not everything is covered "
+                    "here yet, consult the check tracker for more detailed information.");
                 UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
                 UIWidgets::CVarCheckbox("Container Style Matches Contents", "gRando.CSMC");
                 UIWidgets::Tooltip("Currently this is fairly limited, will be expanded upon soon");

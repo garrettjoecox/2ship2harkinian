@@ -3,6 +3,7 @@
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/Rando/StaticData/StaticData.h"
 #include "2s2h/ShipInit.hpp"
+#include "assets/2s2h_assets.h"
 
 extern "C" {
 #include "variables.h"
@@ -17,7 +18,11 @@ Gfx* EnBox_SetRenderMode2(GraphicsContext* gfxCtx);
 Gfx* EnBox_SetRenderMode3(GraphicsContext* gfxCtx);
 void EnBox_Draw(Actor* actor, PlayState* play);
 void Player_DrawStrayFairyParticles(PlayState* play, Vec3f* arg1);
+Gfx* ResourceMgr_LoadGfxByName(const char* path);
 }
+
+static Gfx gBoxChestBaseCopyDL[42];
+static Gfx gBoxChestLidCopyDL[48];
 
 #define ENBOX_RC (actor->home.rot.x)
 #define ENBOX_SET_ITEM(thisx, newItem) ((thisx)->params = (((thisx)->params & ~(0x7F << 5)) | ((newItem & 0x7F) << 5)))
@@ -40,40 +45,42 @@ void EnBox_RandoPostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s*
     RandoItemId randoItemId = Rando::ConvertItem(RANDO_SAVE_CHECKS[ENBOX_RC].randoItemId, (RandoCheckId)ENBOX_RC);
     RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
 
-    gSPMatrix((*gfx)++, Matrix_NewMtx(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-
     switch (randoItemType) {
         case RITYPE_BOSS_KEY:
-            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseOrnateDL);
-            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidOrnateDL);
-            }
-            break;
-        case RITYPE_SMALL_KEY:
-            gDPSetGrayscaleColor((*gfx)++, 255, 255, 255, 255);
-            gSPGrayscale((*gfx)++, true);
-            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseGildedDL);
-            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidGildedDL);
-            }
-            gSPGrayscale((*gfx)++, false);
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerOrnateTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockOrnateTex);
             break;
         case RITYPE_MAJOR:
-            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseGildedDL);
-            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidGildedDL);
-            }
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerGildedTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockGildedTex);
+            break;
+        case RITYPE_MASK:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerMaskTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockMaskTex);
+            break;
+        case RITYPE_SKULLTULA_TOKEN:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerSkullTokenTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockSkullTokenTex);
+            break;
+        case RITYPE_SMALL_KEY:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerSmallKeyTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockSmallKeyTex);
+            break;
+        case RITYPE_STRAY_FAIRY:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerStrayFairyTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockStrayFairyTex);
             break;
         default:
-            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseDL);
-            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
-                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidDL);
-            }
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockTex);
             break;
+    }
+
+    gSPMatrix((*gfx)++, Matrix_NewMtx(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
+        gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseCopyDL);
+    } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
+        gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidCopyDL);
     }
 }
 
@@ -165,3 +172,19 @@ static RegisterShipInitFunc initFunc(
         }
     },
     { "gRando.CSMC", "IS_RANDO" });
+
+static RegisterShipInitFunc initializeChestCopyDLs(
+    []() {
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gBoxChestBaseOrnateDL);
+        memcpy(gBoxChestBaseCopyDL, baseDL, sizeof(gBoxChestBaseCopyDL));
+        gBoxChestBaseCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestBaseCopyDL[8] = gsDPNoOp();
+        gBoxChestBaseCopyDL[25] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
+        gBoxChestBaseCopyDL[26] = gsDPNoOp();
+
+        Gfx* lidDL = ResourceMgr_LoadGfxByName(gBoxChestLidOrnateDL);
+        memcpy(gBoxChestLidCopyDL, lidDL, sizeof(gBoxChestLidCopyDL));
+        gBoxChestLidCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestLidCopyDL[8] = gsDPNoOp();
+    },
+    {});

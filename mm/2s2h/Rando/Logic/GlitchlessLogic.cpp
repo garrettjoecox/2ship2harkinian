@@ -53,9 +53,8 @@ void ApplyGlitchlessLogicToSaveContext() {
     // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
     // section.
     std::vector<RandoItemId> startingItems = {
-        RI_ARROW_FIRE,  RI_MAGIC_BEAN, RI_SONG_STORMS,    RI_MASK_COUPLE,  RI_SONG_NOVA,
-        RI_ARROW_LIGHT, RI_ARROW_ICE,  RI_MASK_ALL_NIGHT, RI_SONG_LULLABY, RI_SONG_ELEGY,
-        RI_DEKU_STICK,  RI_DEKU_NUT,   RI_PICTOGRAPH_BOX,
+        RI_SONG_STORMS,  RI_MASK_COUPLE, RI_ARROW_LIGHT,    RI_MASK_ALL_NIGHT, RI_SONG_LULLABY,
+        RI_DEKU_STICK,   RI_DEKU_NUT,    RI_PICTOGRAPH_BOX, RI_SONG_OATH,
     };
 
     for (RandoItemId randoItemId : startingItems) {
@@ -78,7 +77,8 @@ void ApplyGlitchlessLogicToSaveContext() {
                 continue;
             }
 
-            if (randoStaticCheck.randoCheckType == RCTYPE_POT && RANDO_SAVE_OPTIONS[RO_SHUFFLE_POTS] == RO_GENERIC_NO) {
+            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE) &&
+                RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
                 continue;
             }
 

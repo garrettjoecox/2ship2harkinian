@@ -329,7 +329,8 @@ s32 func_80BED140(PlayState* play) {
 }
 
 s32 func_80BED208(EnAkindonuts* this) {
-    if ((u32)INV_CONTENT(ITEM_MAGIC_BEANS) != ITEM_MAGIC_BEANS) {
+    if (!GameInteractor_Should(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BEAN_REFILL,
+                               !((u32)INV_CONTENT(ITEM_MAGIC_BEANS) != ITEM_MAGIC_BEANS), this)) {
         return 0;
     }
 

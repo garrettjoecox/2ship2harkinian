@@ -6,6 +6,7 @@
 
 #include "z_en_ruppecrow.h"
 #include "objects/object_crow/object_crow.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_4000)
 
@@ -273,6 +274,11 @@ void EnRuppecrow_SpawnRupee(EnRuppecrow* this, PlayState* play) {
         xOffset = (this->rupeeIndex & 1) ? 10.0f : -10.0f;
     } else {
         xOffset = 0.0f;
+    }
+
+    if (!GameInteractor_Should(VB_GUAY_DROP_RUPEE, true, this)) {
+        this->rupeeIndex++;
+        return;
     }
 
     if (EnRuppecrow_CanSpawnBlueRupees(play) && (this->rupeeIndex % 5) == 4) {

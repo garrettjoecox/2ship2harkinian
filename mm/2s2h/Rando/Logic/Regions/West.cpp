@@ -14,7 +14,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Should this be a check?
-            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE]),
+            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
         },
     };
     Regions[RR_GREAT_BAY_COAST] = RandoRegion{ .sceneId = SCENE_30GYOSON,
@@ -22,15 +22,15 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_COAST_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_GREAT_BAY_COAST_MIKAU, CAN_PLAY_SONG(HEALING)),
             CHECK(RC_GREAT_BAY_COAST_HP, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT),
-            CHECK(RC_GREAT_BAY_COAST_POT_1, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_2, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_3, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_4, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_5, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_6, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_7, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_8, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_9, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_01, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_02, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_03, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_04, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_05, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_06, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_07, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_08, true),
+            CHECK(RC_GREAT_BAY_COAST_POT_09, true),
             CHECK(RC_GREAT_BAY_COAST_POT_10, true),
             CHECK(RC_GREAT_BAY_COAST_POT_11, true),
             CHECK(RC_GREAT_BAY_COAST_POT_12, true),
@@ -82,15 +82,15 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_PINNACLE_ROCK_CHEST_1,     CAN_BE_ZORA),
             CHECK(RC_PINNACLE_ROCK_CHEST_2,     CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_1,       CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_2,       CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_3,       CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_4,       CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_5,       CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_PINNACLE_ROCK_POT_6,       CAN_BE_ZORA),
-            CHECK(RC_PINNACLE_ROCK_POT_7,       CAN_BE_ZORA),
-            CHECK(RC_PINNACLE_ROCK_POT_8,       CAN_BE_ZORA),
-            CHECK(RC_PINNACLE_ROCK_POT_9,       CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_01,      CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_02,      CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_03,      CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_04,      CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_05,      CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_POT_06,      CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_07,      CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_08,      CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_POT_09,      CAN_BE_ZORA),
             CHECK(RC_PINNACLE_ROCK_POT_10,      CAN_BE_ZORA),
             CHECK(RC_PINNACLE_ROCK_POT_11,      CAN_BE_ZORA),
             // TODO: Missing HP check to add here later.
@@ -131,16 +131,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), true),
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),             ENTRANCE(ZORA_CAPE, 4), HAS_ITEM(ITEM_HOOKSHOT)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),               ENTRANCE(ZORA_CAPE, 5), HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),             ENTRANCE(ZORA_CAPE, 7), (
-                // TODO: THIS IS TEMPORARY. Once great bay is properly split up, this will be replaced with a proper logic check.
-                CAN_BE_ZORA && CAN_BE_DEKU &&
-                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
-                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(BOSSA_NOVA)
-                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-                // all key locations are logically accessible we can re-add this check.
-                /* && KEY_COUNT(GREAT_BAY_TEMPLE) >= 1 */
-            )),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
         },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_ZORA_CAPE),
@@ -169,6 +160,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 3),                    ENTRANCE(ZORA_HALL_ROOMS, 2), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GREEN_POTION_REFILL, CAN_BE_ZORA),
         },
     };
     Regions[RR_ZORA_HALL_MIKAUS_ROOM] = RandoRegion{ .name = "Mikau's Room", .sceneId = SCENE_BANDROOM,
