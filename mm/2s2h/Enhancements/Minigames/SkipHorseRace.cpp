@@ -12,7 +12,6 @@ extern "C" {
 
 void RegisterSkipHorseRace() {
 
-
     COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVAR, {
         if (gSaveContext.save.cutsceneIndex == 0x0 && gSaveContext.save.entrance == ENTRANCE(GORMAN_TRACK, 5)) {
             gSaveContext.save.entrance = ENTRANCE(GORMAN_TRACK, 2);
