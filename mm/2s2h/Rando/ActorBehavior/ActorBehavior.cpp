@@ -63,8 +63,6 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnGamelupyBehavior();
-    Rando::ActorBehavior::InitEnTest5Behavior();
-    Rando::ActorBehavior::InitEnTsnBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnMnkBehavior();
