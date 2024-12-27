@@ -1340,7 +1340,7 @@ void Graph_CloseDisps(Gfx** dispRefs, Gfx* dispVals, GraphicsContext* gfxCtx, co
 void Lights_GlowCheckPrepare(PlayState* play);
 void Flags_SetWeekEventReg(s32 flag);
 void Flags_ClearWeekEventReg(s32 flag);
-void Flags_SetWeekEventRegHorseRace(u8 state); //not sure on type - enum that goes up to 5
+void Flags_SetWeekEventRegHorseRace(u8 state);
 void Flags_SetEventInf(s32 flag);
 void Flags_ClearEventInf(s32 flag);
 // #endregion
