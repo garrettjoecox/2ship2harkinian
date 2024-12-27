@@ -51,6 +51,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_FIRST_ROOM_2, true)
         },
         .connections = {
+            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, true),
             CONNECTION(RR_IKANA_CASTLE_SKULLTULA_ROOM, CAN_BE_DEKU),
         },
     };
