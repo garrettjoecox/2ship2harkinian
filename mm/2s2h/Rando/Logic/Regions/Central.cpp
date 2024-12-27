@@ -351,8 +351,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_DEKU_PLAYGROUND_RUPEE_4, CAN_BE_DEKU),
             CHECK(RC_DEKU_PLAYGROUND_RUPEE_5, CAN_BE_DEKU),
             CHECK(RC_DEKU_PLAYGROUND_RUPEE_6, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_ALL_DAYS, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_ANY_DAY, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 4),             ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
