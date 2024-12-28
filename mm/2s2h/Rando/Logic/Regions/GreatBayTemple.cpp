@@ -8,6 +8,35 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
+    Regions[RR_GREAT_BAY_TEMPLE_BABA_CHEST_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_TEMPLE_BABA_CHEST, CAN_BE_ZORA || CAN_USE_PROJECTILE || HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM,        true),
+        },
+    };
+    Regions[RR_GREAT_BAY_TEMPLE_BEFORE_WART] = RandoRegion{ .sceneId = SCENE_SEA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_01, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_02, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_03, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_04, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_05, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_06, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_07, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_08, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_09, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_10, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_11, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_12, true),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  true), // TODO: Key Door
+            CONNECTION(RR_GREAT_BAY_TEMPLE_WART,                  true),
+        },
+    };
     Regions[RR_GREAT_BAY_TEMPLE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA_BS,
         .checks = {
             // TODO: CAN_KILL_BOSS(Gyorg)?
@@ -29,35 +58,6 @@ static RegisterShipInitFunc initFunc([]() {
             ENTRANCE(GYORGS_LAIR, 0), // Great Bay Temple Pre Boss Room
         },
     };
-    Regions[RR_GREAT_BAY_TEMPLE_BABA_CHEST_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
-        .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_BABA_CHEST, CAN_BE_ZORA || CAN_USE_PROJECTILE || HAS_ITEM(ITEM_HOOKSHOT)),
-        },
-        .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM,        true),
-        },
-    };
-    Regions[RR_GREAT_BAY_TEMPLE_BEFORE_WART] = RandoRegion{ .sceneId = SCENE_SEA,
-        .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_1,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_10, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_11, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_12, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_2,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_3,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_4,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_5,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_6,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_7,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_8,  true),
-            CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_9,  true),
-        },
-        .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  true), // TODO: Key Door
-            CONNECTION(RR_GREAT_BAY_TEMPLE_WART,                  true),
-        },
-    };
     Regions[RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
         .checks = {
             CHECK(RC_GREAT_BAY_TEMPLE_SF_CENTRAL_ROOM_BARREL,           CAN_BE_GORON || CAN_USE_EXPLOSIVE),
@@ -71,6 +71,15 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_PRE_BOSS_ROOM,           CAN_BE_ZORA),
             CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,    true),
             CONNECTION(RR_GREAT_BAY_TEMPLE_WATER_WHEEL_ROOM,        true),
+        },
+    };
+    Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_WITH_BOSS_KEY_CHEST] = RandoRegion{ .sceneId = SCENE_SEA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_KEY, true),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           true),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -91,15 +100,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_WITH_BOSS_KEY_CHEST,  CAN_BE_ZORA && CAN_USE_MAGIC_ARROW(ICE)),
             CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,                             CAN_USE_MAGIC_ARROW(ICE)),
             CONNECTION(RR_GREAT_BAY_TEMPLE_GREEN_PIPE_2,                      CAN_BE_ZORA),
-        },
-    };
-    Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_WITH_BOSS_KEY_CHEST] = RandoRegion{ .sceneId = SCENE_SEA,
-        .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_KEY, true),
-        },
-        .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           true),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_ENTRANCE] = RandoRegion{ .sceneId = SCENE_SEA,

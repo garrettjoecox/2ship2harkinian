@@ -37,10 +37,10 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_STONE_TOWER_POT_HIGHER_SCARECROW_8;
             }
             if (IS_AT(-1116.0f, 2231.0f)) {
-                randoCheckId = RC_STONE_TOWER_POT_LOWER_SCARECROW_2;
+                randoCheckId = RC_STONE_TOWER_POT_LOWER_SCARECROW_02;
             }
             if (IS_AT(-1116.0f, 2031.0f)) {
-                randoCheckId = RC_STONE_TOWER_POT_LOWER_SCARECROW_4;
+                randoCheckId = RC_STONE_TOWER_POT_LOWER_SCARECROW_04;
             }
             if (IS_AT(-1116.0f, 1511.0f)) {
                 randoCheckId = RC_STONE_TOWER_POT_LOWER_SCARECROW_11;
@@ -65,31 +65,31 @@ RandoCheckId IdentifyPot(Actor* actor) {
             break;
         case SCENE_HAKUGIN_BS:
             if (IS_AT(-1250.0f, -1250.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_1;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_01;
             }
             if (IS_AT(-1400.0f, -60.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_2;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_02;
             }
             if (IS_AT(-1600.0f, -60.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_3;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_03;
             }
             if (IS_AT(-1250.0f, 1250.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_4;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_04;
             }
             if (IS_AT(61.0f, 1440.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_5;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_05;
             }
             if (IS_AT(61.0f, 1740.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_6;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_06;
             }
             if (IS_AT(1250.0f, 1250.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_7;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_07;
             }
             if (IS_AT(1460.0f, -60.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_8;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_08;
             }
             if (IS_AT(1660.0f, -60.0f)) {
-                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_9;
+                randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_09;
             }
             if (IS_AT(1250.0f, -1250.0f)) {
                 randoCheckId = RC_SNOWHEAD_TEMPLE_BOSS_POT_10;
@@ -251,31 +251,31 @@ RandoCheckId IdentifyPot(Actor* actor) {
             break;
         case SCENE_LAST_GORON:
             if (IS_AT(-5670.0f, -2280.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_1;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_01;
             }
             if (IS_AT(-5610.0f, -2280.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_2;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_02;
             }
             if (IS_AT(-2700.0f, -2490.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_3;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_03;
             }
             if (IS_AT(-2640.0f, -2490.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_4;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_04;
             }
             if (IS_AT(-2580.0f, -2490.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_5;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_05;
             }
             if (IS_AT(-7200.0f, -1290.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_6;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_06;
             }
             if (IS_AT(-7260.0f, -1290.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_7;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_07;
             }
             if (IS_AT(-7200.0f, -1410.0f)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_8;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_08;
             }
             if (IS_AT(-7260.0f, -1410.0)) {
-                randoCheckId = RC_MOON_TRIAL_GORON_POT_9;
+                randoCheckId = RC_MOON_TRIAL_GORON_POT_09;
             }
             if (IS_AT(-4890.0f, -1380.0f)) {
                 randoCheckId = RC_MOON_TRIAL_GORON_POT_10;
@@ -347,31 +347,31 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_BIG_POE_4;
             }
             if (IS_AT(1185.0f, -915.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_1;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_01;
             }
             if (IS_AT(1185.0f, -945.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_2;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_02;
             }
             if (IS_AT(1185.0f, -975.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_3;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_03;
             }
             if (IS_AT(1185.0f, -1005.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_4;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_04;
             }
             if (IS_AT(1185.0f, -1035.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_5;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_05;
             }
             if (IS_AT(1185.0f, -1065.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_6;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_06;
             }
             if (IS_AT(1185.0f, -1095.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_7;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_07;
             }
             if (IS_AT(1185.0f, -1125.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_8;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_08;
             }
             if (IS_AT(1185.0f, -1155.0f)) {
-                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_9;
+                randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_09;
             }
             if (IS_AT(1185.0f, -1185.0f)) {
                 randoCheckId = RC_BENEATH_THE_WELL_POT_MIDDLE_10;
@@ -540,19 +540,19 @@ RandoCheckId IdentifyPot(Actor* actor) {
             break;
         case SCENE_SEA:
             if (IS_AT(-1905.0f, -1200.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_3;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_03;
             }
             if (IS_AT(-1755.0f, -1200.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_6;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_06;
             }
             if (IS_AT(-1755.0f, -1680.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_7;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_07;
             }
             if (IS_AT(-1755.0f, -1725.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_8;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_08;
             }
             if (IS_AT(-1755.0f, -1770.0f)) {
-                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_9;
+                randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_09;
             }
             if (IS_AT(-1905.0f, -1680.0f)) {
                 randoCheckId = RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_10;

@@ -8,8 +8,6 @@
 #include "overlays/actors/ovl_En_Ma_Yts/z_en_ma_yts.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
-#include "2s2h/GameInteractor/GameInteractor.h"
-
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_100000 | ACTOR_FLAG_2000000)
 
 #define THIS ((EnMaYto*)thisx)

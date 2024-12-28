@@ -10,15 +10,15 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_BENEATH_THE_WELL_BABA_AND_POTS_ROOM] = RandoRegion{ .name = "Babas and Pots Room", .sceneId = SCENE_REDEAD,
         .checks = {
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_1, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_2, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_3, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_4, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_5, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_6, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_7, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_8, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_9, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_01, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_02, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_03, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_04, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_05, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_06, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_07, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_08, true),
+            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_09, true),
             CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_10, true),
         },
         .connections = {
@@ -118,7 +118,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_FOUR_SPIKED_BARS, true),
-            CONNECTION(RR_BENEATH_THE_WELL_BACK_EXIT, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_VALUE_SHIELD_MIRROR) >= 2))
+            CONNECTION(RR_BENEATH_THE_WELL_BACK_EXIT, CAN_USE_MAGIC_ARROW(LIGHT) || (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR))
         }
     };
     Regions[RR_BENEATH_THE_WELL_RIGHT_FIRE_KEESE] = RandoRegion{ .name = "Right Fire Keese Room", .sceneId = SCENE_REDEAD,

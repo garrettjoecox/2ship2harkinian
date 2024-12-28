@@ -89,11 +89,13 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
      (CAN_PLAY_SONG(STORMS) || (HAS_BOTTLE && (CAN_ACCESS(SPRING_WATER) || CAN_ACCESS(HOT_SPRING_WATER)))))
 #define CAN_USE_MAGIC_ARROW(arrowType) (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_##arrowType) && HAS_MAGIC)
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
+#define CAN_KILL_CURSED_SKULLTULA \
+    (CAN_USE_PROJECTILE || CAN_BE_DEKU || CAN_BE_GORON || CAN_USE_HUMAN_SWORD || CAN_USE_EXPLOSIVE)
 #define CAN_KILL_DINALFOS (CAN_USE_SWORD || CAN_BE_GORON)
 #define CAN_KILL_WIZZROBE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_USE_SWORD || CAN_BE_GORON)
 #define CAN_KILL_WART (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
 #define CAN_KILL_GARO_MASTER (HAS_ITEM(ITEM_BOW) || CAN_BE_GORON || CAN_USE_SWORD)
-#define CAN_KILL_IRONKNUCKLE (CAN_USE_SWORD || CAN_BE_GORON)
+#define CAN_KILL_IRONKNUCKLE (CAN_USE_HUMAN_SWORD || CAN_BE_GORON)
 #define CAN_KILL_BAT \
     (CAN_USE_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE || CAN_BE_GORON || CAN_BE_ZORA)
 #define CAN_LIGHT_TORCH_NEAR_ANOTHER (HAS_ITEM(ITEM_DEKU_STICK) || CAN_USE_MAGIC_ARROW(FIRE))
@@ -149,19 +151,31 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
     }
 // TODO: This is for sure not the right place for these
 inline void Flags_SetSceneSwitch(s32 scene, s32 flag) {
-    gSaveContext.cycleSceneFlags[scene].switch0 |= (1 << flag);
+    if (((flag & ~0x1F) >> 5) == 0) {
+        gSaveContext.cycleSceneFlags[scene].switch0 |= 1 << (flag & 0x1F);
+    } else {
+        gSaveContext.cycleSceneFlags[scene].switch1 |= 1 << (flag & 0x1F);
+    }
 }
 
 inline void Flags_ClearSceneSwitch(s32 scene, s32 flag) {
-    gSaveContext.cycleSceneFlags[scene].switch0 &= ~(1 << flag);
+    if (((flag & ~0x1F) >> 5) == 0) {
+        gSaveContext.cycleSceneFlags[scene].switch0 &= ~(1 << (flag & 0x1F));
+    } else {
+        gSaveContext.cycleSceneFlags[scene].switch1 &= ~(1 << (flag & 0x1F));
+    }
 }
 
 inline bool Flags_GetSceneSwitch(s32 scene, s32 flag) {
     if (gPlayState != NULL && gPlayState->sceneId == scene) {
-        return (gPlayState->actorCtx.sceneFlags.switches[0] >> flag) & 1;
+        return gPlayState->actorCtx.sceneFlags.switches[(flag & ~0x1F) >> 5] & (1 << (flag & 0x1F));
     }
 
-    return (gSaveContext.cycleSceneFlags[scene].switch0 >> flag) & 1;
+    if (((flag & ~0x1F) >> 5) == 0) {
+        return gSaveContext.cycleSceneFlags[scene].switch0 & (1 << (flag & 0x1F));
+    } else {
+        return gSaveContext.cycleSceneFlags[scene].switch1 & (1 << (flag & 0x1F));
+    }
 }
 
 inline bool Flags_GetSceneClear(s32 scene, s32 roomNumber) {

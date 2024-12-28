@@ -20,19 +20,18 @@ void EnAkindonuts_ReplacePurchaseMessage(RandoCheckId randoCheckId, RandoInf ran
         return;
     }
 
-    auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+    auto randoStaticItem = Rando::StaticData::Items[Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId)];
 
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.msg = "I'll sell you {{article}}%g{{item}}%w for %r{{rupees}} Rupees%w!\xE0";
 
-    if (Rando::StaticData::Items[randoSaveCheck.randoItemId].article != "") {
-        CustomMessage::Replace(&entry.msg, "{{article}}",
-                               std::string(Rando::StaticData::Items[randoSaveCheck.randoItemId].article) + " ");
+    if (randoStaticItem.article != "") {
+        CustomMessage::Replace(&entry.msg, "{{article}}", std::string(randoStaticItem.article) + " ");
     } else {
         CustomMessage::Replace(&entry.msg, "{{article}}", "");
     }
 
-    CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
+    CustomMessage::Replace(&entry.msg, "{{item}}", randoStaticItem.name);
     CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(cost));
 
     CustomMessage::LoadCustomMessageIntoFont(entry);
@@ -55,7 +54,7 @@ void EnAkindonuts_IsEligible(RandoCheckId randoCheckId, RandoInf randoInf, bool*
         return;
     }
 
-    *should = Rando::IsItemObtainable(randoSaveCheck.randoItemId, randoCheckId);
+    *should = true;
 }
 
 // This handles the checks for the business scrubs in the Southern Swamp, Goron Village, Zora Hall, and Ikana Canyon.

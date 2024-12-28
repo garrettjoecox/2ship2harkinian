@@ -31,16 +31,19 @@ void Rando::ActorBehavior::Init() {
 }
 
 void Rando::ActorBehavior::OnFileLoad() {
-    Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitDmChar05Behavior();
     Rando::ActorBehavior::InitDmHinaBehavior();
     Rando::ActorBehavior::InitDmStkBehavior();
+    Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
+    Rando::ActorBehavior::InitEnBabaBehavior();
+    Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnFuBehavior();
+    Rando::ActorBehavior::InitEnGamelupyBehavior();
     Rando::ActorBehavior::InitEnGegBehavior();
     Rando::ActorBehavior::InitEnGgBehavior();
     Rando::ActorBehavior::InitEnGinkoBehavior();
@@ -48,6 +51,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnGoBehavior();
     Rando::ActorBehavior::InitEnGsBehavior();
     Rando::ActorBehavior::InitEnHgBehavior();
+    Rando::ActorBehavior::InitEnInBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
     Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
@@ -55,17 +59,15 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnLiftNutsBehavior();
     Rando::ActorBehavior::InitEnMa4Behavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
+    Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnRuppecrowBehavior();
+    Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
-    Rando::ActorBehavior::InitEnBabaBehavior();
-    Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
-    Rando::ActorBehavior::InitEnRzBehavior();
-    Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();

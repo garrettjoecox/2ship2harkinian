@@ -6,6 +6,7 @@
 
 #include "z_en_gamelupy.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -125,7 +126,7 @@ void EnGamelupy_SetupIdle(EnGamelupy* this) {
 }
 
 void EnGamelupy_Idle(EnGamelupy* this, PlayState* play) {
-    if (this->collider.base.ocFlags1 & OC1_HIT) {
+    if (GameInteractor_Should(VB_COLLECT_PLAYGROUND_RUPEE, this->collider.base.ocFlags1 & OC1_HIT, this)) {
         *this->minigameScore += ENGAMELUPY_POINTS;
         if (this->type == ENGAMELUPY_TYPE_BLUE) {
             Rupees_ChangeBy(5);

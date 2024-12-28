@@ -33,6 +33,10 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
         gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
 
+        // Fix a vanilla bug, where you can use magic items prior to getting magic because your magic meter is
+        // initialized with a value of 48
+        gSaveContext.save.saveInfo.playerData.magic = 0;
+
         // TODO: Starting item configuration. Currently if you don't start with ocarina & SoT glitchless logic will fail
         // because of looping condition of needing Deku mask to get ocarina, and needing ocarina to get deku mask.
         GiveItem(RI_OCARINA);
