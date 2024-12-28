@@ -53,7 +53,7 @@ void ApplyGlitchlessLogicToSaveContext() {
     // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
     // section.
     std::vector<RandoItemId> startingItems = {
-        RI_SONG_STORMS, RI_MASK_COUPLE, RI_ARROW_LIGHT,    RI_MASK_ALL_NIGHT, RI_SONG_LULLABY,
+        RI_SONG_STORMS, RI_MASK_COUPLE, RI_MASK_ALL_NIGHT, RI_SONG_LULLABY,
         RI_DEKU_STICK,  RI_DEKU_NUT,    RI_PICTOGRAPH_BOX, RI_SONG_OATH,
     };
 
