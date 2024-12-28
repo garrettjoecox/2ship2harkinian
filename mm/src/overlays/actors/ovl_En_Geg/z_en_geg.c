@@ -633,9 +633,11 @@ void func_80BB27D4(EnGeg* this, PlayState* play) {
             case 0xD6D:
             case 0xD6F:
             case 0xD8A:
-                play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
-                play->msgCtx.stateTimer = 4;
-                this->actionFunc = func_80BB31B8;
+                if (GameInteractor_Should(VB_GIVE_DON_GERO_MASK, true, this)) {
+                    play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
+                    play->msgCtx.stateTimer = 4;
+                    this->actionFunc = func_80BB31B8;
+                }
                 break;
 
             case 0xD72:
