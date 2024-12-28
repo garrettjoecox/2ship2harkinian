@@ -44,7 +44,7 @@ void RegisterSkipOnePointCutscenes() {
                 *should = false;
                 break;
             default:
-                SPDLOG_INFO("Unhandled actor id: {}", actor->id);
+                // SPDLOG_INFO("Unhandled actor id: {}", actor->id);
                 break;
         }
     });

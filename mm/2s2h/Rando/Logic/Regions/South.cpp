@@ -199,11 +199,6 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2),       ENTRANCE(SWAMP_SHOOTING_GALLERY, 0), true),
         },
     };
-    Regions[RR_SWAMP_SPIDER_HOUSE] = RandoRegion{ .sceneId = SCENE_KINSTA1,
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 8),      ENTRANCE(SWAMP_SPIDER_HOUSE, 0), true),
-        },
-    };
     Regions[RR_TOURIST_INFORMATION] = RandoRegion{ .sceneId = SCENE_MAP_SHOP,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 1),      ENTRANCE(TOURIST_INFORMATION, 0), true),
