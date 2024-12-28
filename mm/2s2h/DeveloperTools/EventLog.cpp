@@ -40,9 +40,9 @@ struct EventLogEntry {
 std::vector<EventLogEntry> eventLogEntries;
 
 const char* flagTypeNames[] = {
-    "",         "weekEventReg",  "eventInf",      "scenesVisible", "owlActivation", "chest",
-    "switch",   "clearedRoom",   "collectible",   "unk_14",        "rooms",         "chest *",
-    "switch *", "clearedRoom *", "collectible *", "randoInf",
+    "",         "weekEventReg",  "eventInf",      "scenesVisible",  "owlActivation", "chest",
+    "switch",   "clearedRoom",   "collectible",   "unk_14",         "rooms",         "chest *",
+    "switch *", "clearedRoom *", "collectible *", "weekEventHorse", "randoInf",
 };
 
 #define DEFINE_ACTOR(name, _enumValue, _allocType, _debugName, _humanName) { _enumValue, _debugName },
@@ -124,6 +124,13 @@ void RegisterEventLogHooks() {
                                                                     .type = EVENT_LOG_ENTRY_TYPE_FLAG_SET,
                                                                     .meta = fmt::format("EVENTINF_{:02x}", flag),
                                                                 });
+            } else if (type == FlagType::FLAG_WEEK_EVENT_REG_HORSE_RACE) {
+                eventLogEntries.insert(eventLogEntries.begin(),
+                                       {
+                                           .timestamp = CurrentTime(),
+                                           .type = EVENT_LOG_ENTRY_TYPE_FLAG_SET,
+                                           .meta = fmt::format("WEEKEVENTREG_HORSE_RACE_STATE {:03b}", flag),
+                                       });
             } else {
                 eventLogEntries.insert(
                     eventLogEntries.begin(),
