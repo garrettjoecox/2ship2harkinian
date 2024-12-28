@@ -10,6 +10,7 @@
 #include "objects/object_taisou/object_taisou.h"
 #include "objects/object_hakugin_demo/object_hakugin_demo.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 

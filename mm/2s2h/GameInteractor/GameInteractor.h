@@ -163,6 +163,8 @@ typedef enum {
     VB_GIVE_HONEY_DARLING_REWARD,
     VB_GS_CONTINUE_TEXTBOX,
     VB_GUAY_DROP_RUPEE,
+    VB_OVERRIDE_ENGEG_LIMB,
+    VB_OVERRIDE_TARGET_ARROW_DL,
 } GIVanillaBehavior;
 
 typedef enum {

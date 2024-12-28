@@ -20,6 +20,7 @@ void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnFuBehavior();
+void InitEnGegBehavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();
 void InitEnGirlABehavior();
