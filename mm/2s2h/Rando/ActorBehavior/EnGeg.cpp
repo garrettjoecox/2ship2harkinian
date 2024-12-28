@@ -7,7 +7,8 @@ extern "C" {
 }
 
 std::string CreateItemName() {
-    std::string itemName = Rando::StaticData::Items[RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_DON_GERO_MASK].randoItemId].article;
+    std::string itemName =
+        Rando::StaticData::Items[RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_DON_GERO_MASK].randoItemId].article;
     if (itemName != "") {
         itemName += " ";
     }
@@ -17,9 +18,7 @@ std::string CreateItemName() {
 }
 
 void Rando::ActorBehavior::InitEnGegBehavior() {
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_GEG, IS_RANDO, [](Actor* actor) {
-        SET_WEEKEVENTREG(WEEKEVENTREG_35_40);
-    });
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_GEG, IS_RANDO, [](Actor* actor) { SET_WEEKEVENTREG(WEEKEVENTREG_35_40); });
 
     COND_VB_SHOULD(VB_GIVE_DON_GERO_MASK, IS_RANDO, {
         EnGeg* refActor = va_arg(args, EnGeg*);
@@ -32,7 +31,6 @@ void Rando::ActorBehavior::InitEnGegBehavior() {
         Message_StartTextbox(gPlayState, 0xD75, &refActor->actor);
 
         *should = false;
-
     });
 
     COND_ID_HOOK(OnOpenText, 0xd75, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
