@@ -238,7 +238,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_LOTTERY_SHOP] = RandoRegion{ .sceneId = SCENE_TAKARAKUJI,
         .checks = {
-            // Are we adding the lotter reward as a check?
+            CHECK(RC_CLOCK_TOWN_WEST_LOTTERY, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 8),              ENTRANCE(LOTTERY_SHOP, 0), true),
