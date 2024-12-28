@@ -27,6 +27,10 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_WOODFALL_TEMPLE_BOSS_CONTAINER, true),
             CHECK(RC_WOODFALL_TEMPLE_BOSS_WARP, true),
         },
+        .events = {
+            // TODO: CAN_KILL_BOSS(Odolwa)?
+            EVENT_WEEKEVENTREG("Clear Woodfall Temple", WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE, true),
+        },
         .oneWayEntrances = {
             ENTRANCE(ODOLWAS_LAIR, 0), // From Woodfall Temple Pre-Boss Room
         },
