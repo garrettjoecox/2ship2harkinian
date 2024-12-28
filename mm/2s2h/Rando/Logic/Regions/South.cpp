@@ -63,6 +63,12 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_DOGGY_RACETRACK] = RandoRegion{ .sceneId = SCENE_F01_B,
+        .checks = {
+            CHECK(RC_DOGGY_RACETRACK_POT_1, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_2, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_3, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_4, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROMANI_RANCH, 5),                 ENTRANCE(DOGGY_RACETRACK, 0), true),
         },
