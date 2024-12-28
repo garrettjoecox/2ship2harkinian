@@ -135,8 +135,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
         .checks = {
-            // TODO : Add Gon Gero mask check here.
-            CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE, CAN_USE_SWORD),
+            CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,    CAN_BE_GORON && HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,       CAN_USE_SWORD),
             // TODO : Remove below comment when snowhead is clearable.
             //CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC)
         },
