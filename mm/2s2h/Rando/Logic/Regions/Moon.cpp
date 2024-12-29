@@ -61,6 +61,12 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_MOON_MAJORAS_LAIR] = RandoRegion{ .sceneId = SCENE_LAST_BS,
+        .checks = {
+            // TODO: 1) Add a check for Game Completion?
+            //       2) Determine if it's ok for these pots to be shuffled since we cannot return from here.
+            CHECK(RC_MOON_MAJORA_POT_1, true),
+            CHECK(RC_MOON_MAJORA_POT_2, true),
+        },
         .oneWayEntrances = {
             ENTRANCE(MAJORAS_LAIR, 0), // From moon
         },
