@@ -213,7 +213,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_1, true),
             CHECK(RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_2, true),
             CHECK(RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_3, true),
-            //CHECK(RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_4, true), // This one does not work
+            CHECK(RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_4, true),
         },
         .connections = {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_BIG_POT_ROOM_UPPER, true),

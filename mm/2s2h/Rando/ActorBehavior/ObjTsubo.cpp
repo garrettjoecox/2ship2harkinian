@@ -446,7 +446,7 @@ RandoCheckId IdentifyPot(Actor* actor) {
             if (IS_AT(330.0f, -1531.0f)) {
                 randoCheckId = RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_3;
             }
-            if (IS_AT(330.0f, -1471.0f)) {
+            if (IS_AT(330.0f, -1470.0f)) {
                 randoCheckId = RC_SWAMP_SPIDER_HOUSE_POT_GOLD_ROOM_UPPER_4;
             }
             if (IS_AT(544.0f, -569.0f)) {
