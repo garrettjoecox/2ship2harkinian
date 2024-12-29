@@ -21,9 +21,9 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_ARROWS_30,                  "",     "30 Arrows",                  RITYPE_JUNK,            ITEM_ARROWS_30,                  GI_ARROWS_30,                GID_ARROWS_MEDIUM),
     RI(RI_ARROWS_50,                  "",     "50 Arrows",                  RITYPE_JUNK,            ITEM_ARROWS_50,                  GI_ARROWS_50,                GID_ARROWS_LARGE),
     RI(RI_BLUE_POTION_REFILL,         "a",    "Blue Potion Refill",         RITYPE_JUNK,            ITEM_POTION_BLUE,                GI_POTION_BLUE,              GID_POTION_BLUE),
-    RI(RI_BOMB_BAG_20,                "a",    "Small Bomb Bag",             RITYPE_JUNK,            ITEM_BOMB_BAG_20,                GI_BOMB_BAG_20,              GID_BOMB_BAG_20),
-    RI(RI_BOMB_BAG_30,                "a",    "Bigger Bomb Bag",            RITYPE_JUNK,            ITEM_BOMB_BAG_30,                GI_BOMB_BAG_30,              GID_BOMB_BAG_30),
-    RI(RI_BOMB_BAG_40,                "the",  "Biggest Bomb Bag",           RITYPE_JUNK,            ITEM_BOMB_BAG_40,                GI_BOMB_BAG_40,              GID_BOMB_BAG_40),
+    RI(RI_BOMB_BAG_20,                "a",    "Bomb Bag",                   RITYPE_MAJOR,           ITEM_BOMB_BAG_20,                GI_BOMB_BAG_20,              GID_BOMB_BAG_20),
+    RI(RI_BOMB_BAG_30,                "a",    "Big Bomb Bag",               RITYPE_LESSER,          ITEM_BOMB_BAG_30,                GI_BOMB_BAG_30,              GID_BOMB_BAG_30),
+    RI(RI_BOMB_BAG_40,                "the",  "Biggest Bomb Bag",           RITYPE_LESSER,          ITEM_BOMB_BAG_40,                GI_BOMB_BAG_40,              GID_BOMB_BAG_40),
     RI(RI_BOMBCHU_10,                 "",     "10 Bombchus",                RITYPE_JUNK,            ITEM_BOMBCHUS_10,                GI_BOMBCHUS_10,              GID_BOMBCHU),
     RI(RI_BOMBCHU_5,                  "",     "5 Bombchus",                 RITYPE_JUNK,            ITEM_BOMBCHUS_5,                 GI_BOMBCHUS_5,               GID_BOMBCHU),
     RI(RI_BOMBCHU,                    "a",    "Bombchu",                    RITYPE_JUNK,            ITEM_BOMBCHUS_1,                 GI_BOMBCHUS_1,               GID_BOMBCHU), // not sure about this
