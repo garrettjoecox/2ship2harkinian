@@ -11,7 +11,7 @@ void Rando::ActorBehavior::InitObjKinokoBehavior() {
         Actor* refActor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
 
-        if (player->heldItemAction == PLAYER_IA_BOTTLE_EMPTY) {
+        if ((player->stateFlags3 & PLAYER_STATE3_800) && refActor->xzDistToPlayer <= 20.0f) {
             Flags_SetCollectible(gPlayState, OBJ_KINOKO_GET_FLAG(refActor));
             Actor_Kill(refActor);
         }
