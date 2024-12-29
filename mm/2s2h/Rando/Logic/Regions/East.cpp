@@ -225,6 +225,13 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_SAKON_HIDEOUT] = RandoRegion{ .sceneId = SCENE_SECOM,
+        .checks = {
+            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_1,    true),
+            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_2,    true),
+            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_1,   true),
+            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_2,   true),
+            CHECK(RC_SAKON_HIDEOUT_POT_THIRD_ROOM,      true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 6),                 ENTRANCE(SAKONS_HIDEOUT, 0), true),
         },
