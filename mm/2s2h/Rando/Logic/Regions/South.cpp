@@ -31,7 +31,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_DEKU_PALACE_INSIDE] = RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
         .checks = {
-            CHECK(RC_DEKU_PALACE_HP, true),
+            CHECK(RC_DEKU_PALACE_HP,    true),
+            CHECK(RC_DEKU_PALACE_POT_1, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_POT_2, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 0),           ENTRANCE(DEKU_PALACE, 2), true),
