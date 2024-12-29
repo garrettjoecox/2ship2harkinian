@@ -47,7 +47,7 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 3),      ENTRANCE(DEKU_PALACE, 0), true),
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 4),      ENTRANCE(DEKU_PALACE, 5), CAN_BE_DEKU), // Treetop
-            EXIT(ENTRANCE(DEKU_SHRINE, 0),                  ENTRANCE(DEKU_PALACE, 4), CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            EXIT(ENTRANCE(DEKU_SHRINE, 0),                  ENTRANCE(DEKU_PALACE, 4), CAN_ACCESS(DEKU_PRINCESS)),
         },
         .connections = {
             CONNECTION(RR_DEKU_PALACE_INSIDE, CAN_BE_DEKU),
@@ -55,9 +55,39 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_DEKU_SHRINE] = RandoRegion{ .sceneId = SCENE_DANPEI,
         .checks = {
-            CHECK(RC_DEKU_SHRINE_POT_1,             CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
-            CHECK(RC_DEKU_SHRINE_POT_2,             CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
-            CHECK(RC_DEKU_SHRINE_MASK_OF_SCENTS,    CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_01,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_02,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_03,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_04,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_05,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_06,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_07,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_08,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_09,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_10,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_11,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_12,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_13,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_14,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_15,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_16,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_17,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_18,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_19,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_20,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_21,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_22,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_23,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_24,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_25,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_26,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_27,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_28,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_29,             true),
+            CHECK(RC_DEKU_SHRINE_FREESTANDING_RUPEE_30,             true),
+            CHECK(RC_DEKU_SHRINE_POT_1,                             true),
+            CHECK(RC_DEKU_SHRINE_POT_2,                             true),
+            CHECK(RC_DEKU_SHRINE_MASK_OF_SCENTS,                    true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
@@ -252,6 +282,9 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(WOODFALL_TEMPLE, 0),              ENTRANCE(WOODFALL, 1), CAN_BE_DEKU && CAN_PLAY_SONG(SONATA)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 1),               ENTRANCE(WOODFALL, 2), CAN_BE_DEKU),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_DEKU_PRINCESS, HAS_BOTTLE && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+        }
     };
     Regions[RR_WOODS_OF_MYSTERY] = RandoRegion{ .sceneId = SCENE_26SARUNOMORI,
         .exits = { //     TO                                         FROM
