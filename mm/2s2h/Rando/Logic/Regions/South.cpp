@@ -229,8 +229,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_WOODFALL_GREAT_FAIRY_FOUNTAIN] = RandoRegion{ .name = "Woodfall", .sceneId = SCENE_YOUSEI_IZUMI,
         .checks = {
-            // TODO: We can't add this till all stray fairies are in the pool
-            // CHECK(RC_WOODFALL_GREAT_FAIRY, gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_WOODFALL_TEMPLE] >= 15),
+            CHECK(RC_WOODFALL_GREAT_FAIRY, HAS_ALL_STRAY_FAIRIES(DUNGEON_INDEX_WOODFALL_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WOODFALL, 2),                     ENTRANCE(FAIRY_FOUNTAIN, 1), true),
