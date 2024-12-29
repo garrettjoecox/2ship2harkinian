@@ -50,6 +50,7 @@ void InitEnSyatekiManBehavior();
 void InitEnYbBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();
+void InitObjKinokoBehavior();
 void InitObjMoonStoneBehavior();
 void InitObjTsuboBehavior();
 void InitObjWarpstoneBehavior();

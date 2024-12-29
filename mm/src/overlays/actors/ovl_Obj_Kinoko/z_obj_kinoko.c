@@ -7,6 +7,7 @@
 #include "z_obj_kinoko.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "BenPort.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -48,12 +49,14 @@ void ObjKinoko_Update(Actor* thisx, PlayState* play) {
         thisx->draw = ObjKinoko_Draw;
         thisx->hintId = TATL_HINT_ID_MUSHROOM;
         thisx->flags |= ACTOR_FLAG_TARGETABLE;
-        if (Actor_HasParent(thisx, play)) {
-            Flags_SetCollectible(play, OBJ_KINOKO_GET_FLAG(thisx));
-            Actor_Kill(thisx);
-            return;
+        if (GameInteractor_Should(VB_GIVE_MAGIC_MUSHROOM, true, thisx)) {
+            if (Actor_HasParent(thisx, play)) {
+                Flags_SetCollectible(play, OBJ_KINOKO_GET_FLAG(thisx));
+                Actor_Kill(thisx);
+                return;
+            }
+            Actor_OfferGetItem(thisx, play, GI_MAX, 20.0f, 10.0f);
         }
-        Actor_OfferGetItem(thisx, play, GI_MAX, 20.0f, 10.0f);
         if (Math_SmoothStepToF(&thisx->speed, 0.0f, 0.04f, 2.0f, 0.5f) < 0.5f) {
             thisx->scale.x = 0.0f;
             thisx->speed = 110.0f;

@@ -169,6 +169,7 @@ typedef enum {
     VB_GREAT_BAY_GEAR_CLAMP_PUSH_SPEED,
     VB_GIVE_DON_GERO_MASK,
     VB_TOILET_HAND_TAKE_ITEM,
+    VB_GIVE_MAGIC_MUSHROOM,
 } GIVanillaBehavior;
 
 typedef enum {
