@@ -104,6 +104,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 #define CAN_AFFORD(rc)                                                                                                \
     ((RANDO_SAVE_CHECKS[rc].price < 100) || (RANDO_SAVE_CHECKS[rc].price <= 200 && CUR_UPG_VALUE(UPG_WALLET) >= 1) || \
      (CUR_UPG_VALUE(UPG_WALLET) >= 2))
+#define HAS_ALL_STRAY_FAIRIES(dungeonIndex) (gSaveContext.save.saveInfo.inventory.strayFairies[dungeonIndex] >= 15)
 
 #define EVENT(name, isApplied, onApply, onRemove, condition)                                    \
     {                                                                                           \
