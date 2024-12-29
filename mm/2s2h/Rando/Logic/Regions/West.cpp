@@ -115,7 +115,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ZORA_CAPE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
             // TODO: Grottos
-            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_USE_EXPLOSIVE || CAN_BE_GORON),
+            //CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_USE_EXPLOSIVE || CAN_BE_GORON),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),

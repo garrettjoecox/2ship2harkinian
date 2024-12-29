@@ -105,7 +105,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
             CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, true),
             // TODO: Grottos
-            CHECK(RC_IKANA_CANYON_GROTTO, true),
+            //CHECK(RC_IKANA_CANYON_GROTTO, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 1),                ENTRANCE(IKANA_CANYON, 0), true), 
@@ -155,7 +155,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_IKANA_GRAVEYARD_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
         .checks = {
             // TODO : Grotto
-            CHECK(RC_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON)
+            //CHECK(RC_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON)
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 2),                ENTRANCE(IKANA_GRAVEYARD, 0), true),
