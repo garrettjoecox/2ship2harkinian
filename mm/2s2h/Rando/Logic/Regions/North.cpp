@@ -41,7 +41,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_RACETRACK] = RandoRegion{ .sceneId = SCENE_GORONRACE,
         .checks = {
-            // TODO : Add Gold dust in bottle check.
+            CHECK(RC_GORON_RACETRACK_GOLD_DUST, CAN_BE_GORON && HAS_MAGIC && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_GORON_RACETRACK_POT_01, true),
             CHECK(RC_GORON_RACETRACK_POT_02, true),
             CHECK(RC_GORON_RACETRACK_POT_03, true),
@@ -76,6 +76,9 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 2),     ENTRANCE(GORON_RACETRACK, 0), true),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GOLD_DUST, CAN_BE_GORON && HAS_MAGIC && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
+        }
     };
     Regions[RR_GORON_SHOP] = RandoRegion{ .sceneId = SCENE_GORONSHOP,
         .checks = {
@@ -126,8 +129,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             // TODO : These Smithy checks can be triggered under multiple conditions (Has Fire Arrows, Has Hot Spring Water, Cleared Snowhead Temple) Add after Hot Spring water is in logic.
             CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD, GET_CUR_UPG_VALUE(UPG_WALLET) >= 1),
-            // TODO: Access to gold dust
-            // CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, HAS_ITEM(ITEM_GOLD_DUST) && RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD].obtained)
+            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, HAS_BOTTLE && CAN_ACCESS(GOLD_DUST) && (GET_CUR_UPG_VALUE(UPG_WALLET) >= 1)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),      ENTRANCE(MOUNTAIN_SMITHY, 0), true),
