@@ -52,8 +52,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_BOMB_SHOP_ITEM_1, CAN_AFFORD(RC_BOMB_SHOP_ITEM_1)),
             CHECK(RC_BOMB_SHOP_ITEM_2, CAN_AFFORD(RC_BOMB_SHOP_ITEM_2)),
             // Upon saving the Bomb Shop lady, one item in the shop gets replaced with the other for the remainder of the cycle.
-            // The latter condition should be valid, but it started causing seed generation timeouts for this check.
-            CHECK(RC_BOMB_SHOP_ITEM_3, CAN_AFFORD(RC_BOMB_SHOP_ITEM_3) /*&& !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)*/),
+            CHECK(RC_BOMB_SHOP_ITEM_3, CAN_AFFORD(RC_BOMB_SHOP_ITEM_3)),
             CHECK(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) && CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)),
         },
         .exits = { //     TO                                         FROM
@@ -202,7 +201,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CURIOSITY_SHOP_FRONT] = RandoRegion{ .name = "Front", .sceneId = SCENE_AYASHIISHOP,
         .checks = {
-            CHECK(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) && !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)),
+            CHECK(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM)),
             CHECK(RC_CURIOSITY_SHOP_SPECIAL_ITEM, CAN_AFFORD(RC_CURIOSITY_SHOP_SPECIAL_ITEM) && (CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG) || CHECK_WEEKEVENTREG(WEEKEVENTREG_SAKON_DEAD))),
         },
         .exits = { //     TO                                         FROM
