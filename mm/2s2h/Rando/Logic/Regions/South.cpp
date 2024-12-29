@@ -66,6 +66,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             // TODO: Trick: Jumpslash to clip through (similar to Clock Town Straw).
             CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_DOGGY_RACETRACK_HP,    true),
             CHECK(RC_DOGGY_RACETRACK_POT_1, true),
             CHECK(RC_DOGGY_RACETRACK_POT_2, true),
             CHECK(RC_DOGGY_RACETRACK_POT_3, true),
