@@ -23,6 +23,7 @@ void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnFuBehavior();
 void InitEnGamelupyBehavior();
+void InitEnGegBehavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();
 void InitEnGirlABehavior();

@@ -10,6 +10,7 @@
 #include "objects/object_taisou/object_taisou.h"
 #include "objects/object_hakugin_demo/object_hakugin_demo.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -632,9 +633,11 @@ void func_80BB27D4(EnGeg* this, PlayState* play) {
             case 0xD6D:
             case 0xD6F:
             case 0xD8A:
-                play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
-                play->msgCtx.stateTimer = 4;
-                this->actionFunc = func_80BB31B8;
+                if (GameInteractor_Should(VB_GIVE_DON_GERO_MASK, true, this)) {
+                    play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
+                    play->msgCtx.stateTimer = 4;
+                    this->actionFunc = func_80BB31B8;
+                }
                 break;
 
             case 0xD72:

@@ -166,6 +166,7 @@ typedef enum {
     VB_COLLECT_PLAYGROUND_RUPEE,
     VB_GUAY_DROP_RUPEE,
     VB_GREAT_BAY_GEAR_CLAMP_PUSH_SPEED,
+    VB_GIVE_DON_GERO_MASK,
 } GIVanillaBehavior;
 
 typedef enum {
