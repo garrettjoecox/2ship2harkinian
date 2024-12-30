@@ -15,7 +15,11 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
         Actor* actor = va_arg(args, Actor*);
         if (actor->id == ACTOR_EN_FSN) { // Curiosity Shop owner
             EnFsn* enFsn = (EnFsn*)actor;
-            if (enFsn->isSelling) { // Only consider when the actor is selling
+            EnGirlA* enGirlA = enFsn->items[enFsn->cursorIndex];
+            RandoCheckId randoCheckId = (RandoCheckId)enGirlA->actor.world.rot.z;
+            // Only handle the two special checks. Leave stolen items and actor purchases as-is.
+            if (enFsn->isSelling && (randoCheckId == RC_CURIOSITY_SHOP_SPECIAL_ITEM ||
+                                     randoCheckId == RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM)) {
                 *should = false;
                 Player* player = GET_PLAYER(gPlayState);
                 player->talkActor = actor;
@@ -23,7 +27,6 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
                 Player_TalkWithPlayer(gPlayState, actor);
                 actor->flags |= ACTOR_FLAG_TALK_REQUESTED;
                 enFsn->actionFunc = EnFsn_ResumeInteraction;
-                EnGirlA* enGirlA = enFsn->items[enFsn->cursorIndex];
                 enGirlA->buyFunc(gPlayState, enGirlA);
                 /*
                  * This notebook event must be faked because the randomized item probably won't be the All-Night Mask.
@@ -31,7 +34,7 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
                  * the special item, this notebook event will pop as Link pulls out the item to show. The Curiosity
                  * Shop owner's response will then erase that textbox. Not game breaking, but something to note.
                  */
-                if ((RandoCheckId)enGirlA->actor.world.rot.z == RC_CURIOSITY_SHOP_SPECIAL_ITEM) {
+                if (randoCheckId == RC_CURIOSITY_SHOP_SPECIAL_ITEM) {
                     Message_BombersNotebookQueueEvent(gPlayState, BOMBERS_NOTEBOOK_EVENT_RECEIVED_ALL_NIGHT_MASK);
                 }
             }
