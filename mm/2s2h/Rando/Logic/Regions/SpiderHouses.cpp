@@ -24,7 +24,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_2, true),
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_WEB, true),
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_BOE, true),
-            CHECK(RC_OCEAN_SPIDER_HOUSE_WALLET, true),
         },
         .connections = {
             CONNECTION(RR_OCEAN_SPIDER_HOUSE_ENTRANCE_LOWER, HAS_ITEM(ITEM_HOOKSHOT)),
@@ -50,7 +49,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_OCEAN_SPIDER_HOUSE_ENTRANCE_UPPER] = RandoRegion{ .name = "Entrance Upper", .sceneId = SCENE_KINDAN2,
         .checks = {
-            // TODO : Add check for getting all of the Ocean Skulltula Tokens
+            CHECK(RC_OCEAN_SPIDER_HOUSE_WALLET, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 8),          ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0), true)
