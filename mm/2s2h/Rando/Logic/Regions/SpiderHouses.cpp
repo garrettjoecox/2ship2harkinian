@@ -24,6 +24,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_2, true),
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_WEB, true),
             CHECK(RC_OCEAN_SPIDER_HOUSE_POT_MAIN_ROOM_BOE, true),
+            CHECK(RC_OCEAN_SPIDER_HOUSE_WALLET, true),
         },
         .connections = {
             CONNECTION(RR_OCEAN_SPIDER_HOUSE_ENTRANCE_LOWER, HAS_ITEM(ITEM_HOOKSHOT)),
@@ -182,7 +183,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_KINSTA1,
         .checks = {
-            // TODO: Add check for getting all Swamp Skulltulas
+            CHECK(RC_SWAMP_SPIDER_HOUSE_MASK_OF_TRUTH, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 8),      ENTRANCE(SWAMP_SPIDER_HOUSE, 0), true),
