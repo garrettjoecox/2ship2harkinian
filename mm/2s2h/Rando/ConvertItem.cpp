@@ -280,6 +280,17 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                 }
             }
             return false;
+        case RI_BOTTLE_MILK:
+            if (hasObtainedCheck) {
+                return false;
+            }
+
+            for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
+                if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE || Inventory_HasEmptyBottle()) {
+                    return true;
+                }
+            }
+            return false;
         case RI_MOONS_TEAR:
             return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && INV_CONTENT(ITEM_MOONS_TEAR) != ITEM_NONE);
         case RI_DEED_LAND:
@@ -457,6 +468,14 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 // Shouldn't happen, just in case
                 assert(false);
                 return RI_JUNK;
+            case RI_BOTTLE_MILK:
+                for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
+                    if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE) {
+                        return RI_BOTTLE_MILK;
+                    }
+                }
+                return RI_MILK_REFILL;
+                break;
             default:
                 break;
         }
