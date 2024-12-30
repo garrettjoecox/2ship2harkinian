@@ -133,7 +133,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ROAD_TO_SOUTHERN_SWAMP] = RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
-            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, CAN_USE_PROJECTILE || HAS_ITEM(ITEM_BOMBCHU)),
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_1, CAN_USE_PROJECTILE),
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_TINGLE_MAP_2, CAN_USE_PROJECTILE),
         },
