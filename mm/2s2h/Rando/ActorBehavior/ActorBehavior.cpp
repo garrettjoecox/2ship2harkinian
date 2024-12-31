@@ -72,7 +72,6 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
-    Rando::ActorBehavior::InitObjKinokoBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();
     Rando::ActorBehavior::InitObjWarpstoneBehavior();
