@@ -54,7 +54,7 @@ void ApplyGlitchlessLogicToSaveContext() {
     // section.
     std::vector<RandoItemId> startingItems = {
         RI_SONG_STORMS, RI_MASK_COUPLE,    RI_SONG_LULLABY,   RI_DEKU_STICK,
-        RI_DEKU_NUT,    RI_PICTOGRAPH_BOX, RI_LETTER_TO_MAMA,
+        RI_DEKU_NUT,    RI_PICTOGRAPH_BOX,
     };
 
     for (RandoItemId randoItemId : startingItems) {
