@@ -54,6 +54,9 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 9),                             ONE_WAY_EXIT, true),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GIANTS_CHAMBER, CAN_KILL_GYORG),
+        },
         .oneWayEntrances = {
             ENTRANCE(GYORGS_LAIR, 0), // Great Bay Temple Pre Boss Room
         },

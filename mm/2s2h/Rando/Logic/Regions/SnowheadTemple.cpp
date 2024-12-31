@@ -45,7 +45,8 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Cleared Snowhead Temple", WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE, CAN_USE_MAGIC_ARROW(FIRE)),
+            EVENT_WEEKEVENTREG("Cleared Snowhead Temple",   WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE, CAN_USE_MAGIC_ARROW(FIRE)),
+            EVENT_ACCESS(RANDO_ACCESS_GIANTS_CHAMBER,       CAN_KILL_GOHT),
         },
         .oneWayEntrances = {
             ENTRANCE(GOHTS_LAIR, 0), // Snowhead Temple Boss Room

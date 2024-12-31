@@ -365,9 +365,12 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 15),                        ONE_WAY_EXIT, true),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_GIANTS_CHAMBER, CAN_KILL_TWINMOLD),
+        },
         .oneWayEntrances = {
             ENTRANCE(TWINMOLDS_LAIR, 0), // Blue warp exit
-        }
+        },
     };
 }, {});
 // clang-format on

@@ -30,6 +30,7 @@ static RegisterShipInitFunc initFunc([]() {
         .events = {
             // TODO: CAN_KILL_BOSS(Odolwa)?
             EVENT_WEEKEVENTREG("Clear Woodfall Temple", WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE, true),
+            EVENT_ACCESS(RANDO_ACCESS_GIANTS_CHAMBER,   CAN_KILL_ODOLWA),
         },
         .oneWayEntrances = {
             ENTRANCE(ODOLWAS_LAIR, 0), // From Woodfall Temple Pre-Boss Room
