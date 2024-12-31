@@ -30,6 +30,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                     [[fallthrough]];
                 case ACTOR_EN_BJT:
                 case ACTOR_EN_NB:
+                case ACTOR_EN_PM:
                 case ACTOR_EN_AL:
                     func_80832558(gPlayState, player, func_80837B60);
                     *should = false;

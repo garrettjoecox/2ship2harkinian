@@ -86,6 +86,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_EAST] = RandoRegion{ .sceneId = SCENE_TOWN,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_EAST_POSTMAN_HAT, HAS_ITEM(ITEM_LETTER_MAMA)),
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU),
             CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, true),
         },
