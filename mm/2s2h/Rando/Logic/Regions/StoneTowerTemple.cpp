@@ -152,7 +152,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_LAVA_WIND_ROOM, CAN_KILL_GARO_MASTER),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM, CAN_KILL_GARO_MASTER)
+            CONNECTION(RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM_UPPER, CAN_KILL_GARO_MASTER)
         }
     };
     Regions[RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM_LOWER] = RandoRegion{ .name = "Spiked Bar Room Lower", .sceneId = SCENE_INISIE_N,
@@ -185,7 +185,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_BRIDGE_CHEST, CAN_USE_PROJECTILE),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM, true),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM_UPPER, true),
             CONNECTION(RR_STONE_TOWER_TEMPLE_ENTRANCE, CAN_USE_PROJECTILE)
         }
     };
