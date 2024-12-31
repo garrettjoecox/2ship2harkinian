@@ -32,12 +32,13 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             break;
         case RI_SINGLE_MAGIC:
             gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
-            gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
+            gSaveContext.save.saveInfo.playerData.magic = gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
             SET_WEEKEVENTREG(WEEKEVENTREG_12_80);
             break;
         case RI_DOUBLE_MAGIC:
+            gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
             gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
-            gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
+            gSaveContext.save.saveInfo.playerData.magic = gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
             gSaveContext.save.saveInfo.playerData.magicLevel = 0;
             SET_WEEKEVENTREG(WEEKEVENTREG_12_80);
             break;

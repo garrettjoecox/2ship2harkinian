@@ -21,6 +21,7 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
         case VB_MSG_SCRIPT_DEL_ITEM:
         case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
+        case VB_TOILET_HAND_TAKE_ITEM:
             *should = false;
             break;
     }
@@ -36,12 +37,14 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitDmStkBehavior();
     Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
+    Rando::ActorBehavior::InitEnAob01Behavior();
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
+    Rando::ActorBehavior::InitEnFsnBehavior();
     Rando::ActorBehavior::InitEnFuBehavior();
     Rando::ActorBehavior::InitEnGamelupyBehavior();
     Rando::ActorBehavior::InitEnGegBehavior();

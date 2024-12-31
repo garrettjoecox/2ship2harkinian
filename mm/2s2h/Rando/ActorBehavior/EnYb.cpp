@@ -14,7 +14,7 @@ void Rando::ActorBehavior::InitEnYbBehavior() {
      * checks if you have Kamaro's Mask in your inventory before marking his quest as complete. Normally, this is always
      * true, making the check redundant. For randomizer, we wrap that check.
      */
-    COND_VB_SHOULD(VB_HAVE_KAMAROS_MASK, IS_RANDO, { *should = !RANDO_SAVE_CHECKS[RC_TERMINA_FIELD_KAMARO].obtained; });
+    COND_VB_SHOULD(VB_HAVE_KAMAROS_MASK, IS_RANDO, { *should = RANDO_SAVE_CHECKS[RC_TERMINA_FIELD_KAMARO].eligible; });
 
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
         GetItemId* item = va_arg(args, GetItemId*);

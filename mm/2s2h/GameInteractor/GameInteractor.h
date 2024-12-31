@@ -168,6 +168,8 @@ typedef enum {
     VB_GUAY_DROP_RUPEE,
     VB_GREAT_BAY_GEAR_CLAMP_PUSH_SPEED,
     VB_GIVE_DON_GERO_MASK,
+    VB_TOILET_HAND_TAKE_ITEM,
+    VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP,
 } GIVanillaBehavior;
 
 typedef enum {

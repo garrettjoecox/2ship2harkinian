@@ -3,6 +3,7 @@
 
 extern "C" {
 #include <variables.h>
+#include <functions.h>
 }
 
 SaveContext saveContextCopy;
@@ -17,6 +18,10 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
         gSaveContext.save.saveInfo.inventory.dungeonKeys[i] =
             saveContextCopy.save.shipSaveInfo.rando.foundDungeonKeys[i];
         gSaveContext.save.saveInfo.inventory.strayFairies[i] = saveContextCopy.save.saveInfo.inventory.strayFairies[i];
+    }
+
+    if (saveContextCopy.save.saveInfo.weekEventReg[((WEEKEVENTREG_08_80) >> 8)] & ((WEEKEVENTREG_08_80)&0xFF)) {
+        SET_WEEKEVENTREG(WEEKEVENTREG_08_80);
     }
 
     if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS]) {

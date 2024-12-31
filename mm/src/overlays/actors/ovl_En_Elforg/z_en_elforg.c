@@ -586,7 +586,9 @@ void EnElforg_HiddenByCollider(EnElforg* this, PlayState* play) {
     if (this->collider.base.acFlags & AC_HIT) {
         EnElforg_InitializeParams(this);
         this->actionFunc = EnElforg_FreeFloating;
-        this->actor.draw = EnElforg_Draw;
+        if (GameInteractor_Should(VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, true, this)) {
+            this->actor.draw = EnElforg_Draw;
+        }
         this->actor.world.pos.y += 40.0f;
         this->actor.home.pos.y += 40.0f;
         Actor_PlaySfx(&this->actor, NA_SE_EV_CHIBI_FAIRY_SAVED);

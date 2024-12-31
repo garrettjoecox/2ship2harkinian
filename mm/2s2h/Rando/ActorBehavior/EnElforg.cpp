@@ -79,7 +79,13 @@ void EnElforg_Setup(EnElforg* enElforg) {
 
 // This handles the Stray fairy checks, as well as overriding the draw function for the Stray Fairies
 void Rando::ActorBehavior::InitEnElforgBehavior() {
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_ELFORG, IS_RANDO, [](Actor* actor) { EnElforg_Setup((EnElforg*)actor); });
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_ELFORG, IS_RANDO, [](Actor* actor) {
+        bool invisible = actor->draw == NULL;
+        EnElforg_Setup((EnElforg*)actor);
+        if (invisible) {
+            actor->draw = NULL;
+        }
+    });
 
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_ELFORG, IS_RANDO, {
         *should = false;

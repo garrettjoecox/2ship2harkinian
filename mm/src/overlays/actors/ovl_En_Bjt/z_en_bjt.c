@@ -5,6 +5,7 @@
  */
 
 #include "z_en_bjt.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -322,7 +323,9 @@ s32 EnBjt_ChooseBehaviour(Actor* thisx, PlayState* play) {
 
         case TOILET_HAND_BEHAVIOUR_TAKE_ITEM:
             if (player->exchangeItemAction != PLAYER_IA_NONE) {
-                EnBjt_TakeItem(player->exchangeItemAction);
+                if (GameInteractor_Should(VB_TOILET_HAND_TAKE_ITEM, true, this)) {
+                    EnBjt_TakeItem(player->exchangeItemAction);
+                }
                 player->exchangeItemAction = PLAYER_IA_NONE;
             }
             if (EnBjt_Vanish(this)) {

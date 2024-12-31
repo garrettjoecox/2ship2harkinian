@@ -23,6 +23,8 @@ Gfx* ResourceMgr_LoadGfxByName(const char* path);
 
 static Gfx gBoxChestBaseCopyDL[42];
 static Gfx gBoxChestLidCopyDL[48];
+static Gfx gBoxChestBaseOrnateCopyDL[41];
+static Gfx gBoxChestLidOrnateCopyDL[38];
 
 #define ENBOX_RC (actor->home.rot.x)
 #define ENBOX_SET_ITEM(thisx, newItem) ((thisx)->params = (((thisx)->params & ~(0x7F << 5)) | ((newItem & 0x7F) << 5)))
@@ -44,15 +46,29 @@ void EnBox_RandoPostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s*
     EnBox* enBox = (EnBox*)actor;
     RandoItemId randoItemId = Rando::ConvertItem(RANDO_SAVE_CHECKS[ENBOX_RC].randoItemId, (RandoCheckId)ENBOX_RC);
     RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
+    if (enBox->unk_1EC != 0 && actor->home.rot.z == 0) {
+        actor->home.rot.z = randoItemType + 1;
+    }
+    if (actor->home.rot.z != 0) {
+        randoItemType = (RandoItemType)(actor->home.rot.z - 1);
+    }
 
     switch (randoItemType) {
         case RITYPE_BOSS_KEY:
             gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerOrnateTex);
             gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockOrnateTex);
             break;
+        case RITYPE_HEALTH:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerHealthTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockHealthTex);
+            break;
+        case RITYPE_LESSER:
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerLesserTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockLesserTex);
+            break;
         case RITYPE_MAJOR:
-            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerGildedTex);
-            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockGildedTex);
+            gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerMajorTex);
+            gSPSegment((*gfx)++, 0x0A, (uintptr_t)gBoxChestLockMajorTex);
             break;
         case RITYPE_MASK:
             gSPSegment((*gfx)++, 0x09, (uintptr_t)gBoxChestCornerMaskTex);
@@ -77,10 +93,26 @@ void EnBox_RandoPostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s*
     }
 
     gSPMatrix((*gfx)++, Matrix_NewMtx(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
-        gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseCopyDL);
-    } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
-        gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidCopyDL);
+    switch (randoItemType) {
+        case RITYPE_BOSS_KEY:
+        case RITYPE_HEALTH:
+        case RITYPE_MASK:
+        case RITYPE_SKULLTULA_TOKEN:
+        case RITYPE_SMALL_KEY:
+        case RITYPE_STRAY_FAIRY:
+            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
+                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseOrnateCopyDL);
+            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
+                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidOrnateCopyDL);
+            }
+            break;
+        default:
+            if (limbIndex == OBJECT_BOX_CHEST_LIMB_01) {
+                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestBaseCopyDL);
+            } else if (limbIndex == OBJECT_BOX_CHEST_LIMB_03) {
+                gSPDisplayList((*gfx)++, (Gfx*)gBoxChestLidCopyDL);
+            }
+            break;
     }
 }
 
@@ -175,16 +207,30 @@ static RegisterShipInitFunc initFunc(
 
 static RegisterShipInitFunc initializeChestCopyDLs(
     []() {
-        Gfx* baseDL = ResourceMgr_LoadGfxByName(gBoxChestBaseOrnateDL);
+        // Normal Chest
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gBoxChestBaseDL);
         memcpy(gBoxChestBaseCopyDL, baseDL, sizeof(gBoxChestBaseCopyDL));
         gBoxChestBaseCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
         gBoxChestBaseCopyDL[8] = gsDPNoOp();
-        gBoxChestBaseCopyDL[25] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
-        gBoxChestBaseCopyDL[26] = gsDPNoOp();
-
-        Gfx* lidDL = ResourceMgr_LoadGfxByName(gBoxChestLidOrnateDL);
+        gBoxChestBaseCopyDL[28] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
+        gBoxChestBaseCopyDL[29] = gsDPNoOp();
+        Gfx* lidDL = ResourceMgr_LoadGfxByName(gBoxChestLidDL);
         memcpy(gBoxChestLidCopyDL, lidDL, sizeof(gBoxChestLidCopyDL));
         gBoxChestLidCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
         gBoxChestLidCopyDL[8] = gsDPNoOp();
+        gBoxChestLidCopyDL[26] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
+        gBoxChestLidCopyDL[27] = gsDPNoOp();
+
+        // Ornate Chest
+        Gfx* baseOrnateDL = ResourceMgr_LoadGfxByName(gBoxChestBaseOrnateDL);
+        memcpy(gBoxChestBaseOrnateCopyDL, baseOrnateDL, sizeof(gBoxChestBaseOrnateCopyDL));
+        gBoxChestBaseOrnateCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestBaseOrnateCopyDL[8] = gsDPNoOp();
+        gBoxChestBaseOrnateCopyDL[25] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
+        gBoxChestBaseOrnateCopyDL[26] = gsDPNoOp();
+        Gfx* lidOrnateDL = ResourceMgr_LoadGfxByName(gBoxChestLidOrnateDL);
+        memcpy(gBoxChestLidOrnateCopyDL, lidOrnateDL, sizeof(gBoxChestLidOrnateCopyDL));
+        gBoxChestLidOrnateCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestLidOrnateCopyDL[8] = gsDPNoOp();
     },
     {});

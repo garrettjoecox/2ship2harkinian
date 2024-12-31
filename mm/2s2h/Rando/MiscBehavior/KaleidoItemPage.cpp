@@ -11,16 +11,21 @@ extern "C" {
 
 // Currently this enables a simple "press a" to cycle through the available trade items
 void Rando::MiscBehavior::InitKaleidoItemPage() {
-    COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, IS_RANDO, {
-        PauseContext* pauseCtx = &gPlayState->pauseCtx;
-        u16 slot = pauseCtx->cursorSlot[PAUSE_ITEM];
-        ItemId itemId = (ItemId)*va_arg(args, u16*);
+    COND_HOOK(OnKaleidoUpdate, IS_RANDO, [](PauseContext* pauseCtx) {
+        if ((pauseCtx->state != PAUSE_STATE_MAIN) || (pauseCtx->mainState != PAUSE_MAIN_STATE_IDLE) ||
+            (pauseCtx->pageIndex != PAUSE_ITEM)) {
+            return;
+        }
 
+        u16 slot = pauseCtx->cursorSlot[PAUSE_ITEM];
+        ItemId itemId = (ItemId)pauseCtx->cursorItem[PAUSE_ITEM];
         if (slot != SLOT_TRADE_COUPLE && slot != SLOT_TRADE_DEED && slot != SLOT_TRADE_KEY_MAMA) {
             return;
         }
 
-        *should = false;
+        if (!CHECK_BTN_ALL(CONTROLLER1(&gPlayState->state)->press.button, BTN_A)) {
+            return;
+        }
 
         // Build list of available items
         std::vector<u8> availableItems;
@@ -60,6 +65,15 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
                 break;
         }
 
+        if (availableItems.size() == 0) {
+            return;
+        }
+
+        if (itemId == PAUSE_ITEM_NONE) {
+            INV_CONTENT(availableItems.at(0)) = availableItems.at(0);
+            return;
+        }
+
         // get current index
         int index = -1;
         for (int i = 0; i < availableItems.size(); i++) {
@@ -69,11 +83,18 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
             }
         }
 
-        if (availableItems.size() == 0) {
+        // Display the item
+        Inventory_ReplaceItem(gPlayState, (u8)itemId, availableItems[(index + 1) % availableItems.size()]);
+    });
+
+    COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, IS_RANDO, {
+        PauseContext* pauseCtx = &gPlayState->pauseCtx;
+        u16 slot = pauseCtx->cursorSlot[PAUSE_ITEM];
+
+        if (slot != SLOT_TRADE_COUPLE && slot != SLOT_TRADE_DEED && slot != SLOT_TRADE_KEY_MAMA) {
             return;
         }
 
-        // Display the item
-        Inventory_ReplaceItem(gPlayState, (u8)itemId, availableItems[(index + 1) % availableItems.size()]);
+        *should = false;
     });
 }

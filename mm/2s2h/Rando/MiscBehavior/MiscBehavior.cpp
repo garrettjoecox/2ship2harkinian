@@ -21,6 +21,7 @@ void Rando::MiscBehavior::OnFileLoad() {
     COND_HOOK(OnSceneFlagSet, IS_RANDO, Rando::MiscBehavior::OnSceneFlagSet);
     COND_HOOK(BeforeEndOfCycleSave, IS_RANDO, Rando::MiscBehavior::BeforeEndOfCycleSave);
     COND_HOOK(AfterEndOfCycleSave, IS_RANDO, Rando::MiscBehavior::AfterEndOfCycleSave);
+    COND_HOOK(OnSceneInit, IS_RANDO, Rando::MiscBehavior::OnSceneInit);
     COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, IS_RANDO, [](Actor* actor) { Rando::MiscBehavior::CheckQueue(); });
 
     // This overrides the ocarina condition for Termina Field
@@ -33,6 +34,14 @@ void Rando::MiscBehavior::OnFileLoad() {
     // denied entry to the Stock Pot Inn if they have the room key but it isn't assigned as the active item for the
     // slot. In rando, use this flag instead.
     COND_VB_SHOULD(VB_CHECK_FOR_ROOM_KEY, IS_RANDO, { *should = Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY); });
+
+    // In the case of receiving a sword, we only want to equip it to the Human's B button. Vanilla avoids this issue by
+    // never letting you be other forms when you get a sword from the smithy or curiosity shop.
+    COND_VB_SHOULD(VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP, IS_RANDO, {
+        u8* item = va_arg(args, u8*);
+        *should = false;
+        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = *item;
+    });
 
     // In Sram_OpenSave (right before this code runs) for non-owl saves, it overwrites the entrance to
     // ENTRANCE(CUTSCENE, 0), we need to override that with our starting location (Harcoded to South Clock Town)

@@ -137,6 +137,15 @@ static const ALIGN_ASSET(2) char gFileSelCheatingDayTex[] = dgFileSelCheatingDay
 #define dgFileSelRandIconTex "__OTR__misc/title_static/gFileSelRandIconTex"
 static const ALIGN_ASSET(2) char gFileSelRandIconTex[] = dgFileSelRandIconTex;
 
+#define dgBoxChestCornerHealthTex "__OTR__objects/object_box/gBoxChestCornerHealthTex"
+static const ALIGN_ASSET(2) char gBoxChestCornerHealthTex[] = dgBoxChestCornerHealthTex;
+
+#define dgBoxChestCornerLesserTex "__OTR__objects/object_box/gBoxChestCornerLesserTex"
+static const ALIGN_ASSET(2) char gBoxChestCornerLesserTex[] = dgBoxChestCornerLesserTex;
+
+#define dgBoxChestCornerMajorTex "__OTR__objects/object_box/gBoxChestCornerMajorTex"
+static const ALIGN_ASSET(2) char gBoxChestCornerMajorTex[] = dgBoxChestCornerMajorTex;
+
 #define dgBoxChestCornerMaskTex "__OTR__objects/object_box/gBoxChestCornerMaskTex"
 static const ALIGN_ASSET(2) char gBoxChestCornerMaskTex[] = dgBoxChestCornerMaskTex;
 
@@ -148,6 +157,15 @@ static const ALIGN_ASSET(2) char gBoxChestCornerSmallKeyTex[] = dgBoxChestCorner
 
 #define dgBoxChestCornerStrayFairyTex "__OTR__objects/object_box/gBoxChestCornerStrayFairyTex"
 static const ALIGN_ASSET(2) char gBoxChestCornerStrayFairyTex[] = dgBoxChestCornerStrayFairyTex;
+
+#define dgBoxChestLockHealthTex "__OTR__objects/object_box/gBoxChestLockHealthTex"
+static const ALIGN_ASSET(2) char gBoxChestLockHealthTex[] = dgBoxChestLockHealthTex;
+
+#define dgBoxChestLockLesserTex "__OTR__objects/object_box/gBoxChestLockLesserTex"
+static const ALIGN_ASSET(2) char gBoxChestLockLesserTex[] = dgBoxChestLockLesserTex;
+
+#define dgBoxChestLockMajorTex "__OTR__objects/object_box/gBoxChestLockMajorTex"
+static const ALIGN_ASSET(2) char gBoxChestLockMajorTex[] = dgBoxChestLockMajorTex;
 
 #define dgBoxChestLockMaskTex "__OTR__objects/object_box/gBoxChestLockMaskTex"
 static const ALIGN_ASSET(2) char gBoxChestLockMaskTex[] = dgBoxChestLockMaskTex;

@@ -3596,7 +3596,9 @@ u8 Item_GiveImpl(PlayState* play, u8 item) {
 
     } else if ((item >= ITEM_SWORD_KOKIRI) && (item <= ITEM_SWORD_GILDED)) {
         SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, item - ITEM_SWORD_KOKIRI + EQUIP_VALUE_SWORD_KOKIRI);
-        CUR_FORM_EQUIP(EQUIP_SLOT_B) = item;
+        if (GameInteractor_Should(VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP, true, &item)) {
+            CUR_FORM_EQUIP(EQUIP_SLOT_B) = item;
+        }
         // 2S2H [Randomizer] Added a nullptr check so that we can call this function outside of gameplay for logic
         if (gPlayState != NULL) {
             Interface_LoadItemIconImpl(play, EQUIP_SLOT_B);
