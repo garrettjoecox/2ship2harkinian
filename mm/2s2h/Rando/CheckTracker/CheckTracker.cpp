@@ -8,6 +8,7 @@
 #include <cstring>
 
 // Image Icons
+#include "assets/2s2h_assets.h"
 #include "interface/parameter_static/parameter_static.h"
 #include "assets/archives/icon_item_static/icon_item_static_yar.h"
 #include "assets/interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
@@ -52,7 +53,7 @@ std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
 std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_UNKNOWN*/ gItemIconBombersNotebookTex,
-    /*RCTYPE_CHEST*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_CHEST*/ gChestTrackerIcon,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
     /*RCTYPE_FREESTANDING*/ gItemIconBombersNotebookTex,
     /*RCTYPE_MINIGAME*/ gItemIconBombersNotebookTex,

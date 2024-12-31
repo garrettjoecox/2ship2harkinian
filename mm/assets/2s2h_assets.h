@@ -208,3 +208,6 @@ static const ALIGN_ASSET(2) char gPotStandardDL[] = dgPotStandardDL;
 
 #define dgPotTokenDL "__OTR__objects/object_tsubo/gPotTokenDL"
 static const ALIGN_ASSET(2) char gPotTokenDL[] = dgPotTokenDL;
+
+#define dgChestTrackerIcon "__OTR__textures/icons/gChestTrackerIcon"
+static const ALIGN_ASSET(2) char gChestTrackerIcon[] = dgChestTrackerIcon;

@@ -44,6 +44,8 @@ std::vector<const char*> miscellaneousTextures = {
     gStrayFairyGreatBayIconTex,
     gQuestIconGoldSkulltulaTex,
     gWorldMapOwlFaceTex,
+    gChestTrackerIcon,
+    gChestTrackerIcon2,
 };
 
 extern "C" const char* Ship_GetSceneName(s16 sceneId) {
