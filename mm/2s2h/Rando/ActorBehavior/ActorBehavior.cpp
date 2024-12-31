@@ -22,7 +22,6 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_MSG_SCRIPT_DEL_ITEM:
         case VB_GIVE_NEW_WAVE_BOSSA_NOVA:
         case VB_TOILET_HAND_TAKE_ITEM:
-        case VB_GIVE_MAGIC_MUSHROOM:
             *should = false;
             break;
     }
