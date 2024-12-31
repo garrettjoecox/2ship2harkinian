@@ -211,3 +211,6 @@ static const ALIGN_ASSET(2) char gPotTokenDL[] = dgPotTokenDL;
 
 #define dgChestTrackerIcon "__OTR__textures/icons/gChestTrackerIcon"
 static const ALIGN_ASSET(2) char gChestTrackerIcon[] = dgChestTrackerIcon;
+
+#define dgPotTrackerIcon "__OTR__textures/icons/gPotTrackerIcon"
+static const ALIGN_ASSET(2) char gPotTrackerIcon[] = dgPotTrackerIcon;

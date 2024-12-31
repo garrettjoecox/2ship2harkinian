@@ -55,13 +55,13 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_UNKNOWN*/ gItemIconBombersNotebookTex,
     /*RCTYPE_CHEST*/ gChestTrackerIcon,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
-    /*RCTYPE_FREESTANDING*/ gItemIconBombersNotebookTex,
-    /*RCTYPE_MINIGAME*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_FREESTANDING*/ gRupeeCounterIconTex,
+    /*RCTYPE_MINIGAME*/ gArcheryScoreIconTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
     /*RCTYPE_OWL*/ gWorldMapOwlFaceTex,
-    /*RCTYPE_POT*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_POT*/ gPotTrackerIcon,
     /*RCTYPE_RUPEE*/ gRupeeCounterIconTex,
-    /*RCTYPE_SHOP*/ gRupeeCounterIconTex,
+    /*RCTYPE_SHOP*/ gItemIconAdultsWalletTex,
     /*RCTYPE_SKULL_TOKEN*/ gQuestIconGoldSkulltulaTex,
     /*RCTYPE_SONG*/ gItemIconSongNoteTex,
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
@@ -103,7 +103,8 @@ void DrawCheckTypeIcon(RandoCheckId randoCheckId) {
                  : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
                                            : ImVec2(18.0f, 18.0f),
                  ImVec2(0, 0), ImVec2(1, 1),
-                 checkType == RCTYPE_SHOP ? ImVec4(0.78f, 1, 0.39f, 1) : ImVec4(1, 1, 1, 1));
+                 checkType == RCTYPE_FREESTANDING || checkType == RCTYPE_RUPEE ? ImVec4(0.78f, 1, 0.39f, 1)
+                                                                               : ImVec4(1, 1, 1, 1));
 }
 
 void initializeSceneChecks() {
