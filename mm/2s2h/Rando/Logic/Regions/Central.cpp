@@ -194,6 +194,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CURIOSITY_SHOP_BACK] = RandoRegion{ .name = "Back", .sceneId = SCENE_AYASHIISHOP,
         .checks = {
             // TODO : Add Keaton Mask/Express Letter to Mama checks
+            CHECK(RC_KAFEIS_HIDEOUT_KEATON_MASK, true),
+            CHECK(RC_KAFEIS_HIDEOUT_LETTER_TO_MAMA, true),
             CHECK(RC_KAFEIS_HIDEOUT_PENDANT_OF_MEMORIES, Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI)),
         },
         .exits = { //     TO                                         FROM

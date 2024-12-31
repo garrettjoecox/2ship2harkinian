@@ -171,6 +171,8 @@ typedef enum {
     VB_TOILET_HAND_TAKE_ITEM,
     VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP,
     VB_POT_DRAW_BE_OVERRIDDEN,
+    VB_GIVE_KEATON_MASK,
+    VB_GIVE_LETTER_TO_MAMA,
 } GIVanillaBehavior;
 
 typedef enum {
