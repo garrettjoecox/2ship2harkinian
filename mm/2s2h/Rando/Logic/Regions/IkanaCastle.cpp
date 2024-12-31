@@ -101,6 +101,9 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_IKANA_CASTLE_OUTER_ROOF] = RandoRegion{ .name = "Outer Roof", .sceneId = SCENE_CASTLE,
+        .checks = {
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_HP, CAN_USE_PROJECTILE && CAN_BE_DEKU)
+        },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_BUBBLE_ROOM , true),
             CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, true)
