@@ -48,6 +48,7 @@ void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
+void InitEnTotoBehavior();
 void InitEnYbBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();
