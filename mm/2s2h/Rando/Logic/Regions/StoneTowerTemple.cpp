@@ -69,7 +69,9 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             // IF you get this check you must be Zora to leave, but you could in theory get this as Human too without the Zora mask...kinda iffy to me
             CHECK(RC_STONE_TOWER_TEMPLE_CENTER_ACROSS_WATER_CHEST, CAN_BE_ZORA),
-            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_SUN_BLOCK_CHEST, CAN_BE_ZORA && CAN_USE_MAGIC_ARROW(LIGHT))
+            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_SUN_BLOCK_CHEST, CAN_BE_ZORA && CAN_USE_MAGIC_ARROW(LIGHT)),
+            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_FREESTANDING_RUPEE_01, CAN_USE_MAGIC_ARROW(LIGHT) || CAN_BE_DEITY),
+            CHECK(RC_STONE_TOWER_TEMPLE_CENTER_FREESTANDING_RUPEE_02, CAN_USE_MAGIC_ARROW(LIGHT) && CAN_BE_ZORA),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_OUTSIDE_SWITCH_ROOM, true), // Double check if this side needs a key too

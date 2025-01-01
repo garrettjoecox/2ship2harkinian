@@ -39,7 +39,8 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             if (it == freestandingMap.end()) {
                 return;
             } else {
-                randoStaticCheck.randoCheckId = it->second;
+                SPDLOG_INFO("it: {}", std::to_string(it->second));
+                randoStaticCheck = Rando::StaticData::Checks[it->second];
             }
         }
 
@@ -69,7 +70,18 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             actor->world.pos.x, posY, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH, randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
-                Flags_SetCollectible(play, randoStaticCheck.flag);
+                switch (randoStaticCheck.flagType) {
+                    case FLAG_NONE:
+                        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
+                            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].eligible = true;
+                        }
+                        break;
+                    case FLAG_CYCL_SCENE_COLLECTIBLE:
+                        Flags_SetCollectible(play, randoStaticCheck.flag);
+                        break;
+                    default:
+                        break;
+                }
             },
             [](Actor* actor, PlayState* play) {
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
