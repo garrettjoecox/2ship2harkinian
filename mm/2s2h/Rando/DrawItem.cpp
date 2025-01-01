@@ -90,6 +90,9 @@ void DrawSong(RandoItemId randoItemId) {
         case RI_SONG_SONATA:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 255, 98, 255);
             break;
+        case RI_SONG_SOARING:
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 177, 177, 255);
+            break;
         case RI_SONG_ELEGY:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 98, 0, 255);
             break;
@@ -182,6 +185,7 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_SONG_TIME:
         case RI_SONG_SUN:
         case RI_SONG_HEALING:
+        case RI_SONG_SOARING:
         case RI_SONG_SONATA:
         case RI_SONG_ELEGY:
         case RI_SONG_LULLABY:

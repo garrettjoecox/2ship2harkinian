@@ -725,28 +725,28 @@ RandoCheckId IdentifyPot(Actor* actor) {
             break;
         case SCENE_INISIE_N:
             if (IS_AT(-30.0f, -1995.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_1;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_1;
             }
             if (IS_AT(-30.0f, -1965.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_2;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_2;
             }
             if (IS_AT(-30.0f, -1935.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_3;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_3;
             }
             if (IS_AT(-30.0f, -1905.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_4;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_4;
             }
             if (IS_AT(30.0f, -1995.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_5;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_5;
             }
             if (IS_AT(30.0f, -1965.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_6;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_6;
             }
             if (IS_AT(30.0f, -1935.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_7;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_7;
             }
             if (IS_AT(30.0f, -1905.0f)) {
-                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_BEFORE_WATER_BRIDGE_8;
+                randoCheckId = RC_STONE_TOWER_TEMPLE_POT_SPIKED_BAR_ROOM_8;
             }
             if (IS_AT(45.0f, -690.0f)) {
                 randoCheckId = RC_STONE_TOWER_TEMPLE_POT_ENTRANCE_1;

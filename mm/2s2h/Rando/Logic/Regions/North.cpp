@@ -127,9 +127,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOUNTAIN_SMITHY] = RandoRegion{ .sceneId = SCENE_KAJIYA,
         .checks = {
-            // TODO : These Smithy checks can be triggered under multiple conditions (Has Fire Arrows, Has Hot Spring Water, Cleared Snowhead Temple) Add after Hot Spring water is in logic.
-            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD, GET_CUR_UPG_VALUE(UPG_WALLET) >= 1),
-            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, HAS_BOTTLE && CAN_ACCESS(GOLD_DUST) && (GET_CUR_UPG_VALUE(UPG_WALLET) >= 1)),
+            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD, (CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) || CAN_USE_MAGIC_ARROW(FIRE) || (HAS_BOTTLE && CAN_ACCESS(HOT_SPRING_WATER))) && GET_CUR_UPG_VALUE(UPG_WALLET) >= 1),
+            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, (CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) || CAN_USE_MAGIC_ARROW(FIRE) || (HAS_BOTTLE && CAN_ACCESS(HOT_SPRING_WATER))) && HAS_BOTTLE && CAN_ACCESS(GOLD_DUST) && (GET_CUR_UPG_VALUE(UPG_WALLET) >= 1)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),      ENTRANCE(MOUNTAIN_SMITHY, 0), true),
@@ -212,10 +211,20 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PATH_TO_GORON_VILLAGE_RAMP_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
     };
-    Regions[RR_PATH_TO_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_13HUBUKINOMITI,
+    Regions[RR_PATH_TO_MOUNTAIN_VILLAGE_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_13HUBUKINOMITI,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6),      ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_MOUNTAIN_VILLAGE_UPPER, CAN_BE_GORON || CAN_USE_EXPLOSIVE || CAN_USE_MAGIC_ARROW(FIRE)),
+        },
+    };
+    Regions[RR_PATH_TO_MOUNTAIN_VILLAGE_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_13HUBUKINOMITI,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 3),                ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), true),
-            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6),      ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_MOUNTAIN_VILLAGE_LOWER, CAN_BE_GORON || CAN_USE_EXPLOSIVE || CAN_USE_MAGIC_ARROW(FIRE)),
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_GROTTO] = RandoRegion{ .name = "Path To Snowhead Grotto", .sceneId = SCENE_KAKUSIANA,

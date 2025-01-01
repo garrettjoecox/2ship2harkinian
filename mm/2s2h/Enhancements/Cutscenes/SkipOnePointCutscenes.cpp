@@ -25,8 +25,15 @@ void RegisterSkipOnePointCutscenes() {
                 *should = false;
                 break;
             }
+            case ACTOR_OBJ_COMB:
+                if (gPlayState->sceneId != SCENE_PIRATE) {
+                    actor->csId = -1;
+                    *should = false;
+                }
+                break;
             case ACTOR_OBJ_BEAN:        // Bean Patch
             case ACTOR_OBJ_MAKEKINSUTA: // Bean Patch
+            case ACTOR_OBJ_SPIDERTENT:
                 actor->csId = -1;
                 *should = false;
                 break;
@@ -41,6 +48,9 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_OBJ_ICE_POLY:
             case ACTOR_BG_DBLUE_MOVEBG: // Moveable block in Great Bay Temple
             case ACTOR_OBJ_HUNSUI:      // Geyser in Great Bay Temple
+            case ACTOR_BG_KIN2_BOMBWALL:
+            case ACTOR_BG_ASTR_BOMBWALL:
+            case ACTOR_BG_KIN2_PICTURE:
                 *should = false;
                 break;
             default:
