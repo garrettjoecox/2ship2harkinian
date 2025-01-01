@@ -265,6 +265,9 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_SOUTHERN_SWAMP_SOUTH] = RandoRegion{ .name = "South Section", .sceneId = SCENE_20SICHITAI,
+        .checks = {
+            CHECK(RC_SOUTHERN_SWAMP_ENGRAVING, CAN_BE_DEKU),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WOODFALL, 0),                     ENTRANCE(SOUTHERN_SWAMP_POISONED, 2), CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             EXIT(ENTRANCE(DEKU_PALACE, 0),                  ENTRANCE(SOUTHERN_SWAMP_POISONED, 3), true),
