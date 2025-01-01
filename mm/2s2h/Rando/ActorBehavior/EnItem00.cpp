@@ -7,6 +7,17 @@ extern "C" {
 #include "variables.h"
 }
 
+std::map<std::pair<float, float>, RandoCheckId> freestandingMap = {
+    // Deku Palace (TODO: fix Item Gets, items too close?)
+    { { 439.640961f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_12 },
+    { { 439.640961f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_13 },
+    { { 405.0f, 1309.0f },           RC_DEKU_PALACE_FREESTANDING_RUPEE_14 },
+    { { 370.359039f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_15 },
+    { { 370.359039f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_16 },
+    { { 405.0, 1389.0 },             RC_DEKU_PALACE_FREESTANDING_RUPEE_17 },
+    { { 405.0, 1349.0 },             RC_DEKU_PALACE_FREESTANDING_RUPEE_18 },
+};
+
 void Rando::ActorBehavior::InitEnItem00Behavior() {
     COND_ID_HOOK(ShouldActorInit, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor, bool* should) {
         EnItem00* item00 = (EnItem00*)actor;
@@ -19,7 +30,17 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
                                                                     ENITEM00_GET_7F00(actor), gPlayState->sceneId);
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-            return;
+            float x = item00->actor.home.pos.x;
+            float z = item00->actor.home.pos.z;
+
+            auto it = freestandingMap.find({x, z});
+            SPDLOG_INFO("x: {} | z: {}", std::to_string(x), std::to_string(z));
+            if (it == freestandingMap.end()) {
+                return;
+            } else {
+                randoStaticCheck.randoCheckId = it->second;
+            }
+            //return;
         }
 
         // Pots handle their own items, ignore them
