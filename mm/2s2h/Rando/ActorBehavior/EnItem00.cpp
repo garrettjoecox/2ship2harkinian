@@ -30,16 +30,10 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
                                                                     ENITEM00_GET_7F00(actor), gPlayState->sceneId);
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-            // Temp: Spits out coords if a freestanding item is spawned, useful for checking areas quickly.
-            float x = item00->actor.home.pos.x;
-            float z = item00->actor.home.pos.z;
-            SPDLOG_INFO("x: {} | z: {}", std::to_string(x), std::to_string(z));
-
-            auto it = freestandingMap.find({ x, z });
+            auto it = freestandingMap.find({ item00->actor.home.pos.x, item00->actor.home.pos.z });
             if (it == freestandingMap.end()) {
                 return;
             } else {
-                SPDLOG_INFO("it: {}", std::to_string(it->second));
                 randoStaticCheck = Rando::StaticData::Checks[it->second];
             }
         }
