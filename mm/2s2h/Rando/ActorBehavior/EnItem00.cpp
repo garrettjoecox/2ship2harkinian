@@ -57,9 +57,16 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         // Prevent the original item from spawning
         *should = false;
 
+        // Secret Shrines Freestanding Rupees spawn too high and are out of collection range using CustomItem,
+        // so we lower it slightly so Human Link can reach them.
+        float posY = actor->world.pos.y;
+        if (randoStaticCheck.randoCheckId >= RC_SECRET_SHRINE_FREESTANDING_RUPEE_01 && 
+            randoStaticCheck.randoCheckId <= RC_SECRET_SHRINE_FREESTANDING_RUPEE_17) {
+            posY -= 20.0f;
+        }
         // If it hasn't been collected yet, spawn a dummy item
         CustomItem::Spawn(
-            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
+            actor->world.pos.x, posY, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
             randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
