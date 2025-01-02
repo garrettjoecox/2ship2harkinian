@@ -66,6 +66,7 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_SONG*/ gItemIconSongNoteTex,
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
     /*RCTYPE_BARREL*/ gPotTrackerIcon,
+    /*RCTYPE_CRATE*/ gPotTrackerIcon,
 };
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {

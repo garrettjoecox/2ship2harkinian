@@ -99,6 +99,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 #define CAN_KILL_IRONKNUCKLE (CAN_USE_HUMAN_SWORD || CAN_BE_GORON)
 #define CAN_KILL_BAT \
     (CAN_USE_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE || CAN_BE_GORON || CAN_BE_ZORA)
+#define CAN_BREAK_BARREL (CAN_BE_GORON || CAN_USE_EXPLOSIVE)
 #define CAN_LIGHT_TORCH_NEAR_ANOTHER (HAS_ITEM(ITEM_DEKU_STICK) || CAN_USE_MAGIC_ARROW(FIRE))
 #define KEY_COUNT(dungeon) (gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_##dungeon])
 #define CAN_AFFORD(rc)                                                                                                \

@@ -21,13 +21,18 @@ std::map<std::pair<float, float>, RandoCheckId> barrelMap = {
     { { -300.0f, -1590.0f }, RC_GREAT_BAY_TEMPLE_GREEN_PIPE_1_BARREL_03 },
     { { 2685.0f, -1200.0f }, RC_GREAT_BAY_TEMPLE_GREEN_PIPE_2_BARREL_01 },
     { { 2685.0f, -1260.0f }, RC_GREAT_BAY_TEMPLE_GREEN_PIPE_2_BARREL_02 },
+    { { 1785.0f, 2190.0f }, RC_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM_BARREL_01 },
+    { { 1785.0f, 2070.0f }, RC_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM_BARREL_02 },
+    { { 1785.0f, 2010.0f }, RC_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM_BARREL_03 },
+    { { 1305.0f, 2058.0f }, RC_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM_BARREL_04 },
+    { { 1305.0f, 1998.0f }, RC_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM_BARREL_05 },
 };
 
 void Rando::ActorBehavior::InitObjTaruBehavior() {
     COND_VB_SHOULD(VB_DROP_COLLECTIBLE, IS_RANDO, {
         ObjTaru* refActor = va_arg(args, ObjTaru*);
         auto randoStaticCheck = Rando::StaticData::Checks[RC_UNKNOWN];
-        
+
         auto it = barrelMap.find({ refActor->dyna.actor.home.pos.x, refActor->dyna.actor.home.pos.z });
         if (it == barrelMap.end()) {
             return;
@@ -35,17 +40,17 @@ void Rando::ActorBehavior::InitObjTaruBehavior() {
             randoStaticCheck = Rando::StaticData::Checks[it->second];
         }
 
-        if (!RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled || 
+        if (!RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled ||
             RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
             return;
         }
 
         *should = false;
-        
+
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
         EnItem00* spawn = CustomItem::Spawn(
-            refActor->dyna.actor.world.pos.x, refActor->dyna.actor.world.pos.y, refActor->dyna.actor.world.pos.z, 0, 
+            refActor->dyna.actor.world.pos.x, refActor->dyna.actor.world.pos.y, refActor->dyna.actor.world.pos.z, 0,
             CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
@@ -78,6 +83,7 @@ void Rando::ActorBehavior::InitObjTaruBehavior() {
     COND_ID_HOOK(OnActorKill, ACTOR_OBJ_TARU, IS_RANDO, [](Actor* actor) {
         ObjTaru* refActor = (ObjTaru*)actor;
 
-        SPDLOG_INFO("Barrel Coords: {}f, {}f", std::to_string(refActor->dyna.actor.home.pos.x), std::to_string(refActor->dyna.actor.home.pos.z));
+        SPDLOG_INFO("Barrel Coords: {}f, {}f", std::to_string(refActor->dyna.actor.home.pos.x),
+                    std::to_string(refActor->dyna.actor.home.pos.z));
     });
 }
