@@ -32,7 +32,12 @@ void RegisterSkipBossCutscenes() {
     COND_ID_HOOK(ShouldActorInit, ACTOR_BOSS_02, CVAR, [](Actor* actor, bool* should) { SET_EVENTINF(EVENTINF_55); });
 
     // Igos du Ikana (and lackeys) intro
-    COND_ID_HOOK(ShouldActorInit, ACTOR_EN_KNIGHT, CVAR, [](Actor* actor, bool* should) { SET_EVENTINF(EVENTINF_57); });
+    COND_ID_HOOK(ShouldActorInit, ACTOR_EN_KNIGHT, CVAR, [](Actor* actor, bool* should) {
+        // In the credits, this sceneLayer will 1. Do not set this flag in that case, or things will break.
+        if (gSaveContext.sceneLayer == 0) {
+            SET_EVENTINF(EVENTINF_57);
+        }
+    });
 
     COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
         s16* csId = va_arg(args, s16*);
