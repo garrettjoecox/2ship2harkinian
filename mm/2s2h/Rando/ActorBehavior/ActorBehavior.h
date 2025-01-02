@@ -53,6 +53,7 @@ void InitEnYbBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();
 void InitObjMoonStoneBehavior();
+void InitObjTaruBehavior();
 void InitObjTsuboBehavior();
 void InitObjWarpstoneBehavior();
 
