@@ -53,7 +53,7 @@ void ApplyGlitchlessLogicToSaveContext() {
     // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
     // section.
     std::vector<RandoItemId> startingItems = {
-        RI_SONG_STORMS, RI_MASK_COUPLE, RI_SONG_LULLABY, RI_DEKU_STICK, RI_DEKU_NUT, RI_PICTOGRAPH_BOX,
+        RI_MASK_COUPLE, RI_SONG_LULLABY, RI_DEKU_STICK, RI_DEKU_NUT, RI_PICTOGRAPH_BOX,
     };
 
     for (RandoItemId randoItemId : startingItems) {
@@ -82,7 +82,8 @@ void ApplyGlitchlessLogicToSaveContext() {
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
-                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
+                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
+                    randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM) {
                     continue;
                 } else {
                     int price = Ship_Random(0, 200);

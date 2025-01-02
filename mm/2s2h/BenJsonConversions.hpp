@@ -26,6 +26,7 @@ void to_json(json& j, const RandoSaveCheck& randoSaveCheck) {
         { "eligible", randoSaveCheck.eligible },
         { "obtained", randoSaveCheck.obtained },
         { "shuffled", randoSaveCheck.shuffled },
+        { "skipped", randoSaveCheck.skipped },
         { "price", randoSaveCheck.price },
     };
 }
@@ -35,21 +36,28 @@ void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
     j.at("eligible").get_to(randoSaveCheck.eligible);
     j.at("obtained").get_to(randoSaveCheck.obtained);
     j.at("shuffled").get_to(randoSaveCheck.shuffled);
+    j.at("skipped").get_to(randoSaveCheck.skipped);
     j.at("price").get_to(randoSaveCheck.price);
 }
 
 void to_json(json& j, const RandoSaveInfo& rando) {
     j = json{
         { "randoInf", rando.randoInf },
+        { "randoAccess", rando.randoAccess },
         { "randoSaveChecks", rando.randoSaveChecks },
+        { "finalSeed", rando.finalSeed },
         { "randoSaveOptions", rando.randoSaveOptions },
+        { "foundDungeonKeys", rando.foundDungeonKeys },
     };
 }
 
 void from_json(const json& j, RandoSaveInfo& rando) {
     j.at("randoInf").get_to(rando.randoInf);
+    j.at("randoAccess").get_to(rando.randoAccess);
     j.at("randoSaveChecks").get_to(rando.randoSaveChecks);
+    j.at("finalSeed").get_to(rando.finalSeed);
     j.at("randoSaveOptions").get_to(rando.randoSaveOptions);
+    j.at("foundDungeonKeys").get_to(rando.foundDungeonKeys);
 }
 
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {

@@ -32,15 +32,49 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_WEEKEVENTREG("Return Deku Princess", WEEKEVENTREG_23_20, HAS_BOTTLE && CAN_ACCESS(DEKU_PRINCESS)),
         }
     };
+    Regions[RR_DEKU_PALACE_BEAN_SALESMAN_GROTTO] = RandoRegion{ .name = "Deku Palace Bean Salesman Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_DEKU_PALACE_GROTTO_CHEST, CAN_GROW_BEAN_PLANT),
+            // TODO: Bean salesman check
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(DEKU_PALACE, 9),                  ENTRANCE(GROTTOS, 12), true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_DEKU_PALACE_INSIDE] = RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
         .checks = {
             CHECK(RC_DEKU_PALACE_HP,    true),
             CHECK(RC_DEKU_PALACE_POT_1, CAN_BE_DEKU),
             CHECK(RC_DEKU_PALACE_POT_2, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_01, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_02, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_03, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_04, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_05, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_06, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_07, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_08, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_09, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_10, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_11, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_12, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_13, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_14, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_15, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_16, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_17, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_18, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_19, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_20, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_21, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_22, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_23, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_FREESTANDING_RUPEE_24, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 0),           ENTRANCE(DEKU_PALACE, 2), true),
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 1),           ENTRANCE(DEKU_PALACE, 3), CAN_BE_DEKU), // Cell TODO: Is there something to do with beans here?
+            EXIT(ENTRANCE(GROTTOS, 12),                     ENTRANCE(DEKU_PALACE, 9), true), // TODO: Grotto mapping
         },
         .connections = {
             CONNECTION(RR_DEKU_PALACE_OUTSIDE, true),
@@ -171,6 +205,14 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ROMANI_RANCH, 3),                 ENTRANCE(RANCH_HOUSE, 1), true),
         },
     };
+    Regions[RR_ROAD_TO_SOUTHERN_SWAMP_GROTTO] = RandoRegion{ .name = "Road to Southern Swamp Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_SOUTHERN_SWAMP, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_ROAD_TO_SOUTHERN_SWAMP] = RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, CAN_USE_PROJECTILE || HAS_ITEM(ITEM_BOMBCHU)),
@@ -181,6 +223,9 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(TERMINA_FIELD, 1),                ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 0),      ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1), true),
             EXIT(ENTRANCE(SWAMP_SHOOTING_GALLERY, 0),       ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2), true),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_SOUTHERN_SWAMP_GROTTO, true), // TODO: Grotto mapping
         },
         .events = {
             EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
@@ -203,6 +248,14 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(DOGGY_RACETRACK, 0),              ENTRANCE(ROMANI_RANCH, 5), true),
         },
     };
+    Regions[RR_SOUTHERN_SWAMP_GROTTO] = RandoRegion{ .name = "Southern Swamp Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_SOUTHERN_SWAMP_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_SOUTHERN_SWAMP_SOUTH, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_SOUTHERN_SWAMP_NORTH] = RandoRegion{ .name = "North Section", .sceneId = SCENE_20SICHITAI,
         .checks = {
             CHECK(RC_SOUTHERN_SWAMP_HP, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
@@ -215,6 +268,8 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_3, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_SOUTHERN_SWAMP_FREESTANDING_RUPEE_01, CAN_BE_DEKU || CAN_BE_ZORA),
+            CHECK(RC_SOUTHERN_SWAMP_FREESTANDING_RUPEE_02, CAN_BE_DEKU || CAN_BE_ZORA),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1),       ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), true),
@@ -236,6 +291,9 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_SOUTHERN_SWAMP_SOUTH] = RandoRegion{ .name = "South Section", .sceneId = SCENE_20SICHITAI,
+        .checks = {
+            CHECK(RC_SOUTHERN_SWAMP_ENGRAVING, CAN_BE_DEKU),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WOODFALL, 0),                     ENTRANCE(SOUTHERN_SWAMP_POISONED, 2), CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             EXIT(ENTRANCE(DEKU_PALACE, 0),                  ENTRANCE(SOUTHERN_SWAMP_POISONED, 3), true),
@@ -244,6 +302,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_SOUTHERN_SWAMP_NORTH, (Flags_GetSceneSwitch(SCENE_20SICHITAI, 1) || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE))),
+            CONNECTION(RR_SOUTHERN_SWAMP_GROTTO, CAN_BE_DEKU), // TODO: Grotto mapping
         },
     };
     Regions[RR_SWAMP_SHOOTING_GALLERY] = RandoRegion{ .sceneId = SCENE_SYATEKI_MORI,
@@ -286,6 +345,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_WOODFALL_POT_1, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
             CHECK(RC_WOODFALL_POT_2, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
             CHECK(RC_WOODFALL_POT_3, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
+            CHECK(RC_WOODFALL_FREESTANDING_RUPEE_01, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 2),      ENTRANCE(WOODFALL, 0), true),
@@ -294,9 +354,20 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(WOODFALL_TEMPLE, 2),              ENTRANCE(WOODFALL, 3), CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
         },
     };
+    Regions[RR_WOODS_OF_MYSTERY_GROTTO] = RandoRegion{ .name = "Woods of Mystery Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_WOODS_OF_MYSTERY_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_WOODS_OF_MYSTERY, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_WOODS_OF_MYSTERY] = RandoRegion{ .sceneId = SCENE_26SARUNOMORI,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 7),      ENTRANCE(WOODS_OF_MYSTERY, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_WOODS_OF_MYSTERY_GROTTO, true), // TODO: Grotto mapping
         },
     };
 }, {});

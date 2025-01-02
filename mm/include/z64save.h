@@ -33,8 +33,8 @@ typedef enum RespawnMode {
     /* 8 */ RESPAWN_MODE_MAX
 } RespawnMode;
 
-// 2S2H [Port] Doubled the size of the Save Buffer to support more data, eg rando
-#define SAVE_BUFFER_SIZE 0x8000
+// 2S2H [Port] Quadruple the size of the Save Buffer to support more data, eg rando
+#define SAVE_BUFFER_SIZE 0x4000 * 4
 #define HALF_SAVE_BUFFER_SIZE (SAVE_BUFFER_SIZE / 2)
 
 typedef enum {

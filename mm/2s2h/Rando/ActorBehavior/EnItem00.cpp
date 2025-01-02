@@ -7,6 +7,16 @@ extern "C" {
 #include "variables.h"
 }
 
+std::map<std::pair<float, float>, RandoCheckId> freestandingMap = {
+    { { 439.640961f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_12 },
+    { { 439.640961f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_13 },
+    { { 405.0f, 1309.0f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_14 },
+    { { 370.359039f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_15 },
+    { { 370.359039f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_16 },
+    { { 405.0, 1389.0 }, RC_DEKU_PALACE_FREESTANDING_RUPEE_17 },
+    { { 405.0, 1349.0 }, RC_DEKU_PALACE_FREESTANDING_RUPEE_18 },
+};
+
 void Rando::ActorBehavior::InitEnItem00Behavior() {
     COND_ID_HOOK(ShouldActorInit, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor, bool* should) {
         EnItem00* item00 = (EnItem00*)actor;
@@ -19,7 +29,12 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
                                                                     ENITEM00_GET_7F00(actor), gPlayState->sceneId);
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-            return;
+            auto it = freestandingMap.find({ item00->actor.home.pos.x, item00->actor.home.pos.z });
+            if (it == freestandingMap.end()) {
+                return;
+            } else {
+                randoStaticCheck = Rando::StaticData::Checks[it->second];
+            }
         }
 
         // Pots handle their own items, ignore them
@@ -38,11 +53,25 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
 
         // If it hasn't been collected yet, spawn a dummy item
         CustomItem::Spawn(
-            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
+            // Freestanding PoH & HC cannot be picked up by boomerangs
+            CustomItem::KILL_ON_TOUCH |
+                (randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING ? 0 : CustomItem::ABLE_TO_ZORA_RANG),
             randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
-                Flags_SetCollectible(play, randoStaticCheck.flag);
+                switch (randoStaticCheck.flagType) {
+                    case FLAG_NONE:
+                        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
+                            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].eligible = true;
+                        }
+                        break;
+                    case FLAG_CYCL_SCENE_COLLECTIBLE:
+                        Flags_SetCollectible(play, randoStaticCheck.flag);
+                        break;
+                    default:
+                        break;
+                }
             },
             [](Actor* actor, PlayState* play) {
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];

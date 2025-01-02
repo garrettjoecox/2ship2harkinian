@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_BOSS] = RandoRegion{ .name = "Night 1 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            // TODO: Song of storms
+            CHECK(RC_BENEATH_THE_GRAVEYARD_TOMBSTONE, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CAN_KILL_IRONKNUCKLE),
@@ -96,7 +96,15 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 13),                ENTRANCE(IKANA_CANYON, 14), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Free Ghost Dude", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
+            EVENT_WEEKEVENTREG("Break the curse of Sharp, Composer Brother", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
+        },
+    };
+    Regions[RR_IKANA_CANYON_GROTTO] = RandoRegion{ .name = "Ikana Canyon Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_IKANA_CANYON_LOWER, true), // TODO: Grotto mapping
         },
     };
     Regions[RR_IKANA_CANYON_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_IKANA,
@@ -104,8 +112,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_IKANA_CANYON_SCRUB_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA && CAN_BE_DEKU),
             CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
             CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, true),
-            // TODO: Grottos
-            CHECK(RC_IKANA_CANYON_GROTTO, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 1),                ENTRANCE(IKANA_CANYON, 0), true), 
@@ -119,7 +125,8 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 9),               ONE_WAY_EXIT, true),
         },
         .connections = {
-            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_MAGIC_ARROW(ICE))
+            CONNECTION(RR_IKANA_CANYON_UPPER, HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_MAGIC_ARROW(ICE)),
+            CONNECTION(RR_IKANA_CANYON_GROTTO, true), // TODO: Grotto mapping
         },
         .events = {
             EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, CUR_UPG_VALUE(UPG_WALLET) >= 1),
@@ -152,11 +159,15 @@ static RegisterShipInitFunc initFunc([]() {
             ENTRANCE(IKANA_CANYON, 15), // From Stone Tower Temple Blue Warp
         }
     };
-    Regions[RR_IKANA_GRAVEYARD_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
+    Regions[RR_IKANA_GRAVEYARD_GROTTO] = RandoRegion{ .name = "Ikana Graveyard Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            // TODO : Grotto
-            CHECK(RC_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON)
+            CHECK(RC_IKANA_GRAVEYARD_GROTTO, true),
         },
+        .connections = {
+            CONNECTION(RR_IKANA_GRAVEYARD_LOWER, true), // TODO: Grotto mapping
+        },
+    };
+    Regions[RR_IKANA_GRAVEYARD_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_IKANA, 2),                ENTRANCE(IKANA_GRAVEYARD, 0), true),
             EXIT(ENTRANCE(DAMPES_HOUSE, 0),                          ONE_WAY_EXIT, HAS_ITEM(ITEM_MASK_CAPTAIN)), // Day 3 hole
@@ -165,6 +176,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_IKANA_GRAVEYARD_UPPER, CAN_PLAY_SONG(SONATA)),
+            CONNECTION(RR_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_GRAVEYARD, 4), // Exiting Dampe's house
@@ -219,13 +231,21 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ROAD_TO_IKANA_FIELD_SIDE] = RandoRegion{ .name = "Field Side", .sceneId = SCENE_IKANAMAE,
         .checks = {
             CHECK(RC_ROAD_TO_IKANA_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_ROAD_TO_IKANA_GROTTO, CAN_BE_GORON), // TODO: Grotto
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 4),                ENTRANCE(ROAD_TO_IKANA, 0), true),
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_BELOW_LEDGE, CAN_RIDE_EPONA),
+            CONNECTION(RR_ROAD_TO_IKANA_GROTTO, CAN_BE_GORON), // TODO: Grotto mapping
+        },
+    };
+    Regions[RR_ROAD_TO_IKANA_GROTTO] = RandoRegion{ .name = "Road to Ikana Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_ROAD_TO_IKANA_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, true), // TODO: Grotto mapping
         },
     };
     Regions[RR_SAKON_HIDEOUT] = RandoRegion{ .sceneId = SCENE_SECOM,
@@ -242,6 +262,23 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SECRET_SHRINE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_RANDOM,
         .checks = {
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_01, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_02, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_03, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_04, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_05, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_06, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_07, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_08, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_09, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_10, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_11, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_12, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_13, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_14, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_15, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_16, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
+            CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_17, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
             CHECK(RC_SECRET_SHRINE_POT_1, true),
             CHECK(RC_SECRET_SHRINE_POT_2, true),
             CHECK(RC_SECRET_SHRINE_POT_3, true),

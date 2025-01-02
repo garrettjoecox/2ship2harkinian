@@ -60,7 +60,6 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 actor->textId = 0x2AD1;
                 [[fallthrough]];
             case ACTOR_EN_DNO:
-            case ACTOR_EN_GK:
             case ACTOR_EN_INVADEPOH:
             case ACTOR_EN_JS:
             case ACTOR_EN_KENDO_JS:

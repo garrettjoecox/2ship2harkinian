@@ -17,6 +17,23 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
         },
     };
+    Regions[RR_GREAT_BAY_COAST_COW_GROTTO] = RandoRegion{ .name = "Great Bay Coast Cow Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_COAST_COW_BACK, CAN_PLAY_SONG(EPONA)),
+            CHECK(RC_GREAT_BAY_COAST_COW_FRONT, CAN_PLAY_SONG(EPONA)),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_COAST, true), // TODO: Grotto mapping
+        },
+    };
+    Regions[RR_GREAT_BAY_COAST_FISHERMAN_GROTTO] = RandoRegion{ .name = "Great Bay Coast Fisherman Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_COAST_FISHERMAN_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_COAST, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_GREAT_BAY_COAST] = RandoRegion{ .sceneId = SCENE_30GYOSON,
         .checks = {
             CHECK(RC_GREAT_BAY_COAST_OWL_STATUE, CAN_USE_SWORD),
@@ -48,6 +65,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 0),    ENTRANCE(GREAT_BAY_COAST, 5), CAN_BE_ZORA),
             EXIT(ENTRANCE(MARINE_RESEARCH_LAB, 0),          ENTRANCE(GREAT_BAY_COAST, 7), true),
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),       ENTRANCE(GREAT_BAY_COAST, 8), true),
+        },
+        .connections = {
+            CONNECTION(RR_GREAT_BAY_COAST_COW_GROTTO, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT), // TODO: Grotto mapping
+            CONNECTION(RR_GREAT_BAY_COAST_FISHERMAN_GROTTO, true), // TODO: Grotto mapping
         },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_GREAT_BAY_COAST),
@@ -112,10 +133,16 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ZORA_CAPE, 4),                    ENTRANCE(WATERFALL_RAPIDS, 0), true),
         },
     };
+    Regions[RR_ZORA_CAPE_GROTTO] = RandoRegion{ .name = "Zora Cape Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_ZORA_CAPE_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_CAPE, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_ZORA_CAPE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            // TODO: Grottos
-            CHECK(RC_ZORA_CAPE_GROTTO,                    CAN_USE_EXPLOSIVE || CAN_BE_GORON),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
@@ -135,6 +162,9 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),             ENTRANCE(ZORA_CAPE, 4), HAS_ITEM(ITEM_HOOKSHOT)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),               ENTRANCE(ZORA_CAPE, 5), HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
             EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_CAPE_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
         },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_ZORA_CAPE),
