@@ -17,6 +17,7 @@ enum CustomItemFlags : int16_t {
     STOP_SPINNING = 1 << 6,      // 0000 0000 0100 0000
     CALLED_ACTION = 1 << 7,      // 0000 0000 1000 0000
     TOSS_ON_SPAWN = 1 << 8,      // 0000 0001 0000 0000
+    ABLE_TO_ZORA_RANG = 1 << 9,  // 0000 0010 0000 0000
 };
 void RegisterHooks();
 EnItem00* Spawn(f32 posX, f32 posY, f32 posZ, s16 rot, s16 flags, s16 params, ActorFunc actionFunc = NULL,
