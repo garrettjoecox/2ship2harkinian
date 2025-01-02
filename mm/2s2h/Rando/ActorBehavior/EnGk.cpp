@@ -1,5 +1,6 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include "overlays/actors/ovl_En_Gk/z_en_gk.h"
 
 extern "C" {
 #include "variables.h"
@@ -27,5 +28,20 @@ void Rando::ActorBehavior::InitEnGKBehavior() {
                 Player_TalkWithPlayer(gPlayState, actor);
                 break;
         }
+    });
+
+    COND_VB_SHOULD(VB_TEACH_GORON_LULLABY, IS_RANDO, {
+        EnGk* ObjActor = va_arg(args, EnGk*);
+        PlayState* play = va_arg(args, PlayState*);
+        Player* player = GET_PLAYER(gPlayState);
+        if (!RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].obtained) {
+            if (ObjActor->actor.xzDistToPlayer < 100.0f) {
+                if ((player->transformation == PLAYER_FORM_GORON) && (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
+                    (play->msgCtx.lastPlayedSong == OCARINA_SONG_GORON_LULLABY_INTRO)) {
+                    RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
+                }
+            }
+        }
+        *should = false;
     });
 }

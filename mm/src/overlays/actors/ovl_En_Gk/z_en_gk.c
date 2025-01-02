@@ -5,6 +5,7 @@
  */
 
 #include "z_en_gk.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -889,7 +890,9 @@ void func_80B5202C(EnGk* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (play->csCtx.state == CS_STATE_IDLE) {
-        func_80B51410(this, play);
+        if (GameInteractor_Should(VB_TEACH_GORON_LULLABY, true, this, play)) {
+            func_80B51410(this, play);
+        }
     }
 
     if (!func_80B50854(this, play)) {
