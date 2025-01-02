@@ -128,7 +128,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 3),    ENTRANCE(PIRATES_FORTRESS, 4), true),
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
     Regions[RR_PIRATES_FORTRESS_MOAT_HIGHER] = RandoRegion{ .name = "Higher", .sceneId = SCENE_TORIDE,
@@ -171,25 +171,25 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_LOWER, true),
         },
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_LEFT_EXIT] = RandoRegion{ .name = "Left Side Exit", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_EXIT] = RandoRegion{ .name = "Left Side Exit", .sceneId = SCENE_KAIZOKU,
         // The doorway when exiting the CHEST_EGG_ROOM, one way jump down to Plaza
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 8), true)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_LEFT_LOWER] = RandoRegion{ .name = "Plaza Left Lower", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER] = RandoRegion{ .name = "Plaza Left Lower", .sceneId = SCENE_KAIZOKU,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 7), true)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza_LEFT_UPPER, HAS_ITEM(ITEM_HOOKSHOT))
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA_LEFT_UPPER, HAS_ITEM(ITEM_HOOKSHOT))
         }
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_LEFT_UPPER] = RandoRegion{ .name = "Plaza Left Upper", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_UPPER] = RandoRegion{ .name = "Plaza Left Upper", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_1, true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_2, true),
@@ -199,46 +199,46 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 2),    ENTRANCE(PIRATES_FORTRESS, 3), true),
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
         },
         .events = {
             EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
         },
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_RIGHT_EXIT] = RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
-        // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to Plaza
+    Regions[RR_PIRATES_FORTRESS_PLAZA_RIGHT_EXIT] = RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
+        // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PLAZA
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 6), true)
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_RIGHT] = RandoRegion{ .name = "Right Side", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_RIGHT] = RandoRegion{ .name = "Right Side", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_UPPER_CHEST, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 12), true),
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 4),    ENTRANCE(PIRATES_FORTRESS, 5), true)
-        },
+        },z
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza_TOWER] = RandoRegion{ .name = "Plaza Tower", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_TOWER] = RandoRegion{ .name = "Plaza Tower", .sceneId = SCENE_KAIZOKU,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1),    ENTRANCE(PIRATES_FORTRESS, 2), true),
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza, true),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         },
         .events = {
             EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
         },
     };
-    Regions[RR_PIRATES_FORTRESS_Plaza] = RandoRegion{ .name = "Plaza", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA] = RandoRegion{ .name = "Plaza", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_LOWER_CHEST, true),
         },
@@ -247,10 +247,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 1),    ENTRANCE(PIRATES_FORTRESS, 0), true),
         },
         .connections = {
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT)),
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza_RIGHT, HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA_RIGHT, HAS_ITEM(ITEM_HOOKSHOT)),
             // Outside of using Stones Mask you have to deal with this guard in some way.
-            CONNECTION(RR_PIRATES_FORTRESS_Plaza_TOWER, (
+            CONNECTION(RR_PIRATES_FORTRESS_PLAZA_TOWER, (
                 (HAS_ITEM(ITEM_DEKU_NUT) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_MASK_STONE)) ||
                 (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA
             )),
