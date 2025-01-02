@@ -236,6 +236,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                 return false;
             }
             break;
+        case RI_GOLD_DUST_REFILL:
         case RI_MILK_REFILL:
         case RI_FAIRY_REFILL:
         case RI_RED_POTION_REFILL:
@@ -272,23 +273,14 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             }
             break;
         case RI_BOTTLE_EMPTY:
+        case RI_BOTTLE_MILK:
+        case RI_BOTTLE_GOLD_DUST:
             if (hasObtainedCheck) {
                 return false;
             }
 
             for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
                 if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE) {
-                    return true;
-                }
-            }
-            return false;
-        case RI_BOTTLE_MILK:
-            if (hasObtainedCheck) {
-                return false;
-            }
-
-            for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
-                if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE || Inventory_HasEmptyBottle()) {
                     return true;
                 }
             }
@@ -496,20 +488,27 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 // Shouldn't happen, just in case
                 assert(false);
                 return RI_JUNK;
-            case RI_BOTTLE_MILK:
-                for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
-                    if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE) {
-                        return RI_BOTTLE_MILK;
-                    }
-                }
-                return RI_MILK_REFILL;
-                break;
             default:
                 break;
         }
 
         return randoItemId;
     } else {
+        switch (randoItemId) {
+            case RI_BOTTLE_GOLD_DUST:
+                if (Inventory_HasEmptyBottle()) {
+                    return RI_GOLD_DUST_REFILL;
+                }
+                break;
+            case RI_BOTTLE_MILK:
+                if (Inventory_HasEmptyBottle()) {
+                    return RI_MILK_REFILL;
+                }
+                break;
+            default:
+                break;
+        }
+
         return RI_JUNK;
     }
 }

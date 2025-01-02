@@ -29,6 +29,7 @@ void InitEnGegBehavior();
 void InitEnGgBehavior();
 void InitEnGinkoBehavior();
 void InitEnGirlABehavior();
+void InitEnGKBehavior();
 void InitEnGoBehavior();
 void InitEnGsBehavior();
 void InitEnHgBehavior();

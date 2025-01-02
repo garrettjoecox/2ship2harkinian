@@ -91,7 +91,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
 
     if (CUSTOM_ITEM_FLAGS & CustomItem::KILL_ON_TOUCH) {
         // Pretty self explanatory, if the player is within range, kill the actor and call the action function
-        if ((actor->xzDistToPlayer <= 50.0f) && (fabsf(actor->playerHeightRel) <= fabsf(20.0f))) {
+        if ((actor->xzDistToPlayer <= 30.0f) && (fabsf(actor->playerHeightRel) <= fabsf(35.0f))) {
             if (enItem00->actionFunc != NULL) {
                 enItem00->actionFunc(enItem00, play);
                 CUSTOM_ITEM_FLAGS |= CustomItem::CALLED_ACTION;
@@ -100,8 +100,8 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         }
     } else if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_OVERHEAD) {
         // If the item hasn't been picked up (unk152 == -1) and the player is within range
-        if (enItem00->unk152 == -1 && (actor->xzDistToPlayer <= 50.0f) &&
-            (fabsf(actor->playerHeightRel) <= fabsf(20.0f))) {
+        if (enItem00->unk152 == -1 && (actor->xzDistToPlayer <= 30.0f) &&
+            (fabsf(actor->playerHeightRel) <= fabsf(35.0f))) {
             // Fire the action function
             if (enItem00->actionFunc != NULL) {
                 enItem00->actionFunc(enItem00, play);
@@ -150,7 +150,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
     } else if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
         // If the item hasn't been picked up and the player is within range
         if (!Actor_HasParent(actor, play) && enItem00->unk152 == -1) {
-            Actor_OfferGetItem(actor, play, GI_SHIP, 50.0f, 20.0f);
+            Actor_OfferGetItem(actor, play, GI_SHIP, 30.0f, 35.0f);
         } else {
             if (enItem00->unk152 == -1) {
                 // actor->shape.yOffset = 1250.0f;
