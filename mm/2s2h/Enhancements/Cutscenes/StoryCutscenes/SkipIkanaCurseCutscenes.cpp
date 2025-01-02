@@ -7,7 +7,7 @@
 extern "C" {
 #include "variables.h"
 #include "functions.h"
-#include "overlays/actors/ovl_BG_Haka_Curtain/z_bg_haka_curtain.h"
+#include "overlays/actors/ovl_Bg_Haka_Curtain/z_bg_haka_curtain.h"
 #include "overlays/actors/ovl_En_Po_Composer/z_en_po_composer.h"
 #include "overlays/actors/ovl_Obj_Hgdoor/z_obj_hgdoor.h"
 void func_80B6DE80(BgHakaCurtain* bgHakaCurtain);
