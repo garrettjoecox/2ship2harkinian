@@ -218,7 +218,6 @@ void func_80AACAE4(DmChar05* this, PlayState* play) {
                 if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DMCHAR05, true, ITEM_MASK_COUPLE)) {
                     Item_Give(play, ITEM_MASK_COUPLE);
                 }
-                // Item_Give(play, ITEM_MASK_COUPLE);
             }
             this->unk_18E = 1;
             this->unk_190.x = play->csCtx.actorCues[cueChannel]->startPos.x;
