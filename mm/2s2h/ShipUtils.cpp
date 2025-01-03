@@ -42,7 +42,7 @@ std::unordered_map<s16, const char*> sceneNames = {
 std::vector<const char*> miscellaneousTextures = {
     gRupeeCounterIconTex, gStrayFairyGreatBayIconTex, gQuestIconGoldSkulltulaTex,
     gWorldMapOwlFaceTex,  gChestTrackerIcon,          gPotTrackerIcon,
-    gArcheryScoreIconTex,
+    gArcheryScoreIconTex, gBarrelTrackerIcon,         gCrateTrackerIcon
 };
 
 extern "C" const char* Ship_GetSceneName(s16 sceneId) {
