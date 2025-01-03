@@ -6,6 +6,7 @@
 
 #include "z_en_jg.h"
 #include "overlays/actors/ovl_En_S_Goro/z_en_s_goro.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -915,9 +916,11 @@ void EnJg_CheckIfTalkingToPlayerAndHandleFreezeTimer(EnJg* this, PlayState* play
         } else if (this->textId == 0xDB6) {
             SET_WEEKEVENTREG(WEEKEVENTREG_24_10);
         }
-
-        Message_StartTextbox(play, this->textId, &this->actor);
-        this->actionFunc = EnJg_SetupTalk;
+        
+        if (GameInteractor_Should(VB_TEACH_GORON_LULLABY_INTRO, true, this, play)) {
+            Message_StartTextbox(play, this->textId, &this->actor);
+            this->actionFunc = EnJg_SetupTalk;
+        }
     } else {
         if ((this->actor.xzDistToPlayer < 100.0f) || this->actor.isLockedOn) {
             Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);
