@@ -916,7 +916,7 @@ void EnJg_CheckIfTalkingToPlayerAndHandleFreezeTimer(EnJg* this, PlayState* play
         } else if (this->textId == 0xDB6) {
             SET_WEEKEVENTREG(WEEKEVENTREG_24_10);
         }
-        
+
         if (GameInteractor_Should(VB_TEACH_GORON_LULLABY_INTRO, true, this, play)) {
             Message_StartTextbox(play, this->textId, &this->actor);
             this->actionFunc = EnJg_SetupTalk;
