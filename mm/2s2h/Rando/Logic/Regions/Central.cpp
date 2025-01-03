@@ -86,9 +86,11 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_EAST] = RandoRegion{ .sceneId = SCENE_TOWN,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_EAST_POSTMAN_HAT, HAS_ITEM(ITEM_LETTER_MAMA)),
-            CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU),
-            CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, true),
+            CHECK(RC_CLOCK_TOWN_EAST_SMALL_CRATE_01, true),
+            CHECK(RC_CLOCK_TOWN_EAST_SMALL_CRATE_02, true),
+            CHECK(RC_CLOCK_TOWN_EAST_POSTMAN_HAT,    HAS_ITEM(ITEM_LETTER_MAMA)),
+            CHECK(RC_CLOCK_TOWN_STRAY_FAIRY,         CAN_BE_DEKU),
+            CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST,    true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 7),                ENTRANCE(EAST_CLOCK_TOWN, 0), true),
@@ -117,8 +119,12 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_LAUNDRY] = RandoRegion{ .sceneId = SCENE_ALLEY,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, true),
-            CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, true),
+            CHECK(RC_CLOCK_TOWN_STRAY_FAIRY,                    true),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_FREESTANDING_RUPEE_01,  true),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_FREESTANDING_RUPEE_02,  true),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_FREESTANDING_RUPEE_03,  true),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU,              true),
+            CHECK(RC_CLOCK_TOWN_LAUNDRY_SMALL_CRATE,            true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 6),             ENTRANCE(LAUNDRY_POOL, 0), true),
@@ -381,7 +387,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_SCRUB_GROTTO] = RandoRegion{ .name = "Termina Field Scrub", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_SCRUB_POT, true),
+            CHECK(RC_TERMINA_FIELD_SCRUB_LARGE_CRATE, true),
+            CHECK(RC_TERMINA_FIELD_SCRUB_POT,         true),
             // TODO: Add scrub HP
         },
         .exits = { //     TO                                         FROM
@@ -403,6 +410,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_TERMINA_FIELD_TALL_GRASS_CHEST, true),
             CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT || HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_TERMINA_FIELD_WATER_CHEST, CAN_BE_ZORA),
+            CHECK(RC_TERMINA_FIELD_FREESTANDING_RUPEE_01, true), //TODO: Fix duplicate item get...
             CHECK(RC_TERMINA_FIELD_GUAY_RUPEE_DROP_01, CAN_PLAY_SONG(SONATA) || CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(BOSSA_NOVA)),
             CHECK(RC_TERMINA_FIELD_GUAY_RUPEE_DROP_02, CAN_PLAY_SONG(SONATA) || CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(BOSSA_NOVA)),
             CHECK(RC_TERMINA_FIELD_GUAY_RUPEE_DROP_03, CAN_PLAY_SONG(SONATA) || CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(BOSSA_NOVA)),

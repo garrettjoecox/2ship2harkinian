@@ -9,6 +9,11 @@ extern "C" {
 }
 
 std::map<std::pair<float, float>, RandoCheckId> crateMap = {
+    // Clock Town //
+    { { -1668.0f, 615.0f }, RC_CLOCK_TOWN_LAUNDRY_SMALL_CRATE },
+    { { 759.0f, -458.0f }, RC_CLOCK_TOWN_EAST_SMALL_CRATE_01 },
+    { { 1100.0f, -460.0f }, RC_CLOCK_TOWN_EAST_SMALL_CRATE_02 },
+
     // Great Bay Temple //
     { { 1725.0f, -2100.0f }, RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_01 },
     { { 1725.0f, -2070.0f }, RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_02 },
@@ -43,6 +48,9 @@ std::map<std::pair<float, float>, RandoCheckId> crateMap = {
     { { 797.0f, -915.0f }, RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_01 },
     { { 1151.0f, 180.0f }, RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_02 },
     { { 889.0f, 180.0f }, RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_03 },
+
+    // Termina Field //
+    { { 1750.0f, 830.0f }, RC_TERMINA_FIELD_SCRUB_LARGE_CRATE },
 };
 
 void Rando::ActorBehavior::InitObjKibakoBehavior() {
