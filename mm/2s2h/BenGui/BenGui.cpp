@@ -24,6 +24,7 @@
 
 #include "Enhancements/Trackers/ItemTracker.h"
 #include "Enhancements/Trackers/ItemTrackerSettings.h"
+#include "Enhancements/Trackers/DisplayOverlay.h"
 
 namespace BenGui {
 // MARK: - Delegates
@@ -46,6 +47,7 @@ std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
 std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
 std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
+std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
 
 void SetupGuiElements() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
@@ -110,6 +112,9 @@ void SetupGuiElements() {
                                                                              "Item Tracker Settings", ImVec2(800, 400));
     gui->AddGuiWindow(mItemTrackerSettingsWindow);
     gui->SetPadBtnTogglesMenu();
+
+    mDisplayOverlayWindow = std::make_shared<DisplayOverlayWindow>("gWindows.DisplayOverlay", "Display Overlay");
+    gui->AddGuiWindow(mDisplayOverlayWindow);
 
     mNotificationWindow = std::make_shared<Notification::Window>("gWindows.Notifications", "Notifications Window");
     gui->AddGuiWindow(mNotificationWindow);

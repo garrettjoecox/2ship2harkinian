@@ -986,7 +986,9 @@ void Sram_InitNewSave(void) {
     memcpy(&gSaveContext.save.shipSaveInfo.commitHash, &gGitCommitHash,
            sizeof(gSaveContext.save.shipSaveInfo.commitHash));
     gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
-    // #endregion
+    gSaveContext.save.shipSaveInfo.fileCreatedAt = 0;
+    // gSaveContext.save.shipSaveInfo.fileCreatedAt = GetUnixTimestamp();
+    //  #endregion
 
     Sram_GenerateRandomSaveFields();
 }

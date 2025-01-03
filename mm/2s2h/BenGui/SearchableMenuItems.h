@@ -2,6 +2,7 @@
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/Enhancements/Trackers/DisplayOverlay.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -1473,6 +1474,29 @@ void AddEnhancements() {
                 "",
                 WIDGET_WINDOW_BUTTON,
                 { .size = UIWidgets::Sizes::Inline, .windowName = "Item Tracker Settings" } } } } });
+    enhancementsSidebar.push_back(
+        { "Display Overlay",
+          3,
+          { // Display Overlay for In Game Timers
+            {
+                { "Toggle Display Overlay",
+                  "gWindows.DisplayOverlay",
+                  "Toggles the Display Overlay window for In-game Timers.",
+                  WIDGET_WINDOW_BUTTON,
+                  { .size = UIWidgets::Sizes::Inline, .windowName = "Display Overlay" } },
+                { .widgetName = "Hide Window Background",
+                  .widgetCVar = "gDisplayOverlay.Background",
+                  .widgetTooltip = "Hides the background of the Display Overlay window.",
+                  .widgetType = WIDGET_CVAR_CHECKBOX,
+                  .widgetOptions = { .defaultVariant = false },
+                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
+                { .widgetName = "Scale: %.0fx",
+                  .widgetCVar = "gDisplayOverlay.Scale",
+                  .widgetTooltip = "Adjust the Scale for the Display Overlay window.",
+                  .widgetType = WIDGET_CVAR_SLIDER_FLOAT,
+                  .widgetOptions = { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.0f, .format = "%.1f", .step = 0.1f },
+                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
+            } } });
 }
 
 void AddDevTools() {

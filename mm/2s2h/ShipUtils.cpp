@@ -47,7 +47,11 @@ std::vector<const char*> miscellaneousTextures = { gRupeeCounterIconTex,       g
                                                    gQuestIconGoldSkulltulaTex, gWorldMapOwlFaceTex,
                                                    gChestTrackerIcon,          gPotTrackerIcon,
                                                    gArcheryScoreIconTex,       gBarrelTrackerIcon,
-                                                   gCrateTrackerIcon };
+                                                   gCrateTrackerIcon,          gTimerClockIconTex };
+
+std::vector<const char*> digitList = { gCounterDigit0Tex, gCounterDigit1Tex, gCounterDigit2Tex, gCounterDigit3Tex,
+                                       gCounterDigit4Tex, gCounterDigit5Tex, gCounterDigit6Tex, gCounterDigit7Tex,
+                                       gCounterDigit8Tex, gCounterDigit9Tex, gCounterColonTex };
 
 extern "C" const char* Ship_GetSceneName(s16 sceneId) {
     if (sceneNames.contains(sceneId)) {
@@ -172,6 +176,10 @@ void LoadGuiTextures() {
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
     for (auto& entry : miscellaneousTextures) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
+    for (auto& entry : digitList) {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
