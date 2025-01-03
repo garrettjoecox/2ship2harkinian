@@ -153,30 +153,4 @@ void Rando::ActorBehavior::InitObjKibakoBehavior() {
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
     });
-
-    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_KIBAKO, IS_RANDO, [](Actor* actor) {
-        ObjKibako* refActor = (ObjKibako*)actor;
-
-        SPDLOG_INFO("Small Crate In Area");
-    });
-
-    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_KIBAKO2, IS_RANDO, [](Actor* actor) {
-        ObjKibako2* refActor = (ObjKibako2*)actor;
-
-        SPDLOG_INFO("Large Crate In Area");
-    });
-
-    COND_ID_HOOK(OnActorKill, ACTOR_OBJ_KIBAKO, IS_RANDO, [](Actor* actor) {
-        ObjKibako* refActor = (ObjKibako*)actor;
-
-        SPDLOG_INFO("Small Crate Coords: {}f, {}f", std::to_string(refActor->actor.home.pos.x),
-                    std::to_string(refActor->actor.home.pos.z));
-    });
-
-    COND_ID_HOOK(OnActorKill, ACTOR_OBJ_KIBAKO2, IS_RANDO, [](Actor* actor) {
-        ObjKibako2* refActor = (ObjKibako2*)actor;
-
-        SPDLOG_INFO("Large Crate Coords: {}f, {}f", std::to_string(refActor->dyna.actor.home.pos.x),
-                    std::to_string(refActor->dyna.actor.home.pos.z));
-    });
 }

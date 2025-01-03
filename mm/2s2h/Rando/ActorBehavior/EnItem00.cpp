@@ -89,11 +89,4 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
     });
-
-    COND_ID_HOOK(OnActorKill, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor) {
-        EnItem00* refActor = (EnItem00*)actor;
-
-        // SPDLOG_INFO("EnItem00 Coords: {}f, {}f", std::to_string(refActor->actor.home.pos.x),
-        // std::to_string(refActor->actor.home.pos.z));
-    });
 }

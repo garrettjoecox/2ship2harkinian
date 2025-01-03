@@ -101,17 +101,4 @@ void Rando::ActorBehavior::InitObjTaruBehavior() {
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
     });
-
-    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_TARU, IS_RANDO, [](Actor* actor) {
-        ObjTaru* refActor = (ObjTaru*)actor;
-
-        SPDLOG_INFO("Barrel In Area");
-    });
-
-    COND_ID_HOOK(OnActorKill, ACTOR_OBJ_TARU, IS_RANDO, [](Actor* actor) {
-        ObjTaru* refActor = (ObjTaru*)actor;
-
-        SPDLOG_INFO("Barrel Coords: {}f, {}f", std::to_string(refActor->dyna.actor.home.pos.x),
-                    std::to_string(refActor->dyna.actor.home.pos.z));
-    });
 }
