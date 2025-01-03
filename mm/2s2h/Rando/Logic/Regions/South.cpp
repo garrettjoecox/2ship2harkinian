@@ -11,6 +11,9 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CUCCO_SHACK] = RandoRegion{ .sceneId = SCENE_F01C,
         .checks = {
             CHECK(RC_ROMANI_RANCH_GROG, HAS_ITEM(ITEM_MASK_BREMEN)),
+            CHECK(RC_CUCCO_SHACK_LARGE_CRATE_01, true),
+            CHECK(RC_CUCCO_SHACK_LARGE_CRATE_02, true),
+            CHECK(RC_CUCCO_SHACK_LARGE_CRATE_03, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROMANI_RANCH, 4),                 ENTRANCE(CUCCO_SHACK, 0), true),
@@ -143,9 +146,6 @@ static RegisterShipInitFunc initFunc([]() {
             // TODO: Trick: Jumpslash to clip through (similar to Clock Town Straw).
             CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_DOGGY_RACETRACK_HP,    true),
-            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_01, true),
-            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_02, true),
-            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_03, true),
             CHECK(RC_DOGGY_RACETRACK_POT_1, true),
             CHECK(RC_DOGGY_RACETRACK_POT_2, true),
             CHECK(RC_DOGGY_RACETRACK_POT_3, true),
