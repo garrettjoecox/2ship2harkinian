@@ -33,7 +33,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_12, true),
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  true), // TODO: Key Door
+            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  KEY_COUNT(GREAT_BAY_TEMPLE) >= 1),
             CONNECTION(RR_GREAT_BAY_TEMPLE_WART,                  true),
         },
     };
@@ -217,7 +217,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,    CAN_BE_ZORA),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_BEFORE_WART,     true), // TODO: Key Door
+            CONNECTION(RR_GREAT_BAY_TEMPLE_BEFORE_WART,     KEY_COUNT(GREAT_BAY_TEMPLE) >= 1),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,

@@ -34,7 +34,9 @@ void ApplyNoLogicToSaveContext() {
         }
 
         if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
-            if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
+            if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
+                randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
+                randoCheckId != RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) {
                 continue;
             } else {
                 RANDO_SAVE_CHECKS[randoCheckId].price = Ship_Random(0, 200);

@@ -44,7 +44,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_SWITCH_ROOM, false),
             CONNECTION(RR_STONE_TOWER_TEMPLE_ARMOS_ROOM, true),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_SHALLOW_POOL_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1) // TODO: Key is not working in check tracker logic atm
+            CONNECTION(RR_STONE_TOWER_TEMPLE_SHALLOW_POOL_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1),
         },
     };
     Regions[RR_STONE_TOWER_TEMPLE_ARMOS_ROOM] = RandoRegion{ .name = "Armos Room", .sceneId = SCENE_INISIE_N,
@@ -80,7 +80,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_WIND_ROOM_FREESTANDING_RUPEE_06, CAN_BE_DEKU),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_OUTSIDE_SWITCH_ROOM, true), // Double check if this side needs a key too
+            CONNECTION(RR_STONE_TOWER_TEMPLE_OUTSIDE_SWITCH_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1),
             CONNECTION(RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM, CAN_BE_ZORA)
         },
     };
@@ -100,7 +100,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_SHALLOW_POOL_ROOM, CAN_BE_ZORA),
             CONNECTION(RR_STONE_TOWER_TEMPLE_ENTRANCE, Flags_GetSceneSwitch(SCENE_INISIE_R, 0x03) || CAN_USE_MAGIC_ARROW(LIGHT)),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_MIRROR_PILLAR_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1) // TODO: Key is not working in check tracker logic atm
+            CONNECTION(RR_STONE_TOWER_TEMPLE_MIRROR_PILLAR_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 2),
         },
         .events = {
             EVENT( // Spawns Stray Fairy chest in ISTT Wind Room
@@ -134,7 +134,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_POT_MIRROR_ROOM_2, true),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM, true),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 2),
             CONNECTION(RR_STONE_TOWER_TEMPLE_LAVA_WIND_ROOM, (CAN_BE_GORON && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)) || CAN_USE_MAGIC_ARROW(LIGHT))
         }
     };
@@ -230,7 +230,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE, true),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_LAVA_FLIP_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1 && CAN_BE_DEKU) // TODO: Key is not working in check tracker logic atm
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_LAVA_FLIP_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 3 && CAN_BE_DEKU),
         },
         .events = {
                 EVENT( // Spawns Stray Fairy chest in STT Deep Water Room
@@ -244,7 +244,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_LAVA_FLIP_ROOM] = RandoRegion{ .name = "Flipped Lava Room", .sceneId = SCENE_INISIE_R,
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_WIND_ROOM, true),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_WIND_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 3),
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_BLOCK_FLIP_ROOM, CAN_BE_GORON && CAN_USE_MAGIC_ARROW(LIGHT))
         }
     };
@@ -326,7 +326,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE, true),
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SIDE_OF_ENTRANCE, true),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_BRIDGE, KEY_COUNT(STONE_TOWER_TEMPLE) >= 1) // TODO: Key is not working in check tracker logic atm
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_BRIDGE, KEY_COUNT(STONE_TOWER_TEMPLE) >= 4),
         },
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_BRIDGE] = RandoRegion{ .name = "Bridge", .sceneId = SCENE_INISIE_R,
@@ -334,7 +334,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_GIANT_MASK, CAN_USE_PROJECTILE),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, true),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, KEY_COUNT(STONE_TOWER_TEMPLE) >= 4),
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_UPPER, CAN_USE_PROJECTILE)
         },
     };

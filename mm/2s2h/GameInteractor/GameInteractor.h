@@ -172,6 +172,8 @@ typedef enum {
     VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP,
     VB_POT_DRAW_BE_OVERRIDDEN,
     VB_HAVE_MAGIC_FOR_TINGLE,
+    VB_GIVE_KEATON_MASK,
+    VB_GIVE_LETTER_TO_MAMA,
 } GIVanillaBehavior;
 
 typedef enum {

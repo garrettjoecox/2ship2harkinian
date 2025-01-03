@@ -38,6 +38,10 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(GORON_VILLAGE_WINTER, 2),      ENTRANCE(GORON_SHRINE, 0), true),
             EXIT(ENTRANCE(GORON_SHOP, 0),                ENTRANCE(GORON_SHRINE, 1), true)
         },
+        .events = {
+            // Can either play the song for the Goron child to light torches then use sticks, or shoot the chandelier with fire arrows to skip needing the song(or I guess the small torches themselves, same result)
+            EVENT_WEEKEVENTREG("Spawn Rock Sirloin", WEEKEVENTREG_37_10, ((CAN_PLAY_SONG(LULLABY) && HAS_ITEM(ITEM_DEKU_STICK) || CAN_USE_MAGIC_ARROW(FIRE))) && CAN_BE_GORON && HAS_MAGIC),
+        },
     };
     Regions[RR_GORON_RACETRACK] = RandoRegion{ .sceneId = SCENE_GORONRACE,
         .checks = {
@@ -144,7 +148,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
         .checks = {
-            CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,                CAN_BE_GORON && HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,                CHECK_WEEKEVENTREG(WEEKEVENTREG_37_10)), // TODO: For entrance rando we need to find a way to ensure the Rock Sirloin can be "walked" here
             CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,                   CAN_USE_SWORD),
             CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST,              CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),
             CHECK(RC_MOUNTAIN_VILLAGE_POT,                          CAN_HOOK_SCARECROW),

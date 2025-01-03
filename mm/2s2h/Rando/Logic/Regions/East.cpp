@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_BOSS] = RandoRegion{ .name = "Night 1 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            // TODO: Song of storms
+            CHECK(RC_BENEATH_THE_GRAVEYARD_TOMBSTONE, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CAN_KILL_IRONKNUCKLE),
@@ -96,7 +96,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 13),                ENTRANCE(IKANA_CANYON, 14), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Free Ghost Dude", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
+            EVENT_WEEKEVENTREG("Break the curse of Sharp, Composer Brother", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
         },
     };
     Regions[RR_IKANA_CANYON_GROTTO] = RandoRegion{ .name = "Ikana Canyon Grotto", .sceneId = SCENE_KAKUSIANA,

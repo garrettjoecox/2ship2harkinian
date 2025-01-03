@@ -53,8 +53,9 @@ void ApplyGlitchlessLogicToSaveContext() {
     // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
     // section.
     std::vector<RandoItemId> startingItems = {
-        RI_SONG_STORMS, RI_MASK_COUPLE,    RI_SONG_LULLABY,   RI_DEKU_STICK,
-        RI_DEKU_NUT,    RI_PICTOGRAPH_BOX, RI_LETTER_TO_MAMA,
+        RI_MASK_COUPLE,
+        RI_SONG_LULLABY,
+        RI_PICTOGRAPH_BOX,
     };
 
     for (RandoItemId randoItemId : startingItems) {
@@ -66,26 +67,28 @@ void ApplyGlitchlessLogicToSaveContext() {
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
         for (auto& [randoCheckId, _] : randoRegion.checks) {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+            bool isShuffled = true;
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
-                continue;
+                isShuffled = false;
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_OWL &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO) {
-                continue;
+                isShuffled = false;
             }
 
             if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE) &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
-                continue;
+                isShuffled = false;
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
                 if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
-                    randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM) {
-                    continue;
+                    randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
+                    randoCheckId != RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) {
+                    isShuffled = false;
                 } else {
                     int price = Ship_Random(0, 200);
                     // We need the price to be saved in the current save context for logic, as well as the backed
@@ -96,7 +99,9 @@ void ApplyGlitchlessLogicToSaveContext() {
             }
 
             allChecksThatAreInLogic.insert(randoCheckId);
-            currentCheckPool[randoCheckId] = { true, randoStaticCheck.randoItemId, RI_UNKNOWN, false, false, false };
+            currentCheckPool[randoCheckId] = {
+                isShuffled, randoStaticCheck.randoItemId, RI_UNKNOWN, false, false, false
+            };
         }
     }
 
@@ -140,8 +145,6 @@ void ApplyGlitchlessLogicToSaveContext() {
             auto& randoRegion = Rando::Logic::Regions[regionId];
             for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
                 if (
-                    // Check is shuffled
-                    currentCheckPool[randoCheckId].shuffled &&
                     // Check is not already in the pool
                     currentCheckPool[randoCheckId].inPool == false &&
                     // Check is accessible
@@ -185,7 +188,7 @@ void ApplyGlitchlessLogicToSaveContext() {
                     currentCheckList.push_back(randoCheckId);
                 }
             }
-            if (randoPoolEntry.shuffled && !randoPoolEntry.checkFilled) {
+            if (!randoPoolEntry.checkFilled) {
                 checksLeft++;
             }
         }
@@ -221,7 +224,7 @@ void ApplyGlitchlessLogicToSaveContext() {
         }
 
         // Shuffle the pool
-        if (currentItemList.size() > 1) {
+        if (currentItemList.size() > 1 && currentCheckPool[currentCheckList[0]].shuffled) {
             for (size_t i = 0; i < currentItemList.size(); i++) {
                 std::swap(currentItemList[i], currentItemList[Ship_Random(0, currentItemList.size() - 1)]);
             }
