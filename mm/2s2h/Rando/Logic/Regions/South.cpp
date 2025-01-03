@@ -143,6 +143,9 @@ static RegisterShipInitFunc initFunc([]() {
             // TODO: Trick: Jumpslash to clip through (similar to Clock Town Straw).
             CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_DOGGY_RACETRACK_HP,    true),
+            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_01, true),
+            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_02, true),
+            CHECK(RC_DOGGY_RACETRACK_LARGE_CRATE_03, true),
             CHECK(RC_DOGGY_RACETRACK_POT_1, true),
             CHECK(RC_DOGGY_RACETRACK_POT_2, true),
             CHECK(RC_DOGGY_RACETRACK_POT_3, true),
@@ -154,6 +157,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORMAN_TRACK] = RandoRegion{ .sceneId = SCENE_KOEPONARACE,
         .checks = {
+            CHECK(RC_GORMAN_TRACK_LARGE_CRATE, CAN_PLAY_SONG(EPONA)),
             CHECK(RC_GORMAN_TRACK_GARO_MASK, CAN_PLAY_SONG(EPONA)),
         },
         .exits = { //     TO                                         FROM
@@ -239,6 +243,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_ROMANI_RANCH_FIELD_COW_ENTRANCE, CAN_PLAY_SONG(EPONA) && CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
             CHECK(RC_ROMANI_RANCH_FIELD_COW_NEAR_HOUSE_BACK, CAN_PLAY_SONG(EPONA) && CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
             CHECK(RC_ROMANI_RANCH_FIELD_COW_NEAR_HOUSE_FRONT, CAN_PLAY_SONG(EPONA) && CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
+            CHECK(RC_ROMANI_RANCH_FIELD_LARGE_CRATE, true),
             CHECK(RC_CREMIA_ESCORT, HAS_ITEM(ITEM_BOW) && CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
         },
         .exits = { //     TO                                         FROM

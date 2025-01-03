@@ -8,6 +8,16 @@ extern "C" {
 }
 
 std::map<std::pair<float, float>, RandoCheckId> freestandingMap = {
+    // Beneath the Graveyard //
+    { { -99.000000f, -260.000000f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_01 },
+    { { -133.640945f, -280.000610f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_02 },
+    { { -133.640945f, -319.999390f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_03 },
+    { { -99.000000f, -340.000000f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_04 },
+    { { -64.359055f, -319.999390f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_05 },
+    { { -64.359055f, -280.000610f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_06 },
+    { { -99.000000f, -300.000000f }, RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_07 },
+
+    // Deku Palace //
     { { 439.640961f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_12 },
     { { 439.640961f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_13 },
     { { 405.0f, 1309.0f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_14 },
@@ -78,5 +88,12 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
                 Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
+    });
+
+    COND_ID_HOOK(OnActorKill, ACTOR_EN_ITEM00, IS_RANDO, [](Actor* actor) {
+        EnItem00* refActor = (EnItem00*)actor;
+
+        // SPDLOG_INFO("EnItem00 Coords: {}f, {}f", std::to_string(refActor->actor.home.pos.x),
+        // std::to_string(refActor->actor.home.pos.z));
     });
 }
