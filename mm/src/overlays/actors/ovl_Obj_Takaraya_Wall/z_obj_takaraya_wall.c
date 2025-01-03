@@ -27,6 +27,8 @@
 #include "z_obj_takaraya_wall.h"
 #include "objects/object_takaraya_objects/object_takaraya_objects.h"
 
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
 #define THIS ((ObjTakarayaWall*)thisx)
@@ -468,6 +470,7 @@ void ObjTakarayaWall_Draw(Actor* thisx, PlayState* play) {
     for (i = 0; i < TAKARAYA_WALL_ROWS; i++) {
         for (j = 0; j < TAKARAYA_WALL_COLUMNS; j++) {
             if (sTakarayaWallHeights[i][j] > 0.0f) {
+                FrameInterpolation_RecordOpenChild(this, i * TAKARAYA_WALL_COLUMNS + j);
                 mtx->xw = (i * 120) - 1620;
                 mtx->yw = sTakarayaWallHeights[i][j] + (this->actor.world.pos.y - 120.0f);
                 mtx->zw = (j * 120) + 60;
@@ -494,6 +497,8 @@ void ObjTakarayaWall_Draw(Actor* thisx, PlayState* play) {
                         Audio_PlaySfx_AtPos(&sTakarayaWallAudioPositions[i][j], NA_SE_EV_ROCK_CUBE_FALL - SFX_FLAG);
                     }
                 }
+
+                FrameInterpolation_RecordCloseChild();
             }
         }
     }

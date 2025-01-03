@@ -994,7 +994,6 @@ void EnClearTag_DrawEffects(Actor* thisx, PlayState* play) {
     effect = firstEffect;
     for (i = 0; i < ARRAY_COUNT(this->effect); i++, effect++) {
         if (effect->type == CLEAR_TAG_EFFECT_SPLASH) {
-            FrameInterpolation_RecordOpenChild(effect, effect->type);
             gDPPipeSync(POLY_XLU_DISP++);
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 255, 255, 200);
             gDPSetPrimColor(POLY_XLU_DISP++, 0, 0, 255, 255, 255, 200);
@@ -1005,8 +1004,8 @@ void EnClearTag_DrawEffects(Actor* thisx, PlayState* play) {
 
             // Apply material 16 times along a circle to give the appearance of a splash
             for (j = 0; j < 16; j++) {
-                // BENTODO not sure if I did the math right.
-                FrameInterpolation_RecordOpenChild(effect, (i + ARRAY_COUNT(this->effect) + j));
+                // Bit math to combine index with effect type
+                FrameInterpolation_RecordOpenChild(effect, effect->type + (j << 4));
                 Matrix_RotateYF(2.0f * (j * M_PI) * (1.0f / 16.0f), MTXMODE_NEW);
                 Matrix_MultVecZ(effect->maxScale, &vec);
                 /**
@@ -1029,7 +1028,6 @@ void EnClearTag_DrawEffects(Actor* thisx, PlayState* play) {
                 }
                 FrameInterpolation_RecordCloseChild();
             }
-            FrameInterpolation_RecordCloseChild();
         }
     }
 

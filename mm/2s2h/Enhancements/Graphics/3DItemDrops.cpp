@@ -1,5 +1,6 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/ShipInit.hpp"
 
 extern "C" {
@@ -29,6 +30,12 @@ void EnItem00_3DItemsDraw(Actor* actor, PlayState* play) {
     EnItem00* enItem00 = (EnItem00*)actor;
 
     if (!(enItem00->unk14E & enItem00->unk150)) {
+        Player* player = GET_PLAYER(play);
+        bool itemOnPlayer = player->actor.home.pos.x == enItem00->actor.world.pos.x &&
+                            player->actor.home.pos.z == enItem00->actor.world.pos.z;
+        FrameInterpolation_RecordOpenChild(enItem00, itemOnPlayer ? 1 : 0);
+        FrameInterpolation_IgnoreActorMtx();
+
         switch (enItem00->actor.params) {
             case ITEM00_RUPEE_GREEN:
                 Matrix_Scale(25.0f, 25.0f, 25.0f, MTXMODE_APPLY);
@@ -112,6 +119,8 @@ void EnItem00_3DItemsDraw(Actor* actor, PlayState* play) {
                 GetItem_Draw(play, GID_COMPASS);
                 break;
         }
+
+        FrameInterpolation_RecordCloseChild();
     }
 }
 

@@ -51,6 +51,10 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_BG_KIN2_BOMBWALL:
             case ACTOR_BG_ASTR_BOMBWALL:
             case ACTOR_BG_KIN2_PICTURE:
+            case ACTOR_BG_HAKUGIN_ELVPOLE:
+            case ACTOR_BG_HAKUGIN_SWITCH:
+            case ACTOR_BG_HAKUGIN_POST:
+            case ACTOR_OBJ_Y2SHUTTER:
                 *should = false;
                 break;
             default:

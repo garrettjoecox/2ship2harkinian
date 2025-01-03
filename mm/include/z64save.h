@@ -357,6 +357,7 @@ typedef struct ShipSaveInfo {
     DpadSaveInfo dpadEquips;
     s32 pauseSaveEntrance;
     SaveType saveType;
+    char commitHash[8];
     RandoSaveInfo rando;
 } ShipSaveInfo;
 // #endregion

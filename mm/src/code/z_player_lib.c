@@ -3681,21 +3681,6 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList1, G
                         Player_DrawHookshotReticle(play, player, 77600.0f);
                     }
                 }
-            } else if (CVarGetInteger("gEnhancements.Graphics.BowReticle", 0) &&
-                       ((player->heldItemAction == PLAYER_IA_BOW_FIRE) ||
-                        (player->heldItemAction == PLAYER_IA_BOW_ICE) ||
-                        (player->heldItemAction == PLAYER_IA_BOW_LIGHT) || (player->heldItemAction == PLAYER_IA_BOW))) {
-                if (heldActor != NULL) {
-                    MtxF sp44;
-
-                    Matrix_RotateZYX(0, -15216, -17496, MTXMODE_APPLY);
-                    Matrix_Get(&sp44);
-
-                    if (func_800B7128(player) != 0) {
-                        Matrix_Translate(500.0f, 300.0f, 0.0f, MTXMODE_APPLY);
-                        Player_DrawHookshotReticle(play, player, 776000.0f);
-                    }
-                }
             } else if (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) {
                 if (player->meleeWeaponAnimation == PLAYER_MWA_GORON_PUNCH_RIGHT) {
                     func_80126B8C(play, player);

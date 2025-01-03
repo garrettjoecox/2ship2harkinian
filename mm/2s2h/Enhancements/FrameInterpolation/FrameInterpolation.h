@@ -28,6 +28,8 @@ int FrameInterpolation_GetCameraEpoch(void);
 
 void FrameInterpolation_IgnoreActorMtx(void);
 
+void FrameInterpolation_InterpolateWiderAngles();
+
 void FrameInterpolation_RecordActorPosRotMatrix(void);
 
 void FrameInterpolation_RecordMatrixPush(void);

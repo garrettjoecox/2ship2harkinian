@@ -8,6 +8,7 @@ namespace Spoiler {
 nlohmann::json GenerateFromSaveContext() {
     nlohmann::json spoiler;
     spoiler["type"] = "2S2H_RANDO_SPOILER";
+    spoiler["commitHash"] = gSaveContext.save.shipSaveInfo.commitHash;
     spoiler["finalSeed"] = gSaveContext.save.shipSaveInfo.rando.finalSeed;
 
     spoiler["options"] = nlohmann::json::object();

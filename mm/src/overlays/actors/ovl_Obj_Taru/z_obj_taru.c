@@ -10,6 +10,7 @@
 #include "overlays/actors/ovl_Obj_Tsubo/z_obj_tsubo.h"
 #include "objects/object_taru/object_taru.h"
 #include "objects/object_kibako2/object_kibako2.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS 0x00000000
 
@@ -159,6 +160,10 @@ void func_80B9B9C8(ObjTaru* this, PlayState* play) {
 }
 
 void func_80B9BC64(ObjTaru* this, PlayState* play) {
+    if (!GameInteractor_Should(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, true, this)) {
+        return;
+    }
+
     s32 item;
 
     item = func_800A8150(OBJ_TARU_GET_3F(&this->dyna.actor));

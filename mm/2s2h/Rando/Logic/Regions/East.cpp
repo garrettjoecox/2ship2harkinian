@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_BOSS] = RandoRegion{ .name = "Night 1 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            // TODO: Song of storms
+            CHECK(RC_BENEATH_THE_GRAVEYARD_TOMBSTONE, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CAN_KILL_IRONKNUCKLE),
@@ -75,6 +75,13 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_BEFORE_PIT] = RandoRegion{ .name = "Night 2 Grave Before Pit", .sceneId = SCENE_HAKASHITA,
         .checks = {
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_02, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_03, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_04, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_05, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_06, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_07, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_EARLY, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_1, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_2, true),
@@ -96,7 +103,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 13),                ENTRANCE(IKANA_CANYON, 14), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Free Ghost Dude", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
+            EVENT_WEEKEVENTREG("Break the curse of Sharp, Composer Brother", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
         },
     };
     Regions[RR_IKANA_CANYON_GROTTO] = RandoRegion{ .name = "Ikana Canyon Grotto", .sceneId = SCENE_KAKUSIANA,

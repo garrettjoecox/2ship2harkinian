@@ -70,4 +70,6 @@ void Rando::ActorBehavior::InitEnBalBehavior() {
     COND_ID_HOOK(OnOpenText, 0x1D14, IS_RANDO, OnOpenText);
     COND_ID_HOOK(OnOpenText, 0x1D15, IS_RANDO, OnOpenText);
     COND_ID_HOOK(OnOpenText, 0x1D16, IS_RANDO, OnOpenText);
+
+    COND_VB_SHOULD(VB_HAVE_MAGIC_FOR_TINGLE, IS_RANDO, { *should = true; });
 }

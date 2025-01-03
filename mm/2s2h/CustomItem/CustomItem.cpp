@@ -10,6 +10,32 @@ extern "C" {
 #include "macros.h"
 }
 
+// #region These were copied from z_en_item00.c
+static ColliderCylinderInit sCylinderInit = {
+    {
+        COLTYPE_NONE,
+        AT_NONE,
+        AC_ON | AT_TYPE_PLAYER,
+        OC1_NONE,
+        OC2_NONE,
+        COLSHAPE_CYLINDER,
+    },
+    {
+        ELEMTYPE_UNK0,
+        { 0x00000000, 0x00, 0x00 },
+        { 0x00000010, 0x00, 0x00 },
+        TOUCH_NONE | TOUCH_SFX_NORMAL,
+        BUMP_ON,
+        OCELEM_NONE,
+    },
+    { 10, 30, 0, { 0, 0, 0 } },
+};
+
+static InitChainEntry sInitChain[] = {
+    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_STOP),
+};
+// #endregion
+
 EnItem00* CustomItem::Spawn(f32 posX, f32 posY, f32 posZ, s16 rot, s16 flags, s16 params, ActorFunc actionFunc,
                             ActorFunc drawFunc) {
     if (!gPlayState) {
@@ -56,6 +82,9 @@ void CustomItem00_Init(Actor* actor, PlayState* play) {
         actor->gravity = -1.4f;
         actor->world.rot.y = Rand_ZeroOne() * 40000.0f;
     }
+
+    Actor_ProcessInitChain(actor, sInitChain);
+    Collider_InitAndSetCylinder(play, &enItem00->collider, actor, &sCylinderInit);
 
     enItem00->unk152 = -1;
 }
@@ -212,8 +241,16 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         actor->speed = 0.0f;
     }
 
-    Collider_UpdateCylinder(actor, &enItem00->collider);
-    CollisionCheck_SetAC(play, &play->colChkCtx, &enItem00->collider.base);
+    if (CUSTOM_ITEM_FLAGS & CustomItem::ABLE_TO_ZORA_RANG) {
+        Collider_UpdateCylinder(actor, &enItem00->collider);
+        CollisionCheck_SetAC(play, &play->colChkCtx, &enItem00->collider.base);
+    }
+}
+
+void CustomItem00_Destroy(Actor* actor, PlayState* play) {
+    EnItem00* enItem00 = (EnItem00*)actor;
+
+    Collider_DestroyCylinder(play, &enItem00->collider);
 }
 
 void CustomItem::RegisterHooks() {
@@ -226,7 +263,7 @@ void CustomItem::RegisterHooks() {
             actor->init = CustomItem00_Init;
             actor->update = CustomItem00_Update;
             actor->draw = CustomItem00_Draw;
-            actor->destroy = NULL;
+            actor->destroy = CustomItem00_Destroy;
 
             // Set the rotX/rotZ back to 0, the original values can be accessed from actor->home
             actor->world.rot.x = 0;

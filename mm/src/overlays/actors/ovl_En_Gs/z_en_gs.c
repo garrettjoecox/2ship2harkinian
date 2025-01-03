@@ -198,7 +198,7 @@ void func_80997D38(EnGs* this, PlayState* play) {
 }
 
 void func_80997DEC(EnGs* this, PlayState* play) {
-    if (Player_GetMask(play) == PLAYER_MASK_TRUTH) {
+    if (GameInteractor_Should(VB_GS_CONSIDER_MASK_OF_TRUTH_EQUIPPED, Player_GetMask(play) == PLAYER_MASK_TRUTH, this)) {
         this->unk_210 = 0x20D1;
     } else {
         this->unk_210 = 0x20D0;
