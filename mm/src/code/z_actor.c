@@ -24,6 +24,7 @@
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/BenPort.h"
+#include "2s2h/ShipUtils.h"
 
 // bss
 // FaultClient sActorFaultClient; // 2 funcs
@@ -2826,6 +2827,10 @@ void Actor_UpdateAll(PlayState* play, ActorContext* actorCtx) {
     DynaPoly_UpdateBgActorTransforms(play, &play->colCtx.dyna);
 }
 
+// 2S2H [Port] Extern these for use below in interpolation checks
+extern void Player_Action_93(Player* this, PlayState* play);
+extern void Player_Action_95(Player* this, PlayState* play);
+
 void Actor_Draw(PlayState* play, Actor* actor) {
     Lights* light;
 
@@ -2840,6 +2845,13 @@ void Actor_Draw(PlayState* play, Actor* actor) {
     Lights_BindAll(light, play->lightCtx.listHead,
                    (actor->flags & (ACTOR_FLAG_10000000 | ACTOR_FLAG_400000)) ? NULL : &actor->world.pos, play);
     Lights_Draw(light, play->state.gfxCtx);
+
+    // If the player is performing a Deku spin or entering a Deku flower, set it so that interpolation allows for >90
+    // angle changes to be interpolated smoothly
+    if (actor->id == ACTOR_PLAYER &&
+        (((Player*)actor)->actionFunc == Player_Action_93 || ((Player*)actor)->actionFunc == Player_Action_95)) {
+        FrameInterpolation_InterpolateWiderAngles();
+    }
 
     FrameInterpolation_RecordActorPosRotMatrix();
     if (actor->flags & ACTOR_FLAG_IGNORE_QUAKE) {
@@ -3127,18 +3139,18 @@ s32 Ship_CalcShouldDrawAndUpdate(PlayState* play, Actor* actor, Vec3f* projected
         return true;
     }
 
-    s32 multiplier = CVarGetInteger("gEnhancements.Graphics.IncreaseActorDrawDistance", 1);
-    multiplier = MAX(multiplier, 1);
+    s32 distMultiplier = CVarGetInteger("gEnhancements.Graphics.IncreaseActorDrawDistance", 1);
+    distMultiplier = MAX(distMultiplier, 1);
 
     // Apply distance scale to forward cullzone check
     bool isWithingForwardCullZone =
         (-actor->uncullZoneScale < projectedPos->z) &&
-        (projectedPos->z < ((actor->uncullZoneForward * multiplier) + actor->uncullZoneScale));
+        (projectedPos->z < ((actor->uncullZoneForward + actor->uncullZoneScale) * distMultiplier));
 
     if (isWithingForwardCullZone) {
         // Ensure the projected W value is at least 1.0
         f32 clampedProjectedW = CLAMP_MIN(projectedW, 1.0f);
-        f32 ratioAdjusted = 1.0f;
+        f32 aspectMultiplier = 1.0f;
         f32 uncullZoneScaleDiagonal;
         f32 uncullZoneScaleVertical;
         f32 uncullZoneDownwardAdjusted;
@@ -3157,14 +3169,12 @@ s32 Ship_CalcShouldDrawAndUpdate(PlayState* play, Actor* actor, Vec3f* projected
         }
 
         if (CVarGetInteger("gEnhancements.Graphics.ActorCullingAccountsForWidescreen", 0)) {
-            float originalAspectRatio = 4.0f / 3.0f;
-            float currentAspectRatio = OTRGetAspectRatio();
-            ratioAdjusted = MAX(currentAspectRatio / originalAspectRatio, 1.0f);
+            aspectMultiplier = Ship_GetExtendedAspectRatioMultiplier();
         }
 
         // Apply adjsuted aspect ratio to just the horizontal cullzone check
         bool isWithinHorizontalCullZone =
-            ((fabsf(projectedPos->x) - uncullZoneScaleDiagonal) < (clampedProjectedW * ratioAdjusted));
+            ((fabsf(projectedPos->x) - uncullZoneScaleDiagonal) < (clampedProjectedW * aspectMultiplier));
         bool isAboveBottomOfCullZone = ((-clampedProjectedW < (projectedPos->y + uncullZoneScaleVertical)));
         bool isBelowTopOfCullZone = ((projectedPos->y - uncullZoneDownwardAdjusted) < clampedProjectedW);
 

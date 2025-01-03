@@ -69,7 +69,12 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 }
 
                 if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_VANILLA) {
-                    // uuhhh, we're done here
+                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
+                            RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
+                        }
+                    }
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_NO_LOGIC) {
                     Rando::Logic::ApplyNoLogicToSaveContext();
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_GLITCHLESS) {

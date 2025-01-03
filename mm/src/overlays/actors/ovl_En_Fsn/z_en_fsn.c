@@ -168,15 +168,17 @@ void EnFsn_HandleConversationBackroom(EnFsn* this, PlayState* play) {
             break;
 
         case 0x29E0:
-            if (INV_CONTENT(ITEM_MASK_KEATON) == ITEM_MASK_KEATON) {
-                this->flags |= ENFSN_GIVE_ITEM;
-                this->flags |= ENFSN_GAVE_LETTER_TO_MAMA;
-                this->getItemId = GI_LETTER_TO_MAMA;
-                SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_PRIORITY_MAIL);
-                this->textId = 0x29F1;
-                break;
-            } else {
-                this->textId = 0x29E1;
+            if (GameInteractor_Should(VB_GIVE_KEATON_MASK, true, this)) {
+                if (INV_CONTENT(ITEM_MASK_KEATON) == ITEM_MASK_KEATON) {
+                    this->flags |= ENFSN_GIVE_ITEM;
+                    this->flags |= ENFSN_GAVE_LETTER_TO_MAMA;
+                    this->getItemId = GI_LETTER_TO_MAMA;
+                    SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_PRIORITY_MAIL);
+                    this->textId = 0x29F1;
+                    break;
+                } else {
+                    this->textId = 0x29E1;
+                }
             }
             break;
 
@@ -192,11 +194,13 @@ void EnFsn_HandleConversationBackroom(EnFsn* this, PlayState* play) {
             break;
 
         case 0x29E3:
-            this->flags |= ENFSN_GIVE_ITEM;
-            this->flags |= ENFSN_GAVE_LETTER_TO_MAMA;
-            this->getItemId = GI_LETTER_TO_MAMA;
-            SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_PRIORITY_MAIL);
-            this->textId = 0x29F1;
+            if (GameInteractor_Should(VB_GIVE_LETTER_TO_MAMA, true, this)) {
+                this->flags |= ENFSN_GIVE_ITEM;
+                this->flags |= ENFSN_GAVE_LETTER_TO_MAMA;
+                this->getItemId = GI_LETTER_TO_MAMA;
+                SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_PRIORITY_MAIL);
+                this->textId = 0x29F1;
+            }
             break;
 
         case 0x29F1:

@@ -7,6 +7,7 @@ extern "C" {
 #include "objects/object_fz/object_fz.h"
 #include "objects/object_ik/object_ik.h"
 #include "overlays/ovl_En_Syateki_Okuta/ovl_En_Syateki_Okuta.h"
+#include "overlays/ovl_fbdemo_wipe1/ovl_fbdemo_wipe1.h"
 #include "overlays/ovl_Obj_Jgame_Light/ovl_Obj_Jgame_Light.h"
 
 void ResourceMgr_PatchGfxByName(const char* path, const char* patchName, int index, Gfx instruction);
@@ -312,6 +313,13 @@ void GfxPatcher_ApplyGeometryIssuePatches() {
     PatchClockTownBuildingGeometry();
 }
 
+void GfxPatcher_ApplyTransitionWipePatch() {
+    // Removing G_ZBUFFER as gsDPSetPrimDepth is unimplemented in LUS.
+    // This should have the same effect of using a depth test value of 0, and allows it to render over everything.
+    // LUSTODO: Remove patch once gsDPSetPrimDepth is implemented properly.
+    ResourceMgr_PatchGfxByName(sTransWipe1DL, "zbufferRemoval", 4, gsSPSetGeometryMode(G_SHADE | G_SHADING_SMOOTH));
+}
+
 // Applies required patches for authentic bugs to allow the game to play and render properly
 void GfxPatcher_ApplyNecessaryAuthenticPatches() {
     PatchMiniGameCrossAndCircleSymbols();
@@ -319,4 +327,6 @@ void GfxPatcher_ApplyNecessaryAuthenticPatches() {
     GfxPatcher_ApplyOverflowTexturePatches();
 
     GfxPatcher_ApplyGeometryIssuePatches();
+
+    GfxPatcher_ApplyTransitionWipePatch();
 }

@@ -7,6 +7,7 @@
 #include "z_obj_kibako2.h"
 #include "objects/object_kibako2/object_kibako2.h"
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS 0x00000000
 
@@ -106,6 +107,10 @@ void ObjKibako2_Break(ObjKibako2* this, PlayState* play) {
 }
 
 void ObjKibako2_SpawnCollectible(ObjKibako2* this, PlayState* play) {
+    if (!GameInteractor_Should(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, true, this)) {
+        return;
+    }
+
     s32 dropItem00Id = func_800A8150(KIBAKO2_COLLECTIBLE_ID(&this->dyna.actor));
 
     if (dropItem00Id > ITEM00_NO_DROP) {

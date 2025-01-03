@@ -24,7 +24,9 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_PIRATES_FORTRESS_CAPTAIN_ROOM] = RandoRegion{ .name = "Captain Room", .sceneId = SCENE_PIRATE,
         .checks = {
             // TODO: Zora Egg Here
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_HOOKSHOT, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02))
+            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_01, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02)),
+            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_02, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02)),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_HOOKSHOT,      CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02))
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 1),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0), true),
@@ -109,8 +111,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM] = RandoRegion{ .name = "Left Clam Room", .sceneId = SCENE_PIRATE,
         .checks = {
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1, true),
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_2, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_GUARDED_BARREL, true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1,  true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_2,  true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 4),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 3), true),
@@ -164,6 +167,9 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_PIRATES_FORTRESS_MOAT_PLATFORM] = RandoRegion{ .name = "Platform", .sceneId = SCENE_TORIDE,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_ENTRANCE_BARREL, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 12),            ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 5), true),
         },
@@ -191,6 +197,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_PALAZA_LEFT_UPPER] = RandoRegion{ .name = "Palaza Left Upper", .sceneId = SCENE_KAIZOKU,
         .checks = {
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_BARREL,  true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_1, true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_2, true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_HEART_3, true),
@@ -228,6 +235,10 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
     Regions[RR_PIRATES_FORTRESS_PALAZA_TOWER] = RandoRegion{ .name = "Palaza Tower", .sceneId = SCENE_KAIZOKU,
+        .checks = {
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_02, true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_03, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1),    ENTRANCE(PIRATES_FORTRESS, 2), true),
         },
@@ -240,7 +251,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_PALAZA] = RandoRegion{ .name = "Palaza", .sceneId = SCENE_KAIZOKU,
         .checks = {
-            CHECK(RC_PIRATE_FORTRESS_PLAZA_LOWER_CHEST, true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_01,  true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_LOWER_CHEST,     true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0),    ENTRANCE(PIRATES_FORTRESS, 1), true),
@@ -289,12 +301,34 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_SEWERS_PREGATE] = RandoRegion{ .name = "Sewers Pregate", .sceneId = SCENE_PIRATE,
         .checks = {
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_1, CAN_BE_ZORA),
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2, CAN_BE_ZORA),
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_3, CAN_BE_ZORA),
-            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_1, true),
-            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2, true),
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_HP, true)
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_1,                       CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2,                       CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_3,                       CAN_BE_ZORA),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_1,                 true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2,                 true),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_HP,                            true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_01,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_02,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_03,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_04,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_05,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_06,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_07,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_08,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_09,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_10,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_11,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_12,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_13,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_14,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_15,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_16,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_FREESTANDING_RUPEE_01, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_FREESTANDING_RUPEE_02, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_FREESTANDING_RUPEE_03, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_FREESTANDING_RUPEE_04, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_FREESTANDING_RUPEE_05, true),
+
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 2),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 9), CAN_BE_ZORA),
@@ -306,9 +340,17 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_TELESCOPE_ROOM] = RandoRegion{ .name = "Telescope Room", .sceneId = SCENE_PIRATE,
         .checks = {
-            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_1, true),
-            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_2, true),
-            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_3, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_BARREL_01,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_BARREL_02,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_BARREL_03,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_BARREL_04,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_BARREL_05,             true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_FREESTANDING_RUPEE_01, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_FREESTANDING_RUPEE_02, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_END_FREESTANDING_RUPEE_03, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_1,                 true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_2,                 true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_3,                 true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10), CAN_USE_PROJECTILE)

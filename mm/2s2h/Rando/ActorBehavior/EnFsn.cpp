@@ -9,12 +9,34 @@ void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 void EnFsn_ResumeInteraction(EnFsn* enFsn, PlayState* play);
 }
 
+#define ENFSN_END_CONVERSATION (1 << 0)
+#define ENFSN_GAVE_KEATONS_MASK (1 << 2)
+#define ENFSN_GAVE_LETTER_TO_MAMA (1 << 3)
+
+void EndEnFsnDialogue(EnFsn* actor) {
+    Player* player = GET_PLAYER(gPlayState);
+
+    player->talkActor = &actor->actor;
+    player->talkActorDistance = actor->actor.xzDistToPlayer;
+    player->exchangeItemAction = PLAYER_IA_MINUS1;
+    Player_TalkWithPlayer(gPlayState, &actor->actor);
+    actor->flags |= ACTOR_FLAG_TALK_REQUESTED;
+    actor->actionFunc = EnFsn_ResumeInteraction;
+}
+
 void Rando::ActorBehavior::InitEnFsnBehavior() {
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
         GetItemId* item = va_arg(args, GetItemId*);
         Actor* actor = va_arg(args, Actor*);
+        Player* player = GET_PLAYER(gPlayState);
+
         if (actor->id == ACTOR_EN_FSN) { // Curiosity Shop owner
             EnFsn* enFsn = (EnFsn*)actor;
+            if (enFsn->getItemId == GI_MASK_KEATON || enFsn->getItemId == GI_LETTER_TO_MAMA) {
+                *should = false;
+                EndEnFsnDialogue(enFsn);
+                return;
+            }
             // Handling for when the Curiosity Shop owner sells something to the player
             if (enFsn->isSelling && enFsn->cursorIndex >= 0 && enFsn->cursorIndex <= 2) {
                 EnGirlA* enGirlA = enFsn->items[enFsn->cursorIndex];
@@ -23,12 +45,7 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
                 if (randoCheckId == RC_CURIOSITY_SHOP_SPECIAL_ITEM ||
                     randoCheckId == RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) {
                     *should = false;
-                    Player* player = GET_PLAYER(gPlayState);
-                    player->talkActor = actor;
-                    player->talkActorDistance = actor->xzDistToPlayer;
-                    Player_TalkWithPlayer(gPlayState, actor);
-                    actor->flags |= ACTOR_FLAG_TALK_REQUESTED;
-                    enFsn->actionFunc = EnFsn_ResumeInteraction;
+                    EndEnFsnDialogue(enFsn);
                     enGirlA->buyFunc(gPlayState, enGirlA);
                     /*
                      * This notebook event must be faked because the randomized item probably won't be the All-Night
@@ -43,5 +60,24 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
                 }
             }
         }
+    });
+
+    COND_VB_SHOULD(VB_GIVE_KEATON_MASK, IS_RANDO, {
+        EnFsn* enFsn = va_arg(args, EnFsn*);
+        RANDO_SAVE_CHECKS[RC_KAFEIS_HIDEOUT_KEATON_MASK].eligible = true;
+        enFsn->flags |= ENFSN_GAVE_KEATONS_MASK;
+        enFsn->textId = 0x29E2;
+        EndEnFsnDialogue(enFsn);
+        *should = false;
+    });
+
+    COND_VB_SHOULD(VB_GIVE_LETTER_TO_MAMA, IS_RANDO, {
+        EnFsn* enFsn = va_arg(args, EnFsn*);
+        RANDO_SAVE_CHECKS[RC_KAFEIS_HIDEOUT_LETTER_TO_MAMA].eligible = true;
+        enFsn->flags |= ENFSN_END_CONVERSATION;
+        enFsn->textId = 0x29E4;
+        enFsn->actionFunc = EnFsn_ResumeInteraction;
+        SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_PRIORITY_MAIL);
+        *should = false;
     });
 }

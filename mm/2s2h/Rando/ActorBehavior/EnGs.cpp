@@ -27,7 +27,7 @@ s32 GetObtainedChecksAmount() {
     return obtainedChecks;
 }
 
-RandoCheckId GetRandomCheck(bool filterObtained = false) {
+RandoCheckId GetRandomCheck(bool repeatableOnlyObtained = false) {
     Player* player = GET_PLAYER(gPlayState);
     if (player->talkActor == nullptr || player->talkActor->id != ACTOR_EN_GS) {
         return RC_UNKNOWN;
@@ -37,7 +37,7 @@ RandoCheckId GetRandomCheck(bool filterObtained = false) {
     std::vector<RandoCheckId> availableChecks;
     for (auto& [randoCheckId, _] : Rando::StaticData::Checks) {
         RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (saveCheck.shuffled && (!filterObtained || !saveCheck.obtained)) {
+        if (saveCheck.shuffled && (!repeatableOnlyObtained || !saveCheck.obtained)) {
             availableChecks.push_back(randoCheckId);
         }
     }
@@ -46,7 +46,11 @@ RandoCheckId GetRandomCheck(bool filterObtained = false) {
         return RC_UNKNOWN;
     }
 
-    Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + enGs->unk_210);
+    if (repeatableOnlyObtained) {
+        Ship_Random_Seed(gGameState->frames);
+    } else {
+        Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + enGs->unk_195);
+    }
     return availableChecks[Ship_Random(0, availableChecks.size() - 1)];
 }
 
@@ -55,6 +59,8 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         readableCheckNamesForGs[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
     }
+
+    COND_VB_SHOULD(VB_GS_CONSIDER_MASK_OF_TRUTH_EQUIPPED, IS_RANDO, { *should = true; });
 
     // Override the message ID so that we can control the text
     COND_VB_SHOULD(VB_GS_CONTINUE_TEXTBOX, IS_RANDO, {
@@ -88,7 +94,7 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
 
         // Eventually this part should be opt-in, but for now it's always on
         entry.msg += "\x13\x12...\x13\x12Trade %r{{rupees}} Rupees%w for another hint?\x11\xC2Yes\x11No";
-        s32 cost = MIN(500, GetObtainedChecksAmount() * 2);
+        s32 cost = MAX(10, MIN(500, GetObtainedChecksAmount() * 2));
         CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(cost));
 
         CustomMessage::ReplaceColorChars(&entry.msg);
@@ -104,7 +110,7 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
 
         if (msgCtx->choiceIndex == 0) {
-            s32 cost = MIN(500, GetObtainedChecksAmount() * 2);
+            s32 cost = MAX(10, MIN(500, GetObtainedChecksAmount() * 2));
 
             RandoCheckId randoCheckId = GetRandomCheck(true);
             if (gSaveContext.save.saveInfo.playerData.rupees < cost) {

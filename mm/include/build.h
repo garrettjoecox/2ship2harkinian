@@ -11,6 +11,9 @@ extern u16 gBuildVersionMajor;
 extern u16 gBuildVersionMinor;
 extern u16 gBuildVersionPatch;
 
+extern char gGitBranch[];
+extern char gGitCommitHash[];
+extern char gGitCommitTag[];
 extern char gBuildTeam[];
 extern char gBuildDate[];
 extern char gBuildMakeOption[];
