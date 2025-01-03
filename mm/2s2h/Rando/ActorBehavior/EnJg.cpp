@@ -15,16 +15,14 @@ void Rando::ActorBehavior::InitEnJgBehavior() {
         Player* player = GET_PLAYER(gPlayState);
         if (player->transformation == PLAYER_FORM_GORON) {
             if (!RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].obtained) {
-                SET_WEEKEVENTREG(
-                    WEEKEVENTREG_24_40); // TODO : Make this flag persist between cycles & store to save file.
                 RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].eligible = true;
-                ObjectActor->textId = 0xDC6;
-                Message_StartTextbox(play, ObjectActor->textId, &ObjectActor->actor);
-                ObjectActor->actionFunc = EnJg_SetupTalk;
-                *should = false;
-                return;
             }
+            ObjectActor->textId = 0xDC6;
+        } else {
+            ObjectActor->textId = 0xDB5;
         }
-        *should = true;
+        Message_StartTextbox(play, ObjectActor->textId, &ObjectActor->actor);
+        ObjectActor->actionFunc = EnJg_SetupTalk;
+        *should = false;
     });
 }
