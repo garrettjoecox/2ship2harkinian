@@ -50,11 +50,14 @@ static ImGuiTextFilter sCheckTrackerFilter;
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
 std::vector<SceneId> sortedSceneIds;
 std::unordered_map<RandoCheckId, std::string> readableCheckNames;
+std::unordered_map<RandoCheckId, std::string> accessLogicFuncs;
 
 std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_UNKNOWN*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_BARREL*/ gBarrelTrackerIcon,
     /*RCTYPE_CHEST*/ gChestTrackerIcon,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
+    /*RCTYPE_CRATE*/ gCrateTrackerIcon,
     /*RCTYPE_FREESTANDING*/ gRupeeCounterIconTex,
     /*RCTYPE_MINIGAME*/ gArcheryScoreIconTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
@@ -278,7 +281,7 @@ void CheckTrackerDrawLogicalList() {
     }
 }
 
-std::set<RandoCheckId> checksInLogic;
+std::unordered_map<RandoCheckId, bool> checksInLogic;
 static u32 lastFrame = 0;
 
 void RefreshChecksInLogic() {
@@ -303,7 +306,7 @@ void RefreshChecksInLogic() {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
             auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
             if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc.first()) {
-                checksInLogic.insert(randoCheckId);
+                checksInLogic.insert({ randoCheckId, true });
             }
         }
     }
@@ -380,9 +383,8 @@ void CheckTrackerDrawNonLogicalList() {
                         textColor = UIWidgets::Colors::Gray;
                     }
 
-                    ImGui::PushStyleColor(ImGuiCol_Text, textColor);
-
                     if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
+                        ImGui::PushStyleColor(ImGuiCol_Text, textColor);
                         ImGui::BeginGroup();
                         float cursorPosY = ImGui::GetCursorPosY();
                         if (Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_OWL) {
@@ -403,6 +405,13 @@ void CheckTrackerDrawNonLogicalList() {
                         ImGui::SameLine();
                         ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 0));
                         ImGui::EndGroup();
+                        ImGui::PopStyleColor();
+                        std::string accessLogicString = accessLogicFuncs.find(randoCheckId) != accessLogicFuncs.end()
+                                                            ? accessLogicFuncs[randoCheckId]
+                                                            : "";
+                        if (accessLogicString != "") {
+                            UIWidgets::Tooltip(accessLogicString.c_str());
+                        }
                         ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImGui::IsItemHovered()
                                                                               ? IM_COL32(255, 255, 0, 128)
                                                                               : IM_COL32(255, 255, 255, 0));
@@ -411,7 +420,6 @@ void CheckTrackerDrawNonLogicalList() {
                         }
                         ImGui::TableNextColumn();
                     }
-                    ImGui::PopStyleColor();
                 }
                 ImGui::EndTable();
             }
@@ -468,6 +476,11 @@ void SettingsWindow::DrawElement() {
 void Init() {
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         readableCheckNames[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
+    }
+    for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
+        for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
+            accessLogicFuncs[randoCheckId] = accessLogicFunc.second;
+        }
     }
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
         if (CVAR_SCROLL_TO_SCENE) {

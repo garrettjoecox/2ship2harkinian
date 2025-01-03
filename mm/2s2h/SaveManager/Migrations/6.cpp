@@ -6,4 +6,8 @@ void SaveManager_Migration_6(nlohmann::json& j) {
     if (!j["save"]["shipSaveInfo"].contains("saveType")) {
         j["save"]["shipSaveInfo"]["saveType"] = SAVETYPE_VANILLA;
     }
+    if (!j["save"]["shipSaveInfo"].contains("commitHash")) {
+        u8 commitHash[8] = { 0 };
+        j["save"]["shipSaveInfo"]["commitHash"] = commitHash;
+    }
 }

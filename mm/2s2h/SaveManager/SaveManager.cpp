@@ -472,6 +472,11 @@ extern "C" s32 SaveManager_SysFlashrom_ReadData(void* saveBuffer, u32 pageNum, u
             SaveManager_MoveInvalidSaveFile(fileName,
                                             "Failed to parse save json, the original file has been backed up.");
             return -1;
+        } catch (...) {
+            SPDLOG_ERROR("Failed to parse owl save json");
+            SaveManager_MoveInvalidSaveFile(fileName,
+                                            "Failed to parse save json, the original file has been backed up.");
+            return -1;
         }
     } else {
         if (!j.contains("newCycleSave")) {
@@ -489,6 +494,11 @@ extern "C" s32 SaveManager_SysFlashrom_ReadData(void* saveBuffer, u32 pageNum, u
             return 0;
         } catch (nlohmann::json::exception& je) {
             SPDLOG_ERROR("Failed to parse new cycle save json: {}", je.what());
+            SaveManager_MoveInvalidSaveFile(fileName,
+                                            "Failed to parse save json, the original file has been backed up.");
+            return -1;
+        } catch (...) {
+            SPDLOG_ERROR("Failed to parse new cycle save json");
             SaveManager_MoveInvalidSaveFile(fileName,
                                             "Failed to parse save json, the original file has been backed up.");
             return -1;

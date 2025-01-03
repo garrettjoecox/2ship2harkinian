@@ -4,6 +4,7 @@
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 #include <string.h>
 #include "BenPort.h"
+#include "build.h"
 
 #include "2s2h/GameInteractor/GameInteractor.h"
 
@@ -982,6 +983,8 @@ void Sram_InitNewSave(void) {
     // #region 2S2H
     memcpy(&gSaveContext.save.shipSaveInfo.dpadEquips, &sSaveDefaultDpadItemEquips, sizeof(DpadSaveInfo));
     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
+    memcpy(&gSaveContext.save.shipSaveInfo.commitHash, &gGitCommitHash,
+           sizeof(gSaveContext.save.shipSaveInfo.commitHash));
     gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     // #endregion
 

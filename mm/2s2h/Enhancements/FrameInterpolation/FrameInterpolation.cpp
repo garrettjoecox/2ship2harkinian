@@ -146,6 +146,7 @@ union Data {
         Vec3s rot;
         // MtxF mtx;
         bool has_mtx;
+        bool interpolate_wider_angles;
     } matrix_set_translate_rotate_yxz;
 
     struct {
@@ -192,9 +193,12 @@ uint32_t previous_camera_epoch;
 Recording current_recording;
 Recording previous_recording;
 
+bool interpolate_wider_angles = false;
+
 bool next_is_actor_pos_rot_matrix;
 bool has_inv_actor_mtx;
 bool ignore_inv_actor_mtx;
+size_t ignore_inv_actor_mtx_path_index;
 MtxF inv_actor_mtx;
 size_t inv_actor_mtx_path_index;
 
@@ -268,7 +272,10 @@ struct InterpolateCtx {
         int diff = o - n;
         if (-0x8000 <= diff && diff <= 0x8000) {
             if (diff < -0x4000 || diff > 0x4000) {
-                return ns;
+                // Wider angle cut off values are just slightly larger than when Deku Link enters a flower
+                if (!interpolate_wider_angles || diff < -0x5700 || diff > 0x5700) {
+                    return ns;
+                }
             }
             res = (u16)(w * o + step * n);
         } else {
@@ -279,7 +286,9 @@ struct InterpolateCtx {
             }
             diff = o - n;
             if (diff < -0x4000 || diff > 0x4000) {
-                return ns;
+                if (!interpolate_wider_angles || diff < -0x5700 || diff > 0x5700) {
+                    return ns;
+                }
             }
             res = (u16)(w * o + step * n);
         }
@@ -387,6 +396,7 @@ struct InterpolateCtx {
                             break;
 
                         case Op::MatrixSetTranslateRotateYXZ:
+                            interpolate_wider_angles = new_op.matrix_set_translate_rotate_yxz.interpolate_wider_angles;
                             interpolate_angles(&tmp_vec3s, &old_op.matrix_set_translate_rotate_yxz.rot,
                                                &new_op.matrix_set_translate_rotate_yxz.rot);
                             Matrix_SetTranslateRotateYXZ(lerp(old_op.matrix_set_translate_rotate_yxz.translateX,
@@ -400,6 +410,7 @@ struct InterpolateCtx {
                                 old_op.matrix_set_translate_rotate_yxz.has_mtx) {
                                 actor_mtx = *Matrix_GetCurrent();
                             }
+                            interpolate_wider_angles = false;
                             break;
 
                         case Op::MatrixMtxFToMtx:
@@ -463,6 +474,10 @@ void FrameInterpolation_StartRecord(void) {
     current_recording = {};
     current_path.clear();
     current_path.push_back(&current_recording.root_path);
+    has_inv_actor_mtx = false;
+    interpolate_wider_angles = false;
+    ignore_inv_actor_mtx = false;
+
     if (!camera_interpolation) {
         // default to interpolating
         camera_interpolation = true;
@@ -495,7 +510,9 @@ void FrameInterpolation_RecordCloseChild(void) {
     if (has_inv_actor_mtx && current_path.size() == inv_actor_mtx_path_index) {
         has_inv_actor_mtx = false;
     }
-    ignore_inv_actor_mtx = false;
+    if (ignore_inv_actor_mtx && current_path.size() == ignore_inv_actor_mtx_path_index) {
+        ignore_inv_actor_mtx = false;
+    }
     current_path.pop_back();
 }
 
@@ -507,8 +524,20 @@ int FrameInterpolation_GetCameraEpoch(void) {
     return (int)camera_epoch;
 }
 
+// Marks the current record path and its children to not apply the matrix result
+// against the recorded actor inverted matrix
 void FrameInterpolation_IgnoreActorMtx() {
+    if (!is_recording)
+        return;
     ignore_inv_actor_mtx = true;
+    ignore_inv_actor_mtx_path_index = current_path.size();
+}
+
+// Allows interpolating from angle changes that are up to 123º for the next SetTranslateRotateYXZ
+void FrameInterpolation_InterpolateWiderAngles() {
+    if (!is_recording)
+        return;
+    interpolate_wider_angles = true;
 }
 
 void FrameInterpolation_RecordActorPosRotMatrix(void) {
@@ -578,6 +607,8 @@ void FrameInterpolation_RecordMatrixSetTranslateRotateYXZ(f32 translateX, f32 tr
                                                                                           translateZ, *rot };
     if (next_is_actor_pos_rot_matrix) {
         d.has_mtx = true;
+        d.interpolate_wider_angles = interpolate_wider_angles;
+        interpolate_wider_angles = false;
         // d.mtx = *Matrix_GetCurrent();
         invert_matrix((const float*)Matrix_GetCurrent()->mf, (float*)inv_actor_mtx.mf);
         next_is_actor_pos_rot_matrix = false;

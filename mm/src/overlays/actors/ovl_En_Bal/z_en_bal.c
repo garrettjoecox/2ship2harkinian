@@ -204,7 +204,7 @@ void EnBal_Init(Actor* thisx, PlayState* play) {
     Actor_SetScale(&this->picto.actor, 0.02f);
     SkelAnime_InitFlex(play, &this->skelAnime, &gTingleSkel, &gTingleFloatIdleAnim, this->jointTable, this->morphTable,
                        TINGLE_LIMB_MAX);
-    if (gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+    if (GameInteractor_Should(VB_HAVE_MAGIC_FOR_TINGLE, gSaveContext.save.saveInfo.playerData.isMagicAcquired)) {
         Animation_Change(&this->skelAnime, &gTingleTalkAnim, 1.0f, 0.0f, endFrame, ANIMMODE_LOOP, -10.0f);
     }
     ActorShape_Init(&this->picto.actor.shape, 0.0f, ActorShadow_DrawCircle, 0.0f);
@@ -223,7 +223,7 @@ void EnBal_Init(Actor* thisx, PlayState* play) {
     CollisionCheck_SetInfo2(&this->picto.actor.colChkInfo, &sDamageTable, &sColChkInfoInit);
     Actor_UpdateBgCheckInfo(play, &this->picto.actor, 0.0f, 0.0f, 0.0f, UPDBGCHECKINFO_FLAG_4);
     this->picto.validationFunc = EnBal_ValidatePictograph;
-    if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+    if (!GameInteractor_Should(VB_HAVE_MAGIC_FOR_TINGLE, gSaveContext.save.saveInfo.playerData.isMagicAcquired)) {
         this->picto.actor.world.pos.y = this->picto.actor.floorHeight;
         EnBal_SetMainColliderToHead(this);
         EnBal_SetupGroundIdle(this);
@@ -479,7 +479,7 @@ void EnBal_SetupGroundIdle(EnBal* this) {
 
     this->watchTarget = TINGLE_WATCH_TARGET_NONE;
     if (this->locationMapId == TINGLE_MAP_CLOCK_TOWN) {
-        if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+        if (!GameInteractor_Should(VB_HAVE_MAGIC_FOR_TINGLE, gSaveContext.save.saveInfo.playerData.isMagicAcquired)) {
             // Effectively turn off reinflation timer by setting above 300
             this->timer = 301;
         } else if (this->inflateEarly == true) {
@@ -524,7 +524,8 @@ void EnBal_GroundIdle(EnBal* this, PlayState* play) {
                 this->textId = 0x1D05;
             }
 
-            if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+            if (!GameInteractor_Should(VB_HAVE_MAGIC_FOR_TINGLE,
+                                       gSaveContext.save.saveInfo.playerData.isMagicAcquired)) {
                 // Reinflation should be unreachable while player does not have magic
                 this->inflateEarly = true;
             }

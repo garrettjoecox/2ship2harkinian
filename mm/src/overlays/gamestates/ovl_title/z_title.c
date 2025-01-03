@@ -46,8 +46,19 @@ void ConsoleLogo_PrintBuildInfo(ConsoleLogoState* this) {
     GfxPrint_Open(&printer, POLY_OPA_DISP);
     GfxPrint_SetColor(&printer, 131, 154, 255, 255);
 
-    GfxPrint_SetPos(&printer, 1, 25);
-    GfxPrint_Printf(&printer, "%s", gBuildVersion);
+    // if tag is empty (not a release build)
+    bool showGitInfo = gGitCommitTag[0] == 0;
+
+    if (showGitInfo) {
+        GfxPrint_SetPos(&printer, 1, 24);
+        GfxPrint_Printf(&printer, "Git Branch: %s", gGitBranch);
+
+        GfxPrint_SetPos(&printer, 1, 25);
+        GfxPrint_Printf(&printer, "Git Commit: %s", gGitCommitHash);
+    } else {
+        GfxPrint_SetPos(&printer, 1, 25);
+        GfxPrint_Printf(&printer, "%s", gBuildVersion);
+    }
     GfxPrint_SetPos(&printer, 1, 26);
     GfxPrint_Printf(&printer, "%s", gBuildDate);
 
