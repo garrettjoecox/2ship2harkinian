@@ -149,21 +149,16 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_ZORA_CAPE_WATERFALL_HP,              CAN_BE_ZORA),
             CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_1,        true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_2,        true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1,     true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,     true),
-            CHECK(RC_ZORA_CAPE_OWL_STATUE,                CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 1),              ENTRANCE(ZORA_CAPE, 0), true),
             EXIT(ENTRANCE(ZORA_HALL, 0),                    ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
-            EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), true),
+            EXIT(ENTRANCE(ZORA_HALL,        2),             ENTRANCE(ZORA_CAPE, 1), CAN_BE_ZORA),
             EXIT(ENTRANCE(WATERFALL_RAPIDS, 0),             ENTRANCE(ZORA_CAPE, 4), HAS_ITEM(ITEM_HOOKSHOT)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 3),               ENTRANCE(ZORA_CAPE, 5), HAS_ITEM(ITEM_HOOKSHOT) && CAN_USE_EXPLOSIVE),
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
         },
         .connections = {
+            CONNECTION(RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE, CAN_BE_ZORA),
             CONNECTION(RR_ZORA_CAPE_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
         },
         .events = {
@@ -172,6 +167,22 @@ static RegisterShipInitFunc initFunc([]() {
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
             ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
+        },
+    };
+    Regions[RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
+        .checks = {
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1, true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2, true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3, true),
+            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4, true),
+            CHECK(RC_ZORA_CAPE_OWL_STATUE,            CAN_USE_SWORD),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), CAN_BE_ZORA),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
+        },
+        .connections = {
+            CONNECTION(RR_ZORA_CAPE, CAN_BE_ZORA),
         },
     };
     Regions[RR_ZORA_HALL_EVANS_ROOM] = RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,
