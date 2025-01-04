@@ -80,7 +80,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           true),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           CAN_USE_MAGIC_ARROW(ICE)),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
