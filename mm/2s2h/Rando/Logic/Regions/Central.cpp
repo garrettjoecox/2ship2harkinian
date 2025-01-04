@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 2),              ENTRANCE(ASTRAL_OBSERVATORY, 0), true),
         },
         .connections = {
-            CONNECTION(RR_ASTRAL_OBSERVATORY, CAN_USE_PROJECTILE),
+            CONNECTION(RR_ASTRAL_OBSERVATORY, true),
         },
     };
     Regions[RR_ASTRAL_OBSERVATORY] = RandoRegion{ .name = "Inside Astral Observatory", .sceneId = SCENE_TENMON_DAI,
@@ -44,7 +44,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(TERMINA_FIELD, 9),                ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
         },
         .connections = {
-            CONNECTION(RR_ASTRAL_OBSERVATORY_PASSAGE, CAN_USE_PROJECTILE),
+            CONNECTION(RR_ASTRAL_OBSERVATORY_PASSAGE, true),
         },
     };
     Regions[RR_BOMB_SHOP] = RandoRegion{ .sceneId = SCENE_BOMYA,
