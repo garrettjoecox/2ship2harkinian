@@ -466,8 +466,7 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
             case RI_PROGRESSIVE_LULLABY:
                 if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
                     return RI_SONG_LULLABY_INTRO;
-                }
-                else if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                } else if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
                     return RI_SONG_LULLABY;
                 } else {
                     assert(false);
