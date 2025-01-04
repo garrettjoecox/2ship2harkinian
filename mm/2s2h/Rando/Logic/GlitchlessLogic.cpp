@@ -182,7 +182,7 @@ void ApplyGlitchlessLogicToSaveContext() {
         std::vector<std::pair<RandoItemId, RandoCheckId>> currentItemList;
         for (auto& [randoCheckId, randoPoolEntry] : currentCheckPool) {
             if (randoPoolEntry.inPool) {
-                if (!randoPoolEntry.itemPlaced) {
+                if (!randoPoolEntry.itemPlaced && randoPoolEntry.shuffled) {
                     currentItemList.push_back({ randoPoolEntry.vanillaItemId, randoCheckId });
                 }
                 if (!randoPoolEntry.checkFilled) {
@@ -198,7 +198,7 @@ void ApplyGlitchlessLogicToSaveContext() {
         }
 
         // If there are no items to place, backtrack
-        if (currentItemList.size() == 0) {
+        if (currentCheckList.size() == 0) {
             for (int i = 0; i < amountOfNewlyAccessibleRegions.back(); i++) {
                 currentReachableRegions.erase(newlyAccessibleRegions.back());
                 newlyAccessibleRegions.pop_back();
@@ -224,24 +224,31 @@ void ApplyGlitchlessLogicToSaveContext() {
             continue;
         }
 
-        // Shuffle the pool
-        if (currentItemList.size() > 1 && currentCheckPool[currentCheckList[0]].shuffled) {
-            for (size_t i = 0; i < currentItemList.size(); i++) {
-                std::swap(currentItemList[i], currentItemList[Ship_Random(0, currentItemList.size() - 1)]);
-            }
+        // Select a random check
+        size_t checkIndex = currentCheckList.size() > 1 ? Ship_Random(0, currentCheckList.size() - 1) : 0;
+        RandoCheckId randoCheckId = currentCheckList[checkIndex];
+        if (currentCheckPool[randoCheckId].shuffled) {
+            // Select a random item
+            size_t itemIndex = currentItemList.size() > 1 ? Ship_Random(0, currentItemList.size() - 1) : 0;
+            auto [randoItemId, randoCheckIdFromItem] = currentItemList[itemIndex];
+            SPDLOG_TRACE("Placing item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
+                         Rando::StaticData::Checks[randoCheckId].name);
+            // Place the item in the check
+            currentCheckPool[randoCheckId].checkFilled = true;
+            currentCheckPool[randoCheckId].placedItemId = randoItemId;
+            currentCheckPool[randoCheckIdFromItem].itemPlaced = true;
+            RandoItemId convertedItemId = ConvertItem(randoItemId);
+            GiveItem(convertedItemId);
+            placements.push_back({ randoCheckId, randoCheckIdFromItem, convertedItemId });
+        } else {
+            // Place vanilla item in the check
+            currentCheckPool[randoCheckId].checkFilled = true;
+            currentCheckPool[randoCheckId].placedItemId = currentCheckPool[randoCheckId].vanillaItemId;
+            currentCheckPool[randoCheckId].itemPlaced = true;
+            RandoItemId convertedItemId = ConvertItem(currentCheckPool[randoCheckId].vanillaItemId);
+            GiveItem(convertedItemId);
+            placements.push_back({ randoCheckId, randoCheckId, convertedItemId });
         }
-
-        // Place the item in the check
-        RandoCheckId randoCheckId = currentCheckList[0];
-        auto [randoItemId, randoCheckIdFromItem] = currentItemList[0];
-        SPDLOG_TRACE("Placing item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
-                     Rando::StaticData::Checks[randoCheckId].name);
-        currentCheckPool[randoCheckId].checkFilled = true;
-        currentCheckPool[randoCheckId].placedItemId = randoItemId;
-        currentCheckPool[randoCheckIdFromItem].itemPlaced = true;
-        RandoItemId convertedItemId = ConvertItem(randoItemId);
-        GiveItem(convertedItemId);
-        placements.push_back({ randoCheckId, randoCheckIdFromItem, convertedItemId });
     }
 
     memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));

@@ -181,8 +181,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CLOCK_TOWN_WEST] = RandoRegion{ .sceneId = SCENE_ICHIBA,
         .checks = {
             CHECK(RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET, true),
-            CHECK(RC_CLOCK_TOWN_WEST_BANK_HP, true),
-            CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, true),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_HP, CUR_UPG_VALUE(UPG_WALLET) >= 1),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, CUR_UPG_VALUE(UPG_WALLET) >= 1),
             CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, HAS_ITEM(ITEM_MASK_KAMARO)),
         },
         .exits = { //     TO                                         FROM

@@ -15,6 +15,7 @@
 
 #include "2s2h/Enhancements/Trackers/ItemTracker.h"
 #include "2s2h/Enhancements/Trackers/ItemTrackerSettings.h"
+#include "Enhancements/Trackers/DisplayOverlay.h"
 
 extern "C" {
 #include "z64.h"
@@ -357,6 +358,7 @@ void DrawSettingsMenu() {
 extern std::shared_ptr<HudEditorWindow> mHudEditorWindow;
 extern std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 extern std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
+extern std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
 
 void DrawEnhancementsMenu() {
     if (UIWidgets::BeginMenu("Enhancements")) {
@@ -810,6 +812,10 @@ void DrawEnhancementsMenu() {
         if (mItemTrackerSettingsWindow) {
             UIWidgets::WindowButton("Item Tracker Settings", "gWindows.ItemTrackerSettings",
                                     mItemTrackerSettingsWindow);
+        }
+
+        if (mDisplayOverlayWindow) {
+            UIWidgets::WindowButton("Display Overlay", "gWindows.DisplayOverlay", mDisplayOverlayWindow);
         }
 
         ImGui::EndMenu();

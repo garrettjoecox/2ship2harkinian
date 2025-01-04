@@ -80,7 +80,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM,    true),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           true),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,           CAN_USE_MAGIC_ARROW(ICE)),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -125,6 +125,24 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_GEKKO] = RandoRegion{ .sceneId = SCENE_SEA,
+        .checks = {
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_01, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_02, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_03, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_04, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_05, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_06, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_07, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_08, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_09, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_10, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_11, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_12, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_13, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_14, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_15, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_GEKKO_SMALL_CRATE_16, true),
+        },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_WITH_BOSS_KEY_CHEST,    CAN_USE_MAGIC_ARROW(ICE)),
         },
