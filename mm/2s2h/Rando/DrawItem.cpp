@@ -230,6 +230,8 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
         case RI_PROGRESSIVE_BOMB_BAG:
+        case RI_PROGRESSIVE_LULLABY:
+            Rando::DrawItem(Rando::ConvertItem(randoItemId));
         case RI_PROGRESSIVE_SWORD:
         case RI_PROGRESSIVE_WALLET:
             Rando::DrawItem(Rando::ConvertItem(randoItemId));
