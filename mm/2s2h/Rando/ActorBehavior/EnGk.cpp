@@ -46,14 +46,8 @@ void Rando::ActorBehavior::InitEnGKBehavior() {
     });
 
     COND_VB_SHOULD(VB_GIVE_LULLABY_CHECK_IF_ALREADY_KNOWN, IS_RANDO, {
-        EnGk* ObjActor = va_arg(args, EnGk*);
-        PlayState* play = va_arg(args, PlayState*);
-        Player* player = GET_PLAYER(gPlayState);
         if (!RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].obtained) {
-            ObjActor->unk_350 = 0x4000;
             RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
-            *should = false;
-            return;
         }
         *should = true;
     });
