@@ -987,7 +987,6 @@ void Sram_InitNewSave(void) {
            sizeof(gSaveContext.save.shipSaveInfo.commitHash));
     gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     gSaveContext.save.shipSaveInfo.fileCreatedAt = 0;
-    // gSaveContext.save.shipSaveInfo.fileCreatedAt = GetUnixTimestamp();
     //  #endregion
 
     Sram_GenerateRandomSaveFields();
