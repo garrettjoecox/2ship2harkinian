@@ -949,7 +949,9 @@ void func_80B5227C(EnGk* this, PlayState* play) {
             SET_WEEKEVENTREG(WEEKEVENTREG_CALMED_GORON_ELDERS_SON);
         }
         Actor_PlaySfx(&this->actor, NA_SE_EN_GOLON_SIT_IMT);
-        this->unk_350 = 0x4000;
+        if (GameInteractor_Should(VB_GIVE_LULLABY_CHECK_IF_ALREADY_KNOWN, true, this, play)) {
+            this->unk_350 = 0x4000;
+        }
         this->actionFunc = func_80B52654;
     }
 }

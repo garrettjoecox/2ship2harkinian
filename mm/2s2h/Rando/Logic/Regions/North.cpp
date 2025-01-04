@@ -22,7 +22,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_SHRINE] = RandoRegion{ .sceneId = SCENE_16GORON_HOUSE,
         .checks = {
-            CHECK(RC_GORON_SHRINE_FULL_LULLABY, CAN_BE_GORON && CAN_PLAY_SONG(LULLABY_INTRO)),
+            CHECK(RC_GORON_SHRINE_FULL_LULLABY, CAN_BE_GORON && (CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(LULLABY_INTRO))),
             CHECK(RC_GORON_SHRINE_POT_01, true),
             CHECK(RC_GORON_SHRINE_POT_02, true),
             CHECK(RC_GORON_SHRINE_POT_03, true),
