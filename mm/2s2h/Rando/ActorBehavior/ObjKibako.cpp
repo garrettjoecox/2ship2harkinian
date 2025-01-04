@@ -102,6 +102,14 @@ std::map<std::pair<float, float>, RandoCheckId> crateMap = {
 
     // Goron Village //
     { { -1184.0f, -3051.0f }, RC_GORON_VILLAGE_LARGE_CRATE },
+
+    // Swamp Spider House //
+    { { -828.0f, -210.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_01 },
+    { { -876.0f, -210.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_02 },
+    { { -876.0f, -509.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_03 },
+    { { -870.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_04 },
+    { { -810.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_05 },
+    { { -690.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_06 },
 };
 
 void Rando::ActorBehavior::InitObjKibakoBehavior() {
