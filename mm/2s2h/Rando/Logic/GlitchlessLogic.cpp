@@ -79,8 +79,9 @@ void ApplyGlitchlessLogicToSaveContext() {
                 isShuffled = false;
             }
 
-            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE ||
-                 randoStaticCheck.randoCheckType == RCTYPE_BARREL || randoStaticCheck.randoCheckType == RCTYPE_CRATE) &&
+            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_BARREL ||
+                 randoStaticCheck.randoCheckType == RCTYPE_CRATE ||
+                 randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
                 isShuffled = false;
             }
@@ -88,7 +89,7 @@ void ApplyGlitchlessLogicToSaveContext() {
             if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
                 if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
                     randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
-                    randoCheckId != RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) {
+                    randoCheckId != RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) {
                     isShuffled = false;
                 } else {
                     int price = Ship_Random(0, 200);

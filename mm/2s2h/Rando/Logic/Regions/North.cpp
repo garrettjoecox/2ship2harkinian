@@ -86,9 +86,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_SHOP] = RandoRegion{ .sceneId = SCENE_GORONSHOP,
         .checks = {
-            CHECK(RC_GORON_SHOP_ITEM_1, true),
-            CHECK(RC_GORON_SHOP_ITEM_2, true),
-            CHECK(RC_GORON_SHOP_ITEM_3, true),
+            CHECK(RC_GORON_SHOP_ITEM_01, true),
+            CHECK(RC_GORON_SHOP_ITEM_02, true),
+            CHECK(RC_GORON_SHOP_ITEM_03, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GORON_SHRINE, 1),              ENTRANCE(GORON_SHOP, 0), true)
@@ -96,7 +96,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_11GORONNOSATO,
         .checks = {
-            CHECK(RC_GORON_VILLAGE_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) && CAN_BE_DEKU),
+            CHECK(RC_GORON_VILLAGE_PIECE_OF_HEART, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) && CAN_BE_DEKU),
             CHECK(RC_GORON_VILLAGE_LARGE_CRATE, CAN_USE_MAGIC_ARROW(FIRE) || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_GORON_VILLAGE_MEDIGORON, HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC && CAN_BE_GORON),
             CHECK(RC_GORON_VILLAGE_SCRUB_BOMB_BAG, (GET_CUR_UPG_VALUE(UPG_WALLET) >= 1) && CAN_BE_GORON),
@@ -141,7 +141,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOUNTAIN_VILLAGE_TUNNEL_GROTTO] = RandoRegion{ .name = "Mountain Village Tunnel Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_MOUNTAIN_VILLAGE_TUNNEL_GROTTO, true),
+            CHECK(RC_MOUNTAIN_VILLAGE_TUNNEL_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_MOUNTAIN_VILLAGE, true), // TODO: Grotto mapping
@@ -152,7 +152,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,                CHECK_WEEKEVENTREG(WEEKEVENTREG_37_10)), // TODO: For entrance rando we need to find a way to ensure the Rock Sirloin can be "walked" here
             CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,                   CAN_USE_SWORD),
             CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST,              CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),
-            CHECK(RC_MOUNTAIN_VILLAGE_POT,                          CAN_HOOK_SCARECROW),
+            CHECK(RC_MOUNTAIN_VILLAGE_WINTER_POT,                   CAN_HOOK_SCARECROW),
             CHECK(RC_MOUNTAIN_VILLAGE_SPRING_POT,                   CAN_HOOK_SCARECROW && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_MOUNTAIN_VILLAGE_SPRING_FREESTANDING_RUPEE_01, CAN_BE_GORON && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
         },
@@ -196,10 +196,10 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_PATH_TO_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_17SETUGEN,
         .checks = {
             // TODO : Add Spring only checks.
-            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_1,          CAN_USE_PROJECTILE),
-            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_2,          CAN_USE_PROJECTILE),
-            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_1,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
-            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_2,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_01,          CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_02,          CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_01,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
+            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_02,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_TWIN_ISLANDS_FREESTANDING_RUPEE_01, CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_TWIN_ISLANDS_FREESTANDING_RUPEE_02, CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
             CHECK(RC_TWIN_ISLANDS_FREESTANDING_RUPEE_03, CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
@@ -234,7 +234,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PATH_TO_SNOWHEAD_GROTTO] = RandoRegion{ .name = "Path To Snowhead Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_PATH_TO_SNOWHEAD_GROTTO, true),
+            CHECK(RC_PATH_TO_SNOWHEAD_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, true), // TODO: Grotto mapping
@@ -250,7 +250,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PATH_TO_SNOWHEAD_MIDDLE] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
         .checks = {
-            CHECK(RC_PATH_TO_SNOWHEAD_HP, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && CAN_HOOK_SCARECROW)
+            CHECK(RC_PATH_TO_SNOWHEAD_PIECE_OF_HEART, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && CAN_HOOK_SCARECROW)
         },
         .connections = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON),

@@ -98,7 +98,7 @@ void handleGiantsCheck(SceneId sceneId) {
     // The Oath to Order check only occurs when freeing a Giant for the first time.
     if (gSaveContext.save.saveInfo.unk_EA8[1] == 1) {
         if (IS_RANDO) {
-            RANDO_SAVE_CHECKS[RC_GIANTS_CHAMBER_OATH].eligible = true;
+            RANDO_SAVE_CHECKS[RC_GIANTS_CHAMBER_OATH_TO_ORDER].eligible = true;
         } else {
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                 .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),

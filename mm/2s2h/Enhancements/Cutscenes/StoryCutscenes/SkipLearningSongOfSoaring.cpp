@@ -26,8 +26,8 @@ void RegisterSkipLearningSongOfSoaring() {
     // Then, once this textId is opened for the first time, go ahead and give the player the reward.
     COND_ID_HOOK(OnOpenText, ENGRAVING_TEXT_ID, CVAR || IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         if (IS_RANDO) {
-            if (!RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_ENGRAVING].obtained) {
-                RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_ENGRAVING].eligible = true;
+            if (!RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_SONG_OF_SOARING].obtained) {
+                RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_SONG_OF_SOARING].eligible = true;
             }
         } else {
             if (!CHECK_QUEST_ITEM(QUEST_SONG_SOARING)) {

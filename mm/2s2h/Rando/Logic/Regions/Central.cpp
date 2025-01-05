@@ -22,10 +22,10 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ASTRAL_OBSERVATORY_PASSAGE] = RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
         .checks = {
             CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST, CAN_USE_EXPLOSIVE),
-            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_1, true),
-            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_2, true),
-            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_3, true),
-            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_4, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_01, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_02, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_03, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_POT_04, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 2),              ENTRANCE(ASTRAL_OBSERVATORY, 0), true),
@@ -36,9 +36,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ASTRAL_OBSERVATORY] = RandoRegion{ .name = "Inside Astral Observatory", .sceneId = SCENE_TENMON_DAI,
         .checks = {
-            CHECK(RC_ASTRAL_OBSERVATORY_POT_1, true),
-            CHECK(RC_ASTRAL_OBSERVATORY_POT_2, true),
-            CHECK(RC_ASTRAL_OBSERVATORY_POT_3, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_01, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_02, true),
+            CHECK(RC_ASTRAL_OBSERVATORY_POT_03, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 9),                ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
@@ -49,11 +49,11 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BOMB_SHOP] = RandoRegion{ .sceneId = SCENE_BOMYA,
         .checks = {
-            CHECK(RC_BOMB_SHOP_ITEM_1, CAN_AFFORD(RC_BOMB_SHOP_ITEM_1)),
-            CHECK(RC_BOMB_SHOP_ITEM_2, CAN_AFFORD(RC_BOMB_SHOP_ITEM_2)),
+            CHECK(RC_BOMB_SHOP_ITEM_01, CAN_AFFORD(RC_BOMB_SHOP_ITEM_01)),
+            CHECK(RC_BOMB_SHOP_ITEM_02, CAN_AFFORD(RC_BOMB_SHOP_ITEM_02)),
             // Upon saving the Bomb Shop lady, one item in the shop gets replaced with the other for the remainder of the cycle.
-            CHECK(RC_BOMB_SHOP_ITEM_3, CAN_AFFORD(RC_BOMB_SHOP_ITEM_3)),
-            CHECK(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) && CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)),
+            CHECK(RC_BOMB_SHOP_ITEM_03, CAN_AFFORD(RC_BOMB_SHOP_ITEM_03)),
+            CHECK(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) && CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 6),              ENTRANCE(BOMB_SHOP, 0), true),
@@ -72,10 +72,10 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME, (HAS_MAGIC && CAN_BE_DEKU) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_CLOCK_TOWER_ROOF_OCARINA, (HAS_MAGIC && CAN_BE_DEKU) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_CLOCK_TOWER_ROOF_POT_1, true),
-            CHECK(RC_CLOCK_TOWER_ROOF_POT_2, true),
-            CHECK(RC_CLOCK_TOWER_ROOF_POT_3, true),
-            CHECK(RC_CLOCK_TOWER_ROOF_POT_4, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_01, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_02, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_03, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_04, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(THE_MOON, 0),                              ONE_WAY_EXIT, CAN_PLAY_SONG(OATH) && CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) && CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)),
@@ -133,9 +133,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_NORTH] = RandoRegion{ .sceneId = SCENE_BACKTOWN,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_1, CAN_USE_PROJECTILE),
-            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_2, CAN_USE_PROJECTILE),
-            CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, true),
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_01, CAN_USE_PROJECTILE),
+            CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_02, CAN_USE_PROJECTILE),
+            CHECK(RC_CLOCK_TOWN_NORTH_TREE_PIECE_OF_HEART, true),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
         },
         .exits = { //     TO                                         FROM
@@ -151,7 +151,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_SOUTH] = RandoRegion{ .sceneId = SCENE_CLOCKTOWER,
         .checks = {
-            CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP, true),
+            CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_PIECE_OF_HEART, true),
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || HAS_ITEM(ITEM_HOOKSHOT)),
@@ -181,9 +181,9 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CLOCK_TOWN_WEST] = RandoRegion{ .sceneId = SCENE_ICHIBA,
         .checks = {
             CHECK(RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET, true),
-            CHECK(RC_CLOCK_TOWN_WEST_BANK_HP, CUR_UPG_VALUE(UPG_WALLET) >= 1),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_PIECE_OF_HEART, CUR_UPG_VALUE(UPG_WALLET) >= 1),
             CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, CUR_UPG_VALUE(UPG_WALLET) >= 1),
-            CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, HAS_ITEM(ITEM_MASK_KAMARO)),
+            CHECK(RC_CLOCK_TOWN_WEST_SISTERS_PIECE_OF_HEART, HAS_ITEM(ITEM_MASK_KAMARO)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),                ENTRANCE(WEST_CLOCK_TOWN, 0), true),
@@ -209,7 +209,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CURIOSITY_SHOP_FRONT] = RandoRegion{ .name = "Front", .sceneId = SCENE_AYASHIISHOP,
         .checks = {
-            CHECK(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM)),
+            CHECK(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM)),
             CHECK(RC_CURIOSITY_SHOP_SPECIAL_ITEM, CAN_AFFORD(RC_CURIOSITY_SHOP_SPECIAL_ITEM) && (CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG) || CHECK_WEEKEVENTREG(WEEKEVENTREG_SAKON_DEAD))),
         },
         .exits = { //     TO                                         FROM
@@ -259,7 +259,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MAYOR_RESIDENCE] = RandoRegion{ .sceneId = SCENE_SONCHONOIE,
         .checks = {
-            CHECK(RC_MAYORS_OFFICE_HP, HAS_ITEM(ITEM_MASK_COUPLE)),
+            CHECK(RC_MAYORS_OFFICE_PIECE_OF_HEART, HAS_ITEM(ITEM_MASK_COUPLE)),
             CHECK(RC_MAYORS_OFFICE_KAFEIS_MASK, true)
         },
         .exits = { //     TO                                         FROM
@@ -285,12 +285,12 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SWORDSMAN_SCHOOL] = RandoRegion{ .sceneId = SCENE_DOUJOU,
         .checks = {
-            CHECK(RC_SWORDSMAN_SCHOOL_HP, CAN_USE_HUMAN_SWORD),
-            CHECK(RC_SWORDSMAN_SCHOOL_POT_1, CAN_USE_HUMAN_SWORD),
-            CHECK(RC_SWORDSMAN_SCHOOL_POT_2, CAN_USE_HUMAN_SWORD),
-            CHECK(RC_SWORDSMAN_SCHOOL_POT_3, CAN_USE_HUMAN_SWORD),
-            CHECK(RC_SWORDSMAN_SCHOOL_POT_4, CAN_USE_HUMAN_SWORD),
-            CHECK(RC_SWORDSMAN_SCHOOL_POT_5, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_PIECE_OF_HEART, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_01, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_02, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_03, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_04, CAN_USE_HUMAN_SWORD),
+            CHECK(RC_SWORDSMAN_SCHOOL_POT_05, CAN_USE_HUMAN_SWORD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 3),              ENTRANCE(SWORDMANS_SCHOOL, 0), true),
@@ -331,7 +331,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_DODONGO_GROTTO] = RandoRegion{ .name = "Termina Field Dodongo", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_DODONGO_GROTTO, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_TERMINA_FIELD_DODONGO_GROTTO_CHEST, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),                ENTRANCE(GROTTOS, 7), true), // TODO: Grotto mapping
@@ -371,7 +371,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_PEAHAT_GROTTO] = RandoRegion{ .name = "Termina Field Peahat", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_PEAHAT_GROTTO, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_TERMINA_FIELD_PEAHAT_GROTTO_CHEST, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),                ENTRANCE(GROTTOS, 13), true), // TODO: Grotto mapping
@@ -379,7 +379,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_PILLAR_GROTTO] = RandoRegion{ .name = "Termina Field Pillar", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_PILLAR_GROTTO, true),
+            CHECK(RC_TERMINA_FIELD_PILLAR_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_TERMINA_FIELD, true), // TODO: Grotto mapping
@@ -397,7 +397,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_TALL_GRASS_GROTTO] = RandoRegion{ .name = "Termina Field Tall Grass", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_TALL_GRASS_GROTTO, true),
+            CHECK(RC_TERMINA_FIELD_TALL_GRASS_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_TERMINA_FIELD, true), // TODO: Grotto mapping
@@ -405,7 +405,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD] = RandoRegion{ .sceneId = SCENE_00KEIKOKU,
         .checks = {
-            CHECK(RC_TERMINA_FIELD_KAMARO, CAN_PLAY_SONG(HEALING)),
+            CHECK(RC_TERMINA_FIELD_KAMARO_MASK, CAN_PLAY_SONG(HEALING)),
             CHECK(RC_TERMINA_FIELD_POT, CAN_GROW_BEAN_PLANT),
             CHECK(RC_TERMINA_FIELD_TALL_GRASS_CHEST, true),
             CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT || HAS_ITEM(ITEM_HOOKSHOT)),
@@ -462,24 +462,24 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_DEKU_PLAYGROUND_ALL_DAYS, CAN_BE_DEKU),
             CHECK(RC_DEKU_PLAYGROUND_ANY_DAY, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_1, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_2, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_3, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_4, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_5, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_6, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_1, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_2, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_3, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_4, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_5, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_6, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_1, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_2, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_3, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_4, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_5, CAN_BE_DEKU),
-            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_6, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_01, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_02, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_03, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_04, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_05, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_1_RUPEE_06, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_01, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_02, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_03, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_04, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_05, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_2_RUPEE_06, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_01, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_02, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_03, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_04, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_05, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PLAYGROUND_DAY_3_RUPEE_06, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 4),             ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
@@ -497,14 +497,14 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_TRADING_POST] = RandoRegion{ .sceneId = SCENE_8ITEMSHOP,
         .checks = {
             CHECK(RC_CLOCK_TOWN_WEST_TRADING_POST_POT, true), // Note : Goron has to sidehop to get up.
-            CHECK(RC_TRADING_POST_SHOP_ITEM_1, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_1)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_2, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_2)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_3, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_3)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_4, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_4)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_5, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_5)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_6, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_6)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_7, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_7)),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_8, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_8)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_01, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_01)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_02, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_02)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_03, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_03)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_04, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_04)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_05, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_05)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_06, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_06)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_07, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_07)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_08, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_08)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 5),              ENTRANCE(TRADING_POST, 0), true),

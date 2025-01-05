@@ -28,7 +28,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GREAT_BAY_COAST_FISHERMAN_GROTTO] = RandoRegion{ .name = "Great Bay Coast Fisherman Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_GREAT_BAY_COAST_FISHERMAN_GROTTO, true),
+            CHECK(RC_GREAT_BAY_COAST_FISHERMAN_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_COAST, true), // TODO: Grotto mapping
@@ -38,7 +38,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_GREAT_BAY_COAST_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_GREAT_BAY_COAST_MIKAU, CAN_PLAY_SONG(HEALING)),
-            CHECK(RC_GREAT_BAY_COAST_HP, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT),
+            CHECK(RC_GREAT_BAY_COAST_PIECE_OF_HEART, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT),
             CHECK(RC_GREAT_BAY_COAST_POT_01, true),
             CHECK(RC_GREAT_BAY_COAST_POT_02, true),
             CHECK(RC_GREAT_BAY_COAST_POT_03, true),
@@ -51,11 +51,11 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_COAST_POT_10, true),
             CHECK(RC_GREAT_BAY_COAST_POT_11, true),
             CHECK(RC_GREAT_BAY_COAST_POT_12, true),
-            CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_1, HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_2, HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_GREAT_BAY_COAST_POT_LEDGE_3, HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_1, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_2, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_LEDGE_POT_01, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_LEDGE_POT_02, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_LEDGE_POT_03, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_01, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_GREAT_BAY_COAST_TINGLE_MAP_02, HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 2),                ENTRANCE(GREAT_BAY_COAST, 0), true),
@@ -104,8 +104,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PINNACLE_ROCK_INNER] = RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
         .checks = {
-            CHECK(RC_PINNACLE_ROCK_CHEST_1,     CAN_BE_ZORA),
-            CHECK(RC_PINNACLE_ROCK_CHEST_2,     CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_PINNACLE_ROCK_CHEST_01,     CAN_BE_ZORA),
+            CHECK(RC_PINNACLE_ROCK_CHEST_02,     CAN_BE_ZORA && HAS_MAGIC),
             CHECK(RC_PINNACLE_ROCK_POT_01,      CAN_BE_ZORA && HAS_MAGIC),
             CHECK(RC_PINNACLE_ROCK_POT_02,      CAN_BE_ZORA && HAS_MAGIC),
             CHECK(RC_PINNACLE_ROCK_POT_03,      CAN_BE_ZORA && HAS_MAGIC),
@@ -135,10 +135,10 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_1, true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2, true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3, true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4, true),
+            CHECK(RC_ZORA_CAPE_NEAR_OWL_STATUE_POT_01, true),
+            CHECK(RC_ZORA_CAPE_NEAR_OWL_STATUE_POT_02, true),
+            CHECK(RC_ZORA_CAPE_NEAR_OWL_STATUE_POT_03, true),
+            CHECK(RC_ZORA_CAPE_NEAR_OWL_STATUE_POT_04, true),
             CHECK(RC_ZORA_CAPE_OWL_STATUE,            CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
@@ -151,7 +151,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_CAPE_GROTTO] = RandoRegion{ .name = "Zora Cape Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_ZORA_CAPE_GROTTO, true),
+            CHECK(RC_ZORA_CAPE_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_ZORA_CAPE, true), // TODO: Grotto mapping
@@ -159,12 +159,12 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_CAPE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_1,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
-            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_2,             HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_01,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
+            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_02,             HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
-            CHECK(RC_ZORA_CAPE_WATERFALL_HP,              CAN_BE_ZORA),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_1,        true),
-            CHECK(RC_ZORA_CAPE_POT_NEAR_BEAVERS_2,        true),
+            CHECK(RC_ZORA_CAPE_WATERFALL_PIECE_OF_HEART,  CAN_BE_ZORA),
+            CHECK(RC_ZORA_CAPE_NEAR_BEAVERS_POT_01,        true),
+            CHECK(RC_ZORA_CAPE_NEAR_BEAVERS_POT_02,        true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 1),              ENTRANCE(ZORA_CAPE, 0), true),
@@ -197,9 +197,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_HALL_LULUS_ROOM] = RandoRegion{ .name = "Lulu's Room", .sceneId = SCENE_BANDROOM,
         .checks = {
-            CHECK(RC_ZORA_HALL_SCRUB_DEED,          Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_GORON),
-            CHECK(RC_ZORA_HALL_SCRUB_HP,            Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_GORON && CAN_BE_DEKU),
-            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL, CAN_BE_ZORA),
+            CHECK(RC_ZORA_HALL_SCRUB_DEED,           Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_GORON),
+            CHECK(RC_ZORA_HALL_SCRUB_PIECE_OF_HEART, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && CAN_BE_GORON && CAN_BE_DEKU),
+            CHECK(RC_ZORA_HALL_SCRUB_POTION_REFILL,  CAN_BE_ZORA),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 3),                    ENTRANCE(ZORA_HALL_ROOMS, 2), true),
@@ -215,9 +215,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_HALL_SHOP] = RandoRegion{ .name = "Shop", .sceneId = SCENE_BANDROOM,
         .checks = {
-            CHECK(RC_ZORA_SHOP_ITEM_1, CAN_AFFORD(RC_ZORA_SHOP_ITEM_1)),
-            CHECK(RC_ZORA_SHOP_ITEM_2, CAN_AFFORD(RC_ZORA_SHOP_ITEM_2)),
-            CHECK(RC_ZORA_SHOP_ITEM_3, CAN_AFFORD(RC_ZORA_SHOP_ITEM_3)),
+            CHECK(RC_ZORA_SHOP_ITEM_01, CAN_AFFORD(RC_ZORA_SHOP_ITEM_01)),
+            CHECK(RC_ZORA_SHOP_ITEM_02, CAN_AFFORD(RC_ZORA_SHOP_ITEM_02)),
+            CHECK(RC_ZORA_SHOP_ITEM_03, CAN_AFFORD(RC_ZORA_SHOP_ITEM_03)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 2),                    ENTRANCE(ZORA_HALL_ROOMS, 5), true),
