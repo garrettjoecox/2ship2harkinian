@@ -178,7 +178,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_EXIT] = RandoRegion{ .name = "Left Side Exit", .sceneId = SCENE_KAIZOKU,
-        // The doorway when exiting the CHEST_EGG_ROOM, one way jump down to PALAZA
+        // The doorway when exiting the CHEST_EGG_ROOM, one way jump down to PLAZA
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 8), true)
         },
@@ -214,7 +214,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_PIRATES_FORTRESS_PLAZA_RIGHT_EXIT] = RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
-        // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PALAZA
+        // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PLAZA
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 6), true)
         },
