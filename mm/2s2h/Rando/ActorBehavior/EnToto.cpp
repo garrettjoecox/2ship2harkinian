@@ -4,6 +4,7 @@
 extern "C" {
 #include "variables.h"
 #include "src/overlays/actors/ovl_En_Fu/z_en_fu.h"
+#include "src/overlays/actors/ovl_En_Toto/z_en_toto.h"
 void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 }
 
@@ -12,6 +13,7 @@ void Rando::ActorBehavior::InitEnTotoBehavior() {
         GetItemId* item = va_arg(args, GetItemId*);
         Actor* refActor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
+        EnToto* enToto = (EnToto*)refActor;
 
         if (refActor->id != ACTOR_EN_TOTO) {
             return;
@@ -25,5 +27,9 @@ void Rando::ActorBehavior::InitEnTotoBehavior() {
         player->talkActorDistance = refActor->xzDistToPlayer;
         player->exchangeItemAction = PLAYER_IA_MINUS1;
         Player_TalkWithPlayer(gPlayState, refActor);
+        // The following values get into a weird state because of the rando process, so set them to safe values
+        enToto->actionFuncIndex = 0;
+        enToto->text->unk0 = 0;
+        enToto->text->unk1 = 0;
     });
 }
