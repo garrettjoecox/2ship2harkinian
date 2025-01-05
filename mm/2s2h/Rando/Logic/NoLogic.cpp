@@ -29,7 +29,8 @@ void ApplyNoLogicToSaveContext() {
         }
 
         if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_BARREL ||
-             randoStaticCheck.randoCheckType == RCTYPE_CRATE) &&
+             randoStaticCheck.randoCheckType == RCTYPE_CRATE ||
+             randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) &&
             RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
             continue;
         }
