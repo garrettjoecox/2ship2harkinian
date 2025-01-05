@@ -15,47 +15,47 @@ RandoCheckId IdentifyGameLupy(Actor* actor) {
     switch (CURRENT_DAY) {
         case 1: {
             if (IS_AT(-100.0f, 150.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_1;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_01;
             } else if (IS_AT(100.0f, -50.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_2;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_02;
             } else if (IS_AT(-200.0f, -250.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_3;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_03;
             } else if (IS_AT(200.0f, 350.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_4;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_04;
             } else if (IS_AT(-500.0f, 350.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_5;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_05;
             } else if (IS_AT(500.0f, -250.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_6;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_1_RUPEE_06;
             }
         } break;
         case 2: {
             if (IS_AT(-100.0f, -50.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_1;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_01;
             } else if (IS_AT(300.0f, -250.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_2;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_02;
             } else if (IS_AT(500.0f, 550.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_3;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_03;
             } else if (IS_AT(100.0f, 150.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_4;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_04;
             } else if (IS_AT(-300.0f, 350.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_5;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_05;
             } else if (IS_AT(-500.0f, -450.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_6;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_2_RUPEE_06;
             }
         } break;
         case 3: {
             if (IS_AT(-100.0f, -50.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_1;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_01;
             } else if (IS_AT(100.0f, 150.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_2;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_02;
             } else if (IS_AT(-300.0f, 250.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_3;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_03;
             } else if (IS_AT(300.0f, -150.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_4;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_04;
             } else if (IS_AT(-500.0f, -450.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_5;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_05;
             } else if (IS_AT(500.0f, 550.0f)) {
-                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_6;
+                randoCheckId = RC_DEKU_PLAYGROUND_DAY_3_RUPEE_06;
             }
         } break;
     }

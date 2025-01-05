@@ -123,7 +123,7 @@ void EnGirlA_RandoInit(EnGirlA* enGirlA, PlayState* play) {
 }
 
 void renameBombBags(u16* textId, bool* loadFromMessageTable) {
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.autoFormat = false;
@@ -134,7 +134,7 @@ void renameBombBags(u16* textId, bool* loadFromMessageTable) {
 }
 
 void renameBigBombBags(u16* textId, bool* loadFromMessageTable) {
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.autoFormat = false;
@@ -145,7 +145,7 @@ void renameBigBombBags(u16* textId, bool* loadFromMessageTable) {
 }
 
 void renameStolenBombBag(u16* textId, bool* loadFromMessageTable) {
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.msg = "Tonight's special, stolen from the Bomb Shop: %r" + std::string(randoStaticItem.name) +
@@ -169,70 +169,70 @@ RandoCheckId IdentifyShopItem(Actor* actor) {
             switch (actor->params) {
                 case 10:
                 case 18:
-                    return RC_TRADING_POST_SHOP_ITEM_1;
+                    return RC_TRADING_POST_SHOP_ITEM_01;
                 case 5:
                 case 14:
-                    return RC_TRADING_POST_SHOP_ITEM_2;
+                    return RC_TRADING_POST_SHOP_ITEM_02;
                 case 6:
                 case 17:
-                    return RC_TRADING_POST_SHOP_ITEM_3;
+                    return RC_TRADING_POST_SHOP_ITEM_03;
                 case 3:
                 case 11:
-                    return RC_TRADING_POST_SHOP_ITEM_4;
+                    return RC_TRADING_POST_SHOP_ITEM_04;
                 case 7:
                 case 16:
-                    return RC_TRADING_POST_SHOP_ITEM_5;
+                    return RC_TRADING_POST_SHOP_ITEM_05;
                 case 8:
                 case 12:
-                    return RC_TRADING_POST_SHOP_ITEM_6;
+                    return RC_TRADING_POST_SHOP_ITEM_06;
                 case 9:
                 case 15:
-                    return RC_TRADING_POST_SHOP_ITEM_7;
+                    return RC_TRADING_POST_SHOP_ITEM_07;
                 case 4:
                 case 13:
-                    return RC_TRADING_POST_SHOP_ITEM_8;
+                    return RC_TRADING_POST_SHOP_ITEM_08;
             }
             break;
         case SCENE_BOMYA:
             switch (actor->params) {
                 case 26:
-                    return RC_BOMB_SHOP_ITEM_1;
+                    return RC_BOMB_SHOP_ITEM_01;
                 case 25:
-                    return RC_BOMB_SHOP_ITEM_2;
+                    return RC_BOMB_SHOP_ITEM_02;
                 case 24: // After saving Bomb Shop lady
-                    return RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM;
+                    return RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM;
                 case 23:
-                    return RC_BOMB_SHOP_ITEM_3;
+                    return RC_BOMB_SHOP_ITEM_03;
             }
             break;
         case SCENE_WITCH_SHOP:
             switch (actor->params) {
                 case 2:
-                    return RC_HAGS_POTION_SHOP_ITEM_1;
+                    return RC_HAGS_POTION_SHOP_ITEM_01;
                 case 1:
-                    return RC_HAGS_POTION_SHOP_ITEM_2;
+                    return RC_HAGS_POTION_SHOP_ITEM_02;
                 case 0:
-                    return RC_HAGS_POTION_SHOP_ITEM_3;
+                    return RC_HAGS_POTION_SHOP_ITEM_03;
             }
             break;
         case SCENE_GORONSHOP:
             switch (actor->params) {
                 case 30:
-                    return RC_GORON_SHOP_ITEM_1;
+                    return RC_GORON_SHOP_ITEM_01;
                 case 31:
-                    return RC_GORON_SHOP_ITEM_2;
+                    return RC_GORON_SHOP_ITEM_02;
                 case 32:
-                    return RC_GORON_SHOP_ITEM_3;
+                    return RC_GORON_SHOP_ITEM_03;
             }
             break;
         case SCENE_BANDROOM:
             switch (actor->params) {
                 case 27:
-                    return RC_ZORA_SHOP_ITEM_1;
+                    return RC_ZORA_SHOP_ITEM_01;
                 case 28:
-                    return RC_ZORA_SHOP_ITEM_2;
+                    return RC_ZORA_SHOP_ITEM_02;
                 case 29:
-                    return RC_ZORA_SHOP_ITEM_3;
+                    return RC_ZORA_SHOP_ITEM_03;
             }
             break;
         case SCENE_AYASHIISHOP:
@@ -240,7 +240,7 @@ RandoCheckId IdentifyShopItem(Actor* actor) {
                 case 19: // Saved Bomb Shop lady and recovered big bomb bag, so a new item is in stock
                     return RC_CURIOSITY_SHOP_SPECIAL_ITEM;
                 case 21: // Sakon stole the bomb bag, so the bomb shop check is in stock
-                    return RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM;
+                    return RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM;
             }
             break;
     }
@@ -368,7 +368,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
 
     // Magic Potion Shop Hag "Well, I can use this to make something, come back later"
     COND_ID_HOOK(OnOpenText, 0x884, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
-        RandoCheckId randoCheckId = RC_HAGS_POTION_SHOP_ITEM_1;
+        RandoCheckId randoCheckId = RC_HAGS_POTION_SHOP_ITEM_01;
         auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         if (!randoSaveCheck.shuffled || randoSaveCheck.eligible) {
@@ -403,7 +403,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     // Bomb Shop "We're expecting new stock" (hint)
     COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_NEW_STOCK_HINT_TEXT_ID, IS_RANDO,
                  [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
                      auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
                      auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
@@ -417,7 +417,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     // Bomb Shop "We should have had..."
     COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_1_TEXT_ID, IS_RANDO,
                  [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
                      auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
                      auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
@@ -432,7 +432,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     // Bomb Shop "I thought we could finally sell"
     COND_ID_HOOK(
         OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_2_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+            auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
             auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
             auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
@@ -454,7 +454,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     // Bomb Shop "We just got a larger bomb bag in stock"
     COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_1_TEXT_ID, IS_RANDO,
                  [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
                      auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
                      auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
@@ -476,7 +476,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     // Bomb Shop "Please try our Big Bomb Bag"
     COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_4_TEXT_ID, IS_RANDO,
                  [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM];
+                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
                      auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
                      auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
                      entry.autoFormat = false;

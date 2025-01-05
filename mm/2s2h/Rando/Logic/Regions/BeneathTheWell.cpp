@@ -10,16 +10,16 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_BENEATH_THE_WELL_BABA_AND_POTS_ROOM] = RandoRegion{ .name = "Babas and Pots Room", .sceneId = SCENE_REDEAD,
         .checks = {
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_01, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_02, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_03, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_04, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_05, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_06, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_07, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_08, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_09, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_MIDDLE_10, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_01, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_02, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_03, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_04, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_05, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_06, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_07, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_08, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_09, true),
+            CHECK(RC_BENEATH_THE_WELL_MIDDLE_POT_10, true),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_FREEZARD_ROOM, true),
@@ -37,10 +37,10 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_WELL_BIG_POE_ROOM] = RandoRegion{ .name = "Big Poe Room", .sceneId = SCENE_REDEAD,
         .checks = {
-            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_1, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_2, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_3, true),
-            CHECK(RC_BENEATH_THE_WELL_POT_BIG_POE_4, true),
+            CHECK(RC_BENEATH_THE_WELL_BIG_POE_POT_01, true),
+            CHECK(RC_BENEATH_THE_WELL_BIG_POE_POT_02, true),
+            CHECK(RC_BENEATH_THE_WELL_BIG_POE_POT_03, true),
+            CHECK(RC_BENEATH_THE_WELL_BIG_POE_POT_04, true),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_RIGHT_FIRE_KEESE, true),
@@ -152,11 +152,11 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_WELL_TWO_SPIKED_BARS] = RandoRegion{ .name = "Two Spikes Room", .sceneId = SCENE_REDEAD,
         .checks = {
-            CHECK(RC_BENEATH_THE_WELL_POT_LEFT_SIDE_1, CAN_LIGHT_TORCH_NEAR_ANOTHER),
-            CHECK(RC_BENEATH_THE_WELL_POT_LEFT_SIDE_2, CAN_LIGHT_TORCH_NEAR_ANOTHER),
-            CHECK(RC_BENEATH_THE_WELL_POT_LEFT_SIDE_3, CAN_LIGHT_TORCH_NEAR_ANOTHER),
-            CHECK(RC_BENEATH_THE_WELL_POT_LEFT_SIDE_4, CAN_LIGHT_TORCH_NEAR_ANOTHER),
-            CHECK(RC_BENEATH_THE_WELL_POT_LEFT_SIDE_5, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_BENEATH_THE_WELL_LEFT_SIDE_POT_01, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_BENEATH_THE_WELL_LEFT_SIDE_POT_02, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_BENEATH_THE_WELL_LEFT_SIDE_POT_03, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_BENEATH_THE_WELL_LEFT_SIDE_POT_04, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+            CHECK(RC_BENEATH_THE_WELL_LEFT_SIDE_POT_05, CAN_LIGHT_TORCH_NEAR_ANOTHER),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_WELL_THREE_SPIKED_BARS, true),

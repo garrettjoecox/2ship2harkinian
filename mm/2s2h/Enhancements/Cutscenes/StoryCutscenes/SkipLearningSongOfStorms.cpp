@@ -19,7 +19,7 @@ void RegisterSkipLearningSongOfStorms() {
         s16* csId = va_arg(args, s16*);
         if (gPlayState->sceneId == SCENE_HAKASHITA && *csId == 13) { // Z-Target Flat's tombstone Beneath the Graveyard
             if (IS_RANDO) {
-                RANDO_SAVE_CHECKS[RC_BENEATH_THE_GRAVEYARD_TOMBSTONE].eligible = true;
+                RANDO_SAVE_CHECKS[RC_BENEATH_THE_GRAVEYARD_SONG_OF_STORMS].eligible = true;
             } else {
                 GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                     .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),

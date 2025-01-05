@@ -59,11 +59,12 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
     /*RCTYPE_CRATE*/ gCrateTrackerIcon,
     /*RCTYPE_FREESTANDING*/ gRupeeCounterIconTex,
+    /*RCTYPE_HEART*/ gQuestIconPieceOfHeartTex,
     /*RCTYPE_MINIGAME*/ gArcheryScoreIconTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
     /*RCTYPE_OWL*/ gWorldMapOwlFaceTex,
     /*RCTYPE_POT*/ gPotTrackerIcon,
-    /*RCTYPE_RUPEE*/ gRupeeCounterIconTex,
+    /*RCTYPE_REMAINS*/ gItemIconBombersNotebookTex,
     /*RCTYPE_SHOP*/ gItemIconAdultsWalletTex,
     /*RCTYPE_SKULL_TOKEN*/ gQuestIconGoldSkulltulaTex,
     /*RCTYPE_SONG*/ gItemIconSongNoteTex,
@@ -106,8 +107,7 @@ void DrawCheckTypeIcon(RandoCheckId randoCheckId) {
                  : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
                                            : ImVec2(18.0f, 18.0f),
                  ImVec2(0, 0), ImVec2(1, 1),
-                 checkType == RCTYPE_FREESTANDING || checkType == RCTYPE_RUPEE ? ImVec4(0.78f, 1, 0.39f, 1)
-                                                                               : ImVec4(1, 1, 1, 1));
+                 checkType == RCTYPE_FREESTANDING ? ImVec4(0.78f, 1, 0.39f, 1) : ImVec4(1, 1, 1, 1));
 }
 
 void initializeSceneChecks() {

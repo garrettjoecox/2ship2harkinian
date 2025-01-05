@@ -10,4 +10,7 @@ void SaveManager_Migration_6(nlohmann::json& j) {
         u8 commitHash[8] = { 0 };
         j["save"]["shipSaveInfo"]["commitHash"] = commitHash;
     }
+    if (!j["save"]["shipSaveInfo"].contains("fileCreatedAt")) {
+        j["save"]["shipSaveInfo"]["fileCreatedAt"] = 0;
+    }
 }

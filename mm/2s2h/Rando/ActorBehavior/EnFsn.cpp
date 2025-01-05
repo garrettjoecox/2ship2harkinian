@@ -43,7 +43,7 @@ void Rando::ActorBehavior::InitEnFsnBehavior() {
                 RandoCheckId randoCheckId = (RandoCheckId)enGirlA->actor.world.rot.z;
                 // Only handle the two special checks. Leave stolen items as-is.
                 if (randoCheckId == RC_CURIOSITY_SHOP_SPECIAL_ITEM ||
-                    randoCheckId == RC_BOMB_SHOP_ITEM_OR_CURIOSITY_SHOP_ITEM) {
+                    randoCheckId == RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) {
                     *should = false;
                     EndEnFsnDialogue(enFsn);
                     enGirlA->buyFunc(gPlayState, enGirlA);
