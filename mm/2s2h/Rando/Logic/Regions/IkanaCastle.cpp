@@ -18,8 +18,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_BUBBLE_ROOM] = RandoRegion{ .name = "Bubble Room", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_THIRD_ROOM_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_THIRD_ROOM_2, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_THIRD_ROOM_POT_01, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_THIRD_ROOM_POT_02, true),
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_SKULLTULA_ROOM, CAN_USE_HUMAN_SWORD),
@@ -28,8 +28,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_CEILING_ROOM] = RandoRegion{ .name = "Ceiling Room", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_FIRST_ROOM_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_FIRST_ROOM_2, true)
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_FIRST_ROOM_POT_01, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_FIRST_ROOM_POT_02, true)
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, true),
@@ -38,7 +38,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_COURTYARD] = RandoRegion{ .name = "Courtyard", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_EXTERIOR, true)
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_EXTERIOR_POT, true)
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(BENEATH_THE_WELL, 1),             ENTRANCE(IKANA_CASTLE, 0), true),
@@ -85,8 +85,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_MAIN_ROOM] = RandoRegion{ .name = "Main Room", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_ENTRANCE_2, true)
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_ENTRANCE_POT_01, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_ENTRANCE_POT_02, true)
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CASTLE, 2),                 ENTRANCE(IKANA_CASTLE, 3), true)
@@ -102,7 +102,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_OUTER_ROOF] = RandoRegion{ .name = "Outer Roof", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_HP, CAN_USE_PROJECTILE && CAN_BE_DEKU)
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_PIECE_OF_HEART, CAN_USE_PROJECTILE && CAN_BE_DEKU)
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_BUBBLE_ROOM , true),
@@ -120,8 +120,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_REDEAD_WALKWAY] = RandoRegion{ .name = "Redead Walkway", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_RIGHT_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_RIGHT_2, true)
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_RIGHT_POT_01, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_RIGHT_POT_02, true)
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_WIZZROBE_ROOM, true),
@@ -130,10 +130,10 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_SKULLTULA_ROOM] = RandoRegion{ .name = "Skulltula Room", .sceneId = SCENE_CASTLE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_SECOND_ROOM_1, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_SECOND_ROOM_2, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_SECOND_ROOM_3, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_POT_LEFT_SECOND_ROOM_4, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW))
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_SECOND_ROOM_POT_01, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_SECOND_ROOM_POT_02, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_SECOND_ROOM_POT_03, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW)),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_LEFT_SECOND_ROOM_POT_04, CAN_BE_DEKU || HAS_ITEM(ITEM_BOW))
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_CEILING_ROOM, CAN_USE_HUMAN_SWORD || CAN_USE_PROJECTILE),
@@ -143,14 +143,14 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_IKANA_CASTLE_THRONE_ROOM] = RandoRegion{ .name = "Throne Room", .sceneId = SCENE_IKNINSIDE,
         .checks = {
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS, CAN_USE_MAGIC_ARROW(FIRE) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) && (CAN_USE_HUMAN_SWORD || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA)),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_1, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_2, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_3, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_4, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_5, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_6, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_7, true),
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_8, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_01, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_02, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_03, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_04, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_05, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_06, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_07, true),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_08, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CASTLE, 6),                 ENTRANCE(IGOS_DU_IKANAS_LAIR, 0), true)

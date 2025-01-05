@@ -11,16 +11,16 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_BENEATH_THE_GRAVEYARD_DAMPE] = RandoRegion{ .sceneId = SCENE_DANPEI2TEST,
         .checks = {
             CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_CHEST, HAS_ITEM(ITEM_BOW)),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_01, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_02, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_03, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_04, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_05, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_06, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_07, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_08, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_09, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_DAMPE_10, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_02, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_03, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_04, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_05, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_06, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_07, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_08, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_09, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_DAMPE_POT_10, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 4),                       ONE_WAY_EXIT, true),
@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_BOSS] = RandoRegion{ .name = "Night 1 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_TOMBSTONE, CAN_KILL_IRONKNUCKLE),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_SONG_OF_STORMS, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CAN_KILL_IRONKNUCKLE),
@@ -39,12 +39,12 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE] = RandoRegion{ .name = "Night 1 Grave", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_EARLY_1, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_EARLY_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_EARLY_POT_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_EARLY_POT_02, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_CHEST, CAN_KILL_BAT),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_1, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_2, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_1_BATS_3, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_02, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_03, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 3),              ENTRANCE(BENEATH_THE_GRAVERYARD, 1), true),
@@ -55,7 +55,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_2_BOSS] = RandoRegion{ .name = "Night 2 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_HP, CAN_KILL_IRONKNUCKLE),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_PIECE_OF_HEART, CAN_KILL_IRONKNUCKLE),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, true),
@@ -63,10 +63,10 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT] = RandoRegion{ .name = "Night 2 Grave After Pit", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_1, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_2, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_3, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_AFTER_PIT_4, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_AFTER_PIT_POT_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_AFTER_PIT_POT_02, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_AFTER_PIT_POT_03, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_AFTER_PIT_POT_04, true),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_BOSS, CAN_USE_EXPLOSIVE),
@@ -82,9 +82,9 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_05, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_06, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_FREESTANDING_RUPEE_07, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_EARLY, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_1, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_POT_NIGHT_2_BEFORE_PIT_2, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_EARLY_POT, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_BEFORE_PIT_POT_01, true),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_2_BEFORE_PIT_POT_02, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 2),              ENTRANCE(BENEATH_THE_GRAVERYARD, 0), true),
@@ -108,7 +108,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CANYON_GROTTO] = RandoRegion{ .name = "Ikana Canyon Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_IKANA_CANYON_GROTTO, true),
+            CHECK(RC_IKANA_CANYON_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_IKANA_CANYON_LOWER, true), // TODO: Grotto mapping
@@ -116,7 +116,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CANYON_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_IKANA,
         .checks = {
-            CHECK(RC_IKANA_CANYON_SCRUB_HP, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA && CAN_BE_DEKU),
+            CHECK(RC_IKANA_CANYON_SCRUB_PIECE_OF_HEART, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA && CAN_BE_DEKU),
             CHECK(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && CAN_BE_ZORA),
             CHECK(RC_IKANA_CANYON_SCRUB_POTION_REFILL, true),
         },
@@ -142,8 +142,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
         .checks = {
             CHECK(RC_IKANA_CANYON_OWL_STATUE, CAN_USE_SWORD),
-            CHECK(RC_IKANA_CANYON_TINGLE_MAP_1, CAN_USE_PROJECTILE),
-            CHECK(RC_IKANA_CANYON_TINGLE_MAP_2, CAN_USE_PROJECTILE),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_01, CAN_USE_PROJECTILE),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_02, CAN_USE_PROJECTILE),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),
@@ -249,7 +249,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ROAD_TO_IKANA_GROTTO] = RandoRegion{ .name = "Road to Ikana Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
-            CHECK(RC_ROAD_TO_IKANA_GROTTO, true),
+            CHECK(RC_ROAD_TO_IKANA_GROTTO_CHEST, true),
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, true), // TODO: Grotto mapping
@@ -257,11 +257,11 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SAKON_HIDEOUT] = RandoRegion{ .sceneId = SCENE_SECOM,
         .checks = {
-            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_1,    true),
-            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_2,    true),
-            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_1,   true),
-            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_2,   true),
-            CHECK(RC_SAKON_HIDEOUT_POT_THIRD_ROOM,      true),
+            CHECK(RC_SAKON_HIDEOUT_FIRST_ROOM_POT_01,    true),
+            CHECK(RC_SAKON_HIDEOUT_FIRST_ROOM_POT_02,    true),
+            CHECK(RC_SAKON_HIDEOUT_SECOND_ROOM_POT_01,   true),
+            CHECK(RC_SAKON_HIDEOUT_SECOND_ROOM_POT_02,   true),
+            CHECK(RC_SAKON_HIDEOUT_THIRD_ROOM_POT,       true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 6),                 ENTRANCE(SAKONS_HIDEOUT, 0), true),
@@ -286,9 +286,9 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_15, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
             CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_16, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
             CHECK(RC_SECRET_SHRINE_FREESTANDING_RUPEE_17, HAS_ITEM(ITEM_MAGIC_BEANS) && CAN_ACCESS(SPRING_WATER)),
-            CHECK(RC_SECRET_SHRINE_POT_1, true),
-            CHECK(RC_SECRET_SHRINE_POT_2, true),
-            CHECK(RC_SECRET_SHRINE_POT_3, true),
+            CHECK(RC_SECRET_SHRINE_POT_01, true),
+            CHECK(RC_SECRET_SHRINE_POT_02, true),
+            CHECK(RC_SECRET_SHRINE_POT_03, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 12),                ENTRANCE(SECRET_SHRINE, 0), true),
@@ -303,13 +303,13 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SECRET_SHRINE_WIZZROBE_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x03)),
             CHECK(RC_SECRET_SHRINE_WART_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x04)),
             CHECK(RC_SECRET_SHRINE_GARO_MASTER_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x05)),
-            CHECK(RC_SECRET_SHRINE_HP_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x02) && Flags_GetSceneClear(SCENE_RANDOM, 0x03) && Flags_GetSceneClear(SCENE_RANDOM, 0x04) && Flags_GetSceneClear(SCENE_RANDOM, 0x05)),
-            CHECK(RC_SECRET_SHRINE_POT_4, CAN_BE_ZORA),
-            CHECK(RC_SECRET_SHRINE_POT_5, CAN_BE_ZORA),
-            CHECK(RC_SECRET_SHRINE_POT_6, CAN_BE_ZORA),
-            CHECK(RC_SECRET_SHRINE_POT_7, CAN_BE_ZORA),
-            CHECK(RC_SECRET_SHRINE_POT_8, CAN_BE_ZORA),
-            CHECK(RC_SECRET_SHRINE_POT_9, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_PIECE_OF_HEART_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x02) && Flags_GetSceneClear(SCENE_RANDOM, 0x03) && Flags_GetSceneClear(SCENE_RANDOM, 0x04) && Flags_GetSceneClear(SCENE_RANDOM, 0x05)),
+            CHECK(RC_SECRET_SHRINE_POT_04, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_05, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_06, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_07, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_08, CAN_BE_ZORA),
+            CHECK(RC_SECRET_SHRINE_POT_09, CAN_BE_ZORA),
         },
         .connections = {
             CONNECTION(RR_SECRET_SHRINE_ENTRANCE, true),
@@ -324,8 +324,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_BOTTOM] = RandoRegion{ .name = "Bottom", .sceneId = SCENE_F40,
         .checks = {
-            CHECK(RC_STONE_TOWER_POT_CLIMB_1, HAS_ITEM(ITEM_HOOKSHOT)),
-            CHECK(RC_STONE_TOWER_POT_CLIMB_2, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_STONE_TOWER_CLIMB_POT_01, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_STONE_TOWER_CLIMB_POT_02, HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 3),                 ENTRANCE(STONE_TOWER, 0), true)
@@ -362,15 +362,15 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_INVERTED_UPPER] = RandoRegion{ .sceneId = SCENE_F41,
         .checks = {
-            CHECK(RC_STONE_TOWER_INVERTED_CHEST_1, true),
-            CHECK(RC_STONE_TOWER_INVERTED_CHEST_2, true),
-            CHECK(RC_STONE_TOWER_INVERTED_CHEST_3, true),
+            CHECK(RC_STONE_TOWER_INVERTED_CHEST_01, true),
+            CHECK(RC_STONE_TOWER_INVERTED_CHEST_02, true),
+            CHECK(RC_STONE_TOWER_INVERTED_CHEST_03, true),
             // These pots don't seem to work, no clue why.
-            CHECK(RC_STONE_TOWER_INVERTED_POT_1, true),
-            CHECK(RC_STONE_TOWER_INVERTED_POT_2, true),
-            CHECK(RC_STONE_TOWER_INVERTED_POT_3, true),
-            CHECK(RC_STONE_TOWER_INVERTED_POT_4, true),
-            CHECK(RC_STONE_TOWER_INVERTED_POT_5, true),
+            CHECK(RC_STONE_TOWER_INVERTED_POT_01, true),
+            CHECK(RC_STONE_TOWER_INVERTED_POT_02, true),
+            CHECK(RC_STONE_TOWER_INVERTED_POT_03, true),
+            CHECK(RC_STONE_TOWER_INVERTED_POT_04, true),
+            CHECK(RC_STONE_TOWER_INVERTED_POT_05, true),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_INVERTED_LOWER, true),
@@ -378,18 +378,18 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_MIDDLE] = RandoRegion{ .name = "Middle", .sceneId = SCENE_F40,
         .checks = {
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_01, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_02, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_03, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_04, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_05, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_06, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_07, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_08, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_09, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_10, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_11, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_LOWER_SCARECROW_12, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_01, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_02, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_03, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_04, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_05, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_06, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_07, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_08, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_09, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_10, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_11, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_LOWER_SCARECROW_POT_12, CAN_HOOK_SCARECROW),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_BOTTOM, HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(ELEGY) && CAN_BE_GORON && CAN_BE_ZORA),
@@ -400,10 +400,10 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_STONE_TOWER_TOP] = RandoRegion{ .name = "Top", .sceneId = SCENE_F40,
         .checks = {
             CHECK(RC_STONE_TOWER_OWL_STATUE, CAN_USE_SWORD),
-            CHECK(RC_STONE_TOWER_POT_OWL_STATUE_1, true),
-            CHECK(RC_STONE_TOWER_POT_OWL_STATUE_2, true),
-            CHECK(RC_STONE_TOWER_POT_OWL_STATUE_3, true),
-            CHECK(RC_STONE_TOWER_POT_OWL_STATUE_4, true),
+            CHECK(RC_STONE_TOWER_OWL_STATUE_POT_01, true),
+            CHECK(RC_STONE_TOWER_OWL_STATUE_POT_02, true),
+            CHECK(RC_STONE_TOWER_OWL_STATUE_POT_03, true),
+            CHECK(RC_STONE_TOWER_OWL_STATUE_POT_04, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),         ENTRANCE(STONE_TOWER, 1), CAN_PLAY_SONG(ELEGY) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_LIGHT) && HAS_MAGIC),
@@ -431,15 +431,15 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_F40,
         .checks = {
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_1, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_2, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_3, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_4, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_5, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_6, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_7, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_8, CAN_HOOK_SCARECROW),
-            CHECK(RC_STONE_TOWER_POT_HIGHER_SCARECROW_9, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_01, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_02, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_03, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_04, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_05, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_06, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_07, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_08, CAN_HOOK_SCARECROW),
+            CHECK(RC_STONE_TOWER_HIGHER_SCARECROW_POT_09, CAN_HOOK_SCARECROW),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_MIDDLE, HAS_ITEM(ITEM_HOOKSHOT)),

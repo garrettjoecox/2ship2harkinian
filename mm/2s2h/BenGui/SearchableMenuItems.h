@@ -2,6 +2,7 @@
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/Enhancements/Trackers/DisplayOverlay.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -740,43 +741,64 @@ void AddSettings() {
                                       { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
 
     settingsSidebar.push_back(
-        { "Notifications",
-          1,
+        { "Overlay",
+          2,
           { {
-              { "Position",
-                "gNotifications.Position",
-                "Which corner of the screen notifications appear in.",
-                WIDGET_CVAR_COMBOBOX,
-                { .defaultVariant = 3, .comboBoxOptions = notificationPosition } },
-              { "Duration: %.0f seconds",
-                "gNotifications.Duration",
-                "How long notifications are displayed for.",
-                WIDGET_CVAR_SLIDER_FLOAT,
-                { .min = 3.0f, .max = 30.0f, .defaultVariant = 10.0f, .format = "%.1f", .step = 0.1f } },
-              { "Background Opacity: %.0f%%",
-                "gNotifications.BgOpacity",
-                "How opaque the background of notifications is.",
-                WIDGET_CVAR_SLIDER_FLOAT,
-                { .min = 0.0f, .max = 1.0f, .defaultVariant = 0.5f, .format = "%.0f%%", .isPercentage = true } },
-              { "Size %.1f",
-                "gNotifications.Size",
-                "How large notifications are.",
-                WIDGET_CVAR_SLIDER_FLOAT,
-                { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.8f, .format = "%.1f", .step = 0.1f } },
-              { "Test Notification",
-                "",
-                "Displays a test notification.",
-                WIDGET_BUTTON,
-                {},
-                [](widgetInfo& info) {
-                    Notification::Emit({
-                        .itemIcon = "__OTR__icon_item_24_static_yar/gQuestIconGoldSkulltulaTex",
-                        .prefix = "This",
-                        .message = "is a",
-                        .suffix = "test.",
-                    });
-                } },
-          } } });
+                { .widgetName = "Notifications", .widgetType = WIDGET_SEPARATOR_TEXT },
+                { "Position",
+                  "gNotifications.Position",
+                  "Which corner of the screen notifications appear in.",
+                  WIDGET_CVAR_COMBOBOX,
+                  { .defaultVariant = 3, .comboBoxOptions = notificationPosition } },
+                { "Duration: %.0f seconds",
+                  "gNotifications.Duration",
+                  "How long notifications are displayed for.",
+                  WIDGET_CVAR_SLIDER_FLOAT,
+                  { .min = 3.0f, .max = 30.0f, .defaultVariant = 10.0f, .format = "%.1f", .step = 0.1f } },
+                { "Background Opacity: %.0f%%",
+                  "gNotifications.BgOpacity",
+                  "How opaque the background of notifications is.",
+                  WIDGET_CVAR_SLIDER_FLOAT,
+                  { .min = 0.0f, .max = 1.0f, .defaultVariant = 0.5f, .format = "%.0f%%", .isPercentage = true } },
+                { "Size %.1f",
+                  "gNotifications.Size",
+                  "How large notifications are.",
+                  WIDGET_CVAR_SLIDER_FLOAT,
+                  { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.8f, .format = "%.1f", .step = 0.1f } },
+                { "Test Notification",
+                  "",
+                  "Displays a test notification.",
+                  WIDGET_BUTTON,
+                  {},
+                  [](widgetInfo& info) {
+                      Notification::Emit({
+                          .itemIcon = "__OTR__icon_item_24_static_yar/gQuestIconGoldSkulltulaTex",
+                          .prefix = "This",
+                          .message = "is a",
+                          .suffix = "test.",
+                      });
+                  } },
+            },
+            {
+                { .widgetName = "In-Game Timer", .widgetType = WIDGET_SEPARATOR_TEXT },
+                { "Toggle Display Overlay",
+                  "gWindows.DisplayOverlay",
+                  "Toggles the Display Overlay window for In-game Timers.",
+                  WIDGET_WINDOW_BUTTON,
+                  { .size = UIWidgets::Sizes::Inline, .windowName = "Display Overlay" } },
+                { .widgetName = "Hide Window Background",
+                  .widgetCVar = "gDisplayOverlay.Background",
+                  .widgetTooltip = "Hides the background of the Display Overlay window.",
+                  .widgetType = WIDGET_CVAR_CHECKBOX,
+                  .widgetOptions = { .defaultVariant = false },
+                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
+                { .widgetName = "Scale: %.0fx",
+                  .widgetCVar = "gDisplayOverlay.Scale",
+                  .widgetTooltip = "Adjust the Scale for the Display Overlay window.",
+                  .widgetType = WIDGET_CVAR_SLIDER_FLOAT,
+                  .widgetOptions = { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.0f, .format = "%.1f", .step = 0.1f },
+                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
+            } } });
 
     if (CVarGetInteger("gSettings.SidebarSearch", 0)) {
         settingsSidebar.insert(settingsSidebar.begin() + searchSidebarIndex, searchSidebarEntry);

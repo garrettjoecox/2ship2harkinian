@@ -95,13 +95,21 @@ std::map<std::pair<float, float>, RandoCheckId> crateMap = {
     // Romani Ranch //
     { { -576.0f, -1193.0f }, RC_ROMANI_RANCH_FIELD_LARGE_CRATE },
 
-    // Doggy Racetrack //
-    { { -3439.0f, -583.0f }, RC_DOGGY_RACETRACK_LARGE_CRATE_01 },
-    { { -3382.0f, -565.0f }, RC_DOGGY_RACETRACK_LARGE_CRATE_02 },
-    { { -3325.0f, -546.0f }, RC_DOGGY_RACETRACK_LARGE_CRATE_03 },
+    // Cucco Shack //
+    { { -3439.0f, -583.0f }, RC_CUCCO_SHACK_LARGE_CRATE_01 },
+    { { -3382.0f, -565.0f }, RC_CUCCO_SHACK_LARGE_CRATE_02 },
+    { { -3325.0f, -546.0f }, RC_CUCCO_SHACK_LARGE_CRATE_03 },
 
     // Goron Village //
     { { -1184.0f, -3051.0f }, RC_GORON_VILLAGE_LARGE_CRATE },
+
+    // Swamp Spider House //
+    { { -828.0f, -210.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_01 },
+    { { -876.0f, -210.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_02 },
+    { { -876.0f, -509.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_03 },
+    { { -870.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_04 },
+    { { -810.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_05 },
+    { { -690.0f, -876.0f }, RC_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM_LARGE_CRATE_06 },
 };
 
 void Rando::ActorBehavior::InitObjKibakoBehavior() {

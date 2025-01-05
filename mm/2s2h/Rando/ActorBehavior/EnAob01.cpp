@@ -18,7 +18,7 @@ void Rando::ActorBehavior::InitEnAob01Behavior() {
         }
 
         if (CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_DOGGY_RACETRACK_HEART_PIECE)) {
-            RANDO_SAVE_CHECKS[RC_DOGGY_RACETRACK_HP].eligible = true;
+            RANDO_SAVE_CHECKS[RC_DOGGY_RACETRACK_PIECE_OF_HEART].eligible = true;
         } else {
             Rando::GiveItem(RI_RUPEE_RED);
         }
