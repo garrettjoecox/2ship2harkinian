@@ -69,6 +69,7 @@ void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {
         { "dpadEquips", shipSaveInfo.dpadEquips },
         { "pauseSaveEntrance", shipSaveInfo.pauseSaveEntrance },
         { "saveType", shipSaveInfo.saveType },
+        { "fileCreatedAt", shipSaveInfo.fileCreatedAt },
         { "commitHash", commitHash },
     };
 
@@ -81,6 +82,7 @@ void from_json(const json& j, ShipSaveInfo& shipSaveInfo) {
     j.at("dpadEquips").get_to(shipSaveInfo.dpadEquips);
     j.at("pauseSaveEntrance").get_to(shipSaveInfo.pauseSaveEntrance);
     j.at("saveType").get_to(shipSaveInfo.saveType);
+    j.at("fileCreatedAt").get_to(shipSaveInfo.fileCreatedAt);
     j.at("commitHash").get_to(shipSaveInfo.commitHash);
 
     if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
