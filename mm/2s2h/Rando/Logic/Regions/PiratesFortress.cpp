@@ -186,7 +186,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
-    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER] = RandoRegion{ .name = "Palaza Left Lower", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER] = RandoRegion{ .name = "Plaza Left Lower", .sceneId = SCENE_KAIZOKU,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 7),    ENTRANCE(PIRATES_FORTRESS, 7), true)
         },
@@ -195,7 +195,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_PLAZA_LEFT_UPPER, HAS_ITEM(ITEM_HOOKSHOT))
         }
     };
-    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_UPPER] = RandoRegion{ .name = "Palaza Left Upper", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_LEFT_UPPER] = RandoRegion{ .name = "Plaza Left Upper", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_BARREL,  true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_FREESTANDING_HEART_01, true),
@@ -234,7 +234,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         }
     };
-    Regions[RR_PIRATES_FORTRESS_PLAZA_TOWER] = RandoRegion{ .name = "Palaza Tower", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA_TOWER] = RandoRegion{ .name = "Plaza Tower", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_02, true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_03, true),
@@ -249,7 +249,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
         },
     };
-    Regions[RR_PIRATES_FORTRESS_PLAZA] = RandoRegion{ .name = "Palaza", .sceneId = SCENE_KAIZOKU,
+    Regions[RR_PIRATES_FORTRESS_PLAZA] = RandoRegion{ .name = "Plaza", .sceneId = SCENE_KAIZOKU,
         .checks = {
             CHECK(RC_PIRATE_FORTRESS_PLAZA_LARGE_CRATE_01,  true),
             CHECK(RC_PIRATE_FORTRESS_PLAZA_LOWER_CHEST,     true),
