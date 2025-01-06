@@ -453,14 +453,15 @@ void CheckTrackerWindow::Draw() {
         return;
     }
 
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, trackerBG);
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, trackerBG);
     ImGui::PushStyleColor(ImGuiCol_WindowBg, trackerBG);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
 
     ImGui::SetNextWindowSize(ImVec2(485.0f, 500.0f), ImGuiCond_FirstUseEver);
 
-    ImGui::Begin("Check Tracker", nullptr,
-                 ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Check Tracker", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing);
 
     trackerBG.w = ImGui::IsWindowDocked() ? 1.0f : CVAR_TRACKER_OPACITY;
     ImGui::SetWindowFontScale(trackerScale);
@@ -470,7 +471,7 @@ void CheckTrackerWindow::Draw() {
         ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2 - 10.0f);
         ImGui::TextColored(UIWidgets::Colors::Gray, "No Rando Save Loaded");
         ImGui::End();
-        ImGui::PopStyleColor(2);
+        ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(1);
         return;
     }
@@ -505,7 +506,7 @@ void CheckTrackerWindow::Draw() {
 
     ImGui::End();
 
-    ImGui::PopStyleColor(2);
+    ImGui::PopStyleColor(4);
     ImGui::PopStyleVar(1);
 }
 
