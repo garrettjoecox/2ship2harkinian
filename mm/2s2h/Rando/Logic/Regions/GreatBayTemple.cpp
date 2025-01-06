@@ -296,7 +296,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
            EVENT( // Red Valve in the room before Wart
-                "Opened second Red Valve", 
+                "Opened first Red Valve", 
                 Flags_GetSceneSwitch(SCENE_SEA, 0x34),
                 Flags_SetSceneSwitch(SCENE_SEA, 0x34),
                 Flags_ClearSceneSwitch(SCENE_SEA, 0x34), 
@@ -322,7 +322,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
            EVENT( // Red Valve in the room next to the map room
-                "Opened first Red Valve", 
+                "Opened second Red Valve", 
                 Flags_GetSceneSwitch(SCENE_SEA, 0x35),
                 Flags_SetSceneSwitch(SCENE_SEA, 0x35),
                 Flags_ClearSceneSwitch(SCENE_SEA, 0x35), 
