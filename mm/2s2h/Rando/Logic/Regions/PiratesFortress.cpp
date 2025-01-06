@@ -224,7 +224,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_PIRATES_FORTRESS_PLAZA_RIGHT] = RandoRegion{ .name = "Right Side", .sceneId = SCENE_KAIZOKU,
         .checks = {
-            CHECK(RC_PIRATE_FORTRESS_PLAZA_UPPER_CHEST, true),
+            CHECK(RC_PIRATE_FORTRESS_PLAZA_UPPER_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 5),    ENTRANCE(PIRATES_FORTRESS, 12), true),
