@@ -210,13 +210,13 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
                         height = 35.0f;
                         break;
                     case PLAYER_FORM_FIERCE_DEITY:
-                        height = 90.0f;
+                        height = 100.0f;
                         break;
                     case PLAYER_FORM_GORON:
-                        height = 75.0f;
+                        height = 90.0f;
                         break;
                     case PLAYER_FORM_ZORA:
-                        height = 60.0f;
+                        height = 75.0f;
                         break;
                 }
 

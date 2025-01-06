@@ -61,10 +61,10 @@ static std::vector<RandoItemId> junkItems = {
     RI_RUPEE_PURPLE,
     // Ammo
     RI_ARROWS_10,
-    RI_BOMBCHU,
+    RI_BOMBCHU_5,
     RI_BOMBS_5,
-    RI_DEKU_NUT,
-    RI_DEKU_STICK,
+    RI_DEKU_NUTS_5,
+    RI_DEKU_STICKS_5,
     // Refill
     RI_RED_POTION_REFILL,
     RI_GREEN_POTION_REFILL,
@@ -79,7 +79,7 @@ static std::vector<RandoItemId> junkItems = {
 RandoItemId Rando::CurrentJunkItem() {
     static RandoItemId lastJunkItem = RI_UNKNOWN;
     static u32 lastChosenAt = 0;
-    if (gPlayState != NULL && ABS(gPlayState->gameplayFrames - lastChosenAt) > 10) {
+    if (gPlayState != NULL && ABS(gPlayState->gameplayFrames - lastChosenAt) > 15) {
         lastChosenAt = gPlayState->gameplayFrames;
         lastJunkItem = RI_UNKNOWN;
     }

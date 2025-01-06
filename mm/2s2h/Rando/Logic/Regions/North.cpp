@@ -213,7 +213,8 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(GORON_RACETRACK, 0),          ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 2), HAS_ITEM(ITEM_POWDER_KEG) && CAN_BE_GORON),
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_GORON_VILLAGE_RAMP_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
+            // TODO: This can be reached in entrance rando if coming from Goron Racetrack
+            CONNECTION(RR_PATH_TO_GORON_VILLAGE_RAMP_GROTTO, CAN_USE_EXPLOSIVE && (CAN_BE_GORON || CAN_HOOK_SCARECROW)), // TODO: Grotto mapping
         },
     };
     Regions[RR_PATH_TO_MOUNTAIN_VILLAGE_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_13HUBUKINOMITI,

@@ -42,6 +42,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_DEKU_NUTS_10,               "",     "10 Deku Nuts",               RITYPE_JUNK,            ITEM_DEKU_NUTS_10,               GI_DEKU_NUTS_10,             GID_DEKU_NUTS),
     RI(RI_DEKU_NUTS_5,                "",     "5 Deku Nuts",                RITYPE_JUNK,            ITEM_DEKU_NUTS_5,                GI_DEKU_NUTS_5,              GID_DEKU_NUTS),
     RI(RI_DEKU_STICK,                 "a",    "Deku Stick",                 RITYPE_JUNK,            ITEM_DEKU_STICK,                 GI_DEKU_STICKS_1,            GID_DEKU_STICK),
+    RI(RI_DEKU_STICKS_5,              "",     "5 Deku Sticks",              RITYPE_JUNK,            ITEM_DEKU_STICKS_5,              GI_NONE,                     GID_DEKU_STICK),
     RI(RI_DOUBLE_DEFENSE,             "",     "Double Defense",             RITYPE_HEALTH,          ITEM_NONE,                       GI_NONE,                     GID_HEART_CONTAINER),
     RI(RI_DOUBLE_MAGIC,               "a",    "Magic Upgrade",              RITYPE_LESSER,          ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_BIG),
     RI(RI_FAIRY_REFILL,               "a",    "Fairy",                      RITYPE_JUNK,            ITEM_FAIRY,                      GI_FAIRY,                    GID_FAIRY_2),

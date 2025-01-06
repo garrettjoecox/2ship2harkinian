@@ -17,6 +17,7 @@ void EnOsn_Idle(EnOsn* enOsn, PlayState* play);
 void PlayerCall_Init(Actor* thisx, PlayState* play);
 void PlayerCall_Update(Actor* thisx, PlayState* play);
 void PlayerCall_Draw(Actor* thisx, PlayState* play);
+void Player_StopHorizontalMovement(Player* player);
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
@@ -33,23 +34,27 @@ void RegisterSkipLearningSongOfHealing() {
 
         *should = false;
 
-        // Transform the player into human form
-        s16 objectId = OBJECT_LINK_NUTS;
-        gActorOverlayTable[ACTOR_PLAYER].initInfo->objectId = objectId;
-        func_8012F73C(&gPlayState->objectCtx, player->actor.objectSlot, objectId);
-        player->actor.objectSlot = Object_GetSlot(&gPlayState->objectCtx, GAMEPLAY_KEEP);
-        gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
-        s32 objectSlot = Object_GetSlot(&gPlayState->objectCtx, gActorOverlayTable[ACTOR_PLAYER].initInfo->objectId);
-        player->actor.objectSlot = objectSlot;
-        player->actor.shape.rot.z = GET_PLAYER_FORM + 1;
-        player->actor.init = PlayerCall_Init;
-        player->actor.update = PlayerCall_Update;
-        player->actor.draw = PlayerCall_Draw;
-        gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
+        // Transform the player into human form if we're not in rando
+        if (!IS_RANDO) {
+            s16 objectId = OBJECT_LINK_NUTS;
+            gActorOverlayTable[ACTOR_PLAYER].initInfo->objectId = objectId;
+            func_8012F73C(&gPlayState->objectCtx, player->actor.objectSlot, objectId);
+            player->actor.objectSlot = Object_GetSlot(&gPlayState->objectCtx, GAMEPLAY_KEEP);
+            gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
+            s32 objectSlot =
+                Object_GetSlot(&gPlayState->objectCtx, gActorOverlayTable[ACTOR_PLAYER].initInfo->objectId);
+            player->actor.objectSlot = objectSlot;
+            player->actor.shape.rot.z = GET_PLAYER_FORM + 1;
+            player->actor.init = PlayerCall_Init;
+            player->actor.update = PlayerCall_Update;
+            player->actor.draw = PlayerCall_Draw;
+            gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
+            Player_StopHorizontalMovement(player);
 
-        TransitionFade_SetColor(&gPlayState->unk_18E48, 0x000000);
-        R_TRANS_FADE_FLASH_ALPHA_STEP = -1;
-        Player_PlaySfx(GET_PLAYER(gPlayState), NA_SE_SY_TRANSFORM_MASK_FLASH);
+            TransitionFade_SetColor(&gPlayState->unk_18E48, 0x000000);
+            R_TRANS_FADE_FLASH_ALPHA_STEP = -1;
+            Player_PlaySfx(GET_PLAYER(gPlayState), NA_SE_SY_TRANSFORM_MASK_FLASH);
+        }
 
         // The last thing that he says after teaching you the song.
         enOsn->textId = 0x1FCD;

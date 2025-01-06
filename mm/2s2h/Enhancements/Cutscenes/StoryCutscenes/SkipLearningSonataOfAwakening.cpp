@@ -51,6 +51,7 @@ void RegisterSkipLearningSonataOfAwakening() {
                 gSaveContext.nextTransitionType = TRANS_TYPE_64;
                 gPlayState->transitionTrigger = TRANS_TRIGGER_START;
                 SET_WEEKEVENTREG(WEEKEVENTREG_09_80); // Boil the monkey
+                CLEAR_EVENTINF(EVENTINF_24);          // Stop forcing instrument to be Deku Pipes
                 *should = false;
             }
         }

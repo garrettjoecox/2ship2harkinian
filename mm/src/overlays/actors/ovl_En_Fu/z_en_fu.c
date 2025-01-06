@@ -12,6 +12,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS \
     (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_2000000 | ACTOR_FLAG_CANT_LOCK_ON)
@@ -802,9 +803,12 @@ void func_80962F4C(EnFu* this, PlayState* play) {
         Message_StartTextbox(play, 0x288B, &this->actor);
     }
 
-    if ((!DynaPolyActor_IsPlayerAbove((DynaPolyActor*)this->actor.child) &&
-         (player->actor.bgCheckFlags & BGCHECKFLAG_GROUND)) ||
-        (gSaveContext.timerCurTimes[TIMER_ID_MINIGAME_2] <= SECONDS_TO_TIMER(0)) || (this->unk_548 == this->unk_54C)) {
+    if (GameInteractor_Should(VB_HONEY_AND_DARLING_MINIGAME_FINISH,
+                              (!DynaPolyActor_IsPlayerAbove((DynaPolyActor*)this->actor.child) &&
+                               (player->actor.bgCheckFlags & BGCHECKFLAG_GROUND)) ||
+                                  (gSaveContext.timerCurTimes[TIMER_ID_MINIGAME_2] <= SECONDS_TO_TIMER(0)) ||
+                                  (this->unk_548 == this->unk_54C),
+                              this)) {
         player->stateFlags3 &= ~PLAYER_STATE3_400000;
         func_80961E88(play);
         player->stateFlags1 |= PLAYER_STATE1_20;

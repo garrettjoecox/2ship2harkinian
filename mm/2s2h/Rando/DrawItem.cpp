@@ -7,9 +7,13 @@ extern "C" {
 #include "functions.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_gi_melody/object_gi_melody.h"
+#include "assets/objects/object_gi_key/object_gi_key.h"
+#include "assets/objects/object_gi_bosskey/object_gi_bosskey.h"
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 #include "objects/object_gi_liquid/object_gi_liquid.h"
 #include "objects/object_sek/object_sek.h"
+
+Gfx* ResourceMgr_LoadGfxByName(const char* path);
 }
 
 s32 StrayFairyOverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx,
@@ -180,10 +184,111 @@ void DrawOwlStatue() {
     Gfx_DrawDListOpa(gPlayState, (Gfx*)gOwlStatueOpenedDL);
 }
 
+static Gfx gGiSmallKeyCopyDL[75];
+
+void DrawSmallKey(RandoItemId randoItemId) {
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gGiSmallKeyDL);
+        memcpy(gGiSmallKeyCopyDL, baseDL, sizeof(gGiSmallKeyCopyDL));
+        gGiSmallKeyCopyDL[5] = gsDPNoOp();
+        gGiSmallKeyCopyDL[6] = gsDPNoOp();
+    }
+
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+    switch (randoItemId) {
+        case RI_WOODFALL_SMALL_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            break;
+        case RI_SNOWHEAD_SMALL_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            break;
+        case RI_GREAT_BAY_SMALL_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            break;
+        case RI_STONE_TOWER_SMALL_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            break;
+        default:
+            break;
+    }
+
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_OPA_DISP++, gGiSmallKeyCopyDL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
+static Gfx gGiBossKeyCopyDL[87];
+
+void DrawBossKey(RandoItemId randoItemId) {
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gGiBossKeyDL);
+        memcpy(gGiBossKeyCopyDL, baseDL, sizeof(gGiBossKeyCopyDL));
+        gGiBossKeyCopyDL[5] = gsDPNoOp();
+        gGiBossKeyCopyDL[6] = gsDPNoOp();
+    }
+
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+    switch (randoItemId) {
+        case RI_WOODFALL_BOSS_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            break;
+        case RI_SNOWHEAD_BOSS_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            break;
+        case RI_GREAT_BAY_BOSS_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            break;
+        case RI_STONE_TOWER_BOSS_KEY:
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            break;
+        default:
+            break;
+    }
+
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_OPA_DISP++, gGiBossKeyCopyDL);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiBossKeyGemDL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
         case RI_JUNK:
             Rando::DrawItem(Rando::CurrentJunkItem());
+            break;
+        case RI_GREAT_BAY_SMALL_KEY:
+        case RI_SNOWHEAD_SMALL_KEY:
+        case RI_STONE_TOWER_SMALL_KEY:
+        case RI_WOODFALL_SMALL_KEY:
+            DrawSmallKey(randoItemId);
+            break;
+        case RI_GREAT_BAY_BOSS_KEY:
+        case RI_SNOWHEAD_BOSS_KEY:
+        case RI_STONE_TOWER_BOSS_KEY:
+        case RI_WOODFALL_BOSS_KEY:
+            DrawBossKey(randoItemId);
             break;
         case RI_SONG_TIME:
         case RI_SONG_STORMS:

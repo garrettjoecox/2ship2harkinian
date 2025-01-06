@@ -6031,7 +6031,8 @@ void Message_Update(PlayState* play) {
                     }
                 } else if (sLastPlayedSong == OCARINA_SONG_DOUBLE_TIME) {
                     if (interfaceCtx->restrictions.songOfDoubleTime == 0) {
-                        if ((CURRENT_DAY != 3) || (gSaveContext.save.isNight == 0)) {
+                        if (GameInteractor_Should(VB_ALLOW_SONG_DOUBLE_TIME_ON_FINAL_NIGHT,
+                                                  (CURRENT_DAY != 3) || (gSaveContext.save.isNight == 0))) {
                             if (GameInteractor_Should(VB_DISPLAY_SONG_OF_DOUBLE_TIME_PROMPT, true)) {
                                 if (gSaveContext.save.isNight) {
                                     Message_StartTextbox(play, D_801D0464[CURRENT_DAY - 1], NULL);
