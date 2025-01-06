@@ -67,11 +67,11 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_SF_CENTRAL_ROOM_UNDERWATER_POT,   CAN_BE_ZORA),
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL,     CAN_BE_ZORA && Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36)),   // Reverse Water Flow
+            CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL,     CAN_BE_ZORA && GBT_REVERSE_WATER_FLOW),
             CONNECTION(RR_GREAT_BAY_TEMPLE_GREEN_PIPE_1,            CAN_USE_MAGIC_ARROW(ICE)),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM,                CAN_BE_ZORA && !Flags_GetSceneSwitch(SCENE_SEA, 0x33) && !Flags_GetSceneSwitch(SCENE_SEA, 0x36)), // Regular Water Flow
-            CONNECTION(RR_GREAT_BAY_TEMPLE_PRE_BOSS_ROOM,           CAN_BE_ZORA && Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36)),   // Reverse Water Flow
-            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,    CAN_BE_ZORA && !Flags_GetSceneSwitch(SCENE_SEA, 0x33) && !Flags_GetSceneSwitch(SCENE_SEA, 0x36)), // Regular Water Flow
+            CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM,                CAN_BE_ZORA && GBT_REGULAR_WATER_FLOW),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_PRE_BOSS_ROOM,           CAN_BE_ZORA && GBT_REVERSE_WATER_FLOW),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,    CAN_BE_ZORA && GBT_REGULAR_WATER_FLOW),
             CONNECTION(RR_GREAT_BAY_TEMPLE_WATER_WHEEL_ROOM,        true)
         },
     };
@@ -86,19 +86,20 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL] = RandoRegion{ .sceneId = SCENE_SEA,
         .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_SF_COMPASS_ROOM_TUNNEL_POT,        CAN_BE_ZORA || (CAN_USE_PROJECTILE && HAS_ITEM(ITEM_MASK_GREAT_FAIRY))),
+            // TODO: Think about the best way to handle these checks with waterflow in mind.
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_COMPASS_ROOM_TUNNEL_POT,                CAN_BE_ZORA || (CAN_USE_PROJECTILE && HAS_ITEM(ITEM_MASK_GREAT_FAIRY))),
             CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL_FREESTANDING_RUPEE_01, CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL_FREESTANDING_RUPEE_02, CAN_BE_ZORA),
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,                      !Flags_GetSceneSwitch(SCENE_SEA, 0x33) && !Flags_GetSceneSwitch(SCENE_SEA, 0x36)), // Regular Water Flow
-            CONNECTION(RR_GREAT_BAY_TEMPLE_GREEN_PIPE_2,                      Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36)), // Reverse Water Flow
+            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,              GBT_REGULAR_WATER_FLOW),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_GREEN_PIPE_2,              GBT_REVERSE_WATER_FLOW),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
         .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_CHEST,              true),
-            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_UNDERWATER,    CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_CHEST,               true),
+            CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_UNDERWATER,     CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_SURFACE_POT_01, true),
             CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_SURFACE_POT_02, true),
             CHECK(RC_GREAT_BAY_TEMPLE_COMPASS_ROOM_SURFACE_POT_03, true),
@@ -111,7 +112,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_BABA_CHEST_ROOM,                   true),
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_WITH_BOSS_KEY_CHEST,  CAN_BE_ZORA && CAN_USE_MAGIC_ARROW(ICE)),
             CONNECTION(RR_GREAT_BAY_TEMPLE_GEKKO,                             CAN_USE_MAGIC_ARROW(ICE)),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_GREEN_PIPE_2,                      CAN_BE_ZORA),
             CONNECTION(RR_GREAT_BAY_TEMPLE_COMPASS_ROOM_TUNNEL, true)
         },
     };
@@ -250,25 +250,25 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_BABA_CHEST_ROOM,         CAN_BE_ZORA),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,            CAN_BE_ZORA && Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36)), // Reverse Water Flow
+            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,            CAN_BE_ZORA && GBT_REVERSE_WATER_FLOW),
             CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM,    true),
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_PRE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
         .checks = {
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_01,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_02,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_03,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_04,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_05,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_06,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_07,          CAN_BE_ZORA),
-            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_08,          CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_01,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_02,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_03,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_04,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_05,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_06,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_07,         CAN_BE_ZORA),
+            CHECK(RC_GREAT_BAY_TEMPLE_PRE_BOSS_POT_08,         CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_SF_PRE_BOSS_ABOVE_WATER, CAN_USE_PROJECTILE && HAS_ITEM(ITEM_MASK_GREAT_FAIRY)),
             CHECK(RC_GREAT_BAY_TEMPLE_SF_PRE_BOSS_UNDERWATER,  CAN_BE_ZORA),
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(GYORGS_LAIR, 0),                           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE) && Flags_GetSceneSwitch(SCENE_SEA, 0x37) && Flags_GetSceneSwitch(SCENE_SEA, 0x38) && Flags_GetSceneSwitch(SCENE_SEA, 0x39)),
+            EXIT(ENTRANCE(GYORGS_LAIR, 0),                           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE) && GBT_GREEN_SWITCH_FLOW),
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM, CAN_BE_ZORA),
@@ -349,16 +349,16 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_GREAT_BAY_TEMPLE_WATER_WHEEL_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
         .checks = {
             CHECK(RC_GREAT_BAY_TEMPLE_SF_WATER_WHEEL_PLATFORM,           CAN_BE_ZORA || (HAS_ITEM(ITEM_BOW) && (HAS_ITEM(ITEM_MASK_GREAT_FAIRY)))),
-            CHECK(RC_GREAT_BAY_TEMPLE_SF_WATER_WHEEL_SKULLTULA,          true),
-            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_01, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_02, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_03, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_04, true),
-            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_05, true),
+            CHECK(RC_GREAT_BAY_TEMPLE_SF_WATER_WHEEL_SKULLTULA,          GBT_EITHER_FLOW || (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_MASK_GREAT_FAIRY))),
+            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_01, GBT_EITHER_FLOW),
+            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_02, GBT_EITHER_FLOW),
+            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_03, GBT_EITHER_FLOW),
+            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_04, GBT_EITHER_FLOW),
+            CHECK(RC_GREAT_BAY_TEMPLE_WATER_WHEEL_FREESTANDING_RUPEE_05, GBT_EITHER_FLOW),
 
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,  CAN_BE_ZORA && (!Flags_GetSceneSwitch(SCENE_SEA, 0x33) || Flags_GetSceneSwitch(SCENE_SEA, 0x36))),
+            CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,  CAN_BE_ZORA && GBT_EITHER_FLOW),
             CONNECTION(RR_GREAT_BAY_TEMPLE_ENTRANCE,      true),
         },
         .events = {
@@ -367,7 +367,7 @@ static RegisterShipInitFunc initFunc([]() {
                 Flags_GetSceneSwitch(SCENE_SEA, 0x36),
                 Flags_SetSceneSwitch(SCENE_SEA, 0x36),
                 Flags_ClearSceneSwitch(SCENE_SEA, 0x36), 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x34) && Flags_GetSceneSwitch(SCENE_SEA, 0x35) && HAS_ITEM(ITEM_HOOKSHOT)
+                GBT_RED_SWITCH_FLOW && HAS_ITEM(ITEM_HOOKSHOT)
             ),
             EVENT( // Yellow Switch toggle in the Waterwheel room near entrance
                 "Yellow Switch Toggle", 
