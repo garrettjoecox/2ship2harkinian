@@ -32,6 +32,7 @@ static std::unordered_map<s32, s32> betterSceneIndex = {
 #undef DEFINE_SCENE
 #undef DEFINE_SCENE_UNSET
 
+#define CVAR_NAME_SHOW_CHECK_TRACKER "gWindows.CheckTracker"
 #define CVAR_NAME_SHOW_LOGIC "gRando.CheckTracker.OnlyShowChecksInLogic"
 #define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollectedChecks"
 #define CVAR_NAME_HIDE_SKIPPED "gRando.CheckTracker.HideSkippedChecks"
@@ -39,6 +40,7 @@ static std::unordered_map<s32, s32> betterSceneIndex = {
 #define CVAR_NAME_TRACKER_OPACITY "gRando.CheckTracker.Opacity"
 #define CVAR_NAME_TRACKER_SCALE "gRando.CheckTracker.Scale"
 #define CVAR_NAME_SHOW_CURRENT_SCENE "gRando.CheckTracker.ShowCurrentScene"
+#define CVAR_SHOW_CHECK_TRACKER CVarGetInteger(CVAR_NAME_SHOW_CHECK_TRACKER, 0)
 #define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
 #define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
 #define CVAR_HIDE_SKIPPED CVarGetInteger(CVAR_NAME_HIDE_SKIPPED, 0)
@@ -457,9 +459,15 @@ namespace Rando {
 namespace CheckTracker {
 
 void CheckTrackerWindow::Draw() {
+    if (!CVAR_SHOW_CHECK_TRACKER) {
+        return;
+    }
+
     ImGui::PushStyleColor(ImGuiCol_WindowBg, trackerBG);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
+
+    ImGui::SetNextWindowSize(ImVec2(485.0f, 500.0f), ImGuiCond_FirstUseEver);
 
     ImGui::Begin("Check Tracker", nullptr,
                  ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar);
