@@ -279,7 +279,7 @@ static RegisterShipInitFunc initFunc([]() {
                 Flags_GetSceneSwitch(SCENE_SEA, 0x39),
                 Flags_SetSceneSwitch(SCENE_SEA, 0x39),
                 Flags_ClearSceneSwitch(SCENE_SEA, 0x39), 
-                CAN_USE_MAGIC_ARROW(ICE)
+                true
             ),
         }
     };
