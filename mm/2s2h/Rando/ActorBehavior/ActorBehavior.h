@@ -15,6 +15,7 @@ void InitDmHinaBehavior();
 void InitDmStkBehavior();
 void InitDoorWarp1VBehavior();
 void InitEnAkindonutsBehavior();
+void InitEnAnBehavior();
 void InitEnAob01Behavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
