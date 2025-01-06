@@ -82,23 +82,13 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
 };
 
-uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
-    uint32_t collected = 0;
-    for (RandoCheckId checkId : checks) {
-        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
-        if (randoSaveCheck.obtained) {
-            collected++;
-        }
-    }
-    return collected;
-}
-
 std::string totalChecksFound() {
     std::string totalChecks;
     uint32_t collected = 0;
     uint32_t totalShuffled = 0;
     for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
+        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained ||
+            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].skipped) {
             collected++;
         }
         if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
@@ -344,7 +334,7 @@ void CheckTrackerDrawNonLogicalList() {
         uint32_t obtainedCheckSum = 0;
 
         for (auto& checkId : unfilteredChecks) {
-            if (RANDO_SAVE_CHECKS[checkId].obtained) {
+            if (RANDO_SAVE_CHECKS[checkId].obtained || RANDO_SAVE_CHECKS[checkId].skipped) {
                 obtainedCheckSum++;
                 if (CVAR_HIDE_COLLECTED) {
                     continue;
