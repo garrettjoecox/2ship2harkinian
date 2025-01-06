@@ -11,12 +11,13 @@ namespace CheckTracker {
 void Init();
 void OnFileLoad();
 
-class Window : public Ship::GuiWindow {
+class CheckTrackerWindow : public Ship::GuiWindow {
   public:
     using GuiWindow::GuiWindow;
 
     void InitElement() override{};
-    void DrawElement() override;
+    void DrawElement() override{};
+    void Draw() override;
     void UpdateElement() override{};
 };
 

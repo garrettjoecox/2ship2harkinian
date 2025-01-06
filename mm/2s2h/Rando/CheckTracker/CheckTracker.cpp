@@ -36,16 +36,25 @@ static std::unordered_map<s32, s32> betterSceneIndex = {
 #define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollectedChecks"
 #define CVAR_NAME_HIDE_SKIPPED "gRando.CheckTracker.HideSkippedChecks"
 #define CVAR_NAME_SCROLL_TO_SCENE "gRando.CheckTracker.ScrollToCurrentScene"
+#define CVAR_NAME_TRACKER_OPACITY "gRando.CheckTracker.Opacity"
+#define CVAR_NAME_TRACKER_SCALE "gRando.CheckTracker.Scale"
+#define CVAR_NAME_SHOW_CURRENT_SCENE "gRando.CheckTracker.ShowCurrentScene"
 #define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
 #define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
 #define CVAR_HIDE_SKIPPED CVarGetInteger(CVAR_NAME_HIDE_SKIPPED, 0)
 #define CVAR_SCROLL_TO_SCENE CVarGetInteger(CVAR_NAME_SCROLL_TO_SCENE, 0)
+#define CVAR_TRACKER_OPACITY CVarGetFloat(CVAR_NAME_TRACKER_OPACITY, 0.5f)
+#define CVAR_TRACKER_SCALE CVarGetFloat(CVAR_NAME_TRACKER_SCALE, 1.0f)
+#define CVAR_SHOW_CURRENT_SCENE CVarGetInteger(CVAR_NAME_SHOW_CURRENT_SCENE, 0)
 
 static bool sExpandedHeadersToggle = true;
 static bool sExpandedHeadersState = true;
 static s32 sScrollToTargetScene = -1;
 static s32 sScrollToTargetEntrance = -1;
 static ImGuiTextFilter sCheckTrackerFilter;
+float trackerScale = 1.0f;
+float searchBoxPadding = 15.0f;
+ImVec4 trackerBG = ImVec4{ 0, 0, 0, 0.5f };
 
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
 std::vector<SceneId> sortedSceneIds;
@@ -103,9 +112,9 @@ std::string totalChecksFound() {
 void DrawCheckTypeIcon(RandoCheckId randoCheckId) {
     RandoCheckType checkType = Rando::StaticData::Checks[randoCheckId].randoCheckType;
     ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(checkTypeIconList[checkType]),
-                 checkType == RCTYPE_SONG  ? ImVec2(14.0f, 18.0f)
-                 : checkType == RCTYPE_OWL ? ImVec2(18.0f, 11.0f)
-                                           : ImVec2(18.0f, 18.0f),
+                 checkType == RCTYPE_SONG  ? ImVec2(14.0f * trackerScale, 18.0f * trackerScale)
+                 : checkType == RCTYPE_OWL ? ImVec2(18.0f * trackerScale, 11.0f * trackerScale)
+                                           : ImVec2(18.0f * trackerScale, 18.0f * trackerScale),
                  ImVec2(0, 0), ImVec2(1, 1),
                  checkType == RCTYPE_FREESTANDING ? ImVec4(0.78f, 1, 0.39f, 1) : ImVec4(1, 1, 1, 1));
 }
@@ -340,6 +349,10 @@ void CheckTrackerDrawNonLogicalList() {
                 continue;
             }
 
+            if (CVAR_SHOW_CURRENT_SCENE && Rando::StaticData::Checks[checkId].sceneId != gPlayState->sceneId) {
+                continue;
+            }
+
             checks.push_back(checkId);
         }
 
@@ -347,7 +360,8 @@ void CheckTrackerDrawNonLogicalList() {
             continue;
         }
 
-        if (CVAR_SCROLL_TO_SCENE && sScrollToTargetScene != -1 && sScrollToTargetScene == sceneId) {
+        if (!CVAR_SHOW_CURRENT_SCENE && CVAR_SCROLL_TO_SCENE && sScrollToTargetScene != -1 &&
+            sScrollToTargetScene == sceneId) {
             ImGui::SetScrollHereY(0.0f);
             sScrollToTargetScene = -1;
             sScrollToTargetEntrance = -1;
@@ -368,7 +382,7 @@ void CheckTrackerDrawNonLogicalList() {
         if (ImGui::CollapsingHeader(headerText.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Indent(20.0f);
             if (ImGui::BeginTable("Check Tracker", 2)) {
-                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 16.0f);
+                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, (16.0f * trackerScale));
                 ImGui::TableSetupColumn("Check");
                 ImGui::TableNextColumn();
                 for (auto& randoCheckId : checks) {
@@ -434,25 +448,47 @@ namespace Rando {
 
 namespace CheckTracker {
 
-void Window::DrawElement() {
+void CheckTrackerWindow::Draw() {
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, trackerBG);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
+
+    ImGui::Begin("Check Tracker", nullptr,
+                 ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar);
+
+    trackerBG.w = ImGui::IsWindowDocked() ? 1.0f : CVAR_TRACKER_OPACITY;
+    ImGui::SetWindowFontScale(trackerScale);
+
     if (!gPlayState || !IS_RANDO) {
         ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("No Rando Save Loaded").x) / 2);
         ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2 - 10.0f);
         ImGui::TextColored(UIWidgets::Colors::Gray, "No Rando Save Loaded");
+        ImGui::End();
+        ImGui::PopStyleColor(2);
+        ImGui::PopStyleVar(1);
         return;
     }
 
+    bool sameLine = !(ImGui::GetContentRegionAvail().x <= 300.0f * trackerScale);
+
     UIWidgets::PushStyleCombobox();
-    sCheckTrackerFilter.Draw("##filter", (ImGui::GetContentRegionAvail().x - 150.0f));
+    sCheckTrackerFilter.Draw("##filter", (ImGui::GetContentRegionAvail().x -
+                                          (sameLine ? (ImGui::CalcTextSize("Total: ").x +
+                                                       ImGui::CalcTextSize(totalChecksFound().c_str()).x + 15.0f)
+                                                    : 0)));
     UIWidgets::PopStyleCombobox();
     if (!sCheckTrackerFilter.IsActive()) {
         ImGui::SameLine(18.0f);
         ImGui::Text("Search");
     }
-    ImGui::SameLine(ImGui::GetContentRegionAvail().x - 125.0f);
+
+    if (sameLine) {
+        ImGui::SameLine(ImGui::GetContentRegionAvail().x -
+                        (ImGui::CalcTextSize("Total: ").x + ImGui::CalcTextSize(totalChecksFound().c_str()).x));
+    }
     ImGui::Text("Total: %s", totalChecksFound().c_str());
 
-    ImGui::BeginChild("Checks", ImVec2(0, 0));
+    ImGui::BeginChild("Checks");
     // if (CVAR_SHOW_LOGIC) {
     //     CheckTrackerDrawLogicalList();
     // } else {
@@ -460,14 +496,36 @@ void Window::DrawElement() {
     // }
     sExpandedHeadersState = sExpandedHeadersToggle;
     ImGui::EndChild();
+
+    ImGui::End();
+
+    ImGui::PopStyleColor(2);
+    ImGui::PopStyleVar(1);
 }
 
 void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
-    UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
-    UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
-    UIWidgets::CVarCheckbox("Hide Skipped Checks", CVAR_NAME_HIDE_SKIPPED);
-    UIWidgets::CVarCheckbox("Auto Scroll To Current Scene", CVAR_NAME_SCROLL_TO_SCENE);
+    if (ImGui::BeginTable("Settings Table", 2)) {
+        ImGui::TableNextColumn();
+        UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
+        UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
+        UIWidgets::CVarCheckbox("Hide Skipped Checks", CVAR_NAME_HIDE_SKIPPED);
+        UIWidgets::CVarCheckbox("Auto Scroll To Current Scene", CVAR_NAME_SCROLL_TO_SCENE);
+        UIWidgets::CVarCheckbox("Only Show Current Scene", CVAR_NAME_SHOW_CURRENT_SCENE);
+
+        ImGui::TableNextColumn();
+
+        if (UIWidgets::CVarSliderFloat("Opacity", CVAR_NAME_TRACKER_OPACITY, 0, 1.0f, 0.5f,
+                                       { .format = "%.1f", .step = 0.10f })) {
+            trackerBG.w = CVAR_TRACKER_OPACITY;
+        }
+        if (UIWidgets::CVarSliderFloat("Scale", CVAR_NAME_TRACKER_SCALE, 0.7f, 2.5f, 1.0f,
+                                       { .format = "%.1f", .step = 0.10f })) {
+            trackerScale = CVAR_TRACKER_SCALE;
+        }
+
+        ImGui::EndTable();
+    }
     if (UIWidgets::Button("Expand/Collapse All")) {
         sExpandedHeadersToggle = !sExpandedHeadersToggle;
     }
@@ -488,6 +546,9 @@ void Init() {
             sScrollToTargetEntrance = gSaveContext.save.entrance;
         }
     });
+
+    trackerBG = { 0, 0, 0, CVAR_TRACKER_OPACITY };
+    trackerScale = CVAR_TRACKER_SCALE;
 }
 
 void OnFileLoad() {

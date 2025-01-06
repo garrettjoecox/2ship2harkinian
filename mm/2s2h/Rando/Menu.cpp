@@ -10,7 +10,7 @@
 std::vector<std::string> logicOptions = { "No Logic", "Vanilla", "Glitchless" };
 
 namespace BenGui {
-extern std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
+extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 extern std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
 } // namespace BenGui
 
