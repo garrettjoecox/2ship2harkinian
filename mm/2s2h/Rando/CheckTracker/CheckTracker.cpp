@@ -334,7 +334,7 @@ void CheckTrackerDrawNonLogicalList() {
         uint32_t obtainedCheckSum = 0;
 
         for (auto& checkId : unfilteredChecks) {
-            if (RANDO_SAVE_CHECKS[checkId].obtained || RANDO_SAVE_CHECKS[checkId].skipped) {
+            if (RANDO_SAVE_CHECKS[checkId].obtained) {
                 obtainedCheckSum++;
                 if (CVAR_HIDE_COLLECTED) {
                     continue;
