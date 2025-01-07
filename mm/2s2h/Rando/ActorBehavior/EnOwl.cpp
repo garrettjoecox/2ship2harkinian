@@ -13,5 +13,5 @@ void Rando::ActorBehavior::InitEnOwlBehavior() {
      * logic, Lens may be obtained without magic, so we use this hook to only kill this owl if both Lens and magic are
      * acquired.
      */
-    COND_VB_SHOULD(VB_KILL_OWL, IS_RANDO, { *should = HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC; });
+    COND_VB_SHOULD(VB_KILL_GORON_VILLAGE_OWL, IS_RANDO, { *should = HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC; });
 }

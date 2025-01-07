@@ -181,7 +181,7 @@ typedef enum {
     VB_ARCHERY_ADD_BONUS_POINTS,
     VB_HONEY_AND_DARLING_MINIGAME_FINISH,
     VB_MINIMAP_TOGGLE,
-    VB_KILL_OWL,
+    VB_KILL_GORON_VILLAGE_OWL,
 } GIVanillaBehavior;
 
 typedef enum {
