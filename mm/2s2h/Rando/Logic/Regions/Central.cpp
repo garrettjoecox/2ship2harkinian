@@ -137,6 +137,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_CLOCK_TOWN_NORTH_TINGLE_MAP_02, CAN_USE_PROJECTILE),
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_PIECE_OF_HEART, true),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
+            CHECK(RC_CLOCK_TOWN_POSTBOX, HAS_ITEM(ITEM_MASK_POSTMAN)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 8),                ENTRANCE(NORTH_CLOCK_TOWN, 0), true),
@@ -151,6 +152,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_SOUTH] = RandoRegion{ .sceneId = SCENE_CLOCKTOWER,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_POSTBOX, HAS_ITEM(ITEM_MASK_POSTMAN)),
             CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_PIECE_OF_HEART, true),
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || HAS_ITEM(ITEM_HOOKSHOT)),
@@ -180,6 +182,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWN_WEST] = RandoRegion{ .sceneId = SCENE_ICHIBA,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_POSTBOX, HAS_ITEM(ITEM_MASK_POSTMAN)),
             CHECK(RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET, true),
             CHECK(RC_CLOCK_TOWN_WEST_BANK_PIECE_OF_HEART, CUR_UPG_VALUE(UPG_WALLET) >= 1),
             CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, CUR_UPG_VALUE(UPG_WALLET) >= 1),
