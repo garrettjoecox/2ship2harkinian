@@ -181,7 +181,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_WOODFALL);
             SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_WOODFALL);
             break;
-        case RI_TINGLE_MAP_GREAT_BAY:
+        case RI_TINGLE_MAP_SNOWHEAD:
             Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_SNOWHEAD);
             SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_SNOWHEAD);
             break;
@@ -189,7 +189,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_ROMANI_RANCH);
             SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_ROMANI_RANCH);
             break;
-        case RI_TINGLE_MAP_SNOWHEAD:
+        case RI_TINGLE_MAP_GREAT_BAY:
             Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_GREAT_BAY);
             SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_GREAT_BAY);
             break;

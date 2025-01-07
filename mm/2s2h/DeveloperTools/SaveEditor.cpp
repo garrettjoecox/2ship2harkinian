@@ -904,25 +904,17 @@ void DrawItemsAndMasksTab() {
 
                             CustomMessage::Entry entry = {
                                 .textboxType = 2,
+                                .icon = Rando::StaticData::GetIconForZMessage(randoItemId),
                                 .msg = msg + " " + itemName + "!",
                             };
-                            if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
-                                entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
-                            }
 
                             if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
                                 CustomMessage::SetActiveCustomMessage(entry.msg, entry);
                             } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
                                 CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                             } else {
-                                s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
-                                if (itemId >= ITEM_RECOVERY_HEART) {
-                                    itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
-                                }
-
                                 Notification::Emit({
-                                    .itemIcon =
-                                        itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
+                                    .itemIcon = Rando::StaticData::GetIconTexturePath(randoItemId),
                                     .message = msg,
                                     .suffix = itemName,
                                 });

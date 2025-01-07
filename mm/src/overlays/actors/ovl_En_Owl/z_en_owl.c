@@ -157,7 +157,9 @@ void EnOwl_Init(Actor* thisx, PlayState* play) {
             break;
 
         case ENOWL_GET_TYPE_2:
-            if (gSaveContext.save.saveInfo.inventory.items[ITEM_LENS_OF_TRUTH] == ITEM_LENS_OF_TRUTH) {
+            if (GameInteractor_Should(VB_KILL_GORON_VILLAGE_OWL,
+                                      gSaveContext.save.saveInfo.inventory.items[ITEM_LENS_OF_TRUTH] ==
+                                          ITEM_LENS_OF_TRUTH)) {
                 Actor_Kill(&this->actor);
                 return;
             }

@@ -32,6 +32,7 @@ static std::unordered_map<s32, s32> betterSceneIndex = {
 #undef DEFINE_SCENE
 #undef DEFINE_SCENE_UNSET
 
+#define CVAR_NAME_SHOW_CHECK_TRACKER "gWindows.CheckTracker"
 #define CVAR_NAME_SHOW_LOGIC "gRando.CheckTracker.OnlyShowChecksInLogic"
 #define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollectedChecks"
 #define CVAR_NAME_HIDE_SKIPPED "gRando.CheckTracker.HideSkippedChecks"
@@ -39,6 +40,7 @@ static std::unordered_map<s32, s32> betterSceneIndex = {
 #define CVAR_NAME_TRACKER_OPACITY "gRando.CheckTracker.Opacity"
 #define CVAR_NAME_TRACKER_SCALE "gRando.CheckTracker.Scale"
 #define CVAR_NAME_SHOW_CURRENT_SCENE "gRando.CheckTracker.ShowCurrentScene"
+#define CVAR_SHOW_CHECK_TRACKER CVarGetInteger(CVAR_NAME_SHOW_CHECK_TRACKER, 0)
 #define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
 #define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
 #define CVAR_HIDE_SKIPPED CVarGetInteger(CVAR_NAME_HIDE_SKIPPED, 0)
@@ -80,23 +82,13 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
 };
 
-uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
-    uint32_t collected = 0;
-    for (RandoCheckId checkId : checks) {
-        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
-        if (randoSaveCheck.obtained) {
-            collected++;
-        }
-    }
-    return collected;
-}
-
 std::string totalChecksFound() {
     std::string totalChecks;
     uint32_t collected = 0;
     uint32_t totalShuffled = 0;
     for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
+        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained ||
+            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].skipped) {
             collected++;
         }
         if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
@@ -349,8 +341,11 @@ void CheckTrackerDrawNonLogicalList() {
                 }
             }
 
-            if (RANDO_SAVE_CHECKS[checkId].skipped && CVAR_HIDE_SKIPPED) {
-                continue;
+            if (RANDO_SAVE_CHECKS[checkId].skipped) {
+                obtainedCheckSum++;
+                if (CVAR_HIDE_SKIPPED) {
+                    continue;
+                }
             }
 
             if (!sCheckTrackerFilter.PassFilter(readableCheckNames[checkId].c_str())) {
@@ -457,12 +452,19 @@ namespace Rando {
 namespace CheckTracker {
 
 void CheckTrackerWindow::Draw() {
+    if (!CVAR_SHOW_CHECK_TRACKER) {
+        return;
+    }
+
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, trackerBG);
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, trackerBG);
     ImGui::PushStyleColor(ImGuiCol_WindowBg, trackerBG);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
 
-    ImGui::Begin("Check Tracker", nullptr,
-                 ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar);
+    ImGui::SetNextWindowSize(ImVec2(485.0f, 500.0f), ImGuiCond_FirstUseEver);
+
+    ImGui::Begin("Check Tracker", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing);
 
     trackerBG.w = ImGui::IsWindowDocked() ? 1.0f : CVAR_TRACKER_OPACITY;
     ImGui::SetWindowFontScale(trackerScale);
@@ -472,7 +474,7 @@ void CheckTrackerWindow::Draw() {
         ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2 - 10.0f);
         ImGui::TextColored(UIWidgets::Colors::Gray, "No Rando Save Loaded");
         ImGui::End();
-        ImGui::PopStyleColor(2);
+        ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(1);
         return;
     }
@@ -507,7 +509,7 @@ void CheckTrackerWindow::Draw() {
 
     ImGui::End();
 
-    ImGui::PopStyleColor(2);
+    ImGui::PopStyleColor(4);
     ImGui::PopStyleVar(1);
 }
 

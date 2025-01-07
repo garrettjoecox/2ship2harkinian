@@ -60,6 +60,10 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_BG_HAKUGIN_SWITCH:
             case ACTOR_BG_HAKUGIN_POST:
             case ACTOR_OBJ_Y2SHUTTER:
+            case ACTOR_OBJ_LIGHTBLOCK:
+            case ACTOR_OBJ_LIGHTSWITCH:
+            case ACTOR_BG_IKANA_BOMBWALL:
+            case ACTOR_EN_SW:
                 *should = false;
                 break;
             default:

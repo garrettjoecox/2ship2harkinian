@@ -268,5 +268,8 @@ void CustomItem::RegisterHooks() {
             // Set the rotX/rotZ back to 0, the original values can be accessed from actor->home
             actor->world.rot.x = 0;
             actor->world.rot.z = 0;
+            actor->shape.rot.x = 0;
+            actor->shape.rot.y = 0;
+            actor->shape.rot.z = 0;
         });
 }

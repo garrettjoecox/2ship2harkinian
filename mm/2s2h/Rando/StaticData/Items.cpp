@@ -1,5 +1,10 @@
 #include "StaticData.h"
 
+extern "C" {
+extern s16 D_801CFF94[250];
+#include "assets/interface/parameter_static/parameter_static.h"
+}
+
 namespace Rando {
 
 namespace StaticData {
@@ -178,6 +183,89 @@ RandoItemId GetItemIdFromName(const char* name) {
         }
     }
     return RI_UNKNOWN;
+}
+
+// This exists because of nintendo being nintendo
+u8 GetIconForZMessage(RandoItemId randoItemId) {
+    switch (randoItemId) {
+        case RI_MASK_CAPTAIN:
+            return GI_MASK_TRUTH;
+        case RI_MASK_TRUTH:
+            return GI_MASK_CAPTAIN;
+        case RI_MASK_GIANT:
+            return GI_MASK_KAFEIS_MASK;
+        case RI_MASK_KAFEIS_MASK:
+            return GI_MASK_GIANT;
+        case RI_BOMBCHU:
+        case RI_BOMBCHU_5:
+            return GI_BOMBCHUS_10;
+        case RI_BOW:
+            return GI_ARROWS_10;
+        case RI_DEKU_STICKS_5:
+            return GI_DEKU_STICKS_1;
+        case RI_DOUBLE_DEFENSE:
+            return GI_HEART_CONTAINER;
+        case RI_SINGLE_MAGIC:
+            return GI_MAGIC_JAR_SMALL;
+        case RI_DOUBLE_MAGIC:
+            return GI_MAGIC_JAR_BIG;
+        case RI_GREAT_SPIN_ATTACK:
+            return GI_SWORD_KOKIRI;
+        default:
+            break;
+    }
+
+    if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
+        return (u8)Rando::StaticData::Items[randoItemId].getItemId;
+    }
+
+    return 0xFE;
+}
+
+const char* GetIconTexturePath(RandoItemId randoItemId) {
+    switch (randoItemId) {
+        case RI_BOMBCHU:
+        case RI_BOMBCHU_5:
+            return (const char*)gItemIcons[ITEM_BOMBCHU];
+        case RI_DEKU_STICKS_5:
+            return (const char*)gItemIcons[ITEM_DEKU_STICK];
+        case RI_DOUBLE_DEFENSE:
+            return (const char*)gItemIcons[ITEM_HEART_CONTAINER];
+        case RI_SINGLE_MAGIC:
+            return (const char*)gItemIcons[ITEM_MAGIC_JAR_SMALL];
+        case RI_DOUBLE_MAGIC:
+            return (const char*)gItemIcons[ITEM_MAGIC_JAR_BIG];
+        case RI_GREAT_SPIN_ATTACK:
+            return (const char*)gItemIcons[ITEM_SWORD_KOKIRI];
+        case RI_CLOCK_TOWN_STRAY_FAIRY:
+        case RI_STONE_TOWER_STRAY_FAIRY:
+            return (const char*)gStrayFairyStoneTowerIconTex;
+        case RI_SNOWHEAD_STRAY_FAIRY:
+            return (const char*)gStrayFairySnowheadIconTex;
+        case RI_GREAT_BAY_STRAY_FAIRY:
+            return (const char*)gStrayFairyGreatBayIconTex;
+        case RI_WOODFALL_STRAY_FAIRY:
+            return (const char*)gStrayFairyWoodfallIconTex;
+        case RI_SNOWHEAD_COMPASS:
+        case RI_GREAT_BAY_COMPASS:
+        case RI_WOODFALL_COMPASS:
+        case RI_STONE_TOWER_COMPASS:
+            return (const char*)gItemIcons[ITEM_DUNGEON_MAP];
+        case RI_SNOWHEAD_MAP:
+        case RI_GREAT_BAY_MAP:
+        case RI_WOODFALL_MAP:
+        case RI_STONE_TOWER_MAP:
+            return (const char*)gItemIcons[ITEM_COMPASS];
+        default:
+            break;
+    }
+
+    s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
+    if (itemId >= ITEM_RECOVERY_HEART) {
+        itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
+    }
+
+    return itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr;
 }
 
 // clang-format on

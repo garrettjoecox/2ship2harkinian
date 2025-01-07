@@ -20,6 +20,7 @@ extern "C" {
 
 void Rando::DrawMenu() {
     ImGui::BeginChild("randoSettings", ImVec2(ImGui::GetContentRegionAvail().x / 2, 0));
+    ImGui::SeparatorText("Seed Generation");
     UIWidgets::CVarCheckbox("Enable Rando (Randomizes new files upon creation)", "gRando.Enabled");
 
     if (UIWidgets::CVarCombobox("Seed", "gRando.SpoilerFileIndex", Rando::Spoiler::spoilerOptions)) {
@@ -60,14 +61,16 @@ void Rando::DrawMenu() {
                 "This will shuffle freestanding rupees and drops from pots, crates, etc. Not everything is covered "
                 "here yet, consult the check tracker for more detailed information.");
             UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
-            UIWidgets::CVarCheckbox("Container Style Matches Contents", "gRando.CSMC");
-            UIWidgets::Tooltip("Currently this is fairly limited, will be expanded upon soon");
         }
     }
+    ImGui::SeparatorText("Enhancements");
+    UIWidgets::CVarCheckbox("Container Style Matches Contents", "gRando.CSMC");
+    UIWidgets::Tooltip("This will make the contents of a container match the container itself. This currently only "
+                       "applies to chests and pots");
     UIWidgets::WindowButton("Check Tracker", "gWindows.CheckTracker", BenGui::mRandoCheckTrackerWindow,
-                            { .size = ImVec2((ImGui::GetContentRegionAvail().x - 48.0f), 32.0f) });
+                            { .size = ImVec2((ImGui::GetContentRegionAvail().x - 48.0f), 40.0f) });
     ImGui::SameLine();
-    if (UIWidgets::Button(ICON_FA_COG, { .size = ImVec2(32.0f, 32.0f) })) {
+    if (UIWidgets::Button(ICON_FA_COG, { .size = ImVec2(40.0f, 40.0f) })) {
         BenGui::mRandoCheckTrackerSettingsWindow->ToggleVisibility();
     }
     ImGui::EndChild();

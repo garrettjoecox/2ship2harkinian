@@ -201,20 +201,20 @@ void DrawSmallKey(RandoItemId randoItemId) {
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
     switch (randoItemId) {
         case RI_WOODFALL_SMALL_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 236, 120, 186, 255);
             break;
         case RI_SNOWHEAD_SMALL_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 129, 173, 70, 255);
             break;
         case RI_GREAT_BAY_SMALL_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 99, 90, 183, 255);
             break;
         case RI_STONE_TOWER_SMALL_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 165, 83, 255);
             break;
         default:
             break;
@@ -243,20 +243,20 @@ void DrawBossKey(RandoItemId randoItemId) {
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
     switch (randoItemId) {
         case RI_WOODFALL_BOSS_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 236, 120, 186, 255);
             break;
         case RI_SNOWHEAD_BOSS_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 129, 173, 70, 255);
             break;
         case RI_GREAT_BAY_BOSS_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 99, 90, 183, 255);
             break;
         case RI_STONE_TOWER_BOSS_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 165, 83, 255);
             break;
         default:
             break;
@@ -272,11 +272,40 @@ void DrawBossKey(RandoItemId randoItemId) {
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
+void DrawSparkles(RandoItemId randoItemId, Actor* actor) {
+    if (actor == NULL) {
+        return;
+    }
 
-void Rando::DrawItem(RandoItemId randoItemId) {
+    if (gGameState->frames % 2 == 0) {
+        return;
+    }
+
+    static Vec3f sVelocity = { 0.0f, 0.0f, 0.0f };
+    static Vec3f sAccel = { 0.0f, 0.0f, 0.0f };
+    static Color_RGBA8 sPrimColor = { 255, 255, 255, 255 };
+    static Color_RGBA8 sEnvColor = { 255, 128, 0, 255 };
+    Vec3f newPos;
+
+    newPos.x = Rand_CenteredFloat(10.0f) + actor->world.pos.x;
+    newPos.y = (Rand_ZeroOne() * 10.0f) + actor->world.pos.y;
+    newPos.z = Rand_CenteredFloat(10.0f) + actor->world.pos.z;
+
+    if (actor->id == ACTOR_EN_SI) {
+        newPos.y = (Rand_ZeroOne() * 10.0f) + actor->world.pos.y - 5.0f;
+    } else if (actor->id == ACTOR_EN_ITEM00) {
+        newPos.x = Rand_CenteredFloat(20.0f) + actor->world.pos.x;
+        newPos.y = (Rand_ZeroOne() * 10.0f) + actor->world.pos.y + 10.0f;
+        newPos.z = Rand_CenteredFloat(20.0f) + actor->world.pos.z;
+    }
+
+    EffectSsKirakira_SpawnDispersed(gPlayState, &newPos, &sVelocity, &sAccel, &sPrimColor, &sEnvColor, 2000, 16);
+}
+
+void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
     switch (randoItemId) {
         case RI_JUNK:
-            Rando::DrawItem(Rando::CurrentJunkItem());
+            Rando::DrawItem(Rando::CurrentJunkItem(), actor);
             break;
         case RI_GREAT_BAY_SMALL_KEY:
         case RI_SNOWHEAD_SMALL_KEY:
@@ -333,13 +362,24 @@ void Rando::DrawItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_BOMB_BAG:
         case RI_PROGRESSIVE_SWORD:
         case RI_PROGRESSIVE_WALLET:
-            Rando::DrawItem(Rando::ConvertItem(randoItemId));
+            Rando::DrawItem(Rando::ConvertItem(randoItemId), actor);
             break;
         case RI_NONE:
         case RI_UNKNOWN:
             break;
         default:
             GetItem_Draw(gPlayState, Rando::StaticData::Items[randoItemId].drawId);
+            break;
+    }
+
+    switch (randoItemId) {
+        case RI_NONE:
+        case RI_PROGRESSIVE_MAGIC:
+        case RI_SINGLE_MAGIC:
+        case RI_DOUBLE_MAGIC:
+            DrawSparkles(randoItemId, actor);
+            break;
+        default:
             break;
     }
 }

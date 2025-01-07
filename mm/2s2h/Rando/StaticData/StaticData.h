@@ -43,6 +43,8 @@ struct RandoStaticItem {
 extern std::map<RandoItemId, RandoStaticItem> Items;
 
 RandoItemId GetItemIdFromName(const char* name);
+u8 GetIconForZMessage(RandoItemId itemId);
+const char* GetIconTexturePath(RandoItemId itemId);
 
 struct RandoStaticOption {
     RandoOptionId randoOptionId;

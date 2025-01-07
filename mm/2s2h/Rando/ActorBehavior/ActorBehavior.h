@@ -44,6 +44,7 @@ void InitEnMa4Behavior();
 void InitEnMaYtoBehavior();
 void InitEnMnkBehavior();
 void InitEnOsnBehavior();
+void InitEnOwlBehavior();
 void InitEnRuppecrowBehavior();
 void InitEnRzBehavior();
 void InitEnSellnutsBehavior();

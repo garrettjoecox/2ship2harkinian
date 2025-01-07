@@ -7,6 +7,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Elforg/z_en_elforg.h"
 
 void EnElforg_SpawnSparkles(EnElforg* enElforg, PlayState* play, s32 life);
+void EnElforg_FairyCollected(EnElforg* enElforg, PlayState* play);
 }
 
 #define CUSTOM_PARAM (enElforg->actor.home.rot.x)
@@ -21,12 +22,13 @@ void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_PARAM];
 
-    if (randoSaveCheck.obtained) {
-        return;
-    }
-
     EnElforg_SpawnSparkles(enElforg, play, 16);
     thisx->shape.rot.y = thisx->shape.rot.y + 960;
+
+    if (enElforg->actionFunc == EnElforg_FairyCollected) {
+        // If the fairy is being collected, we don't want to draw the item, it may have been converted by now
+        return;
+    }
 
     Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_PARAM));
 }
