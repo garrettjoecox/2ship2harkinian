@@ -1097,7 +1097,10 @@ void AddEnhancements() {
                 "Enables magic spin attacks for the Fierce Deity Sword and Great Fairy's Sword.",
                 WIDGET_CVAR_CHECKBOX },
               { "Better Picto Message", "gEnhancements.Equipment.BetterPictoMessage",
-                "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX } },
+                "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX },
+              { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
+                "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
+                WIDGET_CVAR_CHECKBOX } },
             {
                 { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
                 { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.",
@@ -1432,6 +1435,13 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Fast Text", "gEnhancements.Dialogue.FastText",
                 "Speeds up text rendering, and enables holding of B progress to next message.",
+                WIDGET_CVAR_CHECKBOX } },
+            // Other
+            { { .widgetName = "Other", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "Swamp Boat Timesaver", "gEnhancements.Timesavers.SwampBoatSpeed",
+                "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat speed up for "
+                "future attempts. When reaching 20 points, you'll be automatically transported back to Koume, "
+                "completing the minigame.",
                 WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Fixes",
