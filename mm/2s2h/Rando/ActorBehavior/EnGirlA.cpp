@@ -43,7 +43,7 @@ void EnGirlA_RandoDrawFunc(Actor* actor, PlayState* play) {
 
     Matrix_RotateYS(enGirlA->rotY, MTXMODE_APPLY);
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(randoSaveCheck.randoItemId, actor);
 }
 
 void EnGirlA_RandoBought(PlayState* play, EnGirlA* enGirlA) {
