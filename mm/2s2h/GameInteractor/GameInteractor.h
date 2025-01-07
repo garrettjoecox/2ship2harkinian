@@ -180,6 +180,7 @@ typedef enum {
     VB_OWL_TELL_ABOUT_SHRINE,
     VB_ARCHERY_ADD_BONUS_POINTS,
     VB_HONEY_AND_DARLING_MINIGAME_FINISH,
+    VB_DRAW_ITEM_FROM_SOB1,
 } GIVanillaBehavior;
 
 typedef enum {

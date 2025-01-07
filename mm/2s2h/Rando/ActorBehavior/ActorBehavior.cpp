@@ -70,6 +70,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
+    Rando::ActorBehavior::InitEnSob1Behavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
     Rando::ActorBehavior::InitEnTotoBehavior();
