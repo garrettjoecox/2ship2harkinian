@@ -1442,6 +1442,10 @@ void AddEnhancements() {
                 "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat speed up for "
                 "future attempts. When reaching 20 points, you'll be automatically transported back to Koume, "
                 "completing the minigame.",
+                WIDGET_CVAR_CHECKBOX },
+              { "Shooting Gallery Both Rewards", "gEnhancements.Timesavers.GalleryTwofer",
+                "When getting a perfect score at the Shooting Gallery, receive both rewards back to back "
+                "instead of having to play twice.",
                 WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Fixes",
