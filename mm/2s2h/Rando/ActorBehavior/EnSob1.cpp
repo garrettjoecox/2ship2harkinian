@@ -24,6 +24,6 @@ void Rando::ActorBehavior::InitEnSob1Behavior() {
 
         EnSob1_DrawCustomItem(actor, gPlayState);
 
-        *should = true;
+        *should = false;
     });
 }
