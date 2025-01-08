@@ -448,6 +448,12 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
 RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId) {
     if (IsItemObtainable(randoItemId, randoCheckId)) {
         switch (randoItemId) {
+            case RI_OCARINA:
+                if (INV_CONTENT(ITEM_OCARINA_OF_TIME) != ITEM_OCARINA_OF_TIME) {
+                    return RI_OCARINA;
+                } else {
+                    return RI_JUNK;
+                }
             case RI_PROGRESSIVE_BOMB_BAG:
                 if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 0) {
                     return RI_BOMB_BAG_20;
@@ -502,6 +508,12 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 // Shouldn't happen, just in case
                 assert(false);
                 return RI_JUNK;
+            case RI_SONG_TIME:
+                if (!CHECK_QUEST_ITEM(QUEST_SONG_TIME)) {
+                    return RI_SONG_TIME;
+                } else {
+                    return RI_JUNK;
+                }
             default:
                 break;
         }
