@@ -36,9 +36,7 @@ void RegisterGalleryTwofer() {
             highestScore = thisx->score;
         }
 
-        bool gotPerfectScore = isSwampGallery 
-                                ? (highestScore >= SWAMP_CVAR)
-                                : (highestScore >= TOWN_CVAR);
+        bool gotPerfectScore = isSwampGallery ? (highestScore >= SWAMP_CVAR) : (highestScore >= TOWN_CVAR);
 
         if (hasQuiver && needsHeartPiece && gotPerfectScore) {
             if (!Actor_HasParent(&thisx->actor, play) && !(player->stateFlags1 & ~(PLAYER_STATE1_20))) {
