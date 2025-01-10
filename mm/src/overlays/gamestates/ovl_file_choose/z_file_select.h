@@ -196,20 +196,20 @@ typedef struct FileSelectState {
     /* 0x243E8 */ Vtx* keyboardVtx;
     /* 0x243EC */ Vtx* nameEntryVtx;
     /* 0x243F0 */ Vtx* keyboard2Vtx;
-    /* 0x243F4 */ u8 newf[4][6];
-    /* 0x2440C */ u16 threeDayResetCount[4];
-    /* 0x24414 */ char fileNames[4][8];
-    /* 0x24434 */ s16 healthCapacity[4];
-    /* 0x2443C */ s16 health[4];
-    /* 0x24444 */ u32 questItems[4];
-    /* 0x24454 */ s8 defenseHearts[4];
-    /* 0x24458 */ u16 time[4];
-    /* 0x24460 */ s16 day[4];
-    /* 0x24468 */ u8 isOwlSave[4];
-    /* 0x2446C */ s16 rupees[4];
-    /* 0x24474 */ u8 walletUpgrades[4];
-    /* 0x24478 */ u8 maskCount[4];
-    /* 0x2447C */ u8 heartPieceCount[4];
+    /* 0x243F4 */ u8 newf[FILE_NUM_MAX_WITH_OWL_SAVE][6];
+    /* 0x2440C */ u16 threeDayResetCount[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24414 */ char fileNames[FILE_NUM_MAX_WITH_OWL_SAVE][8];
+    /* 0x24434 */ s16 healthCapacity[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x2443C */ s16 health[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24444 */ u32 questItems[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24454 */ s8 defenseHearts[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24458 */ u16 time[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24460 */ s16 day[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24468 */ u8 isOwlSave[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x2446C */ s16 rupees[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24474 */ u8 walletUpgrades[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x24478 */ u8 maskCount[FILE_NUM_MAX_WITH_OWL_SAVE];
+    /* 0x2447C */ u8 heartPieceCount[FILE_NUM_MAX_WITH_OWL_SAVE];
     /* 0x24480 */ s16 buttonIndex; // enum will depend on `ConfigMode`
     /* 0x24482 */ s16 confirmButtonIndex; // see `ConfirmButtonIndex` enum
     /* 0x24484 */ s16 menuMode; // see `MenuMode` enum

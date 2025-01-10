@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "functions.h"
+#include "z64horse.h"
 }
 
 #define CVAR_NAME "gEnhancements.Minigames.SkipHorseRace"
@@ -18,6 +19,7 @@ void RegisterSkipHorseRace() {
             SET_WEEKEVENTREG_HORSE_RACE_STATE(WEEKEVENTREG_HORSE_RACE_STATE_2);
             // prevent horse race start music
             gSaveContext.forcedSeqId = NA_BGM_GENERAL_SFX;
+            gHorseIsMounted = false;
         }
     });
 }

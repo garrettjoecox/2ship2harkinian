@@ -152,6 +152,8 @@ void GameState_Update(GameState* gameState) {
 
     GameState_SetFrameBuffer(gameState->gfxCtx);
 
+    GameInteractor_ExecuteOnGameStateMainStart();
+
     gameState->main(gameState);
 
     GameInteractor_ExecuteOnGameStateMainFinish();

@@ -732,13 +732,36 @@ void AddSettings() {
                 WIDGET_CVAR_COMBOBOX,
                 { .comboBoxOptions = textureFilteringMap } } } } });
     // Input Editor
-    settingsSidebar.push_back({ "Input Editor",
-                                1,
-                                { { { "Popout Input Editor",
-                                      "gWindows.BenInputEditor",
-                                      "Enables the separate Input Editor window.",
-                                      WIDGET_WINDOW_BUTTON,
-                                      { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
+    settingsSidebar.push_back(
+        { "Controls",
+          1,
+          { { {
+                  "Simulated Input Lag: %d frames",
+                  CVAR_SIMULATED_INPUT_LAG,
+                  "Buffers your inputs to be executed a specified amount of frames later",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 0, 6, 0 },
+              },
+              { .widgetName =
+                    "This interface can be a little daunting. Please bear with us as we work to improve the experience "
+                    "and address some known issues.\n"
+                    "\n"
+                    "At first glance, you may notice several input devices displayed below the 'Clear All' button. "
+                    "Some of these might be other controllers connected to your computer, while others may be "
+                    "duplicated controllers (a known issue). We recommend clicking on the box with the " ICON_FA_EYE
+                    " icon and the name of any disconnected or unused controllers to hide their inputs. Make sure the "
+                    "target controller remains visible.\n"
+                    "\n"
+                    "If you encounter issues connecting your controller or registering inputs, try closing Steam or "
+                    "any other external input software. Alternatively, test a different controller to determine if "
+                    "it's a compatibility issue.\n",
+                .widgetType = WIDGET_TEXT },
+              { .widgetName = "Bindings", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "Popout Bindings Window",
+                "gWindows.BenInputEditor",
+                "Enables the separate Input Editor window.",
+                WIDGET_WINDOW_BUTTON,
+                { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
 
     settingsSidebar.push_back(
         { "Overlay",
@@ -1044,6 +1067,9 @@ void AddEnhancements() {
               { "Infinite Rupees", "gCheats.InfiniteRupees", "Always have a full Wallet.", WIDGET_CVAR_CHECKBOX, {} },
               { "Infinite Consumables", "gCheats.InfiniteConsumables",
                 "Always have max Consumables, you must have collected the consumables first.", WIDGET_CVAR_CHECKBOX },
+              { "Easy Frame Advance", "gCheats.EasyFrameAdvance",
+                "Continue holding START button when unpausing to only advance a single frame and then re-pause",
+                WIDGET_CVAR_CHECKBOX },
               { "Longer Deku Flower Glide", "gCheats.LongerFlowerGlide",
                 "Allows Deku Link to glide longer, no longer dropping after a certain distance.",
                 WIDGET_CVAR_CHECKBOX },
@@ -1100,7 +1126,9 @@ void AddEnhancements() {
                 "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX },
               { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
                 "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
-                WIDGET_CVAR_CHECKBOX } },
+                WIDGET_CVAR_CHECKBOX },
+              { "Bombchu Drops", "gEnhancements.Equipment.ChuDrops",
+                "When a bomb drop is spawned, it has a 50% chance to be a bombchu instead.", WIDGET_CVAR_CHECKBOX } },
             {
                 { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
                 { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.",
@@ -1186,6 +1214,11 @@ void AddEnhancements() {
                   "Instantly win the Gorman Horse Race", WIDGET_CVAR_CHECKBOX },
             },
             { { .widgetName = "Saving", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "3rd Save File Slot",
+                "gEnhancements.Saving.FileSlot3",
+                "Adds a 3rd file slot that can be used for saves",
+                WIDGET_CVAR_CHECKBOX,
+                { .defaultVariant = true } },
               { "Persistent Owl Saves", "gEnhancements.Saving.PersistentOwlSaves",
                 "Continuing a save will not remove the owl save. Playing Song of "
                 "Time, allowing the moon to crash or finishing the "
@@ -1884,7 +1917,7 @@ void SearchMenuGetItem(widgetInfo& widget) {
                 break;
             case WIDGET_TEXT:
                 ImGui::AlignTextToFramePadding();
-                ImGui::Text(widget.widgetName.c_str());
+                ImGui::TextWrapped(widget.widgetName.c_str());
                 break;
             case WIDGET_COMBOBOX: {
                 int32_t* pointer = std::get<int32_t*>(widget.widgetOptions.valuePointer);

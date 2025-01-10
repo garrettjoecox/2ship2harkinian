@@ -14,6 +14,16 @@ extern const char* D_801C0B20[28];
 
 void RegisterHyruleWarriorsStyledLink() {
     COND_ID_HOOK(OnPlayerPostLimbDraw, PLAYER_LIMB_HEAD, CVAR, [](Player* player, s32 limbIndex) {
+        // This emulates the vanilla check for if the masks should be drawn, specifically around
+        // z_player.c 12923 (Player_Draw)
+        if (player->stateFlags1 & PLAYER_STATE1_100000) {
+            Vec3f temp;
+            SkinMatrix_Vec3fMtxFMultXYZ(&gPlayState->viewProjectionMtxF, &player->actor.focus.pos, &temp);
+            if (temp.z < -4.0f) {
+                return;
+            }
+        }
+
         if (player->currentMask == PLAYER_MASK_NONE && player->transformation == PLAYER_FORM_HUMAN &&
             INV_CONTENT(ITEM_MASK_KEATON) == ITEM_MASK_KEATON) {
             OPEN_DISPS(gPlayState->state.gfxCtx);

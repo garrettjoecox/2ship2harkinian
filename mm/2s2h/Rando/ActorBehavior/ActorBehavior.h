@@ -19,6 +19,7 @@ void InitEnAnBehavior();
 void InitEnAob01Behavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
+void InitEnBomBowlManBehavior();
 void InitEnBoxBehavior();
 void InitEnCowBehavior();
 void InitEnElfgrpBehavior();

@@ -4,17 +4,16 @@
 #include "2s2h_assets.h"
 
 extern "C" {
-#include "z64.h"
-#include "variables.h"
+#include "z64save.h"
 #include "functions.h"
-#include <macros.h>
+#include "macros.h"
 #include "overlays/gamestates/ovl_file_choose/z_file_select.h"
 #include "misc/title_static/title_static.h"
 extern s16 sWindowContentColors[3];
 extern FileSelectState* gFileSelectState;
 }
 
-u8 isRando[4];
+u8 isRando[FILE_NUM_MAX_WITH_OWL_SAVE];
 
 // 5 rectangles per save file:
 // Rand Left Aligned
@@ -22,7 +21,7 @@ u8 isRando[4];
 // Rand Center Aligned
 // Rand Center Aligned (shadow offset)
 // Owl
-Vtx sRandVtxData[20 * 2];
+Vtx sRandVtxData[20 * FILE_NUM_MAX];
 
 constexpr s16 RAND_ICON_HEIGHT = 16;
 constexpr s16 RAND_ICON_WIDTH = 32;
@@ -70,7 +69,7 @@ void SetRandSaveTypeVtxData() {
     int startY = 44;
     int vtxId = 0;
 
-    for (int i = 0; i < 2; i++, startY -= 16, vtxId += 4) {
+    for (int i = 0; i < FILE_NUM_MAX; i++, startY -= 16, vtxId += 4) {
         int posY;
         int posX = gFileSelectState->windowPosX + 163;
 
@@ -134,7 +133,7 @@ void RegisterShoulds() {
 
         // Bail out if not a rando save, or if the save is also an owl save
         // because owl saves already render the small box and large box
-        if (!isRando[fileIndex] || gFileSelectState->isOwlSave[fileIndex + 2]) {
+        if (!isRando[fileIndex] || gFileSelectState->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET]) {
             return;
         }
 
@@ -176,7 +175,7 @@ void RegisterShoulds() {
         // Rand Icon (shadow)
         gDPSetPrimColor(POLY_OPA_DISP++, 0x00, 0x00, 0, 0, 0, gFileSelectState->nameAlpha[fileIndex]);
 
-        if (gFileSelectState->isOwlSave[fileIndex + 2]) {
+        if (gFileSelectState->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET]) {
             gSP1Quadrangle(POLY_OPA_DISP++, 4, 6, 7, 5, 0); // Left aligned
         } else {
             gSP1Quadrangle(POLY_OPA_DISP++, 12, 14, 15, 13, 0); // Centered
@@ -185,14 +184,14 @@ void RegisterShoulds() {
         // Rand Icon
         gDPSetPrimColor(POLY_OPA_DISP++, 0x00, 0x00, 255, 255, 255, gFileSelectState->nameAlpha[fileIndex]);
 
-        if (gFileSelectState->isOwlSave[fileIndex + 2]) {
+        if (gFileSelectState->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET]) {
             gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0); // Left aligned
         } else {
             gSP1Quadrangle(POLY_OPA_DISP++, 8, 10, 11, 9, 0); // Centered
         }
 
         // Owl Icon
-        if (gFileSelectState->isOwlSave[fileIndex + 2]) {
+        if (gFileSelectState->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET]) {
             gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelOwlSaveIconTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 24, 12, 0,
                                 G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
                                 G_TX_NOLOD, G_TX_NOLOD);
@@ -220,6 +219,7 @@ void Rando::MiscBehavior::InitFileSelect() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnFileSelectSaveLoad>(
         [](s16 fileNum, bool isOwlSave, SaveContext* saveContext) {
-            isRando[fileNum + (isOwlSave ? 2 : 0)] = saveContext->save.shipSaveInfo.saveType == SAVETYPE_RANDO;
+            isRando[fileNum + (isOwlSave ? FILE_NUM_OWL_SAVE_OFFSET : 0)] =
+                saveContext->save.shipSaveInfo.saveType == SAVETYPE_RANDO;
         });
 }

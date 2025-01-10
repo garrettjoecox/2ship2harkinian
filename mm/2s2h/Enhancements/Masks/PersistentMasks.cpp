@@ -54,8 +54,14 @@ void UpdatePersistentMasksState() {
                 return;
             }
 
-            if (player->transformation == PLAYER_FORM_DEKU && player->stateFlags1 & PLAYER_STATE1_100000) {
-                return;
+            // This emulates the vanilla check for if the masks should be drawn, specifically around
+            // z_player.c 12923 (Player_Draw)
+            if (player->stateFlags1 & PLAYER_STATE1_100000) {
+                Vec3f temp;
+                SkinMatrix_Vec3fMtxFMultXYZ(&gPlayState->viewProjectionMtxF, &player->actor.focus.pos, &temp);
+                if (temp.z < -4.0f) {
+                    return;
+                }
             }
 
             OPEN_DISPS(gPlayState->state.gfxCtx);

@@ -7,6 +7,7 @@
 #include "z_obj_oshihiki.h"
 #include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
 #include "objects/gameplay_dangeon_keep/gameplay_dangeon_keep.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -480,7 +481,9 @@ void ObjOshihiki_OnActor(ObjOshihiki* this, PlayState* play) {
 void ObjOshihiki_SetupPush(ObjOshihiki* this, PlayState* play) {
     this->stateFlags |= PUSHBLOCK_SETUP_PUSH;
     this->dyna.actor.gravity = 0.0f;
-    this->pushSpeed = 2.0f;
+    if (GameInteractor_Should(VB_PUSH_BLOCK_SET_SPEED, true, this)) {
+        this->pushSpeed = 2.0f;
+    }
     this->actionFunc = ObjOshihiki_Push;
 }
 
@@ -518,7 +521,9 @@ void ObjOshihiki_Push(ObjOshihiki* this, PlayState* play) {
         this->dyna.pushForce = 0.0f;
         this->pushDist = 0.0f;
         this->pushSpeed = 0.0f;
-        this->timer = 10;
+        if (GameInteractor_Should(VB_PUSH_BLOCK_SET_TIMER, true, this)) {
+            this->timer = 10;
+        }
 
         if (this->floorBgIds[this->highestFloor] == BGCHECK_SCENE) {
             ObjOshihiki_SetupOnScene(this, play);

@@ -187,7 +187,7 @@ static void UpdateEquippedBow(PlayState* play, s8 arrowType) {
     s32 bowItem = GetBowItemForArrow(static_cast<PlayerItemAction>(arrowType));
 
     // Update C-buttons
-    for (s32 i = 0; i < 3; i++) {
+    for (s32 i = EQUIP_SLOT_C_LEFT; i <= EQUIP_SLOT_C_RIGHT; i++) {
         if ((BUTTON_ITEM_EQUIP(0, i) == ITEM_BOW) ||
             (BUTTON_ITEM_EQUIP(0, i) >= ITEM_BOW_FIRE && BUTTON_ITEM_EQUIP(0, i) <= ITEM_BOW_LIGHT)) {
             BUTTON_ITEM_EQUIP(0, i) = bowItem;
@@ -200,7 +200,7 @@ static void UpdateEquippedBow(PlayState* play, s8 arrowType) {
     }
 
     // Update D-pad
-    for (s32 i = 0; i < 4; i++) {
+    for (s32 i = EQUIP_SLOT_D_RIGHT; i <= EQUIP_SLOT_D_UP; i++) {
         if ((DPAD_BUTTON_ITEM_EQUIP(0, i) == ITEM_BOW) ||
             (DPAD_BUTTON_ITEM_EQUIP(0, i) >= ITEM_BOW_FIRE && DPAD_BUTTON_ITEM_EQUIP(0, i) <= ITEM_BOW_LIGHT)) {
             DPAD_BUTTON_ITEM_EQUIP(0, i) = bowItem;

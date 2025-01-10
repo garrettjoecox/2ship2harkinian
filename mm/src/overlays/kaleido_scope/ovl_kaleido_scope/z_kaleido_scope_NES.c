@@ -3575,9 +3575,10 @@ void KaleidoScope_Update(PlayState* play) {
                                 pauseCtx->savePromptState = PAUSE_SAVEPROMPT_STATE_5;
                             } else {
                                 if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0)) {
-                                    Sram_SetFlashPagesOwlSave(sramCtx,
-                                                              gFlashOwlSaveStartPages[gSaveContext.fileNum * 2],
-                                                              gFlashOwlSaveNumPages[gSaveContext.fileNum * 2]);
+                                    Sram_SetFlashPagesOwlSave(
+                                        sramCtx,
+                                        gFlashOwlSaveStartPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER],
+                                        gFlashOwlSaveNumPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER]);
                                     Sram_StartWriteToFlashOwlSave(sramCtx);
                                     gSaveContext.save.isOwlSave = false;
                                     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
