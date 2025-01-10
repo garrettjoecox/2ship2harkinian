@@ -104,7 +104,8 @@ void FileSelect_SelectCopySource(GameState* thisx) {
             if (this->stickAdjY >= 30) {
                 this->buttonIndex--;
                 // Instead of removing File 3 entirely, the index is manually adjusted to skip it
-                if (this->buttonIndex == FS_BTN_COPY_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_COPY_FILE_3) {
                     this->buttonIndex = FS_BTN_COPY_FILE_2;
                 }
                 if (this->buttonIndex < FS_BTN_COPY_FILE_1) {
@@ -113,7 +114,8 @@ void FileSelect_SelectCopySource(GameState* thisx) {
             } else {
                 this->buttonIndex++;
                 // Instead of removing File 3 entirely, the index is manually adjusted to skip it
-                if (this->buttonIndex == FS_BTN_COPY_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_COPY_FILE_3) {
                     this->buttonIndex = FS_BTN_COPY_QUIT;
                 }
                 if (this->buttonIndex > FS_BTN_COPY_QUIT) {
@@ -238,7 +240,8 @@ void FileSelect_SelectCopyDest(GameState* thisx) {
             if (this->stickAdjY >= 30) {
                 this->buttonIndex--;
                 // Instead of removing File 3 entirely, the index is manually adjusted to skip it
-                if (this->buttonIndex == FS_BTN_COPY_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_COPY_FILE_3) {
                     this->buttonIndex = FS_BTN_COPY_FILE_2;
                 }
                 if (this->buttonIndex == this->selectedFileIndex) {
@@ -247,7 +250,8 @@ void FileSelect_SelectCopyDest(GameState* thisx) {
                         this->buttonIndex = FS_BTN_COPY_QUIT;
                     }
                     // Instead of removing File 3 entirely, the index is manually adjusted to skip it
-                    if (this->buttonIndex == FS_BTN_COPY_FILE_3) {
+                    if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                        this->buttonIndex == FS_BTN_COPY_FILE_3) {
                         this->buttonIndex = FS_BTN_COPY_FILE_2;
                     }
                 } else if (this->buttonIndex < FS_BTN_COPY_FILE_1) {
@@ -262,7 +266,8 @@ void FileSelect_SelectCopyDest(GameState* thisx) {
                     this->buttonIndex++;
                 }
                 // Instead of removing File 3 entirely, the index is manually adjusted to skip it
-                if (this->buttonIndex == FS_BTN_COPY_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_COPY_FILE_3) {
                     this->buttonIndex = FS_BTN_COPY_QUIT;
                 }
             }
@@ -433,8 +438,9 @@ void FileSelect_CopyConfirm(GameState* thisx) {
         if (!gSaveContext.flashSaveAvailable) {
             this->configMode = CM_COPY_ANIM_1;
         } else {
-            Sram_SetFlashPagesDefault(sramCtx, gFlashSaveStartPages[this->copyDestFileIndex * 2],
-                                      gFlashSpecialSaveNumPages[this->copyDestFileIndex * 2]);
+            Sram_SetFlashPagesDefault(sramCtx,
+                                      gFlashSaveStartPages[this->copyDestFileIndex * FLASH_SAVE_MAIN_MULTIPLIER],
+                                      gFlashSpecialSaveNumPages[this->copyDestFileIndex * FLASH_SAVE_MAIN_MULTIPLIER]);
             Sram_StartWriteToFlashDefault(sramCtx);
             this->configMode = CM_COPY_WAIT_FOR_FLASH_SAVE;
         }
@@ -822,7 +828,8 @@ void FileSelect_EraseSelect(GameState* thisx) {
 
             if (this->stickAdjY >= 30) {
                 this->buttonIndex--;
-                if (this->buttonIndex == FS_BTN_ERASE_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_ERASE_FILE_3) {
                     this->buttonIndex = FS_BTN_ERASE_FILE_2;
                 }
                 if (this->buttonIndex < FS_BTN_ERASE_FILE_1) {
@@ -830,7 +837,8 @@ void FileSelect_EraseSelect(GameState* thisx) {
                 }
             } else {
                 this->buttonIndex++;
-                if (this->buttonIndex == FS_BTN_ERASE_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_ERASE_FILE_3) {
                     this->buttonIndex = FS_BTN_ERASE_QUIT;
                 }
                 if (this->buttonIndex > FS_BTN_ERASE_QUIT) {
@@ -972,8 +980,9 @@ void FileSelect_EraseConfirm(GameState* thisx) {
         if (!gSaveContext.flashSaveAvailable) {
             this->configMode = CM_ERASE_ANIM_1;
         } else {
-            Sram_SetFlashPagesDefault(sramCtx, gFlashSaveStartPages[this->selectedFileIndex * 2],
-                                      gFlashSpecialSaveNumPages[this->selectedFileIndex * 2]);
+            Sram_SetFlashPagesDefault(sramCtx,
+                                      gFlashSaveStartPages[this->selectedFileIndex * FLASH_SAVE_MAIN_MULTIPLIER],
+                                      gFlashSpecialSaveNumPages[this->selectedFileIndex * FLASH_SAVE_MAIN_MULTIPLIER]);
             Sram_StartWriteToFlashDefault(sramCtx);
             this->configMode = CM_ERASE_WAIT_FOR_FLASH_SAVE;
         }

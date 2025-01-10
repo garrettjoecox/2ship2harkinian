@@ -722,12 +722,15 @@ bool BinarySaveConverter_HandleFileDropped(std::string filePath) {
 
         SaveManager_WriteSaveFile(fileName, j);
 
+        // Reset the file select state to reload the save metadata
         if (gFileSelectState != NULL) {
-            func_801457CC(&gFileSelectState->state, &gFileSelectState->sramCtx);
-            if (gFileSelectState->menuMode == FS_MENU_MODE_CONFIG && gFileSelectState->configMode == CM_MAIN_MENU) {
-                gFileSelectState->configMode = CM_FADE_IN_START;
-            }
+            STOP_GAMESTATE(&gFileSelectState->state);
+            SET_NEXT_GAMESTATE(&gFileSelectState->state, FileSelect_Init, sizeof(FileSelectState));
         }
+
+        SPDLOG_INFO("Successfully imported save into slot {}", saveSlot);
+        auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+        gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Successfully imported save into slot %d", saveSlot);
 
         return true;
     } catch (std::exception& e) {

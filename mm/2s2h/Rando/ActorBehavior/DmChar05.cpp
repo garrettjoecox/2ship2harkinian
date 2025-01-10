@@ -4,6 +4,7 @@
 #define GORON_MASK_TEXT 0x79
 #define ZORA_MASK_TEXT 0x7A
 #define GIBDO_MASK_TEXT 0x87
+#define COUPLES_MASK_TEXT 0x85
 
 // Replace vanilla item get text with a simple message stating what randomized item has been received
 void replaceGetItemText(RandoCheckId randoCheckId, u16* textId, bool* loadFromMessageTable) {
@@ -33,6 +34,9 @@ void Rando::ActorBehavior::InitDmChar05Behavior() {
             case ITEM_MASK_ZORA:
                 RANDO_SAVE_CHECKS[RC_GREAT_BAY_COAST_MIKAU].eligible = true;
                 break;
+            case ITEM_MASK_COUPLE:
+                RANDO_SAVE_CHECKS[RC_STOCK_POT_INN_COUPLES_MASK].eligible = true;
+                break;
             default:
                 break;
         }
@@ -55,6 +59,9 @@ void Rando::ActorBehavior::InitDmChar05Behavior() {
             case GID_MASK_ZORA:
                 Rando::DrawItem(RANDO_SAVE_CHECKS[RC_GREAT_BAY_COAST_MIKAU].randoItemId);
                 break;
+            case GID_MASK_COUPLE:
+                Rando::DrawItem(RANDO_SAVE_CHECKS[RC_STOCK_POT_INN_COUPLES_MASK].randoItemId);
+                break;
             default:
                 break;
         }
@@ -71,5 +78,9 @@ void Rando::ActorBehavior::InitDmChar05Behavior() {
 
     COND_ID_HOOK(OnOpenText, GIBDO_MASK_TEXT, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         replaceGetItemText(RC_MUSIC_BOX_HOUSE_FATHER, textId, loadFromMessageTable);
+    });
+
+    COND_ID_HOOK(OnOpenText, COUPLES_MASK_TEXT, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        replaceGetItemText(RC_STOCK_POT_INN_COUPLES_MASK, textId, loadFromMessageTable);
     });
 }

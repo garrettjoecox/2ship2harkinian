@@ -149,6 +149,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
         .checks = {
+            CHECK(RC_KEATON_QUIZ,                                   HAS_ITEM(ITEM_MASK_KEATON)),
             CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,                CHECK_WEEKEVENTREG(WEEKEVENTREG_37_10)), // TODO: For entrance rando we need to find a way to ensure the Rock Sirloin can be "walked" here
             CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,                   CAN_USE_SWORD),
             CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST,              CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),

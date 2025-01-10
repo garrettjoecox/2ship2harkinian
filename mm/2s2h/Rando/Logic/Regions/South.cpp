@@ -144,7 +144,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_DOGGY_RACETRACK] = RandoRegion{ .sceneId = SCENE_F01_B,
         .checks = {
             // TODO: Trick: Jumpslash to clip through (similar to Clock Town Straw).
-            CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT) || CAN_GROW_BEAN_PLANT),
+            // Zora can just climb up, adding it to logic for now but if someone wants to make it a trick later feel free.
+            CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT) || CAN_GROW_BEAN_PLANT || CAN_BE_ZORA),
             CHECK(RC_DOGGY_RACETRACK_PIECE_OF_HEART,    HAS_ITEM(ITEM_MASK_TRUTH)),
             CHECK(RC_DOGGY_RACETRACK_POT_01, true),
             CHECK(RC_DOGGY_RACETRACK_POT_02, true),
@@ -179,6 +180,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MILK_ROAD] = RandoRegion{ .sceneId = SCENE_ROMANYMAE,
         .checks = {
+            CHECK(RC_KEATON_QUIZ, HAS_ITEM(ITEM_MASK_KEATON)),
             CHECK(RC_MILK_ROAD_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_MILK_ROAD_TINGLE_MAP_01, CAN_USE_PROJECTILE),
             CHECK(RC_MILK_ROAD_TINGLE_MAP_02, CAN_USE_PROJECTILE),

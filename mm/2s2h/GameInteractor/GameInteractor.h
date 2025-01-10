@@ -168,6 +168,11 @@ typedef enum {
     VB_COLLECT_PLAYGROUND_RUPEE,
     VB_GUAY_DROP_RUPEE,
     VB_GREAT_BAY_GEAR_CLAMP_PUSH_SPEED,
+    VB_PZL_BLOCK_BEGIN_MOVE,
+    VB_PZL_BLOCK_BE_FINISHED_PULLING,
+    VB_SKATE_BLOCK_BEGIN_MOVE,
+    VB_PUSH_BLOCK_SET_SPEED,
+    VB_PUSH_BLOCK_SET_TIMER,
     VB_GIVE_DON_GERO_MASK,
     VB_TOILET_HAND_TAKE_ITEM,
     VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP,
@@ -183,6 +188,9 @@ typedef enum {
     VB_MINIMAP_TOGGLE,
     VB_KILL_GORON_VILLAGE_OWL,
     VB_MONKEY_WAIT_TO_TALK_AFTER_APPROACH,
+    VB_SETUP_EAST_CLOCK_TOWN_BOM_BOWL_MAN,
+    VB_BE_ELIGBLE_FOR_BOMBERS_NOTEBOOK,
+    VB_BOM_BOWL_MAN_GIVE_ITEM,
     VB_DRAW_ITEM_FROM_SOB1,
 } GIVanillaBehavior;
 
@@ -444,6 +452,7 @@ class GameInteractor {
 
     DEFINE_HOOK(OnFileDropped, (std::string path));
 
+    DEFINE_HOOK(OnGameStateMainStart, ());
     DEFINE_HOOK(OnGameStateMainFinish, ());
     DEFINE_HOOK(OnGameStateDrawFinish, ());
     DEFINE_HOOK(OnGameStateUpdate, ());
@@ -496,6 +505,7 @@ class GameInteractor {
 extern "C" {
 #endif // __cplusplus
 
+void GameInteractor_ExecuteOnGameStateMainStart();
 void GameInteractor_ExecuteOnGameStateMainFinish();
 void GameInteractor_ExecuteOnGameStateDrawFinish();
 void GameInteractor_ExecuteOnGameStateUpdate();

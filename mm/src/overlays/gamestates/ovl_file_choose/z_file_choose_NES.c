@@ -25,6 +25,10 @@ s32 D_808144F1C = 0;
 
 FileSelectState* gFileSelectState = NULL;
 
+// 2S2H [Enhancement] To handle File 3 support and toggle, we undef the file num max and replace it for a CVar check
+#undef FILE_NUM_MAX
+#define FILE_NUM_MAX (CVarGetInteger("gEnhancements.Saving.FileSlot3", true) ? 3 : 2)
+
 static Gfx sScreenFillSetupDL[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_TEXTURE_GEN |
@@ -328,7 +332,8 @@ void FileSelect_UpdateMainMenu(GameState* thisx) {
             Audio_PlaySfx(NA_SE_SY_FSEL_CURSOR);
             if (this->stickAdjY > 30) {
                 this->buttonIndex--;
-                if (this->buttonIndex == FS_BTN_MAIN_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_MAIN_FILE_3) {
                     this->buttonIndex = FS_BTN_MAIN_FILE_2;
                 }
                 if (this->buttonIndex < FS_BTN_MAIN_FILE_1) {
@@ -336,7 +341,8 @@ void FileSelect_UpdateMainMenu(GameState* thisx) {
                 }
             } else {
                 this->buttonIndex++;
-                if (this->buttonIndex == FS_BTN_MAIN_FILE_3) {
+                if (!CVarGetInteger("gEnhancements.Saving.FileSlot3", true) &&
+                    this->buttonIndex == FS_BTN_MAIN_FILE_3) {
                     this->buttonIndex = FS_BTN_MAIN_COPY;
                 }
                 if (this->buttonIndex > FS_BTN_MAIN_OPTIONS) {
@@ -860,8 +866,8 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
         // Account for owl-save offset
 
         spAC = j;
-        if (this->isOwlSave[j + 2]) {
-            spAC = j + 2;
+        if (this->isOwlSave[j + FILE_NUM_OWL_SAVE_OFFSET]) {
+            spAC = j + FILE_NUM_OWL_SAVE_OFFSET;
         }
 
         /* File name */
@@ -1420,8 +1426,8 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex) {
     }
 
     if ((fileIndex == this->selectedFileIndex) || (fileIndex == this->copyDestFileIndex)) {
-        if (this->isOwlSave[fileIndex + 2]) {
-            sp20C = fileIndex + 2;
+        if (this->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET]) {
+            sp20C = fileIndex + FILE_NUM_OWL_SAVE_OFFSET;
         }
 
         gDPPipeSync(POLY_OPA_DISP++);
@@ -1563,7 +1569,8 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex) {
         }
     }
 
-    if (GameInteractor_Should(VB_DRAW_FILE_SELECT_EXTRA_INFO_DETAILS, this->isOwlSave[fileIndex + 2], fileIndex)) {
+    if (GameInteractor_Should(VB_DRAW_FILE_SELECT_EXTRA_INFO_DETAILS,
+                              this->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET], fileIndex)) {
         gDPPipeSync(POLY_OPA_DISP++);
         gDPSetCombineMode(POLY_OPA_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
@@ -1709,14 +1716,14 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
 
     // draw file info box (large box when a file is selected)
     for (fileIndex = 0; fileIndex < 3; fileIndex++, temp += 28) {
-        if (fileIndex < 2) {
+        if (fileIndex < FILE_NUM_MAX) {
             gDPPipeSync(POLY_OPA_DISP++);
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2],
                             this->fileInfoAlpha[fileIndex]);
             gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[temp], 28, 0);
 
             for (quadVtxIndex = 0, i = 0; i < 7; i++, quadVtxIndex += 4) {
-                if ((i < 5) || (this->isOwlSave[fileIndex + 2] && (i >= 5))) {
+                if ((i < 5) || (this->isOwlSave[fileIndex + FILE_NUM_OWL_SAVE_OFFSET] && (i >= 5))) {
                     gDPLoadTextureBlock(POLY_OPA_DISP++, sFileInfoBoxTextures[i], G_IM_FMT_IA, G_IM_SIZ_16b,
                                         sFileInfoBoxPartWidths[i], 56, 0, G_TX_NOMIRROR | G_TX_WRAP,
                                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -1730,7 +1737,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
     gDPPipeSync(POLY_OPA_DISP++);
 
     for (i = 0; i < 3; i++, temp += 16) {
-        if (i < 2) {
+        if (i < FILE_NUM_MAX) {
             // draw file button
             gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[temp], 16, 0);
 
@@ -1756,7 +1763,8 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
                                 G_TX_NOLOD, G_TX_NOLOD);
             gSP1Quadrangle(POLY_OPA_DISP++, 8, 10, 11, 9, 0);
 
-            if (GameInteractor_Should(VB_DRAW_FILE_SELECT_SMALL_EXTRA_INFO_BOX, this->isOwlSave[i + 2], i)) {
+            if (GameInteractor_Should(VB_DRAW_FILE_SELECT_SMALL_EXTRA_INFO_BOX,
+                                      this->isOwlSave[i + FILE_NUM_OWL_SAVE_OFFSET], i)) {
                 gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[0], sWindowContentColors[1],
                                 sWindowContentColors[2], this->nameBoxAlpha[i]);
                 gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelBlankButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 52, 16, 0,
@@ -1768,7 +1776,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
     }
 
     // draw file info
-    for (fileIndex = 0; fileIndex < 2; fileIndex++) {
+    for (fileIndex = 0; fileIndex < FILE_NUM_MAX; fileIndex++) {
         FileSelect_DrawFileInfo(&this->state, fileIndex);
     }
 

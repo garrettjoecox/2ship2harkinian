@@ -215,7 +215,9 @@ void func_80AACAE4(DmChar05* this, PlayState* play) {
 
         if (play->csCtx.actorCues[cueChannel]->id == 2) {
             if (play->csCtx.curFrame == play->csCtx.actorCues[cueChannel]->startFrame) {
-                Item_Give(play, ITEM_MASK_COUPLE);
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_DMCHAR05, true, ITEM_MASK_COUPLE)) {
+                    Item_Give(play, ITEM_MASK_COUPLE);
+                }
             }
             this->unk_18E = 1;
             this->unk_190.x = play->csCtx.actorCues[cueChannel]->startPos.x;
@@ -780,7 +782,9 @@ void func_80AAE030(PlayState* play, DmChar05* this) {
             Matrix_Translate(this->unk_190.x, this->unk_190.y, this->unk_190.z, MTXMODE_NEW);
             Matrix_RotateZYX(0, play->gameplayFrames * 1000, 0, MTXMODE_APPLY);
             Matrix_Scale(0.2f, 0.2f, 0.2f, MTXMODE_APPLY);
-            GetItem_Draw(play, GID_MASK_COUPLE);
+            if (GameInteractor_Should(VB_DRAW_ITEM_FROM_DMCHAR05, true, GID_MASK_COUPLE)) {
+                GetItem_Draw(play, GID_MASK_COUPLE);
+            }
         }
 
         if (Object_IsLoaded(&play->objectCtx, this->objectSlot)) {

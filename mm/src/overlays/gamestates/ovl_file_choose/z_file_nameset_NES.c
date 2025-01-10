@@ -520,8 +520,9 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                                 if (!gSaveContext.flashSaveAvailable) {
                                     this->configMode = CM_NAME_ENTRY_TO_MAIN;
                                 } else {
-                                    Sram_SetFlashPagesDefault(sramCtx, gFlashSaveStartPages[this->buttonIndex * 2],
-                                                              gFlashSpecialSaveNumPages[this->buttonIndex * 2]);
+                                    Sram_SetFlashPagesDefault(
+                                        sramCtx, gFlashSaveStartPages[this->buttonIndex * FLASH_SAVE_MAIN_MULTIPLIER],
+                                        gFlashSpecialSaveNumPages[this->buttonIndex * FLASH_SAVE_MAIN_MULTIPLIER]);
                                     Sram_StartWriteToFlashDefault(sramCtx);
                                     this->configMode = CM_NAME_ENTRY_WAIT_FOR_FLASH_SAVE;
                                 }
@@ -767,7 +768,8 @@ void FileSelect_UpdateOptionsMenu(GameState* thisx) {
         if (!gSaveContext.flashSaveAvailable) {
             this->configMode = CM_OPTIONS_TO_MAIN;
         } else {
-            Sram_SetFlashPagesDefault(sramCtx, gFlashSaveStartPages[8], gFlashSpecialSaveNumPages[8]);
+            Sram_SetFlashPagesDefault(sramCtx, gFlashSaveStartPages[FLASH_SAVE_SRAM_HEADER],
+                                      gFlashSpecialSaveNumPages[FLASH_SAVE_SRAM_HEADER]);
             Sram_StartWriteToFlashDefault(sramCtx);
             this->configMode = CM_OPTIONS_WAIT_FOR_FLASH_SAVE;
         }

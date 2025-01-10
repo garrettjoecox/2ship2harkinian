@@ -96,6 +96,14 @@ void CustomItem00_Draw(Actor* actor, PlayState* play) {
     GetItem_Draw(play, CUSTOM_ITEM_PARAM);
 }
 
+// Once the item is touched we need to clear movement vars so the item doesn't sink in the players hands/above head
+void CustomItem00_ItemTouched(Actor* actor, PlayState* play) {
+    actor->speed = 0.0f;
+    actor->velocity.y = 0.0f;
+    actor->gravity = 0.0f;
+    actor->shape.yOffset = 1250.0f;
+}
+
 void CustomItem00_Update(Actor* actor, PlayState* play) {
     EnItem00* enItem00 = (EnItem00*)actor;
     Player* player = GET_PLAYER(play);
@@ -104,9 +112,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         actor->shape.rot.y += 960;
     }
 
-    if (CUSTOM_ITEM_FLAGS & CustomItem::STOP_BOBBING) {
-        actor->shape.yOffset = 1250.0f;
-    } else {
+    if (!(CUSTOM_ITEM_FLAGS & CustomItem::STOP_BOBBING)) {
         actor->shape.yOffset = (Math_SinS(actor->shape.rot.y) * 150.0f) + 1250.0f;
     }
 
@@ -141,6 +147,9 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
             enItem00->unk152 = 15;
             CUSTOM_ITEM_FLAGS |= CustomItem::STOP_BOBBING;
             CUSTOM_ITEM_FLAGS |= CustomItem::KEEP_ON_PLAYER;
+            CustomItem00_ItemTouched(actor, play);
+            // Move to player right away on this frame
+            Math_Vec3f_Copy(&actor->world.pos, &GET_PLAYER(play)->actor.world.pos);
         }
 
         // If the item has been picked up
@@ -188,6 +197,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
                 CUSTOM_ITEM_FLAGS |= CustomItem::KEEP_ON_PLAYER;
                 // Actor_SetScale(actor, 0.0f);
                 CUSTOM_ITEM_FLAGS |= CustomItem::HIDE_TILL_OVERHEAD;
+                CustomItem00_ItemTouched(actor, play);
             }
 
             // Begin incrementing the unk152, indicating the item has been picked up

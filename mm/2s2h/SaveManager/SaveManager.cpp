@@ -5,34 +5,25 @@
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
 
-#include "macros.h"
 #include "BenJsonConversions.hpp"
 #include "BenPort.h"
 
 extern "C" {
+#include "z64save.h"
+#include "macros.h"
 #include "src/overlays/gamestates/ovl_file_choose/z_file_select.h"
 extern FileSelectState* gFileSelectState;
-
-u16 Sram_CalcChecksum(void* data, size_t count);
 }
 
 // This entire thing is temporary until we have a more robust save system that
 // supports backwards compatibility, migrations, threaded saving, save sections, etc.
-typedef enum FlashSlotFile {
-    /* -1 */ FLASH_SLOT_FILE_UNAVAILABLE = -1,
-    /*  0 */ FLASH_SLOT_FILE_1_NEW_CYCLE,
-    /*  1 */ FLASH_SLOT_FILE_1_NEW_CYCLE_BACKUP,
-    /*  2 */ FLASH_SLOT_FILE_2_NEW_CYCLE,
-    /*  3 */ FLASH_SLOT_FILE_2_NEW_CYCLE_BACKUP,
-    /*  4 */ FLASH_SLOT_FILE_1_OWL_SAVE,
-    /*  5 */ FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP,
-    /*  6 */ FLASH_SLOT_FILE_2_OWL_SAVE,
-    /*  7 */ FLASH_SLOT_FILE_2_OWL_SAVE_BACKUP,
-    /*  8 */ FLASH_SLOT_FILE_SRAM_HEADER,
-    /*  9 */ FLASH_SLOT_FILE_SRAM_HEADER_BACKUP,
-} FlashSlotFile;
+
+#define FLASH_SAVE_UNAVAILABLE ((FlashSave)-1)
+
+#undef GET_NEWF
 
 #define GET_NEWF(save, index) (save.saveInfo.playerData.newf[index])
+
 #define IS_VALID_FILE(save)                                                                    \
     ((GET_NEWF(save, 0) == 'Z') && (GET_NEWF(save, 1) == 'E') && (GET_NEWF(save, 2) == 'L') && \
      (GET_NEWF(save, 3) == 'D') && (GET_NEWF(save, 4) == 'A') && (GET_NEWF(save, 5) == '3'))
@@ -180,49 +171,73 @@ int SaveManager_GetOpenFileSlot() {
         return 2;
     }
 
+    fileName = "file3.json";
+    if (!std::filesystem::exists(savesFolderPath / fileName)) {
+        return 3;
+    }
+
     return -1;
 }
 
-FlashSlotFile SaveManager_GetFlashSlotFileFromPages(u32 pageNum, u32 pageCount) {
-    FlashSlotFile flashSlotFile = FLASH_SLOT_FILE_UNAVAILABLE;
+FlashSave SaveManager_GetFlashSaveFromPages(u32 pageNum, u32 pageCount) {
+    FlashSave flashSave = FLASH_SAVE_UNAVAILABLE;
 
-    for (u32 i = 0; i < ARRAY_COUNT(gFlashSaveStartPages) - 1; i++) {
+    for (u32 i = 0; i < FLASH_SAVE_MAX; i++) {
         // Verify that the requested pages align with expected values
         if (pageNum == (u32)gFlashSaveStartPages[i] &&
             (pageCount == (u32)gFlashSaveNumPages[i] || pageCount == (u32)gFlashSpecialSaveNumPages[i])) {
-            flashSlotFile = static_cast<FlashSlotFile>(i);
+            flashSave = static_cast<FlashSave>(i);
             break;
         }
     }
 
-    return flashSlotFile;
+    return flashSave;
 }
 
 std::string SaveManager_GetFileName(int fileNum, bool isBackup) {
     return "file" + std::to_string(fileNum) + (isBackup ? "backup" : "") + ".json";
 }
 
-std::string SaveManager_GetFileNameFromFlashSlotFile(FlashSlotFile flashSlotFile) {
-    if (flashSlotFile == FLASH_SLOT_FILE_UNAVAILABLE)
+std::string SaveManager_GetFileNameFromFlashSave(FlashSave flashSave) {
+    if (flashSave == FLASH_SAVE_UNAVAILABLE)
         return "invalid";
 
-    if (flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER || flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER_BACKUP) {
+    if (flashSave == FLASH_SAVE_SRAM_HEADER || flashSave == FLASH_SAVE_SRAM_HEADER_BACKUP) {
         return "global.json";
     }
 
     bool isBackup =
-        flashSlotFile == FLASH_SLOT_FILE_1_NEW_CYCLE_BACKUP || flashSlotFile == FLASH_SLOT_FILE_2_NEW_CYCLE_BACKUP ||
-        flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP || flashSlotFile == FLASH_SLOT_FILE_2_OWL_SAVE_BACKUP;
+        flashSave == FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE_BACKUP || flashSave == FLASH_SAVE_FILE_1_OWL_SAVE_BACKUP ||
+        flashSave == FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE_BACKUP || flashSave == FLASH_SAVE_FILE_2_OWL_SAVE_BACKUP ||
+        flashSave == FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE_BACKUP || flashSave == FLASH_SAVE_FILE_3_OWL_SAVE_BACKUP;
 
-    int fileNum =
-        (flashSlotFile == FLASH_SLOT_FILE_1_NEW_CYCLE_BACKUP || flashSlotFile == FLASH_SLOT_FILE_1_NEW_CYCLE ||
-         flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP || flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE)
-            ? 1
-            : 2;
+    int fileNum = -1;
+    switch (flashSave) {
+        case FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE:
+        case FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_1_OWL_SAVE:
+        case FLASH_SAVE_FILE_1_OWL_SAVE_BACKUP:
+            fileNum = 1;
+            break;
+        case FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE:
+        case FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_2_OWL_SAVE:
+        case FLASH_SAVE_FILE_2_OWL_SAVE_BACKUP:
+            fileNum = 2;
+            break;
+        case FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE:
+        case FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_3_OWL_SAVE:
+        case FLASH_SAVE_FILE_3_OWL_SAVE_BACKUP:
+            fileNum = 3;
+            break;
+        default:
+            break;
+    }
 
-    bool isOwlSave =
-        (flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE || flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP ||
-         flashSlotFile == FLASH_SLOT_FILE_2_OWL_SAVE || flashSlotFile == FLASH_SLOT_FILE_2_OWL_SAVE_BACKUP);
+    bool isOwlSave = flashSave == FLASH_SAVE_FILE_1_OWL_SAVE || flashSave == FLASH_SAVE_FILE_1_OWL_SAVE_BACKUP ||
+                     flashSave == FLASH_SAVE_FILE_2_OWL_SAVE || flashSave == FLASH_SAVE_FILE_2_OWL_SAVE_BACKUP ||
+                     flashSave == FLASH_SAVE_FILE_3_OWL_SAVE || flashSave == FLASH_SAVE_FILE_3_OWL_SAVE_BACKUP;
 
     return "file" + std::to_string(fileNum) + (isBackup ? "backup" : "") + ".json";
 }
@@ -261,12 +276,15 @@ bool SaveManager_HandleFileDropped(std::string filePath) {
 
         SaveManager_WriteSaveFile(fileName, j);
 
+        // Reset the file select state to reload the save metadata
         if (gFileSelectState != NULL) {
-            func_801457CC(&gFileSelectState->state, &gFileSelectState->sramCtx);
-            if (gFileSelectState->menuMode == FS_MENU_MODE_CONFIG && gFileSelectState->configMode == CM_MAIN_MENU) {
-                gFileSelectState->configMode = CM_FADE_IN_START;
-            }
+            STOP_GAMESTATE(&gFileSelectState->state);
+            SET_NEXT_GAMESTATE(&gFileSelectState->state, FileSelect_Init, sizeof(FileSelectState));
         }
+
+        SPDLOG_INFO("Successfully imported save into slot {}", saveSlot);
+        auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+        gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Successfully imported save into slot %d", saveSlot);
 
         return true;
     } catch (std::exception& e) {
@@ -283,16 +301,16 @@ bool SaveManager_HandleFileDropped(std::string filePath) {
 }
 
 extern "C" void SaveManager_SysFlashrom_WriteData(u8* saveBuffer, u32 pageNum, u32 pageCount) {
-    FlashSlotFile flashSlotFile = SaveManager_GetFlashSlotFileFromPages(pageNum, pageCount);
-    std::string fileName = SaveManager_GetFileNameFromFlashSlotFile(flashSlotFile);
+    FlashSave flashSave = SaveManager_GetFlashSaveFromPages(pageNum, pageCount);
+    std::string fileName = SaveManager_GetFileNameFromFlashSave(flashSave);
 
     bool isBackup = false;
 
-    if (flashSlotFile == FLASH_SLOT_FILE_UNAVAILABLE) {
+    if (flashSave == FLASH_SAVE_UNAVAILABLE) {
         return;
     }
 
-    if (flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER || flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER_BACKUP) {
+    if (flashSave == FLASH_SAVE_SRAM_HEADER || flashSave == FLASH_SAVE_SRAM_HEADER_BACKUP) {
         SaveOptions saveOptions;
         memcpy(&saveOptions, saveBuffer, sizeof(SaveOptions));
 
@@ -301,20 +319,25 @@ extern "C" void SaveManager_SysFlashrom_WriteData(u8* saveBuffer, u32 pageNum, u
     }
 
     // A new cycle save with the "special" page count means that both the regular slot and the backup slot should be
-    // saved together. We replicate that here by running the save again on the matching backup slot
-    if ((flashSlotFile == FLASH_SLOT_FILE_1_NEW_CYCLE || flashSlotFile == FLASH_SLOT_FILE_2_NEW_CYCLE) &&
-        pageCount == (u32)gFlashSpecialSaveNumPages[flashSlotFile]) {
-        SaveManager_SysFlashrom_WriteData(saveBuffer, gFlashSaveStartPages[flashSlotFile + 1],
-                                          gFlashSaveNumPages[flashSlotFile + 1]);
+    // saved together. We replicate that here by running the save again on the matching backup slot.
+    // Note: This is not accounting for the sram header writing a disk backup. It does not feel important to do so.
+    // If we ever feel like we want a global save backup, then we just need to add it to this condition.
+    if ((flashSave == FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE || flashSave == FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE ||
+         flashSave == FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE) &&
+        pageCount == (u32)gFlashSpecialSaveNumPages[flashSave]) {
+        SaveManager_SysFlashrom_WriteData(saveBuffer, gFlashSaveStartPages[flashSave + 1],
+                                          gFlashSaveNumPages[flashSave + 1]);
     }
 
-    switch (flashSlotFile) {
-        case FLASH_SLOT_FILE_1_NEW_CYCLE_BACKUP:
-        case FLASH_SLOT_FILE_2_NEW_CYCLE_BACKUP:
+    switch (flashSave) {
+        case FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE_BACKUP:
             isBackup = true;
             // fallthrough
-        case FLASH_SLOT_FILE_1_NEW_CYCLE:
-        case FLASH_SLOT_FILE_2_NEW_CYCLE: {
+        case FLASH_SAVE_FILE_1_NEW_CYCLE_SAVE:
+        case FLASH_SAVE_FILE_2_NEW_CYCLE_SAVE:
+        case FLASH_SAVE_FILE_3_NEW_CYCLE_SAVE: {
             Save save;
             memcpy(&save, saveBuffer, sizeof(Save));
 
@@ -348,12 +371,14 @@ extern "C" void SaveManager_SysFlashrom_WriteData(u8* saveBuffer, u32 pageNum, u
             }
             break;
         }
-        case FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP:
-        case FLASH_SLOT_FILE_2_OWL_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_1_OWL_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_2_OWL_SAVE_BACKUP:
+        case FLASH_SAVE_FILE_3_OWL_SAVE_BACKUP:
             isBackup = true;
             // fallthrough
-        case FLASH_SLOT_FILE_1_OWL_SAVE:
-        case FLASH_SLOT_FILE_2_OWL_SAVE: {
+        case FLASH_SAVE_FILE_1_OWL_SAVE:
+        case FLASH_SAVE_FILE_2_OWL_SAVE:
+        case FLASH_SAVE_FILE_3_OWL_SAVE: {
             SaveContext saveContext;
             memcpy(&saveContext, saveBuffer, offsetof(SaveContext, fileNum));
 
@@ -395,18 +420,20 @@ extern "C" void SaveManager_SysFlashrom_WriteData(u8* saveBuffer, u32 pageNum, u
             }
             break;
         }
+        default:
+            break;
     }
 }
 
 extern "C" s32 SaveManager_SysFlashrom_ReadData(void* saveBuffer, u32 pageNum, u32 pageCount) {
-    FlashSlotFile flashSlotFile = SaveManager_GetFlashSlotFileFromPages(pageNum, pageCount);
-    std::string fileName = SaveManager_GetFileNameFromFlashSlotFile(flashSlotFile);
+    FlashSave flashSave = SaveManager_GetFlashSaveFromPages(pageNum, pageCount);
+    std::string fileName = SaveManager_GetFileNameFromFlashSave(flashSave);
 
-    if (flashSlotFile == FLASH_SLOT_FILE_UNAVAILABLE) {
+    if (flashSave == FLASH_SAVE_UNAVAILABLE) {
         return -1;
     }
 
-    if (flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER || flashSlotFile == FLASH_SLOT_FILE_SRAM_HEADER_BACKUP) {
+    if (flashSave == FLASH_SAVE_SRAM_HEADER || flashSave == FLASH_SAVE_SRAM_HEADER_BACKUP) {
         nlohmann::json j;
         int result = SaveManager_ReadSaveFile(fileName, j);
         if (result == -2) {
@@ -431,9 +458,9 @@ extern "C" s32 SaveManager_SysFlashrom_ReadData(void* saveBuffer, u32 pageNum, u
         }
     }
 
-    bool isOwlSave =
-        (flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE || flashSlotFile == FLASH_SLOT_FILE_1_OWL_SAVE_BACKUP ||
-         flashSlotFile == FLASH_SLOT_FILE_2_OWL_SAVE || flashSlotFile == FLASH_SLOT_FILE_2_OWL_SAVE_BACKUP);
+    bool isOwlSave = flashSave == FLASH_SAVE_FILE_1_OWL_SAVE || flashSave == FLASH_SAVE_FILE_1_OWL_SAVE_BACKUP ||
+                     flashSave == FLASH_SAVE_FILE_2_OWL_SAVE || flashSave == FLASH_SAVE_FILE_2_OWL_SAVE_BACKUP ||
+                     flashSave == FLASH_SAVE_FILE_3_OWL_SAVE || flashSave == FLASH_SAVE_FILE_3_OWL_SAVE_BACKUP;
 
     nlohmann::json j;
     int result = SaveManager_ReadSaveFile(fileName, j);
