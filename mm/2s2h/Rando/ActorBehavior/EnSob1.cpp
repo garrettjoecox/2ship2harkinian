@@ -21,9 +21,9 @@ void EnSob1_DrawCustomItem(Actor* thisx, PlayState* play) {
 void Rando::ActorBehavior::InitEnSob1Behavior() {
     COND_VB_SHOULD(VB_DRAW_ITEM_FROM_SOB1, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
-
-        EnSob1_DrawCustomItem(actor, gPlayState);
-
-        *should = false;
+        if (RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_01].shuffled) {
+            EnSob1_DrawCustomItem(actor, gPlayState);
+            *should = false;
+        }
     });
 }
