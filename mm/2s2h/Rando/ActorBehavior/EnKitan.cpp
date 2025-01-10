@@ -9,19 +9,15 @@ void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 
 void Rando::ActorBehavior::InitEnKitanBehavior() {
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
-        GetItemId* item = va_arg(args, GetItemId*);
+        GetItemId* getItemId = va_arg(args, GetItemId*);
         Actor* actor = va_arg(args, Actor*);
-        if (actor->id == ACTOR_EN_KITAN) {
+        if (actor->id == ACTOR_EN_KITAN && *getItemId == GI_HEART_PIECE) { // Leave repeat rupee reward as-is for now
             *should = false;
-            /*
-             * Normally this flag gets set using this syntax, which does not trigger rando's FLAG_WEEK_EVENT_REG
-             * handling. Even if we used the equivalent SET_WEEKEVENTREG(WEEKEVENTREG_79_80), that would only work once,
-             * meaning nothing would be obtained on repeats. So, we set the WEEKEVENTREG flag for the expected game
-             * state but also hard set the eligible flag to true to handle repeats.
-             */
-            gSaveContext.save.saveInfo.weekEventReg[0x4F] |= 0x80;
-            RANDO_SAVE_CHECKS[RC_KEATON_QUIZ].eligible = true;
+            // The actor sets this flag using direct syntax, which does not trigger rando's FLAG_WEEK_EVENT_REG handling
+            SET_WEEKEVENTREG(WEEKEVENTREG_79_80);
             ((EnKitan*)actor)->actionFunc = func_80C09518;
+            // This forces the previous BGM to resume, ending the Keaton quiz BGM
+            Audio_PlayFanfare(NA_BGM_GET_SMALL_ITEM);
             Player_TalkWithPlayer(gPlayState, actor);
         }
     });
