@@ -180,6 +180,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MILK_ROAD] = RandoRegion{ .sceneId = SCENE_ROMANYMAE,
         .checks = {
+            CHECK(RC_KEATON_QUIZ, HAS_ITEM(ITEM_MASK_KEATON)),
             CHECK(RC_MILK_ROAD_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_MILK_ROAD_TINGLE_MAP_01, CAN_USE_PROJECTILE),
             CHECK(RC_MILK_ROAD_TINGLE_MAP_02, CAN_USE_PROJECTILE),
