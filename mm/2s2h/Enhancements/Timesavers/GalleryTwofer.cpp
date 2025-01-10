@@ -9,6 +9,12 @@ extern "C" {
 
 #define CVAR_NAME "gEnhancements.Timesavers.GalleryTwofer"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define SWAMP_CVAR_NAME "gEnhancements.Minigames.SwampArcheryScore"
+#define SWAMP_CVAR CVarGetInteger(SWAMP_CVAR_NAME, 2180)
+#define TOWN_CVAR_NAME "gEnhancements.Minigames.TownArcheryScore"
+#define TOWN_CVAR CVarGetInteger(TOWN_CVAR_NAME, 50)
+
+static s16 highestScore = 0;
 
 void RegisterGalleryTwofer() {
     COND_ID_HOOK(OnActorUpdate, ACTOR_EN_SYATEKI_MAN, CVAR, [](Actor* actor) {
@@ -26,7 +32,15 @@ void RegisterGalleryTwofer() {
                                    ? !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_HEART_PIECE)
                                    : !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_HEART_PIECE);
 
-        if (hasQuiver && needsHeartPiece) {
+        if (thisx->shootingGameState == SG_GAME_STATE_ENDED && thisx->score > highestScore) {
+            highestScore = thisx->score;
+        }
+
+        bool gotPerfectScore = isSwampGallery 
+                                ? (highestScore >= SWAMP_CVAR)
+                                : (highestScore >= TOWN_CVAR);
+
+        if (hasQuiver && needsHeartPiece && gotPerfectScore) {
             if (!Actor_HasParent(&thisx->actor, play) && !(player->stateFlags1 & ~(PLAYER_STATE1_20))) {
                 if (!IS_RANDO) {
                     // Set player state and position (otherwise player turns around)
