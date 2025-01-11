@@ -1,5 +1,10 @@
 #include "StaticData.h"
 
+extern "C" {
+extern s16 D_801CFF94[250];
+#include "assets/interface/parameter_static/parameter_static.h"
+}
+
 namespace Rando {
 
 namespace StaticData {
@@ -27,6 +32,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_BOMBCHU_10,                 "",     "10 Bombchus",                RITYPE_JUNK,            ITEM_BOMBCHUS_10,                GI_BOMBCHUS_10,              GID_BOMBCHU),
     RI(RI_BOMBCHU_5,                  "",     "5 Bombchus",                 RITYPE_JUNK,            ITEM_BOMBCHUS_5,                 GI_BOMBCHUS_5,               GID_BOMBCHU),
     RI(RI_BOMBCHU,                    "a",    "Bombchu",                    RITYPE_JUNK,            ITEM_BOMBCHUS_1,                 GI_BOMBCHUS_1,               GID_BOMBCHU), // not sure about this
+    RI(RI_BOMBERS_NOTEBOOK,           "the",  "Bomber's Notebook",          RITYPE_LESSER,          ITEM_BOMBERS_NOTEBOOK,           GI_BOMBERS_NOTEBOOK,         GID_BOMBERS_NOTEBOOK),
     RI(RI_BOMBS_10,                   "",     "10 Bombs",                   RITYPE_JUNK,            ITEM_BOMBS_10,                   GI_BOMBS_10,                 GID_BOMB),
     RI(RI_BOMBS_5,                    "",     "5 Bombs",                    RITYPE_JUNK,            ITEM_BOMBS_5,                    GI_BOMBS_5,                  GID_BOMB),
     RI(RI_BOTTLE_EMPTY,               "an",   "Empty Bottle",               RITYPE_MAJOR,           ITEM_BOTTLE,                     GI_BOTTLE,                   GID_BOTTLE),
@@ -42,6 +48,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_DEKU_NUTS_10,               "",     "10 Deku Nuts",               RITYPE_JUNK,            ITEM_DEKU_NUTS_10,               GI_DEKU_NUTS_10,             GID_DEKU_NUTS),
     RI(RI_DEKU_NUTS_5,                "",     "5 Deku Nuts",                RITYPE_JUNK,            ITEM_DEKU_NUTS_5,                GI_DEKU_NUTS_5,              GID_DEKU_NUTS),
     RI(RI_DEKU_STICK,                 "a",    "Deku Stick",                 RITYPE_JUNK,            ITEM_DEKU_STICK,                 GI_DEKU_STICKS_1,            GID_DEKU_STICK),
+    RI(RI_DEKU_STICKS_5,              "",     "5 Deku Sticks",              RITYPE_JUNK,            ITEM_DEKU_STICKS_5,              GI_NONE,                     GID_DEKU_STICK),
     RI(RI_DOUBLE_DEFENSE,             "",     "Double Defense",             RITYPE_HEALTH,          ITEM_NONE,                       GI_NONE,                     GID_HEART_CONTAINER),
     RI(RI_DOUBLE_MAGIC,               "a",    "Magic Upgrade",              RITYPE_LESSER,          ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_BIG),
     RI(RI_FAIRY_REFILL,               "a",    "Fairy",                      RITYPE_JUNK,            ITEM_FAIRY,                      GI_FAIRY,                    GID_FAIRY_2),
@@ -74,7 +81,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_MASK_CIRCUS_LEADER,         "the",  "Circus Leader's Mask",       RITYPE_MASK,            ITEM_MASK_CIRCUS_LEADER,         GI_MASK_CIRCUS_LEADER,       GID_MASK_CIRCUS_LEADER),
     RI(RI_MASK_COUPLE,                "the",  "Couples Mask",               RITYPE_MASK,            ITEM_MASK_COUPLE,                GI_MASK_COUPLE,              GID_MASK_COUPLE),
     RI(RI_MASK_DEKU,                  "the",  "Deku Mask",                  RITYPE_MASK,            ITEM_MASK_DEKU,                  GI_MASK_DEKU,                GID_MASK_DEKU),
-    RI(RI_MASK_DON_GERO,              "the",  "Don Geru Mask",              RITYPE_MASK,            ITEM_MASK_DON_GERO,              GI_MASK_DON_GERO,            GID_MASK_DON_GERO),
+    RI(RI_MASK_DON_GERO,              "the",  "Don Gero Mask",              RITYPE_MASK,            ITEM_MASK_DON_GERO,              GI_MASK_DON_GERO,            GID_MASK_DON_GERO),
     RI(RI_MASK_FIERCE_DEITY,          "the",  "Fierce Deity Mask",          RITYPE_MASK,            ITEM_MASK_FIERCE_DEITY,          GI_MASK_FIERCE_DEITY,        GID_MASK_FIERCE_DEITY),
     RI(RI_MASK_GARO,                  "",     "Garo's Mask",                RITYPE_MASK,            ITEM_MASK_GARO,                  GI_MASK_GARO,                GID_MASK_GARO),
     RI(RI_MASK_GIANT,                 "the",  "Giant's Mask",               RITYPE_MASK,            ITEM_MASK_GIANT,                 GI_MASK_GIANT,               GID_MASK_GIANT),
@@ -179,6 +186,89 @@ RandoItemId GetItemIdFromName(const char* name) {
         }
     }
     return RI_UNKNOWN;
+}
+
+// This exists because of nintendo being nintendo
+u8 GetIconForZMessage(RandoItemId randoItemId) {
+    switch (randoItemId) {
+        case RI_MASK_CAPTAIN:
+            return GI_MASK_TRUTH;
+        case RI_MASK_TRUTH:
+            return GI_MASK_CAPTAIN;
+        case RI_MASK_GIANT:
+            return GI_MASK_KAFEIS_MASK;
+        case RI_MASK_KAFEIS_MASK:
+            return GI_MASK_GIANT;
+        case RI_BOMBCHU:
+        case RI_BOMBCHU_5:
+            return GI_BOMBCHUS_10;
+        case RI_BOW:
+            return GI_ARROWS_10;
+        case RI_DEKU_STICKS_5:
+            return GI_DEKU_STICKS_1;
+        case RI_DOUBLE_DEFENSE:
+            return GI_HEART_CONTAINER;
+        case RI_SINGLE_MAGIC:
+            return GI_MAGIC_JAR_SMALL;
+        case RI_DOUBLE_MAGIC:
+            return GI_MAGIC_JAR_BIG;
+        case RI_GREAT_SPIN_ATTACK:
+            return GI_SWORD_KOKIRI;
+        default:
+            break;
+    }
+
+    if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
+        return (u8)Rando::StaticData::Items[randoItemId].getItemId;
+    }
+
+    return 0xFE;
+}
+
+const char* GetIconTexturePath(RandoItemId randoItemId) {
+    switch (randoItemId) {
+        case RI_BOMBCHU:
+        case RI_BOMBCHU_5:
+            return (const char*)gItemIcons[ITEM_BOMBCHU];
+        case RI_DEKU_STICKS_5:
+            return (const char*)gItemIcons[ITEM_DEKU_STICK];
+        case RI_DOUBLE_DEFENSE:
+            return (const char*)gItemIcons[ITEM_HEART_CONTAINER];
+        case RI_SINGLE_MAGIC:
+            return (const char*)gItemIcons[ITEM_MAGIC_JAR_SMALL];
+        case RI_DOUBLE_MAGIC:
+            return (const char*)gItemIcons[ITEM_MAGIC_JAR_BIG];
+        case RI_GREAT_SPIN_ATTACK:
+            return (const char*)gItemIcons[ITEM_SWORD_KOKIRI];
+        case RI_CLOCK_TOWN_STRAY_FAIRY:
+        case RI_STONE_TOWER_STRAY_FAIRY:
+            return (const char*)gStrayFairyStoneTowerIconTex;
+        case RI_SNOWHEAD_STRAY_FAIRY:
+            return (const char*)gStrayFairySnowheadIconTex;
+        case RI_GREAT_BAY_STRAY_FAIRY:
+            return (const char*)gStrayFairyGreatBayIconTex;
+        case RI_WOODFALL_STRAY_FAIRY:
+            return (const char*)gStrayFairyWoodfallIconTex;
+        case RI_SNOWHEAD_COMPASS:
+        case RI_GREAT_BAY_COMPASS:
+        case RI_WOODFALL_COMPASS:
+        case RI_STONE_TOWER_COMPASS:
+            return (const char*)gItemIcons[ITEM_DUNGEON_MAP];
+        case RI_SNOWHEAD_MAP:
+        case RI_GREAT_BAY_MAP:
+        case RI_WOODFALL_MAP:
+        case RI_STONE_TOWER_MAP:
+            return (const char*)gItemIcons[ITEM_COMPASS];
+        default:
+            break;
+    }
+
+    s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
+    if (itemId >= ITEM_RECOVERY_HEART) {
+        itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
+    }
+
+    return itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr;
 }
 
 // clang-format on

@@ -5,6 +5,7 @@
  */
 
 #include "z_en_owl.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -156,7 +157,9 @@ void EnOwl_Init(Actor* thisx, PlayState* play) {
             break;
 
         case ENOWL_GET_TYPE_2:
-            if (gSaveContext.save.saveInfo.inventory.items[ITEM_LENS_OF_TRUTH] == ITEM_LENS_OF_TRUTH) {
+            if (GameInteractor_Should(VB_KILL_GORON_VILLAGE_OWL,
+                                      gSaveContext.save.saveInfo.inventory.items[ITEM_LENS_OF_TRUTH] ==
+                                          ITEM_LENS_OF_TRUTH)) {
                 Actor_Kill(&this->actor);
                 return;
             }
@@ -522,8 +525,10 @@ void func_8095B574(EnOwl* this, PlayState* play) {
 
 void func_8095B650(EnOwl* this, PlayState* play) {
     if (this->actionFlags & 1) {
-        EnOwl_ChangeMode(this, func_8095B574, func_8095C484, &this->skelAnimePerching, &gOwlPerchAnim, 0.0f);
-        this->actor.textId = 0xBF5;
+        if (GameInteractor_Should(VB_OWL_TELL_ABOUT_SHRINE, true, this)) {
+            EnOwl_ChangeMode(this, func_8095B574, func_8095C484, &this->skelAnimePerching, &gOwlPerchAnim, 0.0f);
+            this->actor.textId = 0xBF5;
+        }
         this->actionFlags &= ~8;
     }
     func_8095B480(this, play);

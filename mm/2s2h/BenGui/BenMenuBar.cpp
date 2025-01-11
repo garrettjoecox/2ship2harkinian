@@ -508,6 +508,9 @@ void DrawEnhancementsMenu() {
         if (UIWidgets::BeginMenu("Saving / Time Cycle")) {
 
             ImGui::SeparatorText("Saving");
+            UIWidgets::CVarCheckbox(
+                "3rd Save File Slot", "gEnhancements.Saving.FileSlot3",
+                { .tooltip = "Adds a 3rd file slot that can be used for saves", .defaultValue = true });
             UIWidgets::CVarCheckbox("Persistent Owl Saves", "gEnhancements.Saving.PersistentOwlSaves",
                                     { .tooltip = "Continuing a save will not remove the owl save. Playing Song of "
                                                  "Time, allowing the moon to crash or finishing the "
@@ -569,7 +572,22 @@ void DrawEnhancementsMenu() {
                       "the Rupees to Links current Rupees or 0 respectively." });
             UIWidgets::CVarCheckbox(
                 "Fast Text", "gEnhancements.Dialogue.FastText",
-                { .tooltip = "Speeds up text rendering, and enables holding of B progress to next message" });
+                { .tooltip = "Speeds up text rendering, and enables holding of B progress to next message." });
+
+            ImGui::EndMenu();
+        }
+
+        if (UIWidgets::BeginMenu("TimeSavers")) {
+            UIWidgets::CVarCheckbox(
+                "Swamp Boat Timesaver", "gEnhancements.Timesavers.SwampBoatSpeed",
+                { .tooltip = "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat "
+                             "speed up for future attempts. When reaching 20 points, you'll be automatically "
+                             "transported back to Koume, completing the minigame." });
+
+            UIWidgets::CVarCheckbox(
+                "Shooting Gallery Both Rewards", "gEnhancements.Timesavers.GalleryTwofer",
+                { .tooltip = "When getting a perfect score at the Shooting Gallery, receive both rewards back to back "
+                             "instead of having to play twice." });
 
             ImGui::EndMenu();
         }
@@ -589,6 +607,10 @@ void DrawEnhancementsMenu() {
                 "Instant Fin Boomerangs Recall", "gEnhancements.PlayerActions.InstantRecall",
                 { .tooltip =
                       "Pressing B will instantly recall the fin boomerang back to Zora Link after they are thrown." });
+
+            UIWidgets::CVarCheckbox(
+                "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
+                { .tooltip = "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows." });
 
             UIWidgets::CVarCheckbox(
                 "Two-Handed Sword Spin Attack", "gEnhancements.Equipment.TwoHandedSwordSpinAttack",

@@ -12,7 +12,7 @@
 namespace Rando {
 
 void Init();
-void DrawItem(RandoItemId randoItemId);
+void DrawItem(RandoItemId randoItemId, Actor* actor = nullptr);
 void GiveItem(RandoItemId randoItemId);
 void RemoveItem(RandoItemId randoItemId);
 RandoItemId CurrentJunkItem();

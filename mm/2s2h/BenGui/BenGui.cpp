@@ -43,7 +43,7 @@ std::shared_ptr<EventLogWindow> mEventLogWindow;
 std::shared_ptr<BenMenu> mBenMenu;
 std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
-std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
+std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
 std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
@@ -120,8 +120,8 @@ void SetupGuiElements() {
     gui->AddGuiWindow(mNotificationWindow);
     mNotificationWindow->Show();
 
-    mRandoCheckTrackerWindow =
-        std::make_shared<Rando::CheckTracker::Window>("gWindows.CheckTracker", "Check Tracker", ImVec2(375, 460));
+    mRandoCheckTrackerWindow = std::make_shared<Rando::CheckTracker::CheckTrackerWindow>(
+        "gWindows.CheckTracker", "Check Tracker", ImVec2(375, 460));
     gui->AddGuiWindow(mRandoCheckTrackerWindow);
 
     mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(

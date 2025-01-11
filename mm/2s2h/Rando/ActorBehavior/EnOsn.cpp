@@ -19,4 +19,17 @@ void Rando::ActorBehavior::InitEnOsnBehavior() {
         RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_INTERIOR_DEKU_MASK].eligible = true;
         RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING].eligible = true;
     });
+
+    /*
+     * When the player enters the Clock Tower Interior entrance 3, the Happy Mask Salesman actor will play one of two
+     * cutscenes: learning the Song of Healing (csId 11), or the typical moon crash cycle reset (csId 13). In rando, the
+     * former is never expected. Moon crashes in rando can inadvertently trigger the Song of Healing scene, so we'll
+     * just quietly change to the intended cutscene.
+     */
+    COND_VB_SHOULD(VB_START_CUTSCENE, IS_RANDO, {
+        s16* csId = va_arg(args, s16*);
+        if (gPlayState->sceneId == SCENE_INSIDETOWER && *csId == 11) { // Song of Healing tutorial
+            *csId = 13;                                                // Moon crash new cycle scene
+        }
+    });
 }

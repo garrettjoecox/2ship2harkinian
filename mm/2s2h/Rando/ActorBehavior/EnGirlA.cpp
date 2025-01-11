@@ -43,7 +43,7 @@ void EnGirlA_RandoDrawFunc(Actor* actor, PlayState* play) {
 
     Matrix_RotateYS(enGirlA->rotY, MTXMODE_APPLY);
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(randoSaveCheck.randoItemId, actor);
 }
 
 void EnGirlA_RandoBought(PlayState* play, EnGirlA* enGirlA) {
@@ -159,6 +159,15 @@ void renameSpecialBargain(u16* textId, bool* loadFromMessageTable) {
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.msg = "Tonight's bargain: %r" + std::string(randoStaticItem.name) + "%w. Check it out!\x19\xA8";
+    CustomMessage::LoadCustomMessageIntoFont(entry);
+    *loadFromMessageTable = false;
+}
+
+void ReplaceCannotBuyMessage(u16* textId, bool* loadFromMessageTable) {
+    CustomMessage::Entry entry = {
+        .msg = "Sorry, you can't buy this right now.\xE0",
+    };
+
     CustomMessage::LoadCustomMessageIntoFont(entry);
     *loadFromMessageTable = false;
 }
@@ -498,4 +507,16 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
 
     COND_ID_HOOK(OnOpenText, RANDO_CURIOSITY_SHOP_BARGAIN_2_TEXT_ID, IS_RANDO,
                  [](u16* textId, bool* loadFromMessageTable) { renameSpecialBargain(textId, loadFromMessageTable); });
+
+    // Magic Potion Shop Hag CANBUY_RESULT_CANNOT_GET_NOW (this text ID does not exist and just softlocks)
+    COND_ID_HOOK(OnOpenText, 0x643, IS_RANDO, ReplaceCannotBuyMessage);
+    // Goron Shop CANBUY_RESULT_CANNOT_GET_NOW
+    COND_ID_HOOK(OnOpenText, 0xBD2, IS_RANDO, ReplaceCannotBuyMessage);
+    // Bomb Shop CANBUY_RESULT_CANNOT_GET_NOW
+    COND_ID_HOOK(OnOpenText, 0x645, IS_RANDO, ReplaceCannotBuyMessage);
+    // Trading Post CANBUY_RESULT_CANNOT_GET_NOW
+    COND_ID_HOOK(OnOpenText, 0x6BE, IS_RANDO, ReplaceCannotBuyMessage);
+    COND_ID_HOOK(OnOpenText, 0x6DB, IS_RANDO, ReplaceCannotBuyMessage);
+    // Zora Shop CANBUY_RESULT_CANNOT_GET_NOW (this text ID does not exist and just softlocks)
+    COND_ID_HOOK(OnOpenText, 0x12E1, IS_RANDO, ReplaceCannotBuyMessage);
 }

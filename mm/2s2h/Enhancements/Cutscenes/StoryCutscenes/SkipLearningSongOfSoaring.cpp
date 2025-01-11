@@ -8,6 +8,7 @@
 extern "C" {
 #include "variables.h"
 #include "functions.h"
+#include "overlays/actors/ovl_En_Time_Tag/z_en_time_tag.h"
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
@@ -20,8 +21,11 @@ void RegisterSkipLearningSongOfSoaring() {
      * determined by whether the player has obtained the Song of Soaring or not. We bypass the cutscene by always
      * setting this textId.
      */
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_TIME_TAG, CVAR || IS_RANDO,
-                 [](Actor* actor) { actor->textId = ENGRAVING_TEXT_ID; });
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_TIME_TAG, CVAR || IS_RANDO, [](Actor* actor) {
+        if (TIMETAG_GET_TYPE(actor) == TIMETAG_SOARING_ENGRAVING) {
+            actor->textId = ENGRAVING_TEXT_ID;
+        }
+    });
 
     // Then, once this textId is opened for the first time, go ahead and give the player the reward.
     COND_ID_HOOK(OnOpenText, ENGRAVING_TEXT_ID, CVAR || IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {

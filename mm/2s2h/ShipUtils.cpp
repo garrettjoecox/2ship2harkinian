@@ -43,11 +43,21 @@ std::unordered_map<s16, const char*> sceneNames = {
 #undef DEFINE_SCENE_UNSET
 
 // These textures are not in existing lists that we iterate over.
-std::vector<const char*> miscellaneousTextures = { gRupeeCounterIconTex,       gStrayFairyGreatBayIconTex,
-                                                   gQuestIconGoldSkulltulaTex, gWorldMapOwlFaceTex,
-                                                   gChestTrackerIcon,          gPotTrackerIcon,
-                                                   gArcheryScoreIconTex,       gBarrelTrackerIcon,
-                                                   gCrateTrackerIcon,          gTimerClockIconTex };
+std::vector<const char*> miscellaneousTextures = {
+    gRupeeCounterIconTex,
+    gStrayFairyGreatBayIconTex,
+    gQuestIconGoldSkulltulaTex,
+    gWorldMapOwlFaceTex,
+    gChestTrackerIcon,
+    gPotTrackerIcon,
+    gArcheryScoreIconTex,
+    gBarrelTrackerIcon,
+    gCrateTrackerIcon,
+    gTimerClockIconTex,
+    gStrayFairyStoneTowerIconTex,
+    gStrayFairySnowheadIconTex,
+    gStrayFairyWoodfallIconTex,
+};
 
 std::vector<const char*> digitList = { gCounterDigit0Tex, gCounterDigit1Tex, gCounterDigit2Tex, gCounterDigit3Tex,
                                        gCounterDigit4Tex, gCounterDigit5Tex, gCounterDigit6Tex, gCounterDigit7Tex,

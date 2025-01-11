@@ -96,6 +96,14 @@ void CustomItem00_Draw(Actor* actor, PlayState* play) {
     GetItem_Draw(play, CUSTOM_ITEM_PARAM);
 }
 
+// Once the item is touched we need to clear movement vars so the item doesn't sink in the players hands/above head
+void CustomItem00_ItemTouched(Actor* actor, PlayState* play) {
+    actor->speed = 0.0f;
+    actor->velocity.y = 0.0f;
+    actor->gravity = 0.0f;
+    actor->shape.yOffset = 1250.0f;
+}
+
 void CustomItem00_Update(Actor* actor, PlayState* play) {
     EnItem00* enItem00 = (EnItem00*)actor;
     Player* player = GET_PLAYER(play);
@@ -104,9 +112,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         actor->shape.rot.y += 960;
     }
 
-    if (CUSTOM_ITEM_FLAGS & CustomItem::STOP_BOBBING) {
-        actor->shape.yOffset = 1250.0f;
-    } else {
+    if (!(CUSTOM_ITEM_FLAGS & CustomItem::STOP_BOBBING)) {
         actor->shape.yOffset = (Math_SinS(actor->shape.rot.y) * 150.0f) + 1250.0f;
     }
 
@@ -141,6 +147,9 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
             enItem00->unk152 = 15;
             CUSTOM_ITEM_FLAGS |= CustomItem::STOP_BOBBING;
             CUSTOM_ITEM_FLAGS |= CustomItem::KEEP_ON_PLAYER;
+            CustomItem00_ItemTouched(actor, play);
+            // Move to player right away on this frame
+            Math_Vec3f_Copy(&actor->world.pos, &GET_PLAYER(play)->actor.world.pos);
         }
 
         // If the item has been picked up
@@ -188,6 +197,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
                 CUSTOM_ITEM_FLAGS |= CustomItem::KEEP_ON_PLAYER;
                 // Actor_SetScale(actor, 0.0f);
                 CUSTOM_ITEM_FLAGS |= CustomItem::HIDE_TILL_OVERHEAD;
+                CustomItem00_ItemTouched(actor, play);
             }
 
             // Begin incrementing the unk152, indicating the item has been picked up
@@ -210,13 +220,13 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
                         height = 35.0f;
                         break;
                     case PLAYER_FORM_FIERCE_DEITY:
-                        height = 90.0f;
+                        height = 100.0f;
                         break;
                     case PLAYER_FORM_GORON:
-                        height = 75.0f;
+                        height = 90.0f;
                         break;
                     case PLAYER_FORM_ZORA:
-                        height = 60.0f;
+                        height = 75.0f;
                         break;
                 }
 
@@ -268,5 +278,8 @@ void CustomItem::RegisterHooks() {
             // Set the rotX/rotZ back to 0, the original values can be accessed from actor->home
             actor->world.rot.x = 0;
             actor->world.rot.z = 0;
+            actor->shape.rot.x = 0;
+            actor->shape.rot.y = 0;
+            actor->shape.rot.z = 0;
         });
 }

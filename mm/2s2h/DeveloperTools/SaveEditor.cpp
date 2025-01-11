@@ -17,6 +17,7 @@ extern "C" {
 #include <variables.h>
 #include <functions.h>
 #include "overlays/actors/ovl_En_Test4/z_en_test4.h"
+#include "overlays/actors/ovl_Obj_Tokei_Step/z_obj_tokei_step.h"
 
 extern PlayState* gPlayState;
 extern SaveContext gSaveContext;
@@ -34,6 +35,9 @@ void PlayerCall_Update(Actor* thisx, PlayState* play);
 void PlayerCall_Draw(Actor* thisx, PlayState* play);
 void TransitionFade_SetColor(void* thisx, u32 color);
 
+void ObjTokeiStep_SetupOpen(ObjTokeiStep* objTokeiStep);
+void ObjTokeiStep_DrawOpen(Actor* actor, PlayState* play);
+void ObjTokeiStep_DoNothing(ObjTokeiStep* objTokeiStep, PlayState* play);
 void func_80A42198(EnTest4* thisx);
 void func_80A425E4(EnTest4* thisx, PlayState* play);
 }
@@ -218,6 +222,16 @@ void UpdateGameTime(u16 gameTime) {
         // Unset any screen scaling from the above funcs
         gSaveContext.screenScale = 1000.0f;
         gSaveContext.screenScaleFlag = false;
+    }
+
+    // Open the Clock Tower rooftop
+    if (((CURRENT_DAY == 3) && (gSaveContext.save.time < CLOCK_TIME(6, 0)))) {
+        ObjTokeiStep* objTokeiStep = (ObjTokeiStep*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor,
+                                                                     ACTOR_OBJ_TOKEI_STEP, ACTORCAT_BG, 99999.9f);
+        if (objTokeiStep != NULL && objTokeiStep->actionFunc == ObjTokeiStep_DoNothing) {
+            objTokeiStep->dyna.actor.draw = ObjTokeiStep_DrawOpen;
+            ObjTokeiStep_SetupOpen(objTokeiStep);
+        }
     }
 }
 
@@ -890,25 +904,17 @@ void DrawItemsAndMasksTab() {
 
                             CustomMessage::Entry entry = {
                                 .textboxType = 2,
+                                .icon = Rando::StaticData::GetIconForZMessage(randoItemId),
                                 .msg = msg + " " + itemName + "!",
                             };
-                            if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
-                                entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
-                            }
 
                             if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
                                 CustomMessage::SetActiveCustomMessage(entry.msg, entry);
                             } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
                                 CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                             } else {
-                                s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
-                                if (itemId >= ITEM_RECOVERY_HEART) {
-                                    itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
-                                }
-
                                 Notification::Emit({
-                                    .itemIcon =
-                                        itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
+                                    .itemIcon = Rando::StaticData::GetIconTexturePath(randoItemId),
                                     .message = msg,
                                     .suffix = itemName,
                                 });

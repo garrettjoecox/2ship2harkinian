@@ -12,6 +12,7 @@
 #include "overlays/actors/ovl_En_Syateki_Dekunuts/z_en_syateki_dekunuts.h"
 #include "overlays/actors/ovl_En_Syateki_Okuta/z_en_syateki_okuta.h"
 #include "overlays/actors/ovl_En_Syateki_Wf/z_en_syateki_wf.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_CANT_LOCK_ON)
 
@@ -1192,7 +1193,7 @@ void EnSyatekiMan_Swamp_AddBonusPoints(EnSyatekiMan* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     player->stateFlags1 |= PLAYER_STATE1_20;
-    if (!play->interfaceCtx.perfectLettersOn) {
+    if (GameInteractor_Should(VB_ARCHERY_ADD_BONUS_POINTS, !play->interfaceCtx.perfectLettersOn, this, &sBonusTimer)) {
         if (gSaveContext.timerCurTimes[TIMER_ID_MINIGAME_1] == SECONDS_TO_TIMER(0)) {
             gSaveContext.timerCurTimes[TIMER_ID_MINIGAME_1] = SECONDS_TO_TIMER(0);
             gSaveContext.timerStates[TIMER_ID_MINIGAME_1] = TIMER_STATE_STOP;

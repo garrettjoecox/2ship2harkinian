@@ -138,8 +138,9 @@ void HandleAutoSave() {
         Play_SaveCycleSceneFlags(&gPlayState->state);
         gSaveContext.save.saveInfo.playerData.savedSceneId = gPlayState->sceneId;
         func_8014546C(&gPlayState->sramCtx);
-        Sram_SetFlashPagesOwlSave(&gPlayState->sramCtx, gFlashOwlSaveStartPages[gSaveContext.fileNum * 2],
-                                  gFlashOwlSaveNumPages[gSaveContext.fileNum * 2]);
+        Sram_SetFlashPagesOwlSave(&gPlayState->sramCtx,
+                                  gFlashOwlSaveStartPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER],
+                                  gFlashOwlSaveNumPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER]);
         Sram_StartWriteToFlashOwlSave(&gPlayState->sramCtx);
         gSaveContext.save.isOwlSave = false;
         gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;

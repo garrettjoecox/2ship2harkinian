@@ -1659,7 +1659,9 @@ void EnSob1_BombShopkeeper_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dL
     OPEN_DISPS(play->state.gfxCtx);
 
     if (limbIndex == BOMB_SHOPKEEPER_LIMB_LEFT_HAND) {
-        gSPDisplayList(POLY_OPA_DISP++, gBombShopkeeperBombDL);
+        if (GameInteractor_Should(VB_DRAW_ITEM_FROM_SOB1, true, thisx)) {
+            gSPDisplayList(POLY_OPA_DISP++, gBombShopkeeperBombDL);
+        }
     }
 
     CLOSE_DISPS(play->state.gfxCtx);

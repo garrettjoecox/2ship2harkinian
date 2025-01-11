@@ -1,6 +1,8 @@
 #include "global.h"
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 
+#include "2s2h/GameInteractor/GameInteractor.h"
+
 s16 sPlayerInitPosX = 0;
 s16 sPlayerInitPosZ = 0;
 s16 sPlayerInitDir = 0;
@@ -242,13 +244,14 @@ void Map_Update(PlayState* play) {
 
     if ((play->pauseCtx.state <= PAUSE_STATE_OPENING_2) && (CHECK_BTN_ALL(controller->press.button, BTN_L)) &&
         !Play_InCsMode(play) && !MapDisp_IsMinimapToggleBlocked(play)) {
-        if (!R_MINIMAP_DISABLED) {
-            Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_UP);
-        } else {
-            Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_DOWN);
+        if (GameInteractor_Should(VB_MINIMAP_TOGGLE, true)) {
+            if (!R_MINIMAP_DISABLED) {
+                Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_UP);
+            } else {
+                Audio_PlaySfx(NA_SE_SY_CAMERA_ZOOM_DOWN);
+            }
+            R_MINIMAP_DISABLED ^= 1;
         }
-
-        R_MINIMAP_DISABLED ^= 1;
     }
 
     MapDisp_Update(play);

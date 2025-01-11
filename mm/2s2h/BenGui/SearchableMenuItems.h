@@ -732,13 +732,36 @@ void AddSettings() {
                 WIDGET_CVAR_COMBOBOX,
                 { .comboBoxOptions = textureFilteringMap } } } } });
     // Input Editor
-    settingsSidebar.push_back({ "Input Editor",
-                                1,
-                                { { { "Popout Input Editor",
-                                      "gWindows.BenInputEditor",
-                                      "Enables the separate Input Editor window.",
-                                      WIDGET_WINDOW_BUTTON,
-                                      { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
+    settingsSidebar.push_back(
+        { "Controls",
+          1,
+          { { {
+                  "Simulated Input Lag: %d frames",
+                  CVAR_SIMULATED_INPUT_LAG,
+                  "Buffers your inputs to be executed a specified amount of frames later",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 0, 6, 0 },
+              },
+              { .widgetName =
+                    "This interface can be a little daunting. Please bear with us as we work to improve the experience "
+                    "and address some known issues.\n"
+                    "\n"
+                    "At first glance, you may notice several input devices displayed below the 'Clear All' button. "
+                    "Some of these might be other controllers connected to your computer, while others may be "
+                    "duplicated controllers (a known issue). We recommend clicking on the box with the " ICON_FA_EYE
+                    " icon and the name of any disconnected or unused controllers to hide their inputs. Make sure the "
+                    "target controller remains visible.\n"
+                    "\n"
+                    "If you encounter issues connecting your controller or registering inputs, try closing Steam or "
+                    "any other external input software. Alternatively, test a different controller to determine if "
+                    "it's a compatibility issue.\n",
+                .widgetType = WIDGET_TEXT },
+              { .widgetName = "Bindings", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "Popout Bindings Window",
+                "gWindows.BenInputEditor",
+                "Enables the separate Input Editor window.",
+                WIDGET_WINDOW_BUTTON,
+                { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
 
     settingsSidebar.push_back(
         { "Overlay",
@@ -1044,6 +1067,9 @@ void AddEnhancements() {
               { "Infinite Rupees", "gCheats.InfiniteRupees", "Always have a full Wallet.", WIDGET_CVAR_CHECKBOX, {} },
               { "Infinite Consumables", "gCheats.InfiniteConsumables",
                 "Always have max Consumables, you must have collected the consumables first.", WIDGET_CVAR_CHECKBOX },
+              { "Easy Frame Advance", "gCheats.EasyFrameAdvance",
+                "Continue holding START button when unpausing to only advance a single frame and then re-pause",
+                WIDGET_CVAR_CHECKBOX },
               { "Longer Deku Flower Glide", "gCheats.LongerFlowerGlide",
                 "Allows Deku Link to glide longer, no longer dropping after a certain distance.",
                 WIDGET_CVAR_CHECKBOX },
@@ -1088,39 +1114,6 @@ void AddEnhancements() {
                 "Speeds up the time it takes to push/pull various objects.", WIDGET_CVAR_CHECKBOX },
               { "Dpad Equips", "gEnhancements.Dpad.DpadEquips", "Allows you to equip items to your d-pad",
                 WIDGET_CVAR_CHECKBOX },
-              { "Always Win Doggy Race",
-                "gEnhancements.Minigames.AlwaysWinDoggyRace",
-                "Makes the Doggy Race easier to win.",
-                WIDGET_CVAR_COMBOBOX,
-                { .comboBoxOptions = alwaysWinDoggyraceOptions } },
-              { "Milk Run Reward Options",
-                "gEnhancements.Minigames.CremiaHugs",
-                "Choose what reward you get for winning the Milk Run minigame after the first time. \n"
-                "-Vanilla: Reward is Random\n"
-                "-Hug: Get the hugging cutscene\n"
-                "-Rupee: Get the rupee reward",
-                WIDGET_CVAR_COMBOBOX,
-                { .comboBoxOptions = cremiaRewardOptions } },
-              { "Skip Powder Keg Certification", "gEnhancements.Minigames.PowderKegCertification",
-                "Skips requiring to take the Powder Keg Test before being given the Certification.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Cucco Shack Cucco Count",
-                "gEnhancements.Minigames.CuccoShackCuccoCount",
-                "Choose how many cuccos you need to raise to make Grog happy.",
-                WIDGET_CVAR_SLIDER_INT,
-                { 1, 10, 10 } },
-              { "Swordsman School Winning Score",
-                "gEnhancements.Minigames.SwordsmanSchoolScore",
-                "Sets the score required to win the Swordsman School.",
-                WIDGET_CVAR_SLIDER_INT,
-                { 1, 30, 30 } },
-              { "Malon Target Practice Winning Score",
-                "gEnhancements.Minigames.MalonTargetPractice",
-                "Sets the score required to win Malon's Target Practice.",
-                WIDGET_CVAR_SLIDER_INT,
-                { 1, 10, 10 } },
-              { "Skip Gorman Horse Race", "gEnhancements.Minigames.SkipHorseRace",
-                "Instantly win the Gorman Horse Race", WIDGET_CVAR_CHECKBOX },
               { "Fast Magic Arrow Equip Animation", "gEnhancements.Equipment.MagicArrowEquipSpeed",
                 "Removes the animation for equipping Magic Arrows.", WIDGET_CVAR_CHECKBOX },
               { "Instant Fin Boomerangs Recall", "gEnhancements.PlayerActions.InstantRecall",
@@ -1130,28 +1123,102 @@ void AddEnhancements() {
                 "Enables magic spin attacks for the Fierce Deity Sword and Great Fairy's Sword.",
                 WIDGET_CVAR_CHECKBOX },
               { "Better Picto Message", "gEnhancements.Equipment.BetterPictoMessage",
-                "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX } },
-            { { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
-              { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.", WIDGET_CVAR_CHECKBOX },
-              { "Hyrule Warriors Styled Link", "gModes.HyruleWarriorsStyledLink",
-                "When acquired, places the Keaton and Fierce Deity masks on Link similarly to how he wears them in "
-                "Hyrule Warriors",
+                "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX },
+              { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
+                "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
                 WIDGET_CVAR_CHECKBOX },
-              { "Time Moves when you Move", "gModes.TimeMovesWhenYouMove",
-                "Time only moves when Link is not standing still.", WIDGET_CVAR_CHECKBOX },
-              { "Mirrored World",
-                "gModes.MirroredWorld.Mode",
-                "Mirrors the world horizontally.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                ([](widgetInfo& info) {
-                    if (CVarGetInteger("gModes.MirroredWorld.Mode", 0)) {
-                        CVarSetInteger("gModes.MirroredWorld.State", 1);
-                    } else {
-                        CVarClear("gModes.MirroredWorld.State");
-                    }
-                }) } },
+              { "Bombchu Drops", "gEnhancements.Equipment.ChuDrops",
+                "When a bomb drop is spawned, it has a 50% chance to be a bombchu instead.", WIDGET_CVAR_CHECKBOX } },
+            {
+                { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
+                { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.",
+                  WIDGET_CVAR_CHECKBOX },
+                { "Hyrule Warriors Styled Link", "gModes.HyruleWarriorsStyledLink",
+                  "When acquired, places the Keaton and Fierce Deity masks on Link similarly to how he wears them in "
+                  "Hyrule Warriors",
+                  WIDGET_CVAR_CHECKBOX },
+                { "Time Moves when you Move", "gModes.TimeMovesWhenYouMove",
+                  "Time only moves when Link is not standing still.", WIDGET_CVAR_CHECKBOX },
+                { "Mirrored World",
+                  "gModes.MirroredWorld.Mode",
+                  "Mirrors the world horizontally.",
+                  WIDGET_CVAR_CHECKBOX,
+                  {},
+                  ([](widgetInfo& info) {
+                      if (CVarGetInteger("gModes.MirroredWorld.Mode", 0)) {
+                          CVarSetInteger("gModes.MirroredWorld.State", 1);
+                      } else {
+                          CVarClear("gModes.MirroredWorld.State");
+                      }
+                  }) },
+                { .widgetName = "Minigames", .widgetType = WIDGET_SEPARATOR_TEXT },
+                { "Always Win Doggy Race",
+                  "gEnhancements.Minigames.AlwaysWinDoggyRace",
+                  "Makes the Doggy Race easier to win.",
+                  WIDGET_CVAR_COMBOBOX,
+                  { .comboBoxOptions = alwaysWinDoggyraceOptions } },
+                { "Milk Run Reward Options",
+                  "gEnhancements.Minigames.CremiaHugs",
+                  "Choose what reward you get for winning the Milk Run minigame after the first time. \n"
+                  "-Vanilla: Reward is Random\n"
+                  "-Hug: Get the hugging cutscene\n"
+                  "-Rupee: Get the rupee reward",
+                  WIDGET_CVAR_COMBOBOX,
+                  { .comboBoxOptions = cremiaRewardOptions } },
+                { "Cucco Shack Cucco Count",
+                  "gEnhancements.Minigames.CuccoShackCuccoCount",
+                  "Choose how many cuccos you need to raise to make Grog happy.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 10, 10 } },
+                { "Swordsman School Winning Score",
+                  "gEnhancements.Minigames.SwordsmanSchoolScore",
+                  "Sets the score required to win the Swordsman School.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 30, 30 } },
+                { "Swamp Archery Perfect Score",
+                  "gEnhancements.Minigames.SwampArcheryScore",
+                  "Sets the score required to win the Swamp Archery minigame, if this is changed it also speeds up the "
+                  "final score counting.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1000, 2180, 2180 } },
+                { "Town Archery Perfect Score",
+                  "gEnhancements.Minigames.TownArcheryScore",
+                  "Sets the score required to win the Town Archery minigame. Reaching this score will end the "
+                  "minigame.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 50, 50 } },
+                { "Honey & Darling Day 1 (Bombchus)",
+                  "gEnhancements.Minigames.HoneyAndDarlingDay1",
+                  "Sets the score required to win the Honey & Darling minigame on Day 1.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 8, 8 } },
+                { "Honey & Darling Day 2 (Bombs)",
+                  "gEnhancements.Minigames.HoneyAndDarlingDay2",
+                  "Sets the score required to win the Honey & Darling minigame on Day 2.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 8, 8 } },
+                { "Honey & Darling Day 3 (Bow)",
+                  "gEnhancements.Minigames.HoneyAndDarlingDay3",
+                  "Sets the score required to win the Honey & Darling minigame on Day 3.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 16, 16 } },
+                { "Skip Powder Keg Certification", "gEnhancements.Minigames.PowderKegCertification",
+                  "Skips requiring to take the Powder Keg Test before being given the Certification.",
+                  WIDGET_CVAR_CHECKBOX },
+                { "Malon Target Practice Winning Score",
+                  "gEnhancements.Minigames.MalonTargetPractice",
+                  "Sets the score required to win Malon's Target Practice.",
+                  WIDGET_CVAR_SLIDER_INT,
+                  { 1, 10, 10 } },
+                { "Skip Gorman Horse Race", "gEnhancements.Minigames.SkipHorseRace",
+                  "Instantly win the Gorman Horse Race", WIDGET_CVAR_CHECKBOX },
+            },
             { { .widgetName = "Saving", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "3rd Save File Slot",
+                "gEnhancements.Saving.FileSlot3",
+                "Adds a 3rd file slot that can be used for saves",
+                WIDGET_CVAR_CHECKBOX,
+                { .defaultVariant = true } },
               { "Persistent Owl Saves", "gEnhancements.Saving.PersistentOwlSaves",
                 "Continuing a save will not remove the owl save. Playing Song of "
                 "Time, allowing the moon to crash or finishing the "
@@ -1401,6 +1468,17 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Fast Text", "gEnhancements.Dialogue.FastText",
                 "Speeds up text rendering, and enables holding of B progress to next message.",
+                WIDGET_CVAR_CHECKBOX } },
+            // Other
+            { { .widgetName = "Other", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "Swamp Boat Timesaver", "gEnhancements.Timesavers.SwampBoatSpeed",
+                "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat speed up for "
+                "future attempts. When reaching 20 points, you'll be automatically transported back to Koume, "
+                "completing the minigame.",
+                WIDGET_CVAR_CHECKBOX },
+              { "Shooting Gallery Both Rewards", "gEnhancements.Timesavers.GalleryTwofer",
+                "When getting a perfect score at the Shooting Gallery, receive both rewards back to back "
+                "instead of having to play twice.",
                 WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Fixes",
@@ -1843,7 +1921,7 @@ void SearchMenuGetItem(widgetInfo& widget) {
                 break;
             case WIDGET_TEXT:
                 ImGui::AlignTextToFramePadding();
-                ImGui::Text(widget.widgetName.c_str());
+                ImGui::TextWrapped(widget.widgetName.c_str());
                 break;
             case WIDGET_COMBOBOX: {
                 int32_t* pointer = std::get<int32_t*>(widget.widgetOptions.valuePointer);

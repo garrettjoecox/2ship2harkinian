@@ -23,14 +23,11 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
 
         if (cmdId == MSCRIPT_CMD_06) { // MSCRIPT_OFFER_ITEM
             switch (actor->id) {
-                // Anju crashes for some reason here if you don't skip the next text wait.
-                case ACTOR_EN_AN:
-                    skipCmds.clear();
-                    skipCmds.push_back(MSCRIPT_CMD_12);
+                case ACTOR_EN_PST:
+                    actor->flags |= ACTOR_FLAG_TALK_REQUESTED; // Prevent softlock
                     [[fallthrough]];
                 case ACTOR_EN_BJT:
                 case ACTOR_EN_NB:
-                case ACTOR_EN_PM:
                 case ACTOR_EN_AL:
                     func_80832558(gPlayState, player, func_80837B60);
                     *should = false;

@@ -20,6 +20,11 @@ void RegisterSkipOnePointCutscenes() {
 
         switch (actor->id) {
             case ACTOR_OBJ_SYOKUDAI: { // Torch
+                if (gPlayState->sceneId == SCENE_33ZORACITY) {
+                    // Currently this softlocks you, making you unable to interact with any actors
+                    break;
+                }
+
                 ObjSyokudai* torch = (ObjSyokudai*)actor;
                 torch->snuffTimer = OBJ_SYOKUDAI_SNUFF_NEVER;
                 *should = false;
@@ -55,6 +60,13 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_BG_HAKUGIN_SWITCH:
             case ACTOR_BG_HAKUGIN_POST:
             case ACTOR_OBJ_Y2SHUTTER:
+            case ACTOR_OBJ_LIGHTBLOCK:
+            case ACTOR_OBJ_LIGHTSWITCH:
+            case ACTOR_BG_IKANA_BOMBWALL:
+            case ACTOR_BG_HAKUGIN_BOMBWALL:
+            case ACTOR_EN_SW:
+            case ACTOR_OBJ_CHAN:
+            case ACTOR_EN_MM:
                 *should = false;
                 break;
             default:

@@ -5,6 +5,7 @@
  */
 
 #include "z_en_mnk.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -1093,7 +1094,9 @@ void EnMnk_Monkey_ApproachPlayer(EnMnk* this, PlayState* play) {
         } else {
             EnMnk_Monkey_SetAnim(this, 2);
         }
-        this->actionFunc = EnMnk_Monkey_WaitToTalkAfterApproach;
+        if (GameInteractor_Should(VB_MONKEY_WAIT_TO_TALK_AFTER_APPROACH, true, this)) {
+            this->actionFunc = EnMnk_Monkey_WaitToTalkAfterApproach;
+        }
     }
 
     EnMnk_PlayWalkSfx(this);

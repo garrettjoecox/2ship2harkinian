@@ -4,7 +4,6 @@
 extern "C" {
 #include "variables.h"
 #include "src/overlays/actors/ovl_En_Fu/z_en_fu.h"
-void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 }
 
 void Rando::ActorBehavior::InitEnTotoBehavior() {
@@ -24,6 +23,5 @@ void Rando::ActorBehavior::InitEnTotoBehavior() {
         player->talkActor = refActor;
         player->talkActorDistance = refActor->xzDistToPlayer;
         player->exchangeItemAction = PLAYER_IA_MINUS1;
-        Player_TalkWithPlayer(gPlayState, refActor);
     });
 }

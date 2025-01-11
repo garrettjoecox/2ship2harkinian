@@ -162,6 +162,8 @@ void RegisterBetterSongOfDoubleTime() {
         DrawTextRec(254.0f, 195.0f, 1.0f, 0, 0, 1.0f, 1.0f);
         CLOSE_DISPS(gPlayState->state.gfxCtx);
     });
+
+    COND_VB_SHOULD(VB_ALLOW_SONG_DOUBLE_TIME_ON_FINAL_NIGHT, CVAR, { *should = true; });
 }
 
 static RegisterShipInitFunc initFunc(RegisterBetterSongOfDoubleTime, { CVAR_NAME });

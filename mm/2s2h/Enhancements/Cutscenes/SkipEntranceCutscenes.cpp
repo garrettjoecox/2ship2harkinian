@@ -1,4 +1,4 @@
-#include <libultraship/bridge.h>
+#include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
 
@@ -17,7 +17,7 @@ void RegisterSkipEntranceCutscenes() {
         }
 
         // Skip the entrance cutscene in the castle
-        if (gPlayState->sceneId == SCENE_CASTLE && *csId == 1) {
+        if (gPlayState->sceneId == SCENE_CASTLE && (*csId == 0 || *csId == 1)) {
             *should = false;
         }
 
