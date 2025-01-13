@@ -219,7 +219,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_SNOW_ROOM, true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BEFORE_UPPER_WIZZROBE_ROOM, CanKillEnemy(ACTOR_EN_DINOFOS)),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BEFORE_UPPER_WIZZROBE_ROOM, true),
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_DUAL_SWITCHES_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
