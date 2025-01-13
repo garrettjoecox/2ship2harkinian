@@ -57,6 +57,7 @@ void InitEnSob1Behavior();
 void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
 void InitEnTotoBehavior();
+void InitEnTrtBehavior();
 void InitEnYbBehavior();
 void InitEnZogBehavior();
 void InitItemBHeartBehavior();
