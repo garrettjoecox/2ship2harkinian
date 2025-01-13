@@ -478,14 +478,16 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 assert(false);
                 return RI_JUNK;
             case RI_PROGRESSIVE_LULLABY:
-                if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO)) {
                     return RI_SONG_LULLABY_INTRO;
-                } else if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
-                    return RI_SONG_LULLABY;
                 } else {
-                    assert(false);
-                    return RI_JUNK;
+                    if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                        return RI_SONG_LULLABY;
+                    }
                 }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_JUNK;
             case RI_PROGRESSIVE_MAGIC:
                 if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
                     return RI_SINGLE_MAGIC;

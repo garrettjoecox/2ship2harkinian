@@ -330,7 +330,11 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_SONG_SONATA:
         case RI_SONG_ELEGY:
         case RI_SONG_LULLABY_INTRO:
+            DrawSong(randoItemId);
+            break;
         case RI_SONG_LULLABY:
+            DrawSong(randoItemId);
+            break;
         case RI_SONG_OATH:
         case RI_SONG_EPONA:
         case RI_SONG_NOVA:
@@ -365,7 +369,8 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_PROGRESSIVE_BOW:
         case RI_PROGRESSIVE_BOMB_BAG:
         case RI_PROGRESSIVE_LULLABY:
-            Rando::DrawItem(Rando::ConvertItem(randoItemId));
+            DrawSong(Rando::ConvertItem(randoItemId));
+            break;
         case RI_PROGRESSIVE_SWORD:
         case RI_PROGRESSIVE_WALLET:
             Rando::DrawItem(Rando::ConvertItem(randoItemId), actor);
