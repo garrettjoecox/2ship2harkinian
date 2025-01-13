@@ -93,15 +93,6 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM_UPPER, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
-        },
-        .events = {
-            EVENT( // Sends up the central pillar
-                "Send up the Central Pillar", 
-                Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x34),
-                Flags_SetSceneSwitch(SCENE_HAKUGIN, 0x34),
-                Flags_ClearSceneSwitch(SCENE_HAKUGIN, 0x34), 
-                CAN_BE_GORON
-            ),
         }
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
@@ -122,7 +113,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x34) && !SHT_PILLAR_SOLVED),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, true),
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
@@ -140,22 +131,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_THIRD_FLOOR, CAN_USE_MAGIC_ARROW(FIRE)),
             CONNECTION(RR_SNOWHEAD_TEMPLE_MAP_ROOM_UPPER, CAN_BE_GORON || HAS_ITEM(ITEM_HOOKSHOT)),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR, true)
-        },
-        .events = {
-            EVENT( // Break the first part of the Pillar
-                "Break the first part of the Pillar", 
-                Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x35),
-                Flags_SetSceneSwitch(SCENE_HAKUGIN, 0x35),
-                Flags_ClearSceneSwitch(SCENE_HAKUGIN, 0x35), 
-                (CAN_BE_GORON && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x34))
-            ),
-            EVENT( // Break the third part of the Pillar
-                "Break the Third part of the Pillar", 
-                Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x36),
-                Flags_SetSceneSwitch(SCENE_HAKUGIN, 0x36),
-                Flags_ClearSceneSwitch(SCENE_HAKUGIN, 0x36), 
-                (CAN_BE_GORON && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x34) && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x35) && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x37))
-            ),
         }
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
@@ -175,24 +150,13 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_ALCOVE_CHEST, ((CAN_BE_DEKU && CAN_BE_GORON) || HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_ITEM(ITEM_HOOKSHOT))),
         },
         .exits = {
-            EXIT(ENTRANCE(GOHTS_LAIR, 0),           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_SNOWHEAD_TEMPLE) && SHT_PILLAR_SOLVED),
+            EXIT(ENTRANCE(GOHTS_LAIR, 0),           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_SNOWHEAD_TEMPLE)),
         },
         .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, SHT_PILLAR_SOLVED),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, SHT_PILLAR_SOLVED),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_SNOW_ROOM, (CAN_BE_GORON || HAS_ITEM(ITEM_HOOKSHOT)) && KEY_COUNT(SNOWHEAD_TEMPLE) >= 3),
-        },
-        .events = {
-            EVENT( // Break the second part of the Pillar
-                "Break the Second part of the Pillar", 
-                Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x37),
-                Flags_SetSceneSwitch(SCENE_HAKUGIN, 0x37),
-                Flags_ClearSceneSwitch(SCENE_HAKUGIN, 0x37), 
-                (CAN_BE_GORON && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x34) && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x35))
-            ),
         }
     };
     Regions[RR_SNOWHEAD_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
