@@ -258,7 +258,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO : Check what is effective against aliens.
-            EVENT_WEEKEVENTREG("Defended Cows from Aliens", WEEKEVENTREG_DEFENDED_AGAINST_THEM, CAN_BE_GORON && HAS_ITEM(POWDER_KEG) && (CAN_USE_HUMAN_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW))),
+            EVENT_WEEKEVENTREG("Defended Cows from Aliens", WEEKEVENTREG_DEFENDED_AGAINST_THEM, CAN_BE_GORON && HAS_ITEM(POWDER_KEG) && HAS_ITEM(ITEM_BOW)),
         },
     };
     Regions[RR_SOUTHERN_SWAMP_GROTTO] = RandoRegion{ .name = "Southern Swamp Grotto", .sceneId = SCENE_KAKUSIANA,
