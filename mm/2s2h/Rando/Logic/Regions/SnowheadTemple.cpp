@@ -205,9 +205,6 @@ static RegisterShipInitFunc initFunc([]() {
           CHECK(RC_SNOWHEAD_TEMPLE_ENTRANCE_POT_01, CAN_BE_GORON),
           CHECK(RC_SNOWHEAD_TEMPLE_ENTRANCE_POT_02, CAN_BE_GORON),
       },
-      .exits = { //     TO                                         FROM
-          EXIT(ENTRANCE(SNOWHEAD, 1),                     ENTRANCE(SNOWHEAD_TEMPLE, 0), true),
-      },
       .connections = {
           CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR,   CAN_USE_MAGIC_ARROW(FIRE)),
           CONNECTION(RR_SNOWHEAD_TEMPLE_BRIDGE_ROOM_BEFORE,  true),
