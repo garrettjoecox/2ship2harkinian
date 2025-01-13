@@ -80,9 +80,6 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 #define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
 #define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
 #define CLEAR_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags &= ~(1 << owlId))
-#define SHT_PILLAR_SOLVED                                                                      \
-    (Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x35) && Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x36) && \
-     Flags_GetSceneSwitch(SCENE_HAKUGIN, 0x37))
 #define HAS_BOTTLE_ITEM(item) (Inventory_HasItemInBottle(item))
 // TODO: Maybe not reliable because of theif bird stealing bottle
 #define HAS_BOTTLE (INV_CONTENT(ITEM_BOTTLE) != ITEM_NONE)
