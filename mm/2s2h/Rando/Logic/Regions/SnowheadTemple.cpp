@@ -61,6 +61,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_BRIDGE_ROOM_BEFORE, true),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_MAP_ROOM_LOWER, true),
         },
     };
