@@ -39,8 +39,7 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
 
     // Unset any flags used for checks, whether or not they get the item or junk is determined on our end instead.
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-        if (randoCheckId == RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET || 
-            randoCheckId == RC_CLOCK_TOWN_WEST_BANK_INTEREST || 
+        if (randoCheckId == RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET || randoCheckId == RC_CLOCK_TOWN_WEST_BANK_INTEREST ||
             randoCheckId == RC_CLOCK_TOWN_WEST_BANK_PIECE_OF_HEART) {
             continue;
         }
