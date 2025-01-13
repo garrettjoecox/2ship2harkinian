@@ -104,8 +104,8 @@ std::string totalChecksFound() {
 void DrawCheckTypeIcon(RandoCheckId randoCheckId) {
     RandoCheckType checkType = Rando::StaticData::Checks[randoCheckId].randoCheckType;
     ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(checkTypeIconList[checkType]),
-                 checkType == RCTYPE_SONG  ? ImVec2(14.0f * trackerScale, 18.0f * trackerScale)
-                 : checkType == RCTYPE_OWL ? ImVec2(18.0f * trackerScale, 11.0f * trackerScale)
+                 checkType == RCTYPE_SONG  ? ImVec2(12.0f * trackerScale, 18.0f * trackerScale)
+                 : checkType == RCTYPE_OWL ? ImVec2(18.0f * trackerScale, 9.0f * trackerScale)
                                            : ImVec2(18.0f * trackerScale, 18.0f * trackerScale),
                  ImVec2(0, 0), ImVec2(1, 1),
                  checkType == RCTYPE_FREESTANDING ? ImVec4(0.78f, 1, 0.39f, 1) : ImVec4(1, 1, 1, 1));
