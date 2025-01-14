@@ -41,6 +41,11 @@ void RegisterSkipFallingMoonsTear() {
             }
         }
     });
+
+    COND_ID_HOOK(OnActorDestroy, ACTOR_EN_BJI_01, CVAR, [](Actor* actor) {
+        // Cleanup static vars
+        frames = 0;
+    });
 }
 
 static RegisterShipInitFunc initFunc(RegisterSkipFallingMoonsTear, { CVAR_NAME });
