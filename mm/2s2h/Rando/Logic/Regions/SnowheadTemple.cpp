@@ -80,6 +80,16 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_BRIDGE_ROOM_AFTER, (CAN_BE_GORON && HAS_MAGIC) || (HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_ZORA)) // TODO : Add bomb jump trick here.
         },
     };
+    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BEFORE_UPPER_WIZZROBE_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
+        .checks = {
+            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_KEY_POT_01, true),
+            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_KEY_POT_02, true),
+        },
+        .connections = {
+            CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, true),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, true),
+        },
+    };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
         .checks = {
             CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM_CHEST, CAN_BE_GORON),
@@ -90,11 +100,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM_LOWER,       true),
         },
-    };
-    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
-        .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM_UPPER, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
-        }
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
         // TODO : Think of the best way to handle these central rooms in logic
@@ -108,14 +113,20 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR, CAN_HOOK_SCARECROW)
         },
     };
-    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BEFORE_UPPER_WIZZROBE_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
+    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
+        .connections = {
+            CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM_UPPER, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
+        }
+    };
+    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
         .checks = {
-            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_KEY_POT_01, true),
-            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_KEY_POT_02, true),
+            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_POT_01, true),
+            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_POT_02, true),
         },
         .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, true),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR, HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM, true)
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
@@ -134,17 +145,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_MAP_ROOM_UPPER, CAN_BE_GORON || HAS_ITEM(ITEM_HOOKSHOT)),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR, true)
         }
-    };
-    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
-        .checks = {
-            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_POT_01, true),
-            CHECK(RC_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SCARECROW_POT_02, true),
-        },
-        .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR, HAS_ITEM(ITEM_HOOKSHOT)),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_BOTTOM, true)
-        },
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_THIRD_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN,
         // This region is being treated the same as the upper part that you can access using the completed pillar puzzle...its probably fine like this.
