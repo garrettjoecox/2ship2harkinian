@@ -5,6 +5,7 @@
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/Rando/StaticData/StaticData.h"
+#include "2s2h/ShipUtils.h"
 
 extern "C" {
 #include "variables.h"
@@ -44,7 +45,7 @@ void Rando::MiscBehavior::CheckQueue() {
                         RandoItemId randoItemId =
                             Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
                         std::string msg = "You received";
-                        if (Rando::StaticData::Items[randoItemId].article != "") {
+                        if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
                             msg += " ";
                             msg += Rando::StaticData::Items[randoItemId].article;
                         }

@@ -6,6 +6,7 @@
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
+#include "2s2h/ShipUtils.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -892,7 +893,7 @@ void DrawItemsAndMasksTab() {
                         [](Actor* actor, PlayState* play) {
                             RandoItemId randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
                             std::string msg = "You received";
-                            if (Rando::StaticData::Items[randoItemId].article != "") {
+                            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
                                 msg += " ";
                                 msg += Rando::StaticData::Items[randoItemId].article;
                             }

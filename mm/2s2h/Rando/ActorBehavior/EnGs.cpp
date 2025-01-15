@@ -83,9 +83,9 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         entry.autoFormat = false;
         auto& saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-        entry.msg = "They say %g{{article}}{{item}}%w is hidden at %y{{location}}%w.\x11";
+        entry.msg = "They say %g{{article}}{{item}}%w is hidden at %y{{location}}%w.";
 
-        if (Rando::StaticData::Items[saveCheck.randoItemId].article != "") {
+        if (!Ship_IsCStringEmpty(Rando::StaticData::Items[saveCheck.randoItemId].article)) {
             CustomMessage::Replace(&entry.msg, "{{article}}",
                                    std::string(Rando::StaticData::Items[saveCheck.randoItemId].article) + " ");
         } else {
@@ -95,10 +95,13 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[saveCheck.randoItemId].name);
         CustomMessage::Replace(&entry.msg, "{{location}}", readableCheckNamesForGs[randoCheckId]);
 
+        // Replace colors before line break calculation
+        CustomMessage::ReplaceColorChars(&entry.msg);
+
         CustomMessage::AddLineBreaks(&entry.msg);
 
         // Eventually this part should be opt-in, but for now it's always on
-        entry.msg += "\x13\x12...\x13\x12Trade %r{{rupees}} Rupees%w for another hint?\x11\xC2No\x11Yes";
+        entry.msg += "\x10...\x13\x12Trade %r{{rupees}} Rupees%w for another hint?\x11\xC2No\x11Yes";
         s32 cost = GetNormalizedCost();
         CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(cost));
 
@@ -127,7 +130,7 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
 
                 entry.msg = "Wise choice... They say %g{{article}}{{item}}%w is hidden at %y{{location}}%w.";
 
-                if (Rando::StaticData::Items[saveCheck.randoItemId].article != "") {
+                if (!Ship_IsCStringEmpty(Rando::StaticData::Items[saveCheck.randoItemId].article)) {
                     CustomMessage::Replace(&entry.msg, "{{article}}",
                                            std::string(Rando::StaticData::Items[saveCheck.randoItemId].article) + " ");
                 } else {
