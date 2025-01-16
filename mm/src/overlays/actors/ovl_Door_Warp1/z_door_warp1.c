@@ -244,10 +244,12 @@ void func_808B8C48(DoorWarp1* this, PlayState* play) {
                               this->dyna.actor.world.pos.z, 200, 255, 255, 255);
     Lights_PointNoGlowSetInfo(&this->unk_1F4, this->dyna.actor.world.pos.x, this->dyna.actor.world.pos.y,
                               this->dyna.actor.world.pos.z, 200, 255, 255, 255);
-    if (((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_2) && CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA)) ||
+    bool vanillaCondition =
+        ((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_2) && CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA)) ||
         ((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_3) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT)) ||
         ((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_4) && CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG)) ||
-        ((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_5) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD))) {
+        ((DOORWARP1_GET_FF(&this->dyna.actor) == ENDOORWARP1_FF_5) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD));
+    if (GameInteractor_Should(VB_ACTIVATE_BOSS_WARP_PAD, vanillaCondition, this)) {
         s16 params = DOORWARP1_GET_FF00_2(&this->dyna.actor);
 
         params |= 6;

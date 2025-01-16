@@ -75,4 +75,29 @@ void Rando::ActorBehavior::InitDoorWarp1VBehavior() {
             *should = false;
         }
     });
+
+    /*
+     * Changes the requirements to activate the boss room warp pad shortcut to check for boss room blue warp used
+     */
+    COND_VB_SHOULD(VB_ACTIVATE_BOSS_WARP_PAD, IS_RANDO, {
+        Actor* actor = va_arg(args, Actor*);
+        RandoCheckId checkId = RC_UNKNOWN;
+
+        switch (DOORWARP1_GET_FF(actor)) {
+            case ENDOORWARP1_FF_2:
+                checkId = RC_WOODFALL_TEMPLE_BOSS_WARP;
+                break;
+            case ENDOORWARP1_FF_3:
+                checkId = RC_SNOWHEAD_TEMPLE_BOSS_WARP;
+                break;
+            case ENDOORWARP1_FF_4:
+                checkId = RC_GREAT_BAY_TEMPLE_BOSS_WARP;
+                break;
+            case ENDOORWARP1_FF_5:
+                checkId = RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP;
+                break;
+        }
+
+        *should = RANDO_SAVE_CHECKS[checkId].obtained;
+    });
 }
