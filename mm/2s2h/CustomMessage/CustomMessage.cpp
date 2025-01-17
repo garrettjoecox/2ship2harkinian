@@ -52,7 +52,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
         char currentChar = (*msg)[i];
 
         if ((uint8_t)currentChar >= 0x20 && (uint8_t)currentChar < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
-            currentLineWidth += sNESFontWidths[currentChar - 0x20];
+            currentLineWidth += sNESFontWidths[(uint8_t)currentChar - 0x20];
         }
 
         // Increment for existing new liens
