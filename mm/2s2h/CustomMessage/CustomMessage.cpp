@@ -51,15 +51,8 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
     for (size_t i = 0; i < msg->size(); ++i) {
         char currentChar = (*msg)[i];
 
-        if ((uint8_t)currentChar >= 0x20 && (uint8_t)currentChar < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
+        if (currentChar >= 0x20 && currentChar < 0x20 + sizeof(sNESFontWidths) / sizeof(sNESFontWidths[0])) {
             currentLineWidth += sNESFontWidths[currentChar - 0x20];
-        }
-
-        // Increment for existing new liens
-        if (currentChar == 0x11) {
-            currentLineWidth = 0.0f;
-            lastSpaceIndex = std::string::npos;
-            ++currentLineCount;
         }
 
         if (currentChar == ' ') {
@@ -78,8 +71,8 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
             ++currentLineCount;
 
             if (currentLineCount >= MAX_LINES_PER_PAGE) {
-                // Replace the added new line for a box break instead
-                (*msg)[i] = 0x10;
+                msg->insert(i + 1, 1, 0x10);
+                ++i;
                 currentLineCount = 0;
             }
         }
@@ -88,7 +81,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
 
 // Ensure that the message ends with the message end character
 void CustomMessage::EnsureMessageEnd(std::string* msg) {
-    if ((unsigned char)msg->back() != 0xBF) {
+    if (msg->back() != 0xBF) {
         msg->push_back(0xBF);
     }
 }
@@ -136,10 +129,10 @@ void CustomMessage::LoadCustomMessageIntoFont(CustomMessage::Entry entry) {
     buff[10] = 0xFF;
 
     if (entry.autoFormat) {
-        CustomMessage::ReplaceColorChars(&entry.msg);
-        CustomMessage::Replace(&entry.msg, "\n", "\x11");
         CustomMessage::AddLineBreaks(&entry.msg);
+        CustomMessage::ReplaceColorChars(&entry.msg);
         CustomMessage::EnsureMessageEnd(&entry.msg);
+        CustomMessage::Replace(&entry.msg, "\n", "\x11");
     }
 
     // If message is too long, truncate it and add the message end character

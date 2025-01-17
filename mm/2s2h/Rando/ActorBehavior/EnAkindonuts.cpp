@@ -1,6 +1,5 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
-#include "2s2h/ShipUtils.h"
 
 extern "C" {
 #include "variables.h"
@@ -26,7 +25,7 @@ void EnAkindonuts_ReplacePurchaseMessage(RandoCheckId randoCheckId, RandoInf ran
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.msg = "I'll sell you {{article}}%g{{item}}%w for %r{{rupees}} Rupees%w!\xE0";
 
-    if (!Ship_IsCStringEmpty(randoStaticItem.article)) {
+    if (randoStaticItem.article != "") {
         CustomMessage::Replace(&entry.msg, "{{article}}", std::string(randoStaticItem.article) + " ");
     } else {
         CustomMessage::Replace(&entry.msg, "{{article}}", "");
