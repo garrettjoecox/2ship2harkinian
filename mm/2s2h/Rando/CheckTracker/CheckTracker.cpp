@@ -352,7 +352,7 @@ void CheckTrackerDrawNonLogicalList() {
                 continue;
             }
 
-            if (CVAR_SHOW_CURRENT_SCENE && Rando::StaticData::Checks[checkId].sceneId != gPlayState->sceneId) {
+            if (CVAR_SHOW_CURRENT_SCENE && Play_GetOriginalSceneId(Rando::StaticData::Checks[checkId].sceneId) != Play_GetOriginalSceneId(gPlayState->sceneId)) {
                 continue;
             }
 
