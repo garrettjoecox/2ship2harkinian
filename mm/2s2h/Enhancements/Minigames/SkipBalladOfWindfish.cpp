@@ -19,22 +19,12 @@ void RegisterSkipBalladOfWindfish() {
         }
 
         if (flagType == FLAG_WEEK_EVENT_REG) {
-            if (flag == WEEKEVENTREG_56_10) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_20);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_40);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_80);
-            } else if (flag == WEEKEVENTREG_56_20) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_10);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_40);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_80);
-            } else if (flag == WEEKEVENTREG_56_40) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_20);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_10);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_80);
-            } else if (flag == WEEKEVENTREG_56_80) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_20);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_40);
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_10);
+            if (flag == WEEKEVENTREG_56_10 || flag == WEEKEVENTREG_56_20 || flag == WEEKEVENTREG_56_40 ||
+                flag == WEEKEVENTREG_56_80) {
+                SET_WEEKEVENTREG(WEEKEVENTREG_56_10); // Played Ballad as Human
+                SET_WEEKEVENTREG(WEEKEVENTREG_56_20); // Played Ballad as Deku
+                SET_WEEKEVENTREG(WEEKEVENTREG_56_40); // Played Ballad as Zora
+                SET_WEEKEVENTREG(WEEKEVENTREG_56_80); // Played Ballad as Goron
             }
         }
     });
