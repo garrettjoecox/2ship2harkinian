@@ -18,6 +18,7 @@ void InitEnAkindonutsBehavior();
 void InitEnAlBehavior();
 void InitEnAnBehavior();
 void InitEnAob01Behavior();
+void InitEnAzBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
 void InitEnBomBowlManBehavior();

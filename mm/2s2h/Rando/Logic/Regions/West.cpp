@@ -129,6 +129,10 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_WATERFALL_RAPIDS] = RandoRegion{ .sceneId = SCENE_35TAKI,
+        .checks = {
+            CHECK(RC_WATERFALL_RAPIDS_BEAVER_RACE_01, CAN_BE_ZORA),
+            CHECK(RC_WATERFALL_RAPIDS_BEAVER_RACE_02, CAN_BE_ZORA),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 4),                    ENTRANCE(WATERFALL_RAPIDS, 0), true),
         },

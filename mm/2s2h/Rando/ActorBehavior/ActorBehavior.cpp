@@ -40,6 +40,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnAlBehavior();
     Rando::ActorBehavior::InitEnAnBehavior();
     Rando::ActorBehavior::InitEnAob01Behavior();
+    Rando::ActorBehavior::InitEnAzBehavior();
     Rando::ActorBehavior::InitEnBabaBehavior();
     Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnBomBowlManBehavior();
