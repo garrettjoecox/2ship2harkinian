@@ -12,21 +12,16 @@ extern "C" {
 
 void RegisterSkipBalladOfWindfish() {
 
-    COND_HOOK(OnFlagSet, CVAR, [](FlagType flagType, u32 flag) {
+    COND_VB_SHOULD(VB_BALLAD_PLAYED_FORM, CVAR, {
         if (INV_CONTENT(ITEM_MASK_DEKU) != ITEM_MASK_DEKU || INV_CONTENT(ITEM_MASK_GORON) != ITEM_MASK_GORON ||
             INV_CONTENT(ITEM_MASK_ZORA) != ITEM_MASK_ZORA) {
             return;
         }
 
-        if (flagType == FLAG_WEEK_EVENT_REG) {
-            if (flag == WEEKEVENTREG_56_10 || flag == WEEKEVENTREG_56_20 || flag == WEEKEVENTREG_56_40 ||
-                flag == WEEKEVENTREG_56_80) {
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_10); // Played Ballad as Human
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_20); // Played Ballad as Deku
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_40); // Played Ballad as Zora
-                SET_WEEKEVENTREG(WEEKEVENTREG_56_80); // Played Ballad as Goron
-            }
-        }
+        SET_WEEKEVENTREG(WEEKEVENTREG_56_10); // Played Ballad as Human
+        SET_WEEKEVENTREG(WEEKEVENTREG_56_20); // Played Ballad as Deku
+        SET_WEEKEVENTREG(WEEKEVENTREG_56_40); // Played Ballad as Zora
+        SET_WEEKEVENTREG(WEEKEVENTREG_56_80); // Played Ballad as Goron
     });
 }
 

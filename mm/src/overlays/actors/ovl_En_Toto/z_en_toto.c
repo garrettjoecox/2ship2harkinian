@@ -6,6 +6,7 @@
 
 #include "z_en_toto.h"
 #include "objects/object_zm/object_zm.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -523,6 +524,7 @@ s32 func_80BA46D8(EnToto* this, PlayState* play) {
 
 s32 func_80BA4740(EnToto* this, PlayState* play) {
     if (play->msgCtx.ocarinaMode == OCARINA_MODE_END) {
+        GameInteractor_Should(VB_BALLAD_PLAYED_FORM, true);
         if (GET_PLAYER_FORM == PLAYER_FORM_HUMAN) {
             SET_WEEKEVENTREG(WEEKEVENTREG_56_10);
         }
