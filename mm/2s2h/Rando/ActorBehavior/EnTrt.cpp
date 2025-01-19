@@ -28,7 +28,7 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
         player->talkActor = &refActor->actor;
         player->talkActorDistance = refActor->actor.xzDistToPlayer;
         player->exchangeItemAction = PLAYER_IA_MINUS1;
-        
+
         if (refActor->actor.id == ACTOR_EN_TRT) {
             Player_TalkWithPlayer(gPlayState, &refActor->actor);
             refActor->actionFunc = EnTrt_ItemGiven;
