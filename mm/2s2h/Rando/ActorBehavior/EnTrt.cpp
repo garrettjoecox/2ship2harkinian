@@ -14,7 +14,7 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
         EnTrt* refActor = va_arg(args, EnTrt*);
         Player* player = GET_PLAYER(gPlayState);
 
-        if (refActor->actor.id != ACTOR_EN_TRT) {
+        if (refActor->actor.id != ACTOR_EN_TRT && refActor->actor.id != ACTOR_EN_TRT2) {
             return;
         }
         if (!RANDO_SAVE_CHECKS[RC_HAGS_POTION_SHOP_KOTAKE].shuffled) {
@@ -28,7 +28,10 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
         player->talkActor = &refActor->actor;
         player->talkActorDistance = refActor->actor.xzDistToPlayer;
         player->exchangeItemAction = PLAYER_IA_MINUS1;
-        Player_TalkWithPlayer(gPlayState, &refActor->actor);
-        refActor->actionFunc = EnTrt_ItemGiven;
+        
+        if (refActor->actor.id == ACTOR_EN_TRT) {
+            Player_TalkWithPlayer(gPlayState, &refActor->actor);
+            refActor->actionFunc = EnTrt_ItemGiven;
+        }
     });
 }
