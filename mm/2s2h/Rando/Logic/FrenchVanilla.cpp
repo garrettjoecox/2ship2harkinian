@@ -49,18 +49,6 @@ void ApplyFrenchVanillaLogicToSaveContext() {
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
-    // #region TODO: This just gives us a bunch of stuff that isn't technically in logic yet, so that generation can
-    // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
-    // section.
-    std::vector<RandoItemId> startingItems = {
-        RI_PICTOGRAPH_BOX,
-    };
-
-    for (RandoItemId randoItemId : startingItems) {
-        GiveItem(randoItemId);
-    }
-    // #endregion
-
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
         for (auto& [randoCheckId, _] : randoRegion.checks) {
