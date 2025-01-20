@@ -1,10 +1,33 @@
 #include "ItemTracker.h"
+#include "libultraship/libultraship.h"
 #include "Context.h"
 #include "config/Config.h"
+#include <bit>
+
+extern "C" {
+#include "z64save.h"
+#include "variables.h"
 #include "assets/archives/icon_item_static/icon_item_static_yar.h"
 #include "assets/archives/icon_item_24_static/icon_item_24_static_yar.h"
+#include "assets/interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
+#include "assets/interface/icon_item_field_static/icon_item_field_static.h"
+#include "assets/interface/parameter_static/parameter_static.h"
+}
 
 #define CFG_TRACKER_ITEM(var) ("ItemTracker." var)
+
+typedef enum {
+    TRACKER_ITEM_OWL_ACTIVATIONS = ITEM_NONE + 1,
+    TRACKER_ITEM_STRAY_FAIRY_CLOCK_TOWN,
+    TRACKER_ITEM_STRAY_FAIRY_WOODFALL,
+    TRACKER_ITEM_STRAY_FAIRY_SNOWHEAD,
+    TRACKER_ITEM_STRAY_FAIRY_GREAT_BAY,
+    TRACKER_ITEM_STRAY_FAIRY_STONE_TOWER,
+    TRACKER_ITEM_KEY_WOODFALL,
+    TRACKER_ITEM_KEY_SNOWHEAD,
+    TRACKER_ITEM_KEY_GREAT_BAY,
+    TRACKER_ITEM_KEY_STONE_TONER,
+} ItemTrackerItems;
 
 using namespace Ship;
 
@@ -22,12 +45,16 @@ ItemTrackerWindow::~ItemTrackerWindow() {
     config->SetInteger(CFG_TRACKER_ITEM("WindowType"), (int8_t)mWindowType);
     config->SetInteger(CFG_TRACKER_ITEM("IsDraggable"), mIsDraggable);
     config->SetInteger(CFG_TRACKER_ITEM("OnlyDrawPaused"), mOnlyDrawPaused);
+    config->SetInteger(CFG_TRACKER_ITEM("IncludeMapsAndCompasses"), mIncludeMapsAndCompasses);
     config->SetInteger(CFG_TRACKER_ITEM("DrawCurrentAmmo"), mCapacityModes[ItemTrackerCapacityMode::DrawCurrent]);
     config->SetInteger(CFG_TRACKER_ITEM("DrawMaxAmmo"), mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity]);
     config->SetInteger(CFG_TRACKER_ITEM("DrawMaxCapacity"), mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity]);
     config->SetInteger(CFG_TRACKER_ITEM("InventoryDrawMode"), (int8_t)mItemDrawModes[SECTION_INVENTORY]);
     config->SetInteger(CFG_TRACKER_ITEM("MasksDrawMode"), (int8_t)mItemDrawModes[SECTION_MASKS]);
+    config->SetInteger(CFG_TRACKER_ITEM("EquipmentDrawMode"), (int8_t)mItemDrawModes[SECTION_EQUIPMENT]);
+    config->SetInteger(CFG_TRACKER_ITEM("MiscDrawMode"), (int8_t)mItemDrawModes[SECTION_MISC]);
     config->SetInteger(CFG_TRACKER_ITEM("SongsDrawMode"), (int8_t)mItemDrawModes[SECTION_SONGS]);
+    config->SetInteger(CFG_TRACKER_ITEM("StrayFairiesDrawMode"), (int8_t)mItemDrawModes[SECTION_STRAY_FAIRIES]);
     config->SetInteger(CFG_TRACKER_ITEM("DungeonDrawMode"), (int8_t)mItemDrawModes[SECTION_DUNGEON]);
 
     config->Save();
@@ -50,6 +77,7 @@ void ItemTrackerWindow::LoadSettings() {
         (TrackerWindowType)config->GetInteger(CFG_TRACKER_ITEM("WindowType"), (int8_t)TrackerWindowType::Floating);
     mIsDraggable = config->GetInteger(CFG_TRACKER_ITEM("IsDraggable"), false);
     mOnlyDrawPaused = config->GetInteger(CFG_TRACKER_ITEM("OnlyDrawPaused"), false);
+    mIncludeMapsAndCompasses = config->GetInteger(CFG_TRACKER_ITEM("IncludeMapsAndCompasses"), false);
     mCapacityModes[ItemTrackerCapacityMode::DrawCurrent] =
         config->GetInteger(CFG_TRACKER_ITEM("DrawCurrentAmmo"), false);
     mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity] =
@@ -60,8 +88,14 @@ void ItemTrackerWindow::LoadSettings() {
         CFG_TRACKER_ITEM("InventoryDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
     mItemDrawModes[SECTION_MASKS] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("MasksDrawMode"),
                                                                                (int32_t)ItemTrackerDisplayType::Hidden);
+    mItemDrawModes[SECTION_EQUIPMENT] = (ItemTrackerDisplayType)config->GetInteger(
+        CFG_TRACKER_ITEM("EquipmentDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
+    mItemDrawModes[SECTION_MISC] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("MiscDrawMode"),
+                                                                              (int32_t)ItemTrackerDisplayType::Hidden);
     mItemDrawModes[SECTION_SONGS] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("SongsDrawMode"),
                                                                                (int32_t)ItemTrackerDisplayType::Hidden);
+    mItemDrawModes[SECTION_STRAY_FAIRIES] = (ItemTrackerDisplayType)config->GetInteger(
+        CFG_TRACKER_ITEM("StrayFairiesDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
     mItemDrawModes[SECTION_DUNGEON] = (ItemTrackerDisplayType)config->GetInteger(
         CFG_TRACKER_ITEM("DungeonDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
 }
@@ -100,8 +134,13 @@ static constexpr ImVec4 opaqueTex = { 1.0f, 1.0f, 1.0f, 1.0f };
 static constexpr ImVec4 fadedTex = { 0.5f, 0.5f, 0.5f, 0.5f };
 
 void DrawItem(char* tex, bool drawFaded, float itemSize) {
-    ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(tex), ImVec2(itemSize, itemSize),
-                 ImVec2(0, 0), ImVec2(1, 1), drawFaded ? fadedTex : opaqueTex);
+    auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+    if (!gui->HasTextureByName(tex)) {
+        return;
+    }
+
+    ImGui::Image(gui->GetTextureByName(tex), ImVec2(itemSize, itemSize), ImVec2(0, 0), ImVec2(1, 1),
+                 drawFaded ? fadedTex : opaqueTex);
 }
 
 static constexpr std::array<ImVec4, 5> songInfo = {
@@ -128,10 +167,25 @@ void ItemTrackerWindow::DrawNote(size_t songIndex, bool drawFaded) {
         color = { 1.0f, 1.0f, 1.0f, 1.0f };
     }
     if (drawFaded) {
-        color.w = .5f;
+        color.x *= 0.5f;
+        color.y *= 0.5f;
+        color.z *= 0.5f;
+        color.w *= 0.5f;
     }
     ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(gItemIconSongNoteTex),
                  scaledNoteSize, ImVec2(0, 0), ImVec2(1, 1), color);
+}
+
+void ItemTrackerWindow::DrawOwlFace(bool drawFaded) {
+    constexpr float owlToScale = 36.0f / 24.0f;
+
+    const float iconScale = mIconSize / 36.0f;
+
+    // Scale the note icon with the rest of the items.
+    const ImVec2 scaledOwlSize(owlToScale * 24.0f * iconScale, owlToScale * 12.0f * iconScale);
+
+    ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(gWorldMapOwlFaceTex),
+                 scaledOwlSize, ImVec2(0, 0), ImVec2(1, 1), drawFaded ? fadedTex : opaqueTex);
 }
 
 extern "C" {
@@ -163,6 +217,22 @@ static constexpr std::array<uint8_t, 10> sSongBits = {
     QUEST_SONG_TIME,   QUEST_SONG_HEALING, QUEST_SONG_EPONA,      QUEST_SONG_SOARING, QUEST_SONG_STORMS,
     QUEST_SONG_SONATA, QUEST_SONG_LULLABY, QUEST_SONG_BOSSA_NOVA, QUEST_SONG_ELEGY,   QUEST_SONG_OATH,
 };
+
+static constexpr std::array<const char*, 4> sSwordTextures = {
+    gItemIconKokiriSwordTex,
+    gItemIconKokiriSwordTex,
+    gItemIconRazorSwordTex,
+    gItemIconGildedSwordTex,
+};
+
+static constexpr std::array<const char*, 4> sStrayFairyTextures = {
+    gDungeonStrayFairyWoodfallIconTex,
+    gDungeonStrayFairySnowheadIconTex,
+    gDungeonStrayFairyGreatBayIconTex,
+    gDungeonStrayFairyStoneTowerIconTex,
+};
+
+static constexpr uint16_t sSmallKeyCounts[4] = { 1, 3, 1, 4 };
 
 bool ItemTrackerWindow::HasAmmoCount(int itemId) {
     switch (itemId) {
@@ -250,6 +320,121 @@ void ItemTrackerWindow::DrawAmmoCount(int itemId, const ImVec2& iconPos) {
     ImGui::Text("%s", ammoStr);
 }
 
+bool ItemTrackerWindow::HasItemCount(int itemId) {
+    switch (itemId) {
+        case ITEM_WALLET_ADULT:
+        case TRACKER_ITEM_OWL_ACTIVATIONS:
+        case TRACKER_ITEM_STRAY_FAIRY_WOODFALL:
+        case TRACKER_ITEM_STRAY_FAIRY_SNOWHEAD:
+        case TRACKER_ITEM_STRAY_FAIRY_GREAT_BAY:
+        case TRACKER_ITEM_STRAY_FAIRY_STONE_TOWER:
+        case TRACKER_ITEM_KEY_WOODFALL:
+        case TRACKER_ITEM_KEY_SNOWHEAD:
+        case TRACKER_ITEM_KEY_GREAT_BAY:
+        case TRACKER_ITEM_KEY_STONE_TONER:
+            return true;
+        default:
+            return false;
+    }
+}
+
+ItemTrackerWindow::CountInfo ItemTrackerWindow::GetItemCountInfo(int itemId) {
+    CountInfo info;
+    switch (itemId) {
+        case ITEM_WALLET_ADULT:
+            info = { .cur = (uint16_t)gSaveContext.save.saveInfo.playerData.rupees,
+                     .curCap = (uint16_t)CUR_CAPACITY(UPG_WALLET),
+                     .maxCap = (uint16_t)CAPACITY(UPG_WALLET, 2) };
+            break;
+        case TRACKER_ITEM_OWL_ACTIVATIONS:
+            info = {
+                .cur = (uint16_t)std::popcount<uint16_t>(gSaveContext.save.saveInfo.playerData.owlActivationFlags &
+                                                         ((1 << OWL_WARP_MAX - 1) - 1)),
+                .curCap = (uint16_t)OWL_WARP_MAX - 1,
+                .maxCap = (uint16_t)OWL_WARP_MAX - 1,
+            };
+            break;
+        case TRACKER_ITEM_STRAY_FAIRY_WOODFALL:
+        case TRACKER_ITEM_STRAY_FAIRY_SNOWHEAD:
+        case TRACKER_ITEM_STRAY_FAIRY_GREAT_BAY:
+        case TRACKER_ITEM_STRAY_FAIRY_STONE_TOWER:
+            info = {
+                .cur = (uint16_t)gSaveContext.save.saveInfo.inventory
+                           .strayFairies[itemId - TRACKER_ITEM_STRAY_FAIRY_WOODFALL + DUNGEON_INDEX_WOODFALL_TEMPLE],
+                .curCap = 15,
+                .maxCap = 15,
+            };
+            break;
+        case TRACKER_ITEM_KEY_WOODFALL:
+        case TRACKER_ITEM_KEY_SNOWHEAD:
+        case TRACKER_ITEM_KEY_GREAT_BAY:
+        case TRACKER_ITEM_KEY_STONE_TONER:
+            info = {
+                .cur = (uint16_t)MAX(
+                    DUNGEON_KEY_COUNT(itemId - TRACKER_ITEM_KEY_WOODFALL + DUNGEON_INDEX_WOODFALL_TEMPLE), 0),
+                .curCap = sSmallKeyCounts[itemId - TRACKER_ITEM_KEY_WOODFALL + DUNGEON_INDEX_WOODFALL_TEMPLE],
+                .maxCap = sSmallKeyCounts[itemId - TRACKER_ITEM_KEY_WOODFALL + DUNGEON_INDEX_WOODFALL_TEMPLE],
+            };
+            break;
+        default:
+            info = { 0 };
+    }
+    return info;
+}
+
+void ItemTrackerWindow::DrawItemCount(int itemId, const ImVec2& iconPos) {
+    // Zeroing 16 bytes is a little more optimized than 10
+    char countStr[32] = { 0 };
+    char curStr[8] = { 0 };
+    char curCapStr[8] = { 0 };
+    char maxCapStr[8] = { 0 };
+    CountInfo info;
+
+    if (!HasItemCount(itemId)) {
+        return;
+    }
+
+    info = GetItemCountInfo(itemId);
+
+    if (mCapacityModes[ItemTrackerCapacityMode::DrawCurrent]) {
+        snprintf(curStr, std::size(curStr), "%d", info.cur);
+        if (mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity] ||
+            mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity]) {
+            strncat(curStr, "/", 1);
+        }
+    }
+
+    // When both caps are the same, only display one of them as needed
+    if (info.curCap == info.maxCap) {
+        if (mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity] ||
+            mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity]) {
+            snprintf(curCapStr, std::size(curStr), "%d", info.curCap);
+        }
+    } else {
+        if (mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity]) {
+            snprintf(curCapStr, std::size(curStr), "%d", info.curCap);
+            if (mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity]) {
+                strncat(curCapStr, "/", 1);
+            }
+        }
+
+        if (mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity]) {
+            snprintf(maxCapStr, std::size(curStr), "%d", info.maxCap);
+        }
+    }
+
+    ImGui::SetWindowFontScale(mTextSize / 13.0f);
+    ImVec2 iconPos2 = ImGui::GetCursorScreenPos();
+
+    snprintf(countStr, std::size(countStr), "%s%s%s", curStr, curCapStr, maxCapStr);
+
+    float x = iconPos2.x + (mIconSize / 2.0f) - (ImGui::CalcTextSize(countStr).x / 2.0f);
+    // Normalize the offset based on the icon being 36x36 to account for larger icons.
+    ImGui::SetCursorScreenPos({ x, iconPos2.y - (mTextOffset / 36.0f) * mIconSize });
+
+    ImGui::Text("%s", countStr);
+}
+
 int ItemTrackerWindow::DrawItems(int columns, int prevDrawnColumns) {
     int topPadding = 0;
     size_t i = 0;
@@ -312,9 +497,104 @@ int ItemTrackerWindow::DrawMasks(int columns, int prevDrawnColumns) {
     return 4;
 }
 
+int ItemTrackerWindow::DrawEquipment(int columns, int prevDrawnColumns) {
+    int topPadding = 0;
+
+    ImGui::SetCursorPos(ImVec2((0 * (mIconSize + mIconSpacing) + 8.0f),
+                               (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding));
+    DrawItem(const_cast<char*>(sSwordTextures[MIN(GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD), EQUIP_VALUE_SWORD_GILDED)]),
+             GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_NONE, mIconSize);
+
+    ImGui::SetCursorPos(ImVec2((1 * (mIconSize + mIconSpacing) + 8.0f),
+                               (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding));
+    DrawItem(const_cast<char*>(GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) < EQUIP_VALUE_SHIELD_MIRROR
+                                   ? gItemIconHerosShieldTex
+                                   : gItemIconMirrorShieldTex),
+             GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_NONE, mIconSize);
+    return 1;
+}
+
+int ItemTrackerWindow::DrawMisc(int columns, int prevDrawnColumns) {
+    int topPadding = 0;
+
+    ImVec2 pos = ImVec2((0 * (mIconSize + mIconSpacing) + 8.0f),
+                        (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+
+    ImGui::SetCursorPos(pos);
+    DrawItem(const_cast<char*>(gItemIconBombersNotebookTex), !CHECK_QUEST_ITEM(QUEST_BOMBERS_NOTEBOOK), mIconSize);
+
+    pos = ImVec2((1 * (mIconSize + mIconSpacing) + 8.0f),
+                 (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+    ImGui::SetCursorPos(pos);
+    ImGui::BeginGroup();
+    DrawItem((char*)gItemIcons[ITEM_WALLET_ADULT], false, mIconSize);
+    DrawItemCount(ITEM_WALLET_ADULT, pos);
+    ImGui::EndGroup();
+
+    pos = ImVec2((2 * (mIconSize + mIconSpacing) + 8.0f),
+                 (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+    ImGui::SetCursorPos(pos);
+    DrawItem(const_cast<char*>(gSaveContext.save.saveInfo.playerData.magicLevel < 2 ? gQuestIconSmallMagicJarTex
+                                                                                    : gQuestIconBigMagicJarTex),
+             gSaveContext.save.saveInfo.playerData.magicLevel <= 0, mIconSize);
+
+    pos = ImVec2((3 * (mIconSize + mIconSpacing) + 8.0f),
+                 (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+    ImGui::SetCursorPos(pos);
+    ImGui::BeginGroup();
+    DrawOwlFace(gSaveContext.save.saveInfo.playerData.owlActivationFlags == 0);
+    DrawItemCount(TRACKER_ITEM_OWL_ACTIVATIONS, pos);
+    ImGui::EndGroup();
+
+    // TODO: Heart counts once we have extra save stats
+    // pos = ImVec2((2 * (mIconSize + mIconSpacing) + 8.0f),
+    //              (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+    // ImGui::SetCursorPos(pos);
+    // DrawItem(const_cast<char*>(gQuestIconHeartContainerTex), false, mIconSize);
+
+    // pos = ImVec2((3 * (mIconSize + mIconSpacing) + 8.0f),
+    //              (prevDrawnColumns * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+    // ImGui::SetCursorPos(pos);
+    // DrawItem(const_cast<char*>(gQuestIconPieceOfHeartTex), false, mIconSize);
+
+    return 1;
+}
+
 static int RoundDown(int orig, int nearest) {
     int res = orig % nearest;
     return orig - res;
+}
+
+int ItemTrackerWindow::DrawStrayFairies(int columns, int prevDrawnColumns) {
+    int topPadding = 0;
+
+    for (size_t i = 0; i < 5; i++) {
+        int row = prevDrawnColumns + (i / columns);
+        int column = i % columns;
+        ImVec2 pos = ImVec2((column * (mIconSize + mIconSpacing) + 8.0f),
+                            (row * (mIconSize + mIconSpacing)) + 8.0f + topPadding);
+
+        ImGui::SetCursorPos(pos);
+        if (i == 0) {
+            ImVec4 color = { 1.0f, 0.9f, 0.5f, 1.0f };
+            if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80)) {
+                color.x *= 0.5f;
+                color.y *= 0.5f;
+                color.z *= 0.5f;
+                color.w *= 0.5f;
+            }
+            ImGui::Image(
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName((char*)sStrayFairyTextures[0]),
+                ImVec2(mIconSize, mIconSize), ImVec2(0, 0), ImVec2(1, 1), color);
+        } else {
+            ImGui::BeginGroup();
+            DrawItem((char*)sStrayFairyTextures[i - 1], gSaveContext.save.saveInfo.inventory.strayFairies[i - 1] == 0,
+                     mIconSize);
+            DrawItemCount((i - 1) + TRACKER_ITEM_STRAY_FAIRY_WOODFALL, pos);
+            ImGui::EndGroup();
+        }
+    }
+    return 1;
 }
 
 int ItemTrackerWindow::DrawSongs(int columns, int prevDrawnColumns) {
@@ -363,6 +643,25 @@ int ItemTrackerWindow::DrawDungeonItemsVert(int columns, int prevDrawnColumns) {
     for (size_t i = 0; i < 4; i++) {
         int row = prevDrawnColumns + (i / columns);
         int column = i % columns;
+        ImVec2 pos = ImVec2((column * (rectIconSize + mIconSpacing) + 8.0f),
+                            (row * (rectIconSize + mIconSpacing)) + 8.0f + topPadding);
+
+        ImGui::SetCursorPos(pos);
+        ImGui::BeginGroup();
+        DrawItem(const_cast<char*>(gQuestIconSmallKeyTex), DUNGEON_KEY_COUNT(i) < 0, rectIconSize);
+        DrawItemCount(i + TRACKER_ITEM_KEY_WOODFALL, pos);
+        ImGui::EndGroup();
+    }
+
+    if (!mIncludeMapsAndCompasses) {
+        return 3;
+    }
+
+    prevDrawnColumns++;
+
+    for (size_t i = 0; i < 4; i++) {
+        int row = prevDrawnColumns + (i / columns);
+        int column = i % columns;
         ImGui::SetCursorPos(ImVec2((column * (rectIconSize + mIconSpacing) + 8.0f),
                                    (row * (rectIconSize + mIconSpacing)) + 8.0f + topPadding));
         DrawItem(const_cast<char*>(gQuestIconCompassTex), !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, i), rectIconSize);
@@ -378,7 +677,7 @@ int ItemTrackerWindow::DrawDungeonItemsVert(int columns, int prevDrawnColumns) {
         DrawItem(const_cast<char*>(gQuestIconDungeonMapTex), !CHECK_DUNGEON_ITEM(DUNGEON_MAP, i), rectIconSize);
     }
 
-    return 4;
+    return 5;
 }
 
 void ItemTrackerWindow::DrawItemsInRows(int columns) {
@@ -421,6 +720,34 @@ void ItemTrackerWindow::DrawItemsInRows(int columns) {
         }
     }
 
+    if (mItemDrawModes[SECTION_EQUIPMENT] != ItemTrackerDisplayType::Hidden) {
+        int drawPos = mainWindowPos;
+        if (mItemDrawModes[SECTION_EQUIPMENT] == ItemTrackerDisplayType::Separate) {
+            drawPos = 0;
+            BeginFloatingWindows("Equipment");
+        }
+        advancedBy = DrawEquipment(2, drawPos);
+        if (mItemDrawModes[SECTION_EQUIPMENT] == ItemTrackerDisplayType::Separate) {
+            EndFloatingWindows();
+        } else {
+            mainWindowPos += advancedBy;
+        }
+    }
+
+    if (mItemDrawModes[SECTION_MISC] != ItemTrackerDisplayType::Hidden) {
+        int drawPos = mainWindowPos;
+        if (mItemDrawModes[SECTION_MISC] == ItemTrackerDisplayType::Separate) {
+            drawPos = 0;
+            BeginFloatingWindows("Misc");
+        }
+        advancedBy = DrawMisc(3, drawPos);
+        if (mItemDrawModes[SECTION_MISC] == ItemTrackerDisplayType::Separate) {
+            EndFloatingWindows();
+        } else {
+            mainWindowPos += advancedBy;
+        }
+    }
+
     if (mItemDrawModes[SECTION_SONGS] != ItemTrackerDisplayType::Hidden) {
         int drawPos = mainWindowPos;
         if (mItemDrawModes[SECTION_SONGS] == ItemTrackerDisplayType::Separate) {
@@ -429,6 +756,20 @@ void ItemTrackerWindow::DrawItemsInRows(int columns) {
         }
         advancedBy = DrawSongs(5, drawPos);
         if (mItemDrawModes[SECTION_SONGS] == ItemTrackerDisplayType::Separate) {
+            EndFloatingWindows();
+        } else {
+            mainWindowPos += advancedBy;
+        }
+    }
+
+    if (mItemDrawModes[SECTION_STRAY_FAIRIES] != ItemTrackerDisplayType::Hidden) {
+        int drawPos = mainWindowPos;
+        if (mItemDrawModes[SECTION_STRAY_FAIRIES] == ItemTrackerDisplayType::Separate) {
+            drawPos = 0;
+            BeginFloatingWindows("Stray Fairies");
+        }
+        advancedBy = DrawStrayFairies(5, drawPos);
+        if (mItemDrawModes[SECTION_STRAY_FAIRIES] == ItemTrackerDisplayType::Separate) {
             EndFloatingWindows();
         } else {
             mainWindowPos += advancedBy;
@@ -480,6 +821,10 @@ bool* ItemTrackerWindow::GetIsDraggablePtr() {
 
 bool* ItemTrackerWindow::GetOnlyShowPausedPtr() {
     return &mOnlyDrawPaused;
+}
+
+bool* ItemTrackerWindow::GetIncludeMapsAndCompassesPtr() {
+    return &mIncludeMapsAndCompasses;
 }
 
 ItemTrackerDisplayType* ItemTrackerWindow::GetDrawModePtr(ItemTrackerSection type) {

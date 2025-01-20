@@ -12,6 +12,7 @@
 #include "DeveloperTools/CollisionViewer.h"
 #include "DeveloperTools/EventLog.h"
 #include "HudEditor.h"
+#include "CosmeticEditor.h"
 
 #include "SearchableMenuItems.h"
 

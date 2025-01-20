@@ -34,9 +34,15 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_SINGLE_MAGIC:
             gSaveContext.save.saveInfo.playerData.isMagicAcquired = false;
+            gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = false;
+            gSaveContext.save.saveInfo.playerData.magic = gSaveContext.magicFillTarget = 0;
+            gSaveContext.save.saveInfo.playerData.magicLevel = 0;
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_12_80);
             break;
         case RI_DOUBLE_MAGIC:
             gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = false;
+            gSaveContext.save.saveInfo.playerData.magic = gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
+            gSaveContext.save.saveInfo.playerData.magicLevel = 0;
             break;
         case RI_WOODFALL_BOSS_KEY:
         case RI_WOODFALL_MAP:
@@ -79,9 +85,114 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_WOODFALL_TEMPLE]--;
             break;
         case RI_PROGRESSIVE_MAGIC:
+            if (gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
+                RemoveItem(RI_DOUBLE_MAGIC);
+            } else if (gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+                RemoveItem(RI_SINGLE_MAGIC);
+            }
+            break;
+        case RI_BOW:
+            Inventory_ChangeUpgrade(UPG_QUIVER, 0);
+            Inventory_DeleteItem(ITEM_BOW, SLOT(ITEM_BOW));
+            break;
+        case RI_QUIVER_40:
+            Inventory_ChangeUpgrade(UPG_QUIVER, 1);
+            break;
+        case RI_QUIVER_50:
+            Inventory_ChangeUpgrade(UPG_QUIVER, 2);
+            break;
         case RI_PROGRESSIVE_BOW:
+            if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
+                RemoveItem(RI_QUIVER_50);
+            } else if (CUR_UPG_VALUE(UPG_QUIVER) >= 2) {
+                RemoveItem(RI_QUIVER_40);
+            } else if (CUR_UPG_VALUE(UPG_QUIVER) >= 1) {
+                RemoveItem(RI_BOW);
+            }
+            break;
+        case RI_BOMB_BAG_20:
+            Inventory_ChangeUpgrade(UPG_BOMB_BAG, 0);
+            Inventory_DeleteItem(ITEM_BOMB, SLOT(ITEM_BOMB));
+            Inventory_DeleteItem(ITEM_BOMBCHU, SLOT(ITEM_BOMBCHU));
+            break;
+        case RI_BOMB_BAG_30:
+            Inventory_ChangeUpgrade(UPG_BOMB_BAG, 1);
+            break;
+        case RI_BOMB_BAG_40:
+            Inventory_ChangeUpgrade(UPG_BOMB_BAG, 2);
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
-            // TODO
+            if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 3) {
+                RemoveItem(RI_BOMB_BAG_40);
+            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 2) {
+                RemoveItem(RI_BOMB_BAG_30);
+            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 1) {
+                RemoveItem(RI_BOMB_BAG_20);
+            }
+            break;
+        case RI_WALLET_ADULT:
+            Inventory_ChangeUpgrade(UPG_WALLET, 0);
+            break;
+        case RI_WALLET_GIANT:
+            Inventory_ChangeUpgrade(UPG_WALLET, 1);
+            break;
+        case RI_PROGRESSIVE_WALLET:
+            if (CUR_UPG_VALUE(UPG_WALLET) >= 2) {
+                RemoveItem(RI_WALLET_GIANT);
+            } else if (CUR_UPG_VALUE(UPG_WALLET) >= 1) {
+                RemoveItem(RI_WALLET_ADULT);
+            }
+            break;
+        case RI_SWORD_KOKIRI:
+            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
+            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_NONE;
+            if (gPlayState != NULL) {
+                Interface_LoadItemIconImpl(gPlayState, EQUIP_SLOT_B);
+            }
+            break;
+        case RI_SWORD_RAZOR:
+            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_KOKIRI);
+            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_SWORD_KOKIRI;
+            if (gPlayState != NULL) {
+                Interface_LoadItemIconImpl(gPlayState, EQUIP_SLOT_B);
+            }
+            break;
+        case RI_SWORD_GILDED:
+            SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_RAZOR);
+            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_SWORD_RAZOR;
+            if (gPlayState != NULL) {
+                Interface_LoadItemIconImpl(gPlayState, EQUIP_SLOT_B);
+            }
+            break;
+        case RI_PROGRESSIVE_SWORD:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_GILDED) {
+                RemoveItem(RI_SWORD_GILDED);
+            } else if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_RAZOR) {
+                RemoveItem(RI_SWORD_RAZOR);
+            } else if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI) {
+                RemoveItem(RI_SWORD_KOKIRI);
+            }
+            break;
+        case RI_PROGRESSIVE_LULLABY:
+            if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                RemoveItem(RI_SONG_LULLABY);
+            } else if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO)) {
+                RemoveItem(RI_SONG_LULLABY_INTRO);
+            }
+            break;
+        case RI_SHIELD_MIRROR:
+            SET_EQUIP_VALUE(EQUIP_TYPE_SHIELD, EQUIP_VALUE_SHIELD_HERO);
+            if (gPlayState != NULL) {
+                Player_SetEquipmentData(gPlayState, GET_PLAYER(gPlayState));
+            }
+            break;
+        case RI_SHIELD_HERO:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_HERO) {
+                SET_EQUIP_VALUE(EQUIP_TYPE_SHIELD, EQUIP_VALUE_SHIELD_NONE);
+            }
+            if (gPlayState != NULL) {
+                Player_SetEquipmentData(gPlayState, GET_PLAYER(gPlayState));
+            }
             break;
         case RI_GS_TOKEN_SWAMP: {
             int skullTokenCount = Inventory_GetSkullTokenCount(SCENE_KINSTA1);

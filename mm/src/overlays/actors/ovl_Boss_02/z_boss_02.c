@@ -2358,6 +2358,7 @@ void Boss02_Reset(void) {
     sTwinmoldStatic = NULL;
     sTwinmoldMusicStartTimer = 0;
     sBlueWarp = NULL;
+    sGiantModeScaleFactor = 1.0f;
 
     for (int i = 0; i < TWINMOLD_EFFECT_COUNT; i++) {
         sTwinmoldEffects[i].type = TWINMOLD_EFFECT_NONE;

@@ -9,14 +9,18 @@ void func_80848250(PlayState* play, Player* player);
 void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 }
 
+static std::vector<u8> skipCmds = {};
+
 void Rando::ActorBehavior::InitEnAlBehavior() {
+
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_AL, IS_RANDO, [](Actor* actor) { skipCmds.clear(); });
+
     COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO, {
         u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
 
         if (actor->id == ACTOR_EN_AL) { // Madame Aroma
             Player* player = GET_PLAYER(gPlayState);
-            static std::vector<u8> skipCmds = {};
 
             if (cmdId == MSCRIPT_CMD_06) { // MSCRIPT_OFFER_ITEM
                 *should = false;

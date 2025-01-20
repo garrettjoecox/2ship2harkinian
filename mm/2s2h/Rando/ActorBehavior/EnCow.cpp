@@ -72,6 +72,7 @@ void Rando::ActorBehavior::InitEnCowBehavior() {
             *should = true;
             return;
         }
+        ((EnCow*)actor)->flags |= EN_COW_FLAG_WONT_GIVE_MILK;
 
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
         if (!randoSaveCheck.shuffled || randoSaveCheck.obtained) {

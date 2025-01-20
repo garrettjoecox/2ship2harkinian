@@ -18,6 +18,8 @@ void ApplyToSaveContext(nlohmann::json spoiler) {
         }
 
         if (!spoiler["checks"].contains(randoStaticCheck.name)) {
+            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
+            RANDO_SAVE_CHECKS[randoCheckId].shuffled = false;
             continue;
         }
 

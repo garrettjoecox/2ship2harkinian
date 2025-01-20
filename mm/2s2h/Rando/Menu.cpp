@@ -7,7 +7,7 @@
 #include "build.h"
 
 // TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
-std::vector<std::string> logicOptions = { "Glitchless", "No Logic", "French Vanilla", "Vanilla" };
+std::vector<std::string> logicOptions = { "Glitchless", "No Logic", "Nearly No Logic", "French Vanilla", "Vanilla" };
 
 namespace BenGui {
 extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
@@ -57,6 +57,10 @@ void Rando::DrawMenu() {
                   "glitches\n\n"
                   "No Logic - The items are shuffled completely randomly, this can result in unbeatable seeds, and "
                   "will require heavy use of glitches\n\n"
+                  "Nearly No Logic - The items are shuffled completely randomly, with the following exceptions:\n"
+                  "- Oath to Order and Remains cannot be placed on the Moon\n"
+                  "- Deku Mask, Zora Mask, Sonata, and Bossa Nova cannot be placed in their respective Temples or on "
+                  "the Moon\n\n"
                   "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
                   "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
                   "Vanilla - The items are not shuffled." });

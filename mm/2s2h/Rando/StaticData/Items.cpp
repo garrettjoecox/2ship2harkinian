@@ -1,4 +1,5 @@
 #include "StaticData.h"
+#include "libultraship/bridge.h"
 
 extern "C" {
 extern s16 D_801CFF94[250];
@@ -120,6 +121,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_POWDER_KEG,                 "a",    "Powder Keg",                 RITYPE_MAJOR,           ITEM_POWDER_KEG,                 GI_POWDER_KEG,               GID_POWDER_KEG),
     RI(RI_PROGRESSIVE_BOMB_BAG,       "a",    "Progressive Bomb Bag",       RITYPE_MAJOR,           ITEM_BOMB_BAG_20,                GI_BOMB_BAG_20,              GID_BOMB_BAG_20),
     RI(RI_PROGRESSIVE_BOW,            "a",    "Progressive Bow",            RITYPE_MAJOR,           ITEM_BOW,                        GI_QUIVER_30,                GID_BOW),
+    RI(RI_PROGRESSIVE_LULLABY,        "",     "Progressive Goron Lullaby",  RITYPE_MAJOR,           ITEM_NONE,                       GI_NONE,                     GID_NONE),
     RI(RI_PROGRESSIVE_MAGIC,          "",     "Progressive Magic",          RITYPE_MAJOR,           ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_SMALL),
     RI(RI_PROGRESSIVE_SWORD,          "a",    "Progressive Sword",          RITYPE_MAJOR,           ITEM_NONE,                       GI_NONE,                     GID_SWORD_KOKIRI),
     RI(RI_PROGRESSIVE_WALLET,         "a",    "Progressive Wallet",         RITYPE_MAJOR,           ITEM_NONE,                       GI_NONE,                     GID_WALLET_ADULT),
@@ -149,6 +151,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_SONG_ELEGY,                 "the",  "Elegy of Emptiness",         RITYPE_MAJOR,           ITEM_SONG_ELEGY,                 GI_NONE,                     GID_NONE),
     RI(RI_SONG_EPONA,                 "",     "Epona's Song",               RITYPE_MAJOR,           ITEM_SONG_EPONA,                 GI_NONE,                     GID_NONE),
     RI(RI_SONG_HEALING,               "the",  "Song of Healing",            RITYPE_MAJOR,           ITEM_SONG_HEALING,               GI_NONE,                     GID_NONE),
+    RI(RI_SONG_LULLABY_INTRO,         "the",  "Goron Lullaby Intro",        RITYPE_MAJOR,           ITEM_SONG_LULLABY_INTRO,         GI_NONE,                     GID_NONE),
     RI(RI_SONG_LULLABY,               "the",  "Goron Lullaby",              RITYPE_MAJOR,           ITEM_SONG_LULLABY,               GI_NONE,                     GID_NONE),
     RI(RI_SONG_NOVA,                  "the",  "New Wave Bossa Nova",        RITYPE_MAJOR,           ITEM_SONG_NOVA,                  GI_NONE,                     GID_NONE),
     RI(RI_SONG_OATH,                  "the",  "Oath to Order",              RITYPE_MAJOR,           ITEM_SONG_OATH,                  GI_NONE,                     GID_NONE),
@@ -270,6 +273,25 @@ const char* GetIconTexturePath(RandoItemId randoItemId) {
     }
 
     return itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr;
+}
+
+bool ShouldShowGetItemCutscene(RandoItemId itemId) {
+    if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+        return true;
+    }
+
+    switch (Rando::StaticData::Items[itemId].randoItemType) {
+        case RITYPE_JUNK:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 1;
+        case RITYPE_HEALTH:
+        case RITYPE_LESSER:
+        case RITYPE_STRAY_FAIRY:
+        case RITYPE_SKULLTULA_TOKEN:
+        case RITYPE_SMALL_KEY:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 2;
+        default:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 3;
+    }
 }
 
 // clang-format on

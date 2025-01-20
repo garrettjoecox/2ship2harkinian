@@ -230,13 +230,40 @@ void HudEditorWindow::DrawElement() {
     for (int i = HUD_EDITOR_ELEMENT_B; i < HUD_EDITOR_ELEMENT_MAX; i++) {
         ImGui::PushID(hudEditorElements[i].name);
         ImGui::SeparatorText(hudEditorElements[i].name);
-        float color[3] = { (float)hudEditorElements[i].defaultR / 255, (float)hudEditorElements[i].defaultG / 255,
-                           (float)hudEditorElements[i].defaultB / 255 };
-        // BENTODO: This color picker currently doesn't do anything other than serve as a visual indicator. Eventually
-        // it will be used to set the color of the element.
-        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-        ImGui::ColorEdit3("Color", color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-        ImGui::PopItemFlag();
+        bool colorChanged = CVarGetInteger(hudEditorElements[i].colorChangedCvar, false);
+        float defaultColor[4] = { hudEditorElements[i].defaultR, hudEditorElements[i].defaultG,
+                                  hudEditorElements[i].defaultB, hudEditorElements[i].defaultA };
+        float color[4] = { defaultColor[0], defaultColor[1], defaultColor[2], defaultColor[3] };
+
+        // Move to Function
+        if (colorChanged) {
+            Color_RGBA8 changedColor = CVarGetColor(hudEditorElements[i].colorCvar, {});
+            color[0] = (float)changedColor.r / 255;
+            color[1] = (float)changedColor.g / 255;
+            color[2] = (float)changedColor.b / 255;
+            color[3] = (float)changedColor.a / 255;
+            colorChanged = false;
+        }
+        //
+        colorChanged = ImGui::ColorEdit3("Color", color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+        if (colorChanged) {
+            Color_RGBA8 colorSelected;
+            colorSelected.r = static_cast<uint8_t>(color[0] * 255.0f);
+            colorSelected.g = static_cast<uint8_t>(color[1] * 255.0f);
+            colorSelected.b = static_cast<uint8_t>(color[2] * 255.0f);
+            colorSelected.a = static_cast<uint8_t>(255.0f);
+
+            CVarSetColor(hudEditorElements[i].colorCvar, colorSelected);
+            CVarSetInteger(hudEditorElements[i].colorChangedCvar, true);
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_REFRESH)) {
+            float color[4] = { defaultColor[0], defaultColor[1], defaultColor[2], defaultColor[3] };
+            CVarClear(hudEditorElements[i].colorCvar);
+            CVarClear(hudEditorElements[i].colorChangedCvar);
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        }
         ImGui::SameLine();
         if (UIWidgets::CVarCombobox("Mode", hudEditorElements[i].modeCvar, modeNames,
                                     { .labelPosition = UIWidgets::LabelPosition::None })) {

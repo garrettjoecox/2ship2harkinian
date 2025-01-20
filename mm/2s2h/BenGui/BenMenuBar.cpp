@@ -12,6 +12,7 @@
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "HudEditor.h"
+#include "CosmeticEditor.h"
 
 #include "2s2h/Enhancements/Trackers/ItemTracker.h"
 #include "2s2h/Enhancements/Trackers/ItemTrackerSettings.h"
@@ -356,6 +357,7 @@ void DrawSettingsMenu() {
 }
 
 extern std::shared_ptr<HudEditorWindow> mHudEditorWindow;
+extern std::shared_ptr<CosmeticEditorWindow> mCosmeticEditorWindow;
 extern std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 extern std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
 extern std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
@@ -499,8 +501,6 @@ void DrawEnhancementsMenu() {
                     .tooltip =
                         "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time",
                 });
-            UIWidgets::CVarCheckbox("Skip Get Item Cutscenes", "gEnhancements.Cutscenes.SkipGetItemCutscenes",
-                                    { .tooltip = "This only works in Randomizer currently" });
 
             ImGui::EndMenu();
         }
@@ -825,6 +825,12 @@ void DrawEnhancementsMenu() {
         if (mHudEditorWindow) {
             UIWidgets::WindowButton("Hud Editor", "gWindows.HudEditor", mHudEditorWindow,
                                     { .tooltip = "Enables the Hud Editor window, allowing you to edit your hud" });
+        }
+
+        if (mCosmeticEditorWindow) {
+            UIWidgets::WindowButton(
+                "Cosmetic Editor", "gWindows.CosmeticEditor", mCosmeticEditorWindow,
+                { .tooltip = "Enables the Cosmetic Editor window, allowing you to edit Cosmetics." });
         }
 
         if (mItemTrackerWindow) {

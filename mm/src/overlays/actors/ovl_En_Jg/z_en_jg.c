@@ -6,6 +6,7 @@
 
 #include "z_en_jg.h"
 #include "overlays/actors/ovl_En_S_Goro/z_en_s_goro.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -504,8 +505,11 @@ void EnJg_Talk(EnJg* this, PlayState* play) {
                 play->msgCtx.stateTimer = 4;
                 this->flags &= ~FLAG_LOOKING_AT_PLAYER;
                 this->actionFunc = EnJg_SetupWalk;
-            } else if (CHECK_WEEKEVENTREG(WEEKEVENTREG_24_40) || CHECK_QUEST_ITEM(QUEST_SONG_LULLABY) ||
-                       CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO)) {
+            } else if (GameInteractor_Should(VB_JG_THINK_YOU_KNOW_LULLABY,
+                                             CHECK_WEEKEVENTREG(WEEKEVENTREG_24_40) ||
+                                                 CHECK_QUEST_ITEM(QUEST_SONG_LULLABY) ||
+                                                 CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO),
+                                             this)) {
                 // The player already has the Lullaby or Lullaby Intro, so say "I'm counting on you"
                 this->textId = EnJg_GetNextTextId(this);
                 Message_StartTextbox(play, this->textId, &this->actor);

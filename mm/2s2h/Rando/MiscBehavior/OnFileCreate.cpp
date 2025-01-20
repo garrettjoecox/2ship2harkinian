@@ -77,6 +77,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     }
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_NO_LOGIC) {
                     Rando::Logic::ApplyNoLogicToSaveContext();
+                } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_NEARLY_NO_LOGIC) {
+                    Rando::Logic::ApplyNearlyNoLogicToSaveContext();
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_GLITCHLESS) {
                     Rando::Logic::ApplyGlitchlessLogicToSaveContext();
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_FRENCH_VANILLA) {

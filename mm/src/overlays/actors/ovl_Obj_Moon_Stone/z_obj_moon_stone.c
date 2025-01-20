@@ -107,7 +107,9 @@ void func_80C0673C(ObjMoonStone* this) {
 void func_80C06768(ObjMoonStone* this, PlayState* play) {
     if (CHECK_WEEKEVENTREG(WEEKEVENTREG_74_80)) {
         if (this->actor.draw == NULL) {
-            this->actor.draw = ObjMoonStone_Draw;
+            if (GameInteractor_Should(VB_REVEAL_MOON_STONE_IN_CRATER, true, this)) {
+                this->actor.draw = ObjMoonStone_Draw;
+            }
             Actor_Spawn(&play->actorCtx, play, 1, this->actor.world.pos.x, this->actor.world.pos.y,
                         this->actor.world.pos.z, 0, 0, 0, -1);
         }

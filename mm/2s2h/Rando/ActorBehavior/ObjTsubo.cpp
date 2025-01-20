@@ -428,7 +428,7 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
             return;
         }
 
-        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].cycleObtained) {
             return;
         }
 

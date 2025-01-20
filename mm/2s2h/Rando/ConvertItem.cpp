@@ -199,6 +199,13 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                 return false;
             }
             break;
+        case RI_PROGRESSIVE_LULLABY:
+            if (hasObtainedCheck) {
+                return false;
+            } else if (CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) && CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                return false;
+            }
+            return true;
         case RI_PROGRESSIVE_MAGIC:
             if (hasObtainedCheck) {
                 return false;
@@ -468,6 +475,17 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                     return RI_QUIVER_40;
                 } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
                     return RI_QUIVER_50;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_JUNK;
+            case RI_PROGRESSIVE_LULLABY:
+                if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO)) {
+                    return RI_SONG_LULLABY_INTRO;
+                } else {
+                    if (!CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)) {
+                        return RI_SONG_LULLABY;
+                    }
                 }
                 // Shouldn't happen, just in case
                 assert(false);

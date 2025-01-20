@@ -22,6 +22,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_SHRINE] = RandoRegion{ .sceneId = SCENE_16GORON_HOUSE,
         .checks = {
+            CHECK(RC_GORON_SHRINE_FULL_LULLABY, CAN_BE_GORON && (CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(LULLABY_INTRO))),
             CHECK(RC_GORON_SHRINE_POT_01, true),
             CHECK(RC_GORON_SHRINE_POT_02, true),
             CHECK(RC_GORON_SHRINE_POT_03, true),
@@ -197,6 +198,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_PATH_TO_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_17SETUGEN,
         .checks = {
             // TODO : Add Spring only checks.
+            CHECK(RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO, CAN_BE_GORON && (CAN_USE_MAGIC_ARROW(FIRE) || CAN_ACCESS(HOT_SPRING_WATER))),
             CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_01,          CAN_USE_PROJECTILE),
             CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_02,          CAN_USE_PROJECTILE),
             CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_01,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
@@ -247,7 +249,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 4),      ENTRANCE(PATH_TO_SNOWHEAD, 0), true),
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON && HAS_MAGIC),
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_MIDDLE] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -255,8 +257,8 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_PATH_TO_SNOWHEAD_PIECE_OF_HEART, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && CAN_HOOK_SCARECROW)
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON),
-            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON && HAS_MAGIC),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, CAN_BE_GORON && HAS_MAGIC),
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_UPPER] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -264,7 +266,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SNOWHEAD, 0),                     ENTRANCE(PATH_TO_SNOWHEAD, 1), true),
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON && HAS_MAGIC),
             CONNECTION(RR_PATH_TO_SNOWHEAD_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
     };

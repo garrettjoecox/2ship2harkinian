@@ -6,6 +6,7 @@
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
+#include "2s2h/ShipUtils.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -885,13 +886,14 @@ void DrawItemsAndMasksTab() {
             buttonLabel += randoStaticItem.name;
             if (UIWidgets::Button(buttonLabel.c_str())) {
                 GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
-                    .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
+                    .showGetItemCutscene =
+                        Rando::StaticData::ShouldShowGetItemCutscene(Rando::ConvertItem(randoItemId)),
                     .param = (int16_t)randoItemId,
                     .giveItem =
                         [](Actor* actor, PlayState* play) {
                             RandoItemId randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
                             std::string msg = "You received";
-                            if (Rando::StaticData::Items[randoItemId].article != "") {
+                            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
                                 msg += " ";
                                 msg += Rando::StaticData::Items[randoItemId].article;
                             }
@@ -910,7 +912,8 @@ void DrawItemsAndMasksTab() {
 
                             if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
                                 CustomMessage::SetActiveCustomMessage(entry.msg, entry);
-                            } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+                            } else if (Rando::StaticData::ShouldShowGetItemCutscene(
+                                           Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM))) {
                                 CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                             } else {
                                 Notification::Emit({

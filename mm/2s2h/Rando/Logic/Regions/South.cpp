@@ -329,6 +329,11 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_TOURIST_INFORMATION] = RandoRegion{ .sceneId = SCENE_MAP_SHOP,
+        .checks = {
+            // Also requires poison to not be cleared
+            CHECK(RC_TOURIST_INFORMATION_ARCHERY, CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME) && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_TOURIST_INFORMATION_PICTOBOX, CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 1),      ENTRANCE(TOURIST_INFORMATION, 0), true),
         },
@@ -382,6 +387,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_WOODS_OF_MYSTERY_GROTTO, true), // TODO: Grotto mapping
+        },
+        .events = {
+            EVENT_WEEKEVENTREG("Saved Koume", WEEKEVENTREG_SAVED_KOUME, HAS_BOTTLE && (CAN_ACCESS(RED_POTION_REFILL) || CAN_ACCESS(BLUE_POTION_REFILL))),
         },
     };
 }, {});

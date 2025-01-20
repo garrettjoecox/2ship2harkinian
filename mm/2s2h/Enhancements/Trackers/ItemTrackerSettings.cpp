@@ -58,8 +58,14 @@ void ItemTrackerSettingsWindow::DrawElement() {
 
     UIWidgets::Combobox("Inventory", mItemTrackerWindow->GetDrawModePtr(SECTION_INVENTORY), displayTypes);
     UIWidgets::Combobox("Masks", mItemTrackerWindow->GetDrawModePtr(SECTION_MASKS), displayTypes);
+    UIWidgets::Combobox("Equipment", mItemTrackerWindow->GetDrawModePtr(SECTION_EQUIPMENT), displayTypes);
+    UIWidgets::Combobox("Miscellaneous", mItemTrackerWindow->GetDrawModePtr(SECTION_MISC), displayTypes);
     UIWidgets::Combobox("Songs", mItemTrackerWindow->GetDrawModePtr(SECTION_SONGS), displayTypes);
+    UIWidgets::Combobox("Stray Fairies", mItemTrackerWindow->GetDrawModePtr(SECTION_STRAY_FAIRIES), displayTypes);
     UIWidgets::Combobox("Dungeon Items", mItemTrackerWindow->GetDrawModePtr(SECTION_DUNGEON), displayTypes);
+
+    UIWidgets::Checkbox("Include Maps and Compasses", mItemTrackerWindow->GetIncludeMapsAndCompassesPtr(),
+                        { .tooltip = "Includes Maps and Compasses with the Dungeon Items section" });
 
     UIWidgets::Checkbox("Draw Current Ammo",
                         mItemTrackerWindow->GetCapacityModePtr(ItemTrackerCapacityMode::DrawCurrent));

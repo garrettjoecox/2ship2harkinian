@@ -22,6 +22,7 @@ void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& 
 RandoRegionId GetRegionIdFromEntrance(s32 entrance);
 void ApplyFrenchVanillaLogicToSaveContext();
 void ApplyGlitchlessLogicToSaveContext();
+void ApplyNearlyNoLogicToSaveContext();
 void ApplyNoLogicToSaveContext();
 
 struct RandoEvent {
@@ -76,6 +77,13 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 // Be careful here, as some checks require you to play the song as a specific form
 #define CAN_PLAY_SONG(song) (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song))
 #define CAN_RIDE_EPONA (CAN_PLAY_SONG(EPONA))
+#define GBT_REGULAR_WATER_FLOW (!Flags_GetSceneSwitch(SCENE_SEA, 0x33) && !Flags_GetSceneSwitch(SCENE_SEA, 0x36))
+#define GBT_REVERSE_WATER_FLOW (Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36))
+#define GBT_EITHER_FLOW (!Flags_GetSceneSwitch(SCENE_SEA, 0x33) || Flags_GetSceneSwitch(SCENE_SEA, 0x36))
+#define GBT_RED_SWITCH_FLOW (Flags_GetSceneSwitch(SCENE_SEA, 0x34) && Flags_GetSceneSwitch(SCENE_SEA, 0x35))
+#define GBT_GREEN_SWITCH_FLOW                                                          \
+    (Flags_GetSceneSwitch(SCENE_SEA, 0x37) && Flags_GetSceneSwitch(SCENE_SEA, 0x38) && \
+     Flags_GetSceneSwitch(SCENE_SEA, 0x39))
 #define ONE_WAY_EXIT -1
 #define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
 #define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))

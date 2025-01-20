@@ -2,6 +2,9 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/Rando/Types.h"
 
+#include <numeric>
+#include <iterator>
+
 extern "C" {
 #include "variables.h"
 #include "ShipUtils.h"
@@ -18,19 +21,6 @@ void ApplyGlitchlessLogicToSaveContext() {
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
-    // #region TODO: This just gives us a bunch of stuff that isn't technically in logic yet, so that generation can
-    // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
-    // section.
-    std::vector<RandoItemId> startingItems = {
-        RI_SONG_LULLABY,
-        RI_PICTOGRAPH_BOX,
-    };
-
-    for (RandoItemId randoItemId : startingItems) {
-        GiveItem(randoItemId);
-    }
-    // #endregion
-
     std::vector<RandoItemId> itemPool;
     std::unordered_map<RandoCheckId, bool> checkPool;
 
@@ -40,6 +30,9 @@ void ApplyGlitchlessLogicToSaveContext() {
 
     RandoCheckId checkWithJunk = RC_UNKNOWN;
     std::set<RandoItemId> nonJunkItemsThatWeHaveTried;
+    std::vector<RandoCheckId> checksWithJunk;
+    std::vector<int> checksWithJunkWeights;
+    int weight = 1;
 
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
@@ -179,6 +172,14 @@ void ApplyGlitchlessLogicToSaveContext() {
                     if (isShuffled) {
                         randoItemId = itemPool.back();
                         itemPool.pop_back();
+
+                        if (Rando::StaticData::Items[randoItemId].randoItemType == RITYPE_JUNK ||
+                            Rando::StaticData::Items[randoItemId].randoItemType == RITYPE_HEALTH) {
+                            checksWithJunk.push_back(randoCheckId);
+                            checksWithJunkWeights.push_back(weight);
+                        }
+                        SPDLOG_TRACE("Check: {}:{}", Rando::StaticData::Checks[randoCheckId].name,
+                                     Rando::StaticData::Items[randoItemId].spoilerName);
                     } else {
                         randoItemId = Rando::StaticData::Checks[randoCheckId].randoItemId;
                     }
@@ -186,8 +187,6 @@ void ApplyGlitchlessLogicToSaveContext() {
                     RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoItemId;
                     RANDO_SAVE_CHECKS[randoCheckId].shuffled = isShuffled;
                     GiveItem(ConvertItem(randoItemId));
-                    SPDLOG_TRACE("Check: {}:{}", Rando::StaticData::Checks[randoCheckId].name,
-                                 Rando::StaticData::Items[randoItemId].spoilerName);
                     checksInLogicChanged = true;
                 }
             }
@@ -201,17 +200,6 @@ void ApplyGlitchlessLogicToSaveContext() {
         // Choose a random check with junk, and attempt to place progressive items until we unlock something
         if (!regionsInLogicChanged && !checksInLogicChanged && !eventsInLogicChanged) {
             if (checkWithJunk == RC_UNKNOWN) {
-                std::vector<RandoCheckId> checksWithJunk;
-                for (auto& [randoCheckId, isShuffled] : checksInLogic) {
-                    if (isShuffled &&
-                        (Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].randoItemType ==
-                             RITYPE_JUNK ||
-                         Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].randoItemType ==
-                             RITYPE_HEALTH)) {
-                        checksWithJunk.push_back(randoCheckId);
-                    }
-                }
-
                 if (checksWithJunk.empty()) {
                     handleError("No checks with junk, not sure what to do");
                 }
@@ -219,7 +207,18 @@ void ApplyGlitchlessLogicToSaveContext() {
                 if (checksWithJunk.size() == 1) {
                     checkWithJunk = checksWithJunk[0];
                 } else {
-                    checkWithJunk = checksWithJunk[Ship_Random(0, checksWithJunk.size() - 1)];
+                    std::vector<double> cumulativeWeights(checksWithJunkWeights.size());
+                    std::partial_sum(checksWithJunkWeights.begin(), checksWithJunkWeights.end(),
+                                     cumulativeWeights.begin());
+                    double random = Ship_Random(0, cumulativeWeights.back());
+                    auto it = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), random);
+                    size_t index = std::distance(cumulativeWeights.begin(), it);
+
+                    checkWithJunk = checksWithJunk[index];
+
+                    // Remove the check from the list of checks with junk
+                    checksWithJunk.erase(checksWithJunk.begin() + index);
+                    checksWithJunkWeights.erase(checksWithJunkWeights.begin() + index);
                 }
             }
 
@@ -240,8 +239,9 @@ void ApplyGlitchlessLogicToSaveContext() {
             }
 
             if (nonJunkItemsThatWeHaveNotTried.empty()) {
-                // SPDLOG_TRACE("Already tried all non-junk items, leaving the last non-junk item in place {}",
-                // Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
+                SPDLOG_TRACE("Already tried all non-junk items, leaving the last non-junk item in place: {}: {}",
+                             Rando::StaticData::Checks[checkWithJunk].name,
+                             Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
                 checkWithJunk = RC_UNKNOWN;
                 nonJunkItemsThatWeHaveTried.clear();
                 continue;
@@ -260,11 +260,14 @@ void ApplyGlitchlessLogicToSaveContext() {
             itemPool.push_back(oldRandoItemId);
 
             nonJunkItemsThatWeHaveTried.insert(newRandoItemId);
-            // SPDLOG_TRACE("Replaced junk item with: {}", Rando::StaticData::Items[newRandoItemId].spoilerName);
+            SPDLOG_TRACE("Attempting to replaced junk item: {}:{}", Rando::StaticData::Checks[checkWithJunk].name,
+                         Rando::StaticData::Items[newRandoItemId].spoilerName);
         } else {
+            weight++;
             if (checkWithJunk != RC_UNKNOWN) {
-                // SPDLOG_TRACE("Replacing junk item with: {}",
-                // Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
+                SPDLOG_TRACE("Successfully Replaced junk item with: {}:{}",
+                             Rando::StaticData::Checks[checkWithJunk].name,
+                             Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
             }
             checkWithJunk = RC_UNKNOWN;
             nonJunkItemsThatWeHaveTried.clear();

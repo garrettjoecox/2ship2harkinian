@@ -8,7 +8,8 @@
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 
 #include "BenPort.h"
-#include "BenGui/HudEditor.h"
+#include "2s2h/BenGui/CosmeticEditor.h"
+#include "2s2h/BenGui/HudEditor.h"
 #include "assets/2s2h_assets.h"
 
 void MapDisp_DestroyMapI(PlayState* play);
@@ -294,8 +295,9 @@ void MapDisp_DrawMinimapRoom(PlayState* play, TexturePtr texture, s32 x, s32 y, 
 
     Gfx_SetupDL39_Overlay(play->state.gfxCtx);
     MapData_GetMapColor(MapData_GetMapColorIndex(mapDataRoom->mapId), &color);
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, color.r, color.g, color.b,
-                    (s32)(play->interfaceCtx.minimapAlpha * intensity * color.a / 255.0f));
+    gDPSetPrimColorOverride(OVERLAY_DISP++, 0, 0, color.r, color.g, color.b,
+                            (s32)(play->interfaceCtx.minimapAlpha * intensity * color.a / 255.0f),
+                            COSMETIC_ELEMENT_MINIMAP);
     MapData_GetDrawType(mapDataRoom->mapId, &drawType);
 
     switch (drawType) {
