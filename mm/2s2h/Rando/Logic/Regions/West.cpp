@@ -89,6 +89,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_MARINE_RESEARCH_LAB] = RandoRegion{ .sceneId = SCENE_LABO,
         .checks = {
             CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME) && RANDO_ACCESS[RANDO_ACCESS_ZORA_EGG] >= 7),
+            CHECK(RC_GREAT_BAY_COAST_MARINE_LAB_FISH_PIECE_OF_HEART, HAS_BOTTLE && CAN_ACCESS(FISH)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),              ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
