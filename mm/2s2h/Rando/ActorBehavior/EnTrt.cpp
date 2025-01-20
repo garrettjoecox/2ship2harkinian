@@ -30,7 +30,8 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
         if (actor->id != ACTOR_EN_TRT && actor->id != ACTOR_EN_TRT2) {
             return;
         }
-        if (!RANDO_SAVE_CHECKS[RC_HAGS_POTION_SHOP_KOTAKE].shuffled) {
+        if (!RANDO_SAVE_CHECKS[RC_HAGS_POTION_SHOP_KOTAKE].shuffled ||
+            RANDO_SAVE_CHECKS[RC_HAGS_POTION_SHOP_KOTAKE].cycleObtained) {
             return;
         }
 
