@@ -35,6 +35,7 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
         }
 
         SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_KOTAKE_BOTTLE);
+        SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_RED_POTION_FOR_KOUME);
         *should = false;
 
         actor->parent = &player->actor;
