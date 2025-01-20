@@ -36,7 +36,7 @@ void Rando::ActorBehavior::InitEnTrtBehavior() {
 
         SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_KOTAKE_BOTTLE);
         *should = false;
-        
+
         actor->parent = &player->actor;
         player->talkActor = actor;
         player->talkActorDistance = actor->xzDistToPlayer;
