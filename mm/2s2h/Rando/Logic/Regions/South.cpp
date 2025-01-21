@@ -298,6 +298,13 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
             EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
             EVENT_ACCESS(RANDO_ACCESS_BEANS_REFILL, CAN_BE_DEKU && HAS_ITEM(ITEM_MAGIC_BEANS)),
+            EVENT( // Killing Octorok blocking the southern swamp south section(Without Boat)
+                "Kill Octorok(Without Boat)", 
+                Flags_GetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_SetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_ClearSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
+            ),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana
@@ -338,12 +345,12 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 1),      ENTRANCE(TOURIST_INFORMATION, 0), true),
         },
         .events = {
-            EVENT( // Killing Octorok blocking the southern swamp south section
-                "Kill Octorok", 
+            EVENT( // Killing Octorok blocking the southern swamp south section(Using Boat)
+                "Kill Octorok(Using Boat)", 
                 Flags_GetSceneSwitch(SCENE_20SICHITAI, 0x01), 
                 Flags_SetSceneSwitch(SCENE_20SICHITAI, 0x01), 
                 Flags_ClearSceneSwitch(SCENE_20SICHITAI, 0x01), 
-                true // TODO: Conditions for starting swamp tour
+                CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME)
             ),
         },
     };
