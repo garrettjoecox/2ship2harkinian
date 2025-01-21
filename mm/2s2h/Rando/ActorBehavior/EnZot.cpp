@@ -12,7 +12,7 @@ void Rando::ActorBehavior::InitEnZotBehavior() {
         Actor* refActor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
 
-        if (refActor->id != ACTOR_EN_ZOT && gPlayState->sceneId != SCENE_33ZORACITY) {
+        if (refActor->id != ACTOR_EN_ZOT || gPlayState->sceneId != SCENE_33ZORACITY) {
             return;
         }
 
@@ -20,13 +20,12 @@ void Rando::ActorBehavior::InitEnZotBehavior() {
         // have any I am specifying the Params for the Zora Hall Scene Lights.
         if (refActor->params == -1015) {
             RANDO_SAVE_CHECKS[RC_ZORA_HALL_SCENE_LIGHTS].eligible = true;
+            *should = false;
+            refActor->parent = &player->actor;
+            player->talkActor = refActor;
+            player->talkActorDistance = refActor->xzDistToPlayer;
+            player->exchangeItemAction = PLAYER_IA_MINUS1;
+            Player_TalkWithPlayer(gPlayState, refActor);
         }
-
-        *should = false;
-        refActor->parent = &player->actor;
-        player->talkActor = refActor;
-        player->talkActorDistance = refActor->xzDistToPlayer;
-        player->exchangeItemAction = PLAYER_IA_MINUS1;
-        Player_TalkWithPlayer(gPlayState, refActor);
     });
 }
