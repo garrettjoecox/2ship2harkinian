@@ -297,16 +297,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SNOWHEAD_NEAR_TEMPLE] = RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(SNOWHEAD_TEMPLE, 0),              ENTRANCE(SNOWHEAD, 1), (
-                CAN_BE_GORON
-                //CAN_BE_GORON && CAN_BE_DEKU &&
-                //HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_ITEM(ITEM_ARROW_FIRE) && 
-                //HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE
-                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-                // all key locations are logically accessible we can re-add this check.
-                /* && KEY_COUNT(SNOWHEAD_TEMPLE) >= 3 */
-            )),
+            EXIT(ENTRANCE(SNOWHEAD_TEMPLE, 0),              ENTRANCE(SNOWHEAD, 1), CAN_BE_GORON),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 2),               ENTRANCE(SNOWHEAD, 2), true),
         },
         .connections = {

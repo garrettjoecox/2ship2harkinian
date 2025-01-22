@@ -57,6 +57,10 @@ void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_MAX] = RandoRegion{ .sceneId = SCENE_MAX,
+        .checks = {
+            CHECK(RC_STARTING_ITEM_DEKU_MASK, true),
+            CHECK(RC_STARTING_ITEM_SONG_OF_HEALING, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0),                      ONE_WAY_EXIT, true), // Save warp
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 9),                      ONE_WAY_EXIT, CAN_PLAY_SONG(SOARING) && CAN_OWL_WARP(OWL_WARP_CLOCK_TOWN)),

@@ -65,6 +65,7 @@ static std::vector<RandoItemId> junkItems = {
     RI_BOMBS_5,
     RI_DEKU_NUTS_5,
     RI_DEKU_STICKS_5,
+    RI_MAGIC_JAR_SMALL,
     // Refill
     RI_RED_POTION_REFILL,
     RI_GREEN_POTION_REFILL,
