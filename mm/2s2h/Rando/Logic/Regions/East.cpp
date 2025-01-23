@@ -224,8 +224,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ROAD_TO_IKANA_BELOW_LEDGE] = RandoRegion{ .name = "Below Ledge", .sceneId = SCENE_IKANAMAE,
         .checks = {
             CHECK(RC_ROAD_TO_IKANA_POT, CAN_HOOK_SCARECROW),
-            // TODO: HAS_ACCESS_TO_POTION_REFILL?
-            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC /* && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE)) */),
+            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && HAS_ACCESS_TO_POTION_REFILL),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),              ENTRANCE(ROAD_TO_IKANA, 2), true)
