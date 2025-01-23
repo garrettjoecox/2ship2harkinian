@@ -396,7 +396,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_WOODS_OF_MYSTERY_GROTTO, true), // TODO: Grotto mapping
         },
         .events = {
-            EVENT_WEEKEVENTREG("Saved Koume", WEEKEVENTREG_SAVED_KOUME, HAS_ACCESS_TO_POTION_REFILL),
+            EVENT_WEEKEVENTREG("Saved Koume", WEEKEVENTREG_SAVED_KOUME, HAS_BOTTLE && (CAN_ACCESS(RED_POTION_REFILL) || CAN_ACCESS(BLUE_POTION_REFILL))),
         },
     };
 }, {});
