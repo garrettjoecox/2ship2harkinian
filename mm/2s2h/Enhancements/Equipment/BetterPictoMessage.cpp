@@ -44,10 +44,9 @@ void RegisterBetterPictoMessage() {
         }
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
+        entry.msg = "Keep this %rpicture of {{target}}%w?%g\n\xC2Yes\nNo";
 
-        std::string msg = "picture of " + target;
-        CustomMessage::Replace(&entry.msg, "picture", msg);
+        CustomMessage::Replace(&entry.msg, "{{target}}", target);
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;

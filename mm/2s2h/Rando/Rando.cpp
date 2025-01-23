@@ -25,3 +25,23 @@ void Rando::Init() {
     Rando::CheckTracker::Init();
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveLoad>(OnSaveLoadHandler);
 }
+
+RandoCheckId Rando::FindItemPlacement(RandoItemId randoItemId) {
+    for (auto& [randoCheckId, check] : Rando::StaticData::Checks) {
+        if (RANDO_SAVE_CHECKS[randoCheckId].randoItemId == randoItemId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
+std::string Rando::GetItemName(RandoItemId randoItemId) {
+    std::string itemName = Rando::StaticData::Items[randoItemId].article;
+    if (itemName != "") {
+        itemName += " ";
+    }
+    itemName += Rando::StaticData::Items[randoItemId].name;
+
+    return itemName;
+}
