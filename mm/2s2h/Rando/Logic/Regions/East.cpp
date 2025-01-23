@@ -232,7 +232,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, CAN_RIDE_EPONA),
-            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_MASK_GARO)),
+            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && (HAS_ITEM(ITEM_MASK_GARO) || HAS_ITEM(ITEM_MASK_GIBDO))),
         },
     };
     Regions[RR_ROAD_TO_IKANA_FIELD_SIDE] = RandoRegion{ .name = "Field Side", .sceneId = SCENE_IKANAMAE,
