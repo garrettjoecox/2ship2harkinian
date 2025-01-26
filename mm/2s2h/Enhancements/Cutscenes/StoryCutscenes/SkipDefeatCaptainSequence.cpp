@@ -24,13 +24,13 @@ void SkipDefeatCaptainCutscene() {
     Player* player = GET_PLAYER(gPlayState);
 
     // the cutscene sets link's position/rotation to
-    // 
-    // player->actor.world = { { -100.0f, 474.0f, -2330.0f }, { 0, -16384, 0 } }; 
-    // 
+    //
+    // player->actor.world = { { -100.0f, 474.0f, -2330.0f }, { 0, -16384, 0 } };
+    //
     // but link walks forward when not told not to by the cutscene, so we're
     // setting link's position back a little bit so he doesn't walk off the ledge
-    player->actor.world = { { 64.0f, 488.0f, -2332.0f }, { 0, -16384, 0 } }; 
-    
+    player->actor.world = { { 64.0f, 488.0f, -2332.0f }, { 0, -16384, 0 } };
+
     // make sure captain's gone
     SET_WEEKEVENTREG(WEEKEVENTREG_23_04);
 
