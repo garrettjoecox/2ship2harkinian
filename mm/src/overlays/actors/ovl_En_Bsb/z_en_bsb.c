@@ -329,7 +329,7 @@ void EnBsb_Init(Actor* thisx, PlayState* play) {
 
     this->actor.targetMode = 0xA;
 
-    if (WEEKEVENTREG(0x17) & 4) {
+    if (CHECK_WEEKEVENTREG(WEEKEVENTREG_23_04)) {
         Actor_Kill(&this->actor);
         return;
     }
@@ -1520,7 +1520,7 @@ s32 func_80C0E9CC(EnBsb* this, PlayState* play) {
                     break;
 
                 case 5:
-                    WEEKEVENTREG(23) |= 4;
+                    SET_WEEKEVENTREG(WEEKEVENTREG_23_04);
                     Actor_PlaySfx(&this->actor, NA_SE_EN_KITA_BREAK);
                     break;
 

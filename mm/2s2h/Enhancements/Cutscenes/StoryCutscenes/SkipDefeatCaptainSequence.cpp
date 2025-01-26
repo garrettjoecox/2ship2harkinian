@@ -44,6 +44,9 @@ void SkipDefeatCaptainCutscene() {
     // todo: not sure how to make link not walk forward, setting pos/rot to make him not walk off the ledge
     player->actor.world = { { 64.0f, 488.0f, -2332.0f }, { 0, -16384, 0 } }; 
     
+    // make sure he's gone
+    SET_WEEKEVENTREG(WEEKEVENTREG_23_04);
+
     // get rid of the fire from the chest
     Flags_SetSwitch(gPlayState, 0x0B);
 }
