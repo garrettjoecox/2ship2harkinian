@@ -57,13 +57,13 @@ void RegisterSkipDefeatCaptainSequence() {
     //     SkipDefeatCaptainTextbox();
     // });
 
-    COND_VB_SHOULD(VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE, CVAR || IS_RANDO, {
+    COND_VB_SHOULD(VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE, CVAR, {
         *should = false;
         EnBsb* captain = (EnBsb*)va_arg(args, EnBsb*);
         SkipDefeatCaptainTextbox(captain);
     });
 
-    COND_VB_SHOULD(VB_START_CUTSCENE, CVAR || IS_RANDO, {
+    COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
         s16* csId = va_arg(args, s16*);
         if (gPlayState->sceneId == SCENE_BOTI && *csId == 20) {
             *should = false;
