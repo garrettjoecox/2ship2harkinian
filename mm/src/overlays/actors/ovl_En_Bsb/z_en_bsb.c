@@ -9,6 +9,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "z64rumble.h"
 #include "z64shrink_window.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_UNFRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_2000000)
 
@@ -1073,8 +1074,10 @@ void func_80C0D964(EnBsb* this, PlayState* play) {
     this->unk_02A4 = 0;
     this->unk_02A8 = 0;
     this->actor.textId = 0x1535;
-    Message_StartTextbox(play, this->actor.textId, &this->actor);
-    this->actionFunc = func_80C0D9B4;
+    if (GameInteractor_Should(VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE, true)) {
+        Message_StartTextbox(play, this->actor.textId, &this->actor);
+        this->actionFunc = func_80C0D9B4;
+    }
 }
 
 void func_80C0D9B4(EnBsb* this, PlayState* play) {
