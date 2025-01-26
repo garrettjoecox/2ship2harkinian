@@ -233,6 +233,11 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             gSaveContext.healthAccumulator = gSaveContext.save.saveInfo.playerData.healthCapacity + 0x10;
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_BOTTLE_RED_POTION:
+            // ITEM_LONGSHOT will give a Red Potion bottle on the first available bottle slot
+            // ITEM_POTION_RED will put a Red Potion bottle on the first bottle slot
+            Item_Give(gPlayState, ITEM_LONGSHOT);
+            break;
         case RI_JUNK:
         case RI_NONE:
             break;

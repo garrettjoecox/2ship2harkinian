@@ -285,6 +285,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         case RI_BOTTLE_CHATEAU_ROMANI:
         case RI_BOTTLE_MILK:
         case RI_BOTTLE_GOLD_DUST:
+        case RI_BOTTLE_RED_POTION:
             if (hasObtainedCheck) {
                 return false;
             }
@@ -541,6 +542,10 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                     return RI_MILK_REFILL;
                 }
                 break;
+            case RI_BOTTLE_RED_POTION:
+                if (Inventory_HasEmptyBottle()) {
+                    return RI_RED_POTION_REFILL;
+                }
             default:
                 break;
         }
