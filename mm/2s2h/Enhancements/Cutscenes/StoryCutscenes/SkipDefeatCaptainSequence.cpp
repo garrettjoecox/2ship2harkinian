@@ -1,21 +1,17 @@
 #include <libultraship/bridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
-#include "2s2h/CustomMessage/CustomMessage.h"
-#include "2s2h/CustomItem/CustomItem.h"
-#include "2s2h/Rando/Rando.h"
 #include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "variables.h"
-#include "functions.h"
 #include "overlays/actors/ovl_En_Bsb/z_en_bsb.h"
-extern void func_80C0D9B4(EnBsb*, PlayState*);
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void SkipDefeatCaptainTextbox(EnBsb* captain) {
+    // from func_80C0D9B4
     gPlayState->nextEntrance = Entrance_CreateFromSpawn(5);
     gSaveContext.nextCutsceneIndex = 0;
     gPlayState->transitionTrigger = 0x14;
