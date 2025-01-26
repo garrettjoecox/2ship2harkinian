@@ -24,27 +24,18 @@ void SkipDefeatCaptainTextbox(EnBsb* captain) {
     captain->unk_111A = 0;
 }
 
-// todo: this triggers the transition but the textbox stays on screen
-// void SkipDefeatCaptainTextbox() {
-//     auto blarg = 3;
-//     gPlayState->msgCtx.msgMode = MSGMODE_NONE;
-//     gPlayState->nextEntrance = ENTRANCE(IKANA_GRAVEYARD, 5);
-//     gSaveContext.nextCutsceneIndex = 0;
-//     gPlayState->transitionTrigger = 0x14;
-//     gPlayState->transitionType = 2;
-//     gSaveContext.nextTransitionType = 3;
-// }
-
 void SkipDefeatCaptainCutscene() {
     Player* player = GET_PLAYER(gPlayState);
 
-    // set link's position/rotation to what it is at the end of the cutscene
+    // the cutscene sets link's position/rotation to
+    // 
     // player->actor.world = { { -100.0f, 474.0f, -2330.0f }, { 0, -16384, 0 } }; 
-
-    // todo: not sure how to make link not walk forward, setting pos/rot to make him not walk off the ledge
+    // 
+    // but link walks forward when not told not to by the cutscene, so we're
+    // setting link's position back a little bit so he doesn't walk off the ledge
     player->actor.world = { { 64.0f, 488.0f, -2332.0f }, { 0, -16384, 0 } }; 
     
-    // make sure he's gone
+    // make sure captain's gone
     SET_WEEKEVENTREG(WEEKEVENTREG_23_04);
 
     // get rid of the fire from the chest
@@ -52,11 +43,6 @@ void SkipDefeatCaptainCutscene() {
 }
 
 void RegisterSkipDefeatCaptainSequence() {
-    // todo: couldn't figure out how to make the textbox not show up using this
-    // COND_ID_HOOK(OnOpenText, 0x1535, CVAR || IS_RANDO, [](u16* textId, bool* loadFromMessageTable){
-    //     SkipDefeatCaptainTextbox();
-    // });
-
     COND_VB_SHOULD(VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE, CVAR, {
         *should = false;
         EnBsb* captain = (EnBsb*)va_arg(args, EnBsb*);
