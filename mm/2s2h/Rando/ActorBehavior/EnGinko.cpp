@@ -32,36 +32,4 @@ void Rando::ActorBehavior::InitEnGinkoBehavior() {
 
         *should = false;
     });
-
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_GINKO_MAN, IS_RANDO, [](Actor* actor) {
-        EnGinkoMan* refActor = (EnGinkoMan*)actor;
-
-        // Set New Account
-        refActor->isNewAccount = false;
-        if (HS_GET_BANK_RUPEES() == 0) {
-            HS_SET_BANK_RUPEES(1);
-        }
-    });
-
-    COND_VB_SHOULD(VB_CONTINUE_BANKER_DIALOGUE, IS_RANDO, {
-        EnGinkoMan* enGinkoMan = va_arg(args, EnGinkoMan*);
-
-        // Initial Banter
-        if (enGinkoMan->curTextId == 0 || enGinkoMan->curTextId == 0x44c || enGinkoMan->curTextId == 0x457) {
-            Message_StartTextbox(gPlayState, 0x466, &enGinkoMan->actor);
-            enGinkoMan->curTextId = 0x466;
-            *should = false;
-        }
-
-        // Deposit Dialogue
-        if (enGinkoMan->curTextId == 0x469 && enGinkoMan->choiceDepositWithdrawl == GINKOMAN_CHOICE_DEPOSIT) {
-            enGinkoMan->curTextId = 0x44f;
-            *should = false;
-        }
-
-        if (enGinkoMan->curTextId == 0x454 || enGinkoMan->curTextId == 0x453) {
-            enGinkoMan->curTextId = 0x455;
-            *should = false;
-        }
-    });
 }

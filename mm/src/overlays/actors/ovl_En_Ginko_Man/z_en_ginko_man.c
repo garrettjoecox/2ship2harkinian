@@ -118,9 +118,7 @@ void EnGinkoMan_DepositDialogue(EnGinkoMan* this, PlayState* play) {
         return;
     }
 
-    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {
-        return;
-    }
+    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {}
 
     switch (this->curTextId) {
         case 0x44C:
@@ -345,9 +343,7 @@ void EnGinkoMan_WaitForDialogueInput(EnGinkoMan* this, PlayState* play) {
         return;
     }
 
-    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {
-        return;
-    }
+    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {}
 
     switch (this->curTextId) {
         case 0x44E:
