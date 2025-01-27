@@ -54,6 +54,51 @@ void ApplyNearlyNoLogicToSaveContext() {
         itemPool.push_back(randoStaticCheck.randoItemId);
     }
 
+    // TODO: This should be decided by the player from the UI
+    std::vector<RandoItemId> startingItems = {
+        RI_SWORD_KOKIRI,
+        RI_SHIELD_HERO,
+        RI_OCARINA,
+        RI_SONG_TIME,
+    };
+
+    // Grant the starting items
+    for (RandoItemId startingItem : startingItems) {
+        GiveItem(ConvertItem(startingItem));
+    }
+
+    // Add sword and shield to the pool if they aren't in the starting items
+    if (std::find(startingItems.begin(), startingItems.end(), RI_SWORD_KOKIRI) == startingItems.end()) {
+        itemPool.push_back(RI_SWORD_KOKIRI);
+    }
+    if (std::find(startingItems.begin(), startingItems.end(), RI_SHIELD_HERO) == startingItems.end()) {
+        itemPool.push_back(RI_SHIELD_HERO);
+    }
+
+    // Add other items that don't have a vanilla location like Sun's Song or Song of Double Time
+
+    // Remove starting items from the pool (but only one per entry in startingItems)
+    for (RandoItemId startingItem : startingItems) {
+        auto it = std::find(itemPool.begin(), itemPool.end(), startingItem);
+        if (it != itemPool.end()) {
+            itemPool.erase(it);
+        }
+    }
+
+    // Add/Remove junk items to/from the pool to make the item pool size match the check pool size
+    while (checkPool.size() != itemPool.size()) {
+        if (checkPool.size() > itemPool.size()) {
+            itemPool.push_back(RI_JUNK);
+        } else {
+            for (int i = 0; i < itemPool.size(); i++) {
+                if (Rando::StaticData::Items[itemPool[i]].randoItemType == RITYPE_JUNK) {
+                    itemPool.erase(itemPool.begin() + i);
+                    break;
+                }
+            }
+        }
+    }
+
     for (size_t i = 0; i < itemPool.size(); i++) {
         std::swap(itemPool[i], itemPool[Ship_Random(0, itemPool.size() - 1)]);
     }

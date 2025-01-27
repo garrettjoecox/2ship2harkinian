@@ -196,12 +196,14 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_GS_TOKEN_SWAMP: {
             int skullTokenCount = Inventory_GetSkullTokenCount(SCENE_KINSTA1);
+            skullTokenCount--;
             gSaveContext.save.saveInfo.skullTokenCount =
                 ((int)(skullTokenCount & 0xFFFF) << 0x10) | (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF);
             break;
         }
         case RI_GS_TOKEN_OCEAN: {
             int skullTokenCount = Inventory_GetSkullTokenCount(SCENE_KINDAN2);
+            skullTokenCount--;
             gSaveContext.save.saveInfo.skullTokenCount =
                 (gSaveContext.save.saveInfo.skullTokenCount & 0xFFFF0000) | (skullTokenCount & 0xFFFF);
             break;

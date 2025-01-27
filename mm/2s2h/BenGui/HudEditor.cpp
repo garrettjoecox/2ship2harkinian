@@ -277,24 +277,33 @@ void HudEditorWindow::DrawElement() {
                                   ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBody |
                                       ImGuiTableFlags_SizingStretchSame)) {
                 ImGui::TableNextColumn();
-                UIWidgets::CVarSliderInt("X", hudEditorElements[i].xCvar, -10, 330, hudEditorElements[i].defaultX,
+                UIWidgets::CVarSliderInt("X", hudEditorElements[i].xCvar,
                                          {
                                              .showButtons = false,
                                              .format = "X: %d",
+                                             .min = -10,
+                                             .max = 330,
+                                             .defaultValue = hudEditorElements[i].defaultX,
                                              .labelPosition = UIWidgets::LabelPosition::None,
                                          });
                 ImGui::TableNextColumn();
-                UIWidgets::CVarSliderInt("Y", hudEditorElements[i].yCvar, -10, 250, hudEditorElements[i].defaultY,
+                UIWidgets::CVarSliderInt("Y", hudEditorElements[i].yCvar,
                                          {
                                              .showButtons = false,
                                              .format = "Y: %d",
+                                             .min = -10,
+                                             .max = 250,
+                                             .defaultValue = hudEditorElements[i].defaultY,
                                              .labelPosition = UIWidgets::LabelPosition::None,
                                          });
                 ImGui::TableNextColumn();
-                UIWidgets::CVarSliderFloat("Scale", hudEditorElements[i].scaleCvar, 0.25f, 4.0f, 1.0f,
+                UIWidgets::CVarSliderFloat("Scale", hudEditorElements[i].scaleCvar,
                                            {
                                                .showButtons = false,
                                                .format = "Scale: %.2f",
+                                               .min = 0.25f,
+                                               .max = 4.0f,
+                                               .defaultValue = 1.0f,
                                                .labelPosition = UIWidgets::LabelPosition::None,
                                            });
                 ImGui::EndTable();

@@ -80,11 +80,15 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitEnSob1Behavior();
+    Rando::ActorBehavior::InitEnSshBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
+    Rando::ActorBehavior::InitEnTalkBehavior();
     Rando::ActorBehavior::InitEnTotoBehavior();
+    Rando::ActorBehavior::InitEnTrtBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
+    Rando::ActorBehavior::InitEnZotBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjKibakoBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();

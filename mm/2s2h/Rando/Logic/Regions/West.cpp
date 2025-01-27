@@ -190,7 +190,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_ZORA_HALL_EVANS_ROOM] = RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,
-        // TODO: Missing HP check to add here later.
+        .checks = {
+            CHECK(RC_ZORA_HALL_EVANS_PIECE_OF_HEART,           HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 4),                    ENTRANCE(ZORA_HALL_ROOMS, 3), true),
         },
@@ -229,6 +231,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_ZORA_HALL] = RandoRegion{ .sceneId = SCENE_33ZORACITY,
+        .checks = {
+            CHECK(RC_ZORA_HALL_SCENE_LIGHTS, CAN_USE_MAGIC_ARROW(FIRE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 1),                    ENTRANCE(ZORA_HALL, 0), true),           
             EXIT(ENTRANCE(ZORA_HALL_ROOMS, 5),              ENTRANCE(ZORA_HALL, 2), true), // To Shop

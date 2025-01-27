@@ -23,6 +23,8 @@ std::string formatTimeDisplay(uint32_t value) {
 }
 
 void DrawInGameTimer(uint32_t timer) {
+    float windowScale = MAX(CVarGetFloat("gDisplayOverlay.Scale", 1.0f), 1.0f);
+
     std::string timerStr = formatTimeDisplay(timer).c_str();
     char* textToDecode = new char[timerStr.size() + 1];
     textToDecode = std::strcpy(textToDecode, timerStr.c_str());
@@ -56,6 +58,9 @@ void DisplayOverlayWindow::Draw() {
         return;
     }
 
+    float windowScale = MAX(CVarGetFloat("gDisplayOverlay.Scale", 1.0f), 1.0f);
+    ImVec4 windowBG = !CVarGetInteger("gDisplayOverlay.Background", 0) ? ImVec4(0, 0, 0, 0.5f) : ImVec4(0, 0, 0, 0);
+
     ImGui::PushStyleColor(ImGuiCol_WindowBg, windowBG);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
@@ -80,16 +85,7 @@ void DisplayOverlayWindow::Draw() {
     ImGui::PopStyleColor(2);
 }
 
-void DisplayOverlayInitSettings() {
-    windowScale = CVarGetFloat("gDisplayOverlay.Scale", 1.0f);
-    if (windowScale < 1.0f) {
-        windowScale = 1.0f;
-    }
-    windowBG = !CVarGetInteger("gDisplayOverlay.Background", 0) ? ImVec4(0, 0, 0, 0.5f) : ImVec4(0, 0, 0, 0);
-}
-
 void DisplayOverlayWindow::InitElement() {
-    DisplayOverlayInitSettings();
     COND_HOOK(OnSaveLoad, true, [](s16 fileNum) {
         if (gSaveContext.save.shipSaveInfo.fileCreatedAt == 0) {
             gSaveContext.save.shipSaveInfo.fileCreatedAt = GetUnixTimestamp();

@@ -37,10 +37,10 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         // initialized with a value of 48
         gSaveContext.save.saveInfo.playerData.magic = 0;
 
-        // TODO: Starting item configuration. Currently if you don't start with ocarina & SoT glitchless logic will fail
-        // because of looping condition of needing Deku mask to get ocarina, and needing ocarina to get deku mask.
-        GiveItem(RI_OCARINA);
-        GiveItem(RI_SONG_TIME);
+        // Remove Sword & Shield
+        SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
+        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_NONE;
+        SET_EQUIP_VALUE(EQUIP_TYPE_SHIELD, EQUIP_VALUE_SHIELD_NONE);
 
         try {
             // SpoilerFileIndex == 0 means we're generating a new one
@@ -69,6 +69,9 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 }
 
                 if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_VANILLA) {
+                    GiveItem(RI_SWORD_KOKIRI);
+                    GiveItem(RI_SHIELD_HERO);
+
                     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
                         if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
                             RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
@@ -87,6 +90,9 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     throw std::runtime_error("Logic option not implemented: " +
                                              std::to_string(RANDO_SAVE_OPTIONS[RO_LOGIC]));
                 }
+
+                RANDO_SAVE_CHECKS[RC_STARTING_ITEM_DEKU_MASK].eligible = true;
+                RANDO_SAVE_CHECKS[RC_STARTING_ITEM_SONG_OF_HEALING].eligible = true;
 
                 if (CVarGetInteger("gRando.GenerateSpoiler", 0)) {
                     nlohmann::json spoiler = Rando::Spoiler::GenerateFromSaveContext();

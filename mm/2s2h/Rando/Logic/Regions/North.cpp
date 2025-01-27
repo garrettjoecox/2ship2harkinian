@@ -87,9 +87,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_SHOP] = RandoRegion{ .sceneId = SCENE_GORONSHOP,
         .checks = {
-            CHECK(RC_GORON_SHOP_ITEM_01, true),
-            CHECK(RC_GORON_SHOP_ITEM_02, true),
-            CHECK(RC_GORON_SHOP_ITEM_03, true),
+            CHECK(RC_GORON_SHOP_ITEM_01, CAN_AFFORD(RC_GORON_SHOP_ITEM_01)),
+            CHECK(RC_GORON_SHOP_ITEM_02, CAN_AFFORD(RC_GORON_SHOP_ITEM_02)),
+            CHECK(RC_GORON_SHOP_ITEM_03, CAN_AFFORD(RC_GORON_SHOP_ITEM_03)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GORON_SHRINE, 1),              ENTRANCE(GORON_SHOP, 0), true)
@@ -249,7 +249,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 4),      ENTRANCE(PATH_TO_SNOWHEAD, 0), true),
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON && HAS_MAGIC),
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_MIDDLE] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -257,8 +257,8 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_PATH_TO_SNOWHEAD_PIECE_OF_HEART, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && CAN_HOOK_SCARECROW)
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON),
-            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON && HAS_MAGIC),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, CAN_BE_GORON && HAS_MAGIC),
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_UPPER] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -266,7 +266,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SNOWHEAD, 0),                     ENTRANCE(PATH_TO_SNOWHEAD, 1), true),
         },
         .connections = {
-            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON && HAS_MAGIC),
             CONNECTION(RR_PATH_TO_SNOWHEAD_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
     };
@@ -297,16 +297,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SNOWHEAD_NEAR_TEMPLE] = RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(SNOWHEAD_TEMPLE, 0),              ENTRANCE(SNOWHEAD, 1), (
-                CAN_BE_GORON
-                //CAN_BE_GORON && CAN_BE_DEKU &&
-                //HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_ITEM(ITEM_ARROW_FIRE) && 
-                //HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE
-                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-                // all key locations are logically accessible we can re-add this check.
-                /* && KEY_COUNT(SNOWHEAD_TEMPLE) >= 3 */
-            )),
+            EXIT(ENTRANCE(SNOWHEAD_TEMPLE, 0),              ENTRANCE(SNOWHEAD, 1), CAN_BE_GORON),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 2),               ENTRANCE(SNOWHEAD, 2), true),
         },
         .connections = {
