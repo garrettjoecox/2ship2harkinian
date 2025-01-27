@@ -224,15 +224,14 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ROAD_TO_IKANA_BELOW_LEDGE] = RandoRegion{ .name = "Below Ledge", .sceneId = SCENE_IKANAMAE,
         .checks = {
             CHECK(RC_ROAD_TO_IKANA_POT, CAN_HOOK_SCARECROW),
-            // TODO: HAS_ACCESS_TO_POTION_REFILL?
-            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC /* && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE)) */),
+            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && HAS_BOTTLE && (CAN_ACCESS(RED_POTION_REFILL) || CAN_ACCESS(BLUE_POTION_REFILL))),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),              ENTRANCE(ROAD_TO_IKANA, 2), true)
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, CAN_RIDE_EPONA),
-            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_MASK_GARO)),
+            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && (HAS_ITEM(ITEM_MASK_GARO) || HAS_ITEM(ITEM_MASK_GIBDO))),
         },
     };
     Regions[RR_ROAD_TO_IKANA_FIELD_SIDE] = RandoRegion{ .name = "Field Side", .sceneId = SCENE_IKANAMAE,
@@ -348,16 +347,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_INVERTED_NEAR_TEMPLE] = RandoRegion{ .sceneId = SCENE_F41,
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),  ENTRANCE(STONE_TOWER_INVERTED, 1), (
-                // TODO: THIS IS TEMPORARY. Once stone tower is properly split up, this will be replaced with a proper logic check.
-                CAN_BE_ZORA && CAN_BE_DEKU && CAN_BE_GORON &&
-                HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
-                HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(ELEGY)
-                // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-                // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-                // all key locations are logically accessible we can re-add this check.
-                /* && KEY_COUNT(STONE_TOWER_TEMPLE) >= 4 */
-            )),
+            EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 0),  ENTRANCE(STONE_TOWER_INVERTED, 1), true),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_INVERTED_LOWER, true),
@@ -411,16 +401,6 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(STONE_TOWER_INVERTED, 0),         ENTRANCE(STONE_TOWER, 1), CAN_PLAY_SONG(ELEGY) && HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_LIGHT) && HAS_MAGIC),
             EXIT(ENTRANCE(STONE_TOWER_TEMPLE, 0),           ENTRANCE(STONE_TOWER, 2), CAN_BE_ZORA && CAN_BE_GORON && CAN_PLAY_SONG(ELEGY))
-            // (
-            //     // TODO: THIS IS TEMPORARY. Once stone tower is properly split up, this will be replaced with a proper logic check.
-            //     CAN_BE_ZORA && CAN_BE_DEKU && CAN_BE_GORON &&
-            //     HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_HOOKSHOT) && 
-            //     HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER && CAN_USE_SWORD && CAN_USE_EXPLOSIVE && CAN_PLAY_SONG(ELEGY)
-            //     // TODO: We can't really add requirement for key count, as the keys need to be in the pool
-            //     // to be shuffled, and to be in the pool their vanilla location has to be accessible. Once
-            //     // all key locations are logically accessible we can re-add this check.
-            //     /* && KEY_COUNT(STONE_TOWER_TEMPLE) >= 4 */
-            // )),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),

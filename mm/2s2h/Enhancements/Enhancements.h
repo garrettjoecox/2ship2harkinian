@@ -1,7 +1,6 @@
 #ifndef ENHANCEMENTS_H
 #define ENHANCEMENTS_H
 
-#include "Cycle/Cycle.h"
 #include "Saving/SavingEnhancements.h"
 
 enum AlwaysWinDoggyRaceOptions {

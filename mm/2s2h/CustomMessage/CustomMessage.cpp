@@ -38,6 +38,7 @@ void CustomMessage::ReplaceColorChars(std::string* msg) {
     CustomMessage::Replace(msg, "%w", white);
     CustomMessage::Replace(msg, "%y", "\x04");
     CustomMessage::Replace(msg, "%g", "\x02");
+    CustomMessage::Replace(msg, "%b", "\x03");
 }
 
 void CustomMessage::AddLineBreaks(std::string* msg) {
@@ -51,8 +52,15 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
     for (size_t i = 0; i < msg->size(); ++i) {
         char currentChar = (*msg)[i];
 
-        if (currentChar >= 0x20 && currentChar < 0x20 + sizeof(sNESFontWidths) / sizeof(sNESFontWidths[0])) {
-            currentLineWidth += sNESFontWidths[currentChar - 0x20];
+        if ((uint8_t)currentChar >= 0x20 && (uint8_t)currentChar < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
+            currentLineWidth += sNESFontWidths[(uint8_t)currentChar - 0x20];
+        }
+
+        // Increment for existing new liens
+        if (currentChar == 0x11) {
+            currentLineWidth = 0.0f;
+            lastSpaceIndex = std::string::npos;
+            ++currentLineCount;
         }
 
         if (currentChar == ' ') {
@@ -71,8 +79,8 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
             ++currentLineCount;
 
             if (currentLineCount >= MAX_LINES_PER_PAGE) {
-                msg->insert(i + 1, 1, 0x10);
-                ++i;
+                // Replace the added new line for a box break instead
+                (*msg)[i] = 0x10;
                 currentLineCount = 0;
             }
         }
@@ -81,7 +89,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
 
 // Ensure that the message ends with the message end character
 void CustomMessage::EnsureMessageEnd(std::string* msg) {
-    if (msg->back() != 0xBF) {
+    if ((unsigned char)msg->back() != 0xBF) {
         msg->push_back(0xBF);
     }
 }
@@ -129,10 +137,10 @@ void CustomMessage::LoadCustomMessageIntoFont(CustomMessage::Entry entry) {
     buff[10] = 0xFF;
 
     if (entry.autoFormat) {
-        CustomMessage::AddLineBreaks(&entry.msg);
         CustomMessage::ReplaceColorChars(&entry.msg);
-        CustomMessage::EnsureMessageEnd(&entry.msg);
         CustomMessage::Replace(&entry.msg, "\n", "\x11");
+        CustomMessage::AddLineBreaks(&entry.msg);
+        CustomMessage::EnsureMessageEnd(&entry.msg);
     }
 
     // If message is too long, truncate it and add the message end character

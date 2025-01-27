@@ -227,7 +227,7 @@ void CheckTrackerDrawLogicalList() {
                     ImGui::TableNextColumn();
                     for (auto& [name, accessLogicString] : availableEvents) {
                         ImGui::TableNextColumn();
-                        ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::White);
+                        ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::ColorValues.at(UIWidgets::Colors::White));
                         ImGui::Text("%s (Event)", name.c_str());
                         if (accessLogicString != "") {
                             UIWidgets::Tooltip(accessLogicString.c_str());
@@ -238,9 +238,11 @@ void CheckTrackerDrawLogicalList() {
                     for (auto& [checkId, accessLogicString] : availableChecks) {
                         auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
-                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained  ? UIWidgets::Colors::LightGreen
-                                                             : randoSaveCheck.skipped ? UIWidgets::Colors::Indigo
-                                                                                      : UIWidgets::Colors::White);
+                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained
+                                                                 ? UIWidgets::ColorValues.at(UIWidgets::Colors::Green)
+                                                             : randoSaveCheck.skipped
+                                                                 ? UIWidgets::ColorValues.at(UIWidgets::Colors::Indigo)
+                                                                 : UIWidgets::ColorValues.at(UIWidgets::Colors::White));
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                             ImGui::BeginGroup();
                             float cursorPosY = ImGui::GetCursorPosY();
@@ -352,7 +354,8 @@ void CheckTrackerDrawNonLogicalList() {
                 continue;
             }
 
-            if (CVAR_SHOW_CURRENT_SCENE && Rando::StaticData::Checks[checkId].sceneId != gPlayState->sceneId) {
+            if (CVAR_SHOW_CURRENT_SCENE && Play_GetOriginalSceneId(Rando::StaticData::Checks[checkId].sceneId) !=
+                                               Play_GetOriginalSceneId(gPlayState->sceneId)) {
                 continue;
             }
 
@@ -376,8 +379,9 @@ void CheckTrackerDrawNonLogicalList() {
         std::string headerText = Ship_GetSceneName(sceneId);
         headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(unfilteredChecks.size()) + ")";
 
-        ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == unfilteredChecks.size() ? UIWidgets::Colors::LightGreen
-                                                                                         : UIWidgets::Colors::White);
+        ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == unfilteredChecks.size()
+                                                 ? UIWidgets::ColorValues.at(UIWidgets::Colors::Green)
+                                                 : UIWidgets::ColorValues.at(UIWidgets::Colors::White));
 
         if (sExpandedHeadersState != sExpandedHeadersToggle) {
             ImGui::SetNextItemOpen(sExpandedHeadersToggle);
@@ -391,13 +395,13 @@ void CheckTrackerDrawNonLogicalList() {
                 for (auto& randoCheckId : checks) {
                     Rando::StaticData::RandoStaticCheck& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                     RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                    ImVec4 textColor = UIWidgets::Colors::White;
+                    ImVec4 textColor = UIWidgets::ColorValues.at(UIWidgets::Colors::White);
                     if (randoSaveCheck.obtained) {
-                        textColor = UIWidgets::Colors::LightGreen;
+                        textColor = UIWidgets::ColorValues.at(UIWidgets::Colors::Green);
                     } else if (randoSaveCheck.skipped) {
-                        textColor = UIWidgets::Colors::Indigo;
+                        textColor = UIWidgets::ColorValues.at(UIWidgets::Colors::Indigo);
                     } else if (CVAR_SHOW_LOGIC && !checksInLogic.contains(randoCheckId)) {
-                        textColor = UIWidgets::Colors::Gray;
+                        textColor = UIWidgets::ColorValues.at(UIWidgets::Colors::Gray);
                     }
 
                     if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
@@ -472,7 +476,7 @@ void CheckTrackerWindow::Draw() {
     if (!gPlayState || !IS_RANDO) {
         ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("No Rando Save Loaded").x) / 2);
         ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2 - 10.0f);
-        ImGui::TextColored(UIWidgets::Colors::Gray, "No Rando Save Loaded");
+        ImGui::TextColored(UIWidgets::ColorValues.at(UIWidgets::Colors::Gray), "No Rando Save Loaded");
         ImGui::End();
         ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(1);
@@ -525,12 +529,24 @@ void SettingsWindow::DrawElement() {
 
         ImGui::TableNextColumn();
 
-        if (UIWidgets::CVarSliderFloat("Opacity", CVAR_NAME_TRACKER_OPACITY, 0, 1.0f, 0.5f,
-                                       { .format = "%.1f", .step = 0.10f })) {
+        if (UIWidgets::CVarSliderFloat("Opacity", CVAR_NAME_TRACKER_OPACITY,
+                                       {
+                                           .format = "%.1f",
+                                           .step = 0.10f,
+                                           .min = 0.0f,
+                                           .max = 1.0f,
+                                           .defaultValue = 0.5f,
+                                       })) {
             trackerBG.w = CVAR_TRACKER_OPACITY;
         }
-        if (UIWidgets::CVarSliderFloat("Scale", CVAR_NAME_TRACKER_SCALE, 0.7f, 2.5f, 1.0f,
-                                       { .format = "%.1f", .step = 0.10f })) {
+        if (UIWidgets::CVarSliderFloat("Scale", CVAR_NAME_TRACKER_SCALE,
+                                       {
+                                           .format = "%.1f",
+                                           .step = 0.10f,
+                                           .min = 0.7f,
+                                           .max = 2.5f,
+                                           .defaultValue = 1.0f,
+                                       })) {
             trackerScale = CVAR_TRACKER_SCALE;
         }
 

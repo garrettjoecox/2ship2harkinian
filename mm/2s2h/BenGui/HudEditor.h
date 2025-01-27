@@ -80,14 +80,15 @@ typedef struct {
     const char* yCvar;
     const char* scaleCvar;
     const char* colorCvar;
+    const char* colorChangedCvar;
     const char* modeCvar;
 } HudEditorElement;
 
 #define HUD_EDITOR_ELEMENT(id, name, cvar, defaultX, defaultY, defaultR, defaultG, defaultB, defaultA)          \
     {                                                                                                           \
         id, name, defaultX, defaultY, defaultR, defaultG, defaultB, defaultA, "gHudEditor." cvar ".Position.X", \
-            "gHudEditor." cvar ".Position.Y", "gHudEditor." cvar ".Scale", "gHudEditor." cvar ".Color.Value",   \
-            "gHudEditor." cvar ".Mode"                                                                          \
+            "gHudEditor." cvar ".Position.Y", "gHudEditor." cvar ".Scale", "gColors." cvar ".Color",            \
+            "gColors." cvar ".Changed", "gHudEditor." cvar ".Mode"                                              \
     }
 
 extern HudEditorElementID hudEditorActiveElement;

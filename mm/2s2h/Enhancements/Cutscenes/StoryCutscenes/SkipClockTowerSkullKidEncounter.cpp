@@ -27,32 +27,43 @@ AnimationInfo armsCrossedLoop = {
     (AnimationHeader*)&gSkullKidFloatingArmsCrossedAnim, 1.0f, 0.0f, -1.0f, ANIMMODE_LOOP, 0.0f
 };
 
+Vec3f afterCutscenePos = { 0, 200.0f, 0 };
+
 // Skips the interaction with Skull Kid at the Clock Tower, both with and without the ocarina
 void RegisterSkipClockTowerSkullKidEncounter() {
     COND_ID_HOOK(OnActorInit, ACTOR_DM_STK, CVAR, [](Actor* actor) {
         DmStk* dmstk = (DmStk*)actor;
 
-        dmstk->actor.world.pos.y += 100.0f;
+        // Needs to be clock tower rooftop
+        if (gPlayState->sceneId != SCENE_OKUJOU) {
+            return;
+        }
 
         if (dmstk->actionFunc == DmStk_ClockTower_StartIntroCutsceneVersion1) {
+            // Place Skullkid in his final position from when the cutscene would have ended
+            dmstk->actor.world.pos = afterCutscenePos;
             dmstk->animIndex = 33; // SK_ANIM_CALL_DOWN_MOON_LOOP
             dmstk->handType = 3;   // SK_HAND_TYPE_HOLDING_OCARINA
             DmStk_ChangeAnim(dmstk, gPlayState, &dmstk->skelAnime, &moonLoop, 0);
             dmstk->actionFunc = DmStk_ClockTower_IdleWithOcarina;
             Actor_PlaySfx(&dmstk->actor, NA_SE_EN_STAL20_CALL_MOON);
-            Audio_PlaySequenceInCutscene(56);
+            Audio_PlaySequenceInCutscene(NA_BGM_MINI_BOSS);
         } else if (dmstk->actionFunc == DmStk_ClockTower_StartIntroCutsceneVersion2) {
+            // Place Skullkid in his final position from when the cutscene would have ended
+            dmstk->actor.world.pos = afterCutscenePos;
             dmstk->animIndex = 38; // SK_ANIM_FLOATING_ARMS_CROSSED
             DmStk_ChangeAnim(dmstk, gPlayState, &dmstk->skelAnime, &armsCrossedLoop, 0);
             dmstk->actionFunc = DmStk_ClockTower_Idle;
+            Actor_PlaySfx(&dmstk->actor, NA_SE_EN_STAL20_CALL_MOON);
+            Audio_PlaySequenceInCutscene(NA_BGM_MINI_BOSS);
         }
     });
 
     COND_ID_HOOK(OnActorInit, ACTOR_DM_CHAR02, CVAR, [](Actor* actor) {
         DmChar02* dmChar02 = (DmChar02*)actor;
 
-        // Raise it so that it's not visible and cannot be collected until skull kid is hit
-        dmChar02->actor.world.pos.y += 100.0f;
+        // Place ocarina in its final position from when the cutscene would have ended
+        dmChar02->actor.world.pos = afterCutscenePos;
     });
 }
 

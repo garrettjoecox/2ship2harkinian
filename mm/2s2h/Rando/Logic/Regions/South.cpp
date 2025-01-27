@@ -174,9 +174,13 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_HAGS_POTION_SHOP_ITEM_01, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_01) && HAS_ITEM(ITEM_MASK_SCENTS) && HAS_BOTTLE),
             CHECK(RC_HAGS_POTION_SHOP_ITEM_02, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_02)),
             CHECK(RC_HAGS_POTION_SHOP_ITEM_03, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_03)),
+            CHECK(RC_HAGS_POTION_SHOP_KOTAKE, true),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 5),      ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_RED_POTION_REFILL, true),
         },
     };
     Regions[RR_MILK_ROAD] = RandoRegion{ .sceneId = SCENE_ROMANYMAE,
@@ -297,6 +301,13 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
             EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
             EVENT_ACCESS(RANDO_ACCESS_BEANS_REFILL, CAN_BE_DEKU && HAS_ITEM(ITEM_MAGIC_BEANS)),
+            EVENT( // Killing Octorok blocking the southern swamp south section(Without Boat)
+                "Kill Octorok(Without Boat)", 
+                Flags_GetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_SetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_ClearSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
+            ),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana
@@ -328,16 +339,21 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_TOURIST_INFORMATION] = RandoRegion{ .sceneId = SCENE_MAP_SHOP,
+        .checks = {
+            // Also requires poison to not be cleared
+            CHECK(RC_TOURIST_INFORMATION_ARCHERY, CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME) && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_TOURIST_INFORMATION_PICTOBOX, CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 1),      ENTRANCE(TOURIST_INFORMATION, 0), true),
         },
         .events = {
-            EVENT( // Killing Octorok blocking the southern swamp south section
-                "Kill Octorok", 
+            EVENT( // Killing Octorok blocking the southern swamp south section(Using Boat)
+                "Kill Octorok(Using Boat)", 
                 Flags_GetSceneSwitch(SCENE_20SICHITAI, 0x01), 
                 Flags_SetSceneSwitch(SCENE_20SICHITAI, 0x01), 
                 Flags_ClearSceneSwitch(SCENE_20SICHITAI, 0x01), 
-                true // TODO: Conditions for starting swamp tour
+                CHECK_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME)
             ),
         },
     };
@@ -381,6 +397,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_WOODS_OF_MYSTERY_GROTTO, true), // TODO: Grotto mapping
+        },
+        .events = {
+            EVENT_WEEKEVENTREG("Saved Koume", WEEKEVENTREG_SAVED_KOUME, HAS_BOTTLE && (CAN_ACCESS(RED_POTION_REFILL) || CAN_ACCESS(BLUE_POTION_REFILL))),
         },
     };
 }, {});

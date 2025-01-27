@@ -976,7 +976,9 @@ void EnGoroiwa_Init(Actor* thisx, PlayState* play) {
         return;
     }
 
-    if ((this->actor.home.rot.y >= (sp2C->count - 1)) && (this->actor.home.rot.y < 0)) {
+    //! @bug: Impossible to reach, && should be an ||
+    // 2S2H [Port] Opting to fix this to address a rolling snowball in snowhead being placed with garbage values
+    if ((this->actor.home.rot.y >= (sp2C->count - 1)) || (this->actor.home.rot.y < 0)) {
         this->actor.home.rot.y = 0;
     }
 

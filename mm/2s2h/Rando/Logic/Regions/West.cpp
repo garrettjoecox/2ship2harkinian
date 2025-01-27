@@ -129,6 +129,10 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_WATERFALL_RAPIDS] = RandoRegion{ .sceneId = SCENE_35TAKI,
+        .checks = {
+            CHECK(RC_WATERFALL_RAPIDS_BEAVER_RACE_01, CAN_BE_ZORA),
+            CHECK(RC_WATERFALL_RAPIDS_BEAVER_RACE_02, CAN_BE_ZORA),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 4),                    ENTRANCE(WATERFALL_RAPIDS, 0), true),
         },
@@ -159,7 +163,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_ZORA_CAPE] = RandoRegion{ .sceneId = SCENE_31MISAKI,
         .checks = {
-            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_01,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU),
+            CHECK(RC_ZORA_CAPE_LEDGE_CHEST_01,             HAS_ITEM(ITEM_HOOKSHOT) && CAN_BE_DEKU), // TODO : Decide if we want to add a trick for this, since you could also just hookshot to the chest from the right spot.
             CHECK(RC_ZORA_CAPE_LEDGE_CHEST_02,             HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_ZORA_CAPE_UNDERWATER_CHEST,          CAN_BE_ZORA),
             CHECK(RC_ZORA_CAPE_WATERFALL_PIECE_OF_HEART,  CAN_BE_ZORA),
@@ -185,7 +189,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_ZORA_HALL_EVANS_ROOM] = RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,
-        // TODO: Missing HP check to add here later.
+        .checks = {
+            CHECK(RC_ZORA_HALL_EVANS_PIECE_OF_HEART,           HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 4),                    ENTRANCE(ZORA_HALL_ROOMS, 3), true),
         },
@@ -224,6 +230,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_ZORA_HALL] = RandoRegion{ .sceneId = SCENE_33ZORACITY,
+        .checks = {
+            CHECK(RC_ZORA_HALL_SCENE_LIGHTS, CAN_USE_MAGIC_ARROW(FIRE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 1),                    ENTRANCE(ZORA_HALL, 0), true),           
             EXIT(ENTRANCE(ZORA_HALL_ROOMS, 5),              ENTRANCE(ZORA_HALL, 2), true), // To Shop

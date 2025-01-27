@@ -210,7 +210,7 @@ void Rando::ActorBehavior::InitObjKibakoBehavior() {
 
         randoCheckId = it->second;
 
-        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].cycleObtained) {
             return;
         }
 
@@ -228,7 +228,7 @@ void Rando::ActorBehavior::InitObjKibakoBehavior() {
 
         randoCheckId = it->second;
 
-        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].cycleObtained) {
             return;
         }
 

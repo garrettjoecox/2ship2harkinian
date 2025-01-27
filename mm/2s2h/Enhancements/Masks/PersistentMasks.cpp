@@ -65,11 +65,17 @@ void UpdatePersistentMasksState() {
             }
 
             OPEN_DISPS(gPlayState->state.gfxCtx);
+
+            // Set back geometry modes left over from player head DL, incase another mask changed the values
+            gSPLoadGeometryMode(POLY_OPA_DISP++,
+                                G_ZBUFFER | G_SHADE | G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
+
             Matrix_Push();
             Player_DrawBunnyHood(gPlayState);
             gSPDisplayList(POLY_OPA_DISP++,
                            (Gfx*)D_801C0B20[PLAYER_MASK_BUNNY - 1]); // D_801C0B20 is an array of mask DLs
             Matrix_Pop();
+
             CLOSE_DISPS(gPlayState->state.gfxCtx);
         });
 
@@ -146,8 +152,12 @@ void RegisterPersistentMasks() {
 
     // Speed the player up when the bunny hood state is active
     COND_VB_SHOULD(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, CVAR, {
+        Player* player = va_arg(args, Player*);
+
         // But don't speed up if the player is non-human and controller input is being overriden for cutscenes/minigames
-        if (STATE_CVAR && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN || gPlayState->actorCtx.unk268 == 0)) {
+        // or if player is Kafei
+        if (STATE_CVAR && player->actor.id == ACTOR_PLAYER &&
+            (GET_PLAYER_FORM == PLAYER_FORM_HUMAN || gPlayState->actorCtx.unk268 == 0)) {
             *should = true;
         }
     });

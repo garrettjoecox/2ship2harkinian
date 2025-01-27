@@ -3,6 +3,7 @@
 
 extern "C" {
 #include "variables.h"
+#include "overlays/actors/ovl_En_Gk/z_en_gk.h"
 
 void Player_TalkWithPlayer(PlayState* play, Actor* actor);
 }
@@ -27,5 +28,20 @@ void Rando::ActorBehavior::InitEnGKBehavior() {
                 Player_TalkWithPlayer(gPlayState, actor);
                 break;
         }
+    });
+
+    COND_VB_SHOULD(VB_START_CUTSCENE, IS_RANDO, {
+        s16* csId = va_arg(args, s16*);
+        Actor* actor = va_arg(args, Actor*);
+
+        if (*csId != 9 || actor == NULL || actor->id != ACTOR_EN_GK) {
+            return;
+        }
+
+        EnGk* enGk = (EnGk*)actor;
+
+        enGk->unk_1E4 &= ~0x20;
+        *should = false;
+        RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
     });
 }

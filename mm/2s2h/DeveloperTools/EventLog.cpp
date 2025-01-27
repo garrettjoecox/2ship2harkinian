@@ -263,7 +263,7 @@ void EventLogWindow::DrawElement() {
 
     ImGui::SameLine();
 
-    if (UIWidgets::Button("Filters", { .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Filters", UIWidgets::ButtonOptions{}.Size(UIWidgets::Sizes::Inline))) {
         ImGui::OpenPopup("eventLogFiltersPopup");
     }
 
@@ -348,7 +348,8 @@ void EventLogWindow::DrawElement() {
 
     ImGui::SameLine(0);
 
-    if (UIWidgets::Button("Clear", { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Clear",
+                          UIWidgets::ButtonOptions{ .color = UIWidgets::Colors::Red }.Size(UIWidgets::Sizes::Inline))) {
         eventLogEntries.clear();
     }
 

@@ -1,5 +1,6 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/ShipUtils.h"
 
 extern "C" {
 #include "variables.h"
@@ -49,7 +50,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         if (!randoRazorSwordSaveCheck.obtained) {
             entry.autoFormat = false;
             std::string itemName;
-            if (Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].article != "") {
+            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].article)) {
                 itemName += Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].article;
                 itemName += " ";
             }
@@ -79,7 +80,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
 
         if (!RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD].eligible) {
             RandoSaveCheck& randoGildedSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD];
-            if (Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].article != "") {
+            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].article)) {
                 itemName = Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].article;
                 itemName += " ";
             } else {

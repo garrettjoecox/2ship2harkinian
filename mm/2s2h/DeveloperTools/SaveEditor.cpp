@@ -6,6 +6,7 @@
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
+#include "2s2h/ShipUtils.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -62,12 +63,14 @@ constexpr u8 WALLET_LEVEL_MAX = 2;
 ImVec4 colorTint;
 const char* songTooltip;
 const char* curForm;
-ImVec4 formColor;
+UIWidgets::Colors formColor;
 uint32_t formObject;
 static std::unordered_map<RandoItemId, const char*> randoItemIdComboboxMap;
 
 InventorySlot selectedInventorySlot = SLOT_NONE;
 std::vector<ItemId> safeItemsForInventorySlot[SLOT_MASK_FIERCE_DEITY + 1] = {};
+
+using namespace UIWidgets;
 
 void initSafeItemsForInventorySlot() {
     for (int i = 0; i < sizeof(gItemSlots); i++) {
@@ -259,7 +262,7 @@ void DrawTempleClears() {
     } else {
         open = CHECK_WEEKEVENTREG(WEEKEVENTREG_20_01);
     }
-    if (UIWidgets::Checkbox("Woodfall Open", &open, { .disabled = cleared })) {
+    if (UIWidgets::Checkbox("Woodfall Open", &open, { { .disabled = cleared } })) {
         if (open) {
             SET_WEEKEVENTREG(WEEKEVENTREG_20_01);
         } else {
@@ -285,7 +288,7 @@ void DrawTempleClears() {
     } else {
         open = CHECK_WEEKEVENTREG(WEEKEVENTREG_30_01);
     }
-    if (UIWidgets::Checkbox("Snowhead Open", &open, { .disabled = cleared })) {
+    if (UIWidgets::Checkbox("Snowhead Open", &open, { { .disabled = cleared } })) {
         if (open) {
             SET_WEEKEVENTREG(WEEKEVENTREG_30_01);
         } else {
@@ -314,7 +317,7 @@ void DrawTempleClears() {
     } else {
         open = CHECK_WEEKEVENTREG(WEEKEVENTREG_53_20);
     }
-    if (UIWidgets::Checkbox("Great Bay Open", &open, { .disabled = cleared })) {
+    if (UIWidgets::Checkbox("Great Bay Open", &open, { { .disabled = cleared } })) {
         if (open) {
             SET_WEEKEVENTREG(WEEKEVENTREG_53_20);
             SET_WEEKEVENTREG(WEEKEVENTREG_93_08);
@@ -341,8 +344,9 @@ void DrawTempleClears() {
 
     ImGui::SameLine();
 
-    if (UIWidgets::Checkbox("Stone Tower Inverted", &inverted,
-                            { .disabled = !inStoneTower, .disabledTooltip = "Can only invert while in Stone Tower" })) {
+    if (UIWidgets::Checkbox(
+            "Stone Tower Inverted", &inverted,
+            { { .disabled = !inStoneTower, .disabledTooltip = "Can only invert while in Stone Tower" } })) {
         if (inverted) {
             Flags_SetSwitch(gPlayState, 20);
         } else {
@@ -402,7 +406,7 @@ void DrawGeneralTab() {
     ImGui::EndGroup();
 
     ImGui::BeginGroup();
-    if (UIWidgets::Button("Max Health", { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Max Health", { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
         gSaveContext.save.saveInfo.playerData.doubleDefense = 1;
         gSaveContext.save.saveInfo.inventory.defenseHearts = 20;
         gSaveContext.save.saveInfo.playerData.healthCapacity = gSaveContext.save.saveInfo.playerData.health = 20 * 16;
@@ -410,7 +414,7 @@ void DrawGeneralTab() {
     }
     ImGui::SameLine();
     if (UIWidgets::Button("Reset##resetHealthButton",
-                          { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                          { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
         gSaveContext.save.saveInfo.playerData.doubleDefense = 0;
         gSaveContext.save.saveInfo.inventory.defenseHearts = 0;
         gSaveContext.save.saveInfo.playerData.healthCapacity = gSaveContext.save.saveInfo.playerData.health = 3 * 16;
@@ -446,7 +450,8 @@ void DrawGeneralTab() {
     };
     for (size_t i = 0; i < timeSkipAmounts.size(); i++) {
         const auto& skip = timeSkipAmounts.at(i);
-        if (UIWidgets::Button(skip.second, { .color = UIWidgets::Colors::Indigo, .size = UIWidgets::Sizes::Inline })) {
+        if (UIWidgets::Button(skip.second,
+                              { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::LightBlue })) {
             UpdateGameTime(gSaveContext.save.time + CLOCK_TIME(0, skip.first));
         }
         if (i < timeSkipAmounts.size() - 1) {
@@ -488,7 +493,7 @@ void DrawGeneralTab() {
     ImGui::EndGroup();
 
     ImGui::BeginGroup();
-    if (UIWidgets::Button("Max Magic", { .color = UIWidgets::Colors::DarkGreen, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Max Magic", { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::DarkGreen })) {
         gSaveContext.magicCapacity = gSaveContext.save.saveInfo.playerData.magic = MAGIC_DOUBLE_METER;
         gSaveContext.save.saveInfo.playerData.magicLevel = 2;
         gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
@@ -497,7 +502,7 @@ void DrawGeneralTab() {
     }
     ImGui::SameLine();
     if (UIWidgets::Button("Reset##resetMagicButton",
-                          { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                          { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
         gSaveContext.magicCapacity = gSaveContext.save.saveInfo.playerData.magic = 0;
         gSaveContext.save.saveInfo.playerData.magicLevel = 0;
         gSaveContext.save.saveInfo.playerData.isMagicAcquired = false;
@@ -544,13 +549,13 @@ void DrawGeneralTab() {
     ImGui::SameLine();
 
     ImGui::BeginGroup();
-    if (UIWidgets::Button("Max Rupees", { .color = UIWidgets::Colors::Green, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Max Rupees", { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Green })) {
         Inventory_ChangeUpgrade(UPG_WALLET, 2);
         gSaveContext.save.saveInfo.playerData.rupees = CUR_CAPACITY(UPG_WALLET);
     }
     ImGui::SameLine();
     if (UIWidgets::Button("Reset##resetRupeesButton",
-                          { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                          { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
         gSaveContext.save.saveInfo.playerData.rupees = 0;
         Inventory_ChangeUpgrade(UPG_WALLET, 0);
     }
@@ -892,7 +897,7 @@ void DrawItemsAndMasksTab() {
                         [](Actor* actor, PlayState* play) {
                             RandoItemId randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
                             std::string msg = "You received";
-                            if (Rando::StaticData::Items[randoItemId].article != "") {
+                            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
                                 msg += " ";
                                 msg += Rando::StaticData::Items[randoItemId].article;
                             }
@@ -1114,7 +1119,7 @@ void DrawQuestStatusTab() {
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
     ImGui::BeginChild("questTab", ImVec2(0, 0), true);
 
-    if (UIWidgets::Button("Give All##items", { .color = UIWidgets::Colors::Green, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Give All##items", { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Green })) {
         for (int32_t i = QUEST_REMAINS_ODOLWA; i <= QUEST_BOMBERS_NOTEBOOK; i++) {
             if (i != QUEST_SHIELD && i != QUEST_SWORD) {
                 SET_QUEST_ITEM(i);
@@ -1132,7 +1137,7 @@ void DrawQuestStatusTab() {
         }
     }
     ImGui::SameLine();
-    if (UIWidgets::Button("Reset##items", { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+    if (UIWidgets::Button("Reset##items", { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
         for (int32_t i = QUEST_REMAINS_ODOLWA; i <= QUEST_BOMBERS_NOTEBOOK; i++) {
             if (i != QUEST_SHIELD && i != QUEST_SWORD) {
                 REMOVE_QUEST_ITEM(i);
@@ -1354,12 +1359,12 @@ void GetPlayerForm(uint32_t form) {
             break;
         case PLAYER_FORM_GORON:
             curForm = "Goron";
-            formColor = UIWidgets::Colors::Yellow;
+            formColor = UIWidgets::Colors::Brown;
             formObject = OBJECT_LINK_GORON;
             break;
         case PLAYER_FORM_ZORA:
             curForm = "Zora";
-            formColor = UIWidgets::Colors::Indigo;
+            formColor = UIWidgets::Colors::LightBlue;
             formObject = OBJECT_LINK_ZORA;
             break;
         case PLAYER_FORM_DEKU:
@@ -1369,7 +1374,7 @@ void GetPlayerForm(uint32_t form) {
             break;
         case PLAYER_FORM_HUMAN:
             curForm = "Human";
-            formColor = UIWidgets::Colors::LightGreen;
+            formColor = UIWidgets::Colors::Green;
             formObject = OBJECT_LINK_CHILD;
             break;
         default:
@@ -1472,7 +1477,7 @@ void DrawPlayerTab() {
             static int currentWeapon = 0;
             static int currentShield = 0;
 
-            UIWidgets::PushStyleCombobox(UIWidgets::Colors::LightGreen);
+            UIWidgets::PushStyleCombobox(UIWidgets::Colors::Green);
             ImGui::PushItemWidth(ImGui::GetFontSize() * 15);
             if (ImGui::BeginCombo("Equipped Sword", weaponCombo[currentWeapon])) {
                 for (int i = EQUIP_VALUE_SWORD_KOKIRI; i <= EQUIP_VALUE_SWORD_GILDED; i++) {
@@ -1631,10 +1636,8 @@ void DrawFlagsTab() {
                             });
         if (gPlayState != NULL) {
             ImGui::SameLine();
-            if (UIWidgets::Button("Current", {
-                                                 .color = UIWidgets::Colors::Gray,
-                                                 .size = UIWidgets::Sizes::Inline,
-                                             })) {
+            if (UIWidgets::Button("Current", UIWidgets::ButtonOptions{ { .color = UIWidgets::Colors::Gray } }.Size(
+                                                 UIWidgets::Sizes::Inline))) {
                 selectedScene = gPlayState->sceneId;
             }
         }
@@ -1653,12 +1656,12 @@ void DrawFlagsTab() {
             ImGui::Text("switches[0]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switches0",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.switches[0] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switches0",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.switches[0] = 0;
             }
             UIWidgets::DrawFlagArray32("##switches0", gPlayState->actorCtx.sceneFlags.switches[0]);
@@ -1669,12 +1672,12 @@ void DrawFlagsTab() {
             ImGui::Text("switches[1]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switches1",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.switches[1] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switches1",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.switches[1] = 0;
             }
             UIWidgets::DrawFlagArray32("##switches1", gPlayState->actorCtx.sceneFlags.switches[1]);
@@ -1684,12 +1687,12 @@ void DrawFlagsTab() {
             ImGui::Text("switches[2]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switches2",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.switches[2] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switches2",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.switches[2] = 0;
             }
             UIWidgets::DrawFlagArray32("##switches2", gPlayState->actorCtx.sceneFlags.switches[2]);
@@ -1700,12 +1703,12 @@ void DrawFlagsTab() {
             ImGui::Text("switches[3]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switches3",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.switches[3] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switches3",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.switches[3] = 0;
             }
             UIWidgets::DrawFlagArray32("##switches3", gPlayState->actorCtx.sceneFlags.switches[3]);
@@ -1715,12 +1718,12 @@ void DrawFlagsTab() {
             ImGui::Text("chest");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##chest",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.chest = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##chest",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.chest = 0;
             }
             UIWidgets::DrawFlagArray32("##chest", gPlayState->actorCtx.sceneFlags.chest);
@@ -1731,12 +1734,12 @@ void DrawFlagsTab() {
             ImGui::Text("clearedRoom");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##clearedRoom",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.clearedRoom = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##clearedRoom",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.clearedRoom = 0;
             }
             UIWidgets::DrawFlagArray32("##clearedRoom", gPlayState->actorCtx.sceneFlags.clearedRoom);
@@ -1746,12 +1749,12 @@ void DrawFlagsTab() {
             ImGui::Text("clearedRoomTemp");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##clearedRoomTemp",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.clearedRoomTemp = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##clearedRoomTemp",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.clearedRoomTemp = 0;
             }
             UIWidgets::DrawFlagArray32("##clearedRoomTemp", gPlayState->actorCtx.sceneFlags.clearedRoomTemp);
@@ -1762,12 +1765,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible[0]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible0",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.collectible[0] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible0",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.collectible[0] = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible0", gPlayState->actorCtx.sceneFlags.collectible[0]);
@@ -1777,12 +1780,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible[1]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible1",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.collectible[1] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible1",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.collectible[1] = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible1", gPlayState->actorCtx.sceneFlags.collectible[1]);
@@ -1793,12 +1796,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible[2]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible2",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.collectible[2] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible2",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.collectible[2] = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible2", gPlayState->actorCtx.sceneFlags.collectible[2]);
@@ -1808,12 +1811,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible[3]");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible3",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gPlayState->actorCtx.sceneFlags.collectible[3] = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible3",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gPlayState->actorCtx.sceneFlags.collectible[3] = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible3", gPlayState->actorCtx.sceneFlags.collectible[3]);
@@ -1839,14 +1842,14 @@ void DrawFlagsTab() {
             break;
         case 3: // scenesVisible
             if (UIWidgets::Button("All##scenesVisible",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 for (int i = 0; i < 7; i++) {
                     gSaveContext.save.saveInfo.scenesVisible[i] = UINT32_MAX;
                 }
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##scenesVisible",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 for (int i = 0; i < 7; i++) {
                     gSaveContext.save.saveInfo.scenesVisible[i] = 0;
                 }
@@ -1859,12 +1862,12 @@ void DrawFlagsTab() {
             break;
         case 4: // owlActivation
             if (UIWidgets::Button("All##owlActivationFlags",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.playerData.owlActivationFlags = UINT16_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##owlActivationFlags",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.playerData.owlActivationFlags = 0;
             }
             UIWidgets::DrawFlagArray16("##owlActivationFlags",
@@ -1876,12 +1879,12 @@ void DrawFlagsTab() {
             ImGui::Text("chest");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##chest",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].chest = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##chest",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].chest = 0;
             }
             UIWidgets::DrawFlagArray32("##chest", gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].chest);
@@ -1892,12 +1895,12 @@ void DrawFlagsTab() {
             ImGui::Text("switch0");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switch0",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].switch0 = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switch0",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].switch0 = 0;
             }
             UIWidgets::DrawFlagArray32("##switch0",
@@ -1908,12 +1911,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].collectible = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].collectible = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible",
@@ -1925,12 +1928,12 @@ void DrawFlagsTab() {
             ImGui::Text("switch1");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switch1",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].switch1 = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switch1",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].switch1 = 0;
             }
             UIWidgets::DrawFlagArray32("##switch1",
@@ -1941,12 +1944,12 @@ void DrawFlagsTab() {
             ImGui::Text("clearedRoom");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##clearedRoom",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].clearedRoom = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##clearedRoom",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].clearedRoom = 0;
             }
             UIWidgets::DrawFlagArray32("##clearedRoom",
@@ -1958,12 +1961,12 @@ void DrawFlagsTab() {
             ImGui::Text("unk_14");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##unk_14",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].unk_14 = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##unk_14",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].unk_14 = 0;
             }
             UIWidgets::DrawFlagArray32("##unk_14",
@@ -1974,12 +1977,12 @@ void DrawFlagsTab() {
             ImGui::Text("rooms");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##rooms",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].rooms = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##rooms",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].rooms = 0;
             }
             UIWidgets::DrawFlagArray32("##rooms", gSaveContext.save.saveInfo.permanentSceneFlags[selectedScene].rooms);
@@ -1991,12 +1994,12 @@ void DrawFlagsTab() {
             ImGui::Text("chest");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##chest",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.cycleSceneFlags[selectedScene].chest = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##chest",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.cycleSceneFlags[selectedScene].chest = 0;
             }
             UIWidgets::DrawFlagArray32("##chest", gSaveContext.cycleSceneFlags[selectedScene].chest);
@@ -2007,12 +2010,12 @@ void DrawFlagsTab() {
             ImGui::Text("switch0");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switch0",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.cycleSceneFlags[selectedScene].switch0 = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switch0",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.cycleSceneFlags[selectedScene].switch0 = 0;
             }
             UIWidgets::DrawFlagArray32("##switch0", gSaveContext.cycleSceneFlags[selectedScene].switch0);
@@ -2022,12 +2025,12 @@ void DrawFlagsTab() {
             ImGui::Text("collectible");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##collectible",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.cycleSceneFlags[selectedScene].collectible = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##collectible",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.cycleSceneFlags[selectedScene].collectible = 0;
             }
             UIWidgets::DrawFlagArray32("##collectible", gSaveContext.cycleSceneFlags[selectedScene].collectible);
@@ -2038,12 +2041,12 @@ void DrawFlagsTab() {
             ImGui::Text("switch1");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##switch1",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.cycleSceneFlags[selectedScene].switch1 = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##switch1",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.cycleSceneFlags[selectedScene].switch1 = 0;
             }
             UIWidgets::DrawFlagArray32("##switch1", gSaveContext.cycleSceneFlags[selectedScene].switch1);
@@ -2053,12 +2056,12 @@ void DrawFlagsTab() {
             ImGui::Text("clearedRoom");
             ImGui::SameLine(110);
             if (UIWidgets::Button("All##clearedRoom",
-                                  { .color = UIWidgets::Colors::Gray, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Gray })) {
                 gSaveContext.cycleSceneFlags[selectedScene].clearedRoom = UINT32_MAX;
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Clear##clearedRoom",
-                                  { .color = UIWidgets::Colors::Red, .size = UIWidgets::Sizes::Inline })) {
+                                  { .size = UIWidgets::Sizes::Inline, .color = UIWidgets::Colors::Red })) {
                 gSaveContext.cycleSceneFlags[selectedScene].clearedRoom = 0;
             }
             UIWidgets::DrawFlagArray32("##clearedRoom", gSaveContext.cycleSceneFlags[selectedScene].clearedRoom);
@@ -2126,7 +2129,8 @@ void DrawRandoTab() {
         UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
         UIWidgets::Tooltip("Obtained");
         ImGui::TableNextColumn();
-        ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
+        ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::ColorValues.at(UIWidgets::Colors::Green)
+                                                   : UIWidgets::ColorValues.at(UIWidgets::Colors::White),
                            randoStaticCheck.name);
         ImGui::TableNextColumn();
         UIWidgets::Combobox((hiddenName + "reward").c_str(), &randoSaveCheck.randoItemId, randoItemIdComboboxMap,

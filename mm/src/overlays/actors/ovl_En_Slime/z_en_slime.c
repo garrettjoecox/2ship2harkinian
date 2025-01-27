@@ -7,6 +7,7 @@
 #include "z_en_slime.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_UNFRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_200)
@@ -1227,12 +1228,17 @@ void EnSlime_Draw(Actor* thisx, PlayState* play) {
     }
 
     if (this->actionFunc == EnSlime_Revive) {
+        FrameInterpolation_RecordOpenChild(this, (uintptr_t)EnSlime_Revive);
+        FrameInterpolation_IgnoreActorMtx();
+
         Matrix_Translate(this->actor.world.pos.x, this->actor.world.pos.y, this->actor.world.pos.z, MTXMODE_NEW);
         Matrix_RotateYS(this->reviveRotY, MTXMODE_APPLY);
         Matrix_Scale(this->reviveScale.x, this->reviveScale.y, this->reviveScale.z, MTXMODE_APPLY);
 
         gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(POLY_XLU_DISP++, gChuchuPuddleDL);
+
+        FrameInterpolation_RecordCloseChild();
     }
 
     if ((this->actor.params != EN_SLIME_TYPE_BLUE) && (this->actor.scale.x > 0.0f)) {
