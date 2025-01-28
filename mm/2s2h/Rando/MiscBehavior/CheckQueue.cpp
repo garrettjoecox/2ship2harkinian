@@ -75,6 +75,7 @@ void Rando::MiscBehavior::CheckQueue() {
                             });
                         }
                         Rando::GiveItem(randoItemId);
+                        randoSaveCheck.cycleObtained = true;
                         randoSaveCheck.obtained = true;
                         randoSaveCheck.eligible = false;
                         queued = false;

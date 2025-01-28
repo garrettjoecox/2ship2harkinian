@@ -46,20 +46,22 @@ void ApplyFrenchVanillaLogicToSaveContext() {
     std::vector<RandoEvent*> newlyTriggeredEvents;
     std::vector<int> amountOfNewlyTriggeredEvents;
 
-    SaveContext copiedSaveContext;
-    memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
-
-    // #region TODO: This just gives us a bunch of stuff that isn't technically in logic yet, so that generation can
-    // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
-    // section.
+    // TODO: This should be decided by the player from the UI
     std::vector<RandoItemId> startingItems = {
-        RI_PICTOGRAPH_BOX,
+        RI_OCARINA,
+        RI_SONG_TIME,
+        // French Vanilla not compatible with starting without these items
+        RI_SWORD_KOKIRI,
+        RI_SHIELD_HERO,
     };
 
-    for (RandoItemId randoItemId : startingItems) {
-        GiveItem(randoItemId);
+    // Grant the starting items
+    for (RandoItemId startingItem : startingItems) {
+        GiveItem(ConvertItem(startingItem));
     }
-    // #endregion
+
+    SaveContext copiedSaveContext;
+    memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {

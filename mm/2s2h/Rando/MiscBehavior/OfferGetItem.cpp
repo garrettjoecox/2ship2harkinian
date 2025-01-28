@@ -62,6 +62,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
             case ACTOR_EN_GURUGURU:
             case ACTOR_EN_HS:
             case ACTOR_EN_STH:
+            case ACTOR_EN_ZOS:
                 *should = false;
                 actor->parent = &player->actor;
                 player->talkActor = actor;

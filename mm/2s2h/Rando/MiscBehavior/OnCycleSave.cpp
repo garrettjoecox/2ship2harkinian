@@ -8,6 +8,25 @@ extern "C" {
 
 SaveContext saveContextCopy;
 
+// TODO: This should be moved somewhere else
+bool IsRenewable(RandoItemId randoItemId) {
+    switch (randoItemId) {
+        case RI_BOTTLE_MILK:
+        case RI_MILK_REFILL:
+        case RI_BOTTLE_GOLD_DUST:
+        case RI_GOLD_DUST_REFILL:
+        case RI_BOTTLE_CHATEAU_ROMANI:
+        case RI_CHATEAU_ROMANI_REFILL:
+        case RI_RED_POTION_REFILL:
+        case RI_BLUE_POTION_REFILL:
+        case RI_GREEN_POTION_REFILL:
+        case RI_MAGIC_BEAN:
+            return true;
+        default:
+            return false;
+    }
+}
+
 void Rando::MiscBehavior::BeforeEndOfCycleSave() {
     memcpy(&saveContextCopy, &gSaveContext, sizeof(SaveContext));
 }
@@ -39,6 +58,12 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
 
     // Unset any flags used for checks, whether or not they get the item or junk is determined on our end instead.
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        RANDO_SAVE_CHECKS[randoCheckId].cycleObtained = false;
+
+        if (randoCheckId == RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET || randoCheckId == RC_CLOCK_TOWN_WEST_BANK_INTEREST ||
+            randoCheckId == RC_CLOCK_TOWN_WEST_BANK_PIECE_OF_HEART) {
+            continue;
+        }
         switch (randoStaticCheck.flagType) {
             case FLAG_WEEK_EVENT_REG:
                 // Clear the flag without triggering hook
@@ -48,5 +73,13 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
                 // most of the others are handled by the game, with the exception of PERSISTENT_CYCLE_FLAGS_SET, not
                 // sure if any of these cases affect us yet so ignoring for now
         }
+    }
+
+    // Re-grant initial items, in the future we may only do this if it's a refill
+    if (IsRenewable(RANDO_SAVE_CHECKS[RC_STARTING_ITEM_DEKU_MASK].randoItemId)) {
+        RANDO_SAVE_CHECKS[RC_STARTING_ITEM_DEKU_MASK].eligible = true;
+    }
+    if (IsRenewable(RANDO_SAVE_CHECKS[RC_STARTING_ITEM_SONG_OF_HEALING].randoItemId)) {
+        RANDO_SAVE_CHECKS[RC_STARTING_ITEM_SONG_OF_HEALING].eligible = true;
     }
 }

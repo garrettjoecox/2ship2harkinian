@@ -65,6 +65,7 @@ static std::vector<RandoItemId> junkItems = {
     RI_BOMBS_5,
     RI_DEKU_NUTS_5,
     RI_DEKU_STICKS_5,
+    RI_MAGIC_JAR_SMALL,
     // Refill
     RI_RED_POTION_REFILL,
     RI_GREEN_POTION_REFILL,
@@ -284,6 +285,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         case RI_BOTTLE_CHATEAU_ROMANI:
         case RI_BOTTLE_MILK:
         case RI_BOTTLE_GOLD_DUST:
+        case RI_BOTTLE_RED_POTION:
             if (hasObtainedCheck) {
                 return false;
             }
@@ -540,6 +542,10 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                     return RI_MILK_REFILL;
                 }
                 break;
+            case RI_BOTTLE_RED_POTION:
+                if (Inventory_HasEmptyBottle()) {
+                    return RI_RED_POTION_REFILL;
+                }
             default:
                 break;
         }

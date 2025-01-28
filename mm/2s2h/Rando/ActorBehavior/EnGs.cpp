@@ -101,7 +101,7 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         CustomMessage::AddLineBreaks(&entry.msg);
 
         // Eventually this part should be opt-in, but for now it's always on
-        entry.msg += "\x10...\x13\x12Trade %r{{rupees}} Rupees%w for another hint?\x11\xC2No\x11Yes";
+        entry.msg += "\x10...\x13\x12Trade %r{{rupees}} Rupees%w for another hint?\x02\x11\xC2No\x11Yes";
         s32 cost = GetNormalizedCost();
         CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(cost));
 

@@ -111,7 +111,7 @@ void Rando::ActorBehavior::InitObjTaruBehavior() {
 
         randoCheckId = it->second;
 
-        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].cycleObtained) {
             return;
         }
 

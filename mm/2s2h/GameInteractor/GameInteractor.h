@@ -65,7 +65,7 @@ typedef enum {
     VB_TATL_INTERUPT_MSG4,
     VB_TATL_INTERUPT_MSG6,
     VB_ITEM_BE_RESTRICTED,
-    VB_FLIP_HOP_VARIABLE,
+    VB_APPLY_AIR_CONTROL,
     VB_DISABLE_LETTERBOX,
     VB_START_GREAT_FAIRY_CUTSCENE,
     VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
@@ -204,6 +204,10 @@ typedef enum {
     VB_GORON_ROLL_DISABLE_SPIKE_MODE,
     VB_DEKU_LINK_SPIN_ON_LAST_HOP,
     VB_BALLAD_PLAYED_FORM,
+    VB_CONTINUE_BANKER_DIALOGUE,
+    VB_FISH2_SPAWN_HEART_PIECE,
+    VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE,
+    VB_CLAMP_ANIMATION_SPEED,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -478,6 +482,8 @@ class GameInteractor {
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
+    DEFINE_HOOK(AfterInterfaceClockDraw, ());
+    DEFINE_HOOK(BeforeInterfaceClockDraw, ());
 
     DEFINE_HOOK(OnSceneInit, (s8 sceneId, s8 spawnNum));
     DEFINE_HOOK(OnRoomInit, (s8 sceneId, s8 roomNum));
@@ -531,6 +537,8 @@ void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, Sav
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
+void GameInteractor_ExecuteAfterInterfaceClockDraw();
+void GameInteractor_ExecuteBeforeInterfaceClockDraw();
 
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum);
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum);

@@ -101,7 +101,7 @@ void Rando::ActorBehavior::InitEnElforgBehavior() {
 
     COND_VB_SHOULD(VB_KILL_CLOCK_TOWN_STRAY_FAIRY, IS_RANDO, {
         auto& randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_STRAY_FAIRY];
-        *should = randoSaveCheck.obtained;
+        *should = randoSaveCheck.cycleObtained;
     });
 
     // Stray fairies that are trapped by enemies have their draw func set later on, so we need to override that as well

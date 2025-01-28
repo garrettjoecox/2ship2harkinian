@@ -38,6 +38,7 @@ void CustomMessage::ReplaceColorChars(std::string* msg) {
     CustomMessage::Replace(msg, "%w", white);
     CustomMessage::Replace(msg, "%y", "\x04");
     CustomMessage::Replace(msg, "%g", "\x02");
+    CustomMessage::Replace(msg, "%b", "\x03");
 }
 
 void CustomMessage::AddLineBreaks(std::string* msg) {
@@ -52,7 +53,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
         char currentChar = (*msg)[i];
 
         if ((uint8_t)currentChar >= 0x20 && (uint8_t)currentChar < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
-            currentLineWidth += sNESFontWidths[currentChar - 0x20];
+            currentLineWidth += sNESFontWidths[(uint8_t)currentChar - 0x20];
         }
 
         // Increment for existing new liens

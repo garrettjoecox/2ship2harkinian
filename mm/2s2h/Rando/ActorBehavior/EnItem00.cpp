@@ -54,7 +54,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-        if (!randoSaveCheck.shuffled || Flags_GetCollectible(gPlayState, randoStaticCheck.flag)) {
+        if (!randoSaveCheck.shuffled || randoSaveCheck.cycleObtained) {
             return;
         }
 

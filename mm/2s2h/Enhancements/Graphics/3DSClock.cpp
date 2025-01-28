@@ -73,9 +73,15 @@ void Draw3DSClock() {
 
             sThreeDayClockAlpha = gPlayState->interfaceCtx.bAlpha;
 
-            OPEN_DISPS(gPlayState->state.gfxCtx);
             s16 posX = 160;
             s16 posY = 210;
+
+            OPEN_DISPS(gPlayState->state.gfxCtx);
+
+            Gfx_SetupDL42_Overlay(gPlayState->state.gfxCtx);
+            gDPSetRenderMode(OVERLAY_DISP++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+            gDPSetAlphaCompare(OVERLAY_DISP++, G_AC_THRESHOLD);
 
             // Draw background of 3DS clock
             // TODO: Replace this with matrix/vertex handling to avoid gaps when scaled

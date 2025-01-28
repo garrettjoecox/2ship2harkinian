@@ -1,6 +1,7 @@
 #include "Rando/Rando.h"
 #include <libultraship/libultraship.h>
-#include "Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "variables.h"
@@ -12,6 +13,7 @@ extern "C" {
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 #include "objects/object_gi_liquid/object_gi_liquid.h"
 #include "objects/object_sek/object_sek.h"
+#include "objects/object_st/object_st.h"
 
 Gfx* ResourceMgr_LoadGfxByName(const char* path);
 }
@@ -190,15 +192,6 @@ void DrawOwlStatue() {
 static Gfx gGiSmallKeyCopyDL[75];
 
 void DrawSmallKey(RandoItemId randoItemId) {
-    static bool initialized = false;
-    if (!initialized) {
-        initialized = true;
-        Gfx* baseDL = ResourceMgr_LoadGfxByName(gGiSmallKeyDL);
-        memcpy(gGiSmallKeyCopyDL, baseDL, sizeof(gGiSmallKeyCopyDL));
-        gGiSmallKeyCopyDL[5] = gsDPNoOp();
-        gGiSmallKeyCopyDL[6] = gsDPNoOp();
-    }
-
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
@@ -232,15 +225,6 @@ void DrawSmallKey(RandoItemId randoItemId) {
 static Gfx gGiBossKeyCopyDL[87];
 
 void DrawBossKey(RandoItemId randoItemId) {
-    static bool initialized = false;
-    if (!initialized) {
-        initialized = true;
-        Gfx* baseDL = ResourceMgr_LoadGfxByName(gGiBossKeyDL);
-        memcpy(gGiBossKeyCopyDL, baseDL, sizeof(gGiBossKeyCopyDL));
-        gGiBossKeyCopyDL[5] = gsDPNoOp();
-        gGiBossKeyCopyDL[6] = gsDPNoOp();
-    }
-
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
@@ -275,6 +259,43 @@ void DrawBossKey(RandoItemId randoItemId) {
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
+
+static Gfx gSkulltulaTokenFlameCopyDL[76];
+
+void DrawSkulltulaToken(RandoItemId randoItemId, Actor* actor) {
+    // It is not known why this happens, but the eyes on the skulltula tokens disappear if they are are perfectly
+    // parallel with the camera. This most likely a problem in our Fast3D (maybe z-index stuff?).
+    // Tilting the token down by 16 units seems to be enough to get it to always render the eyes without being
+    // noticeable that it is tilted. This issue was most prevalent for tokens in shops.
+    Matrix_RotateXS(16, MTXMODE_APPLY);
+
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gSkulltulaTokenDL);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+
+    if (randoItemId == RI_GS_TOKEN_OCEAN) {
+        gDPSetPrimColor(POLY_XLU_DISP++, 0, 0x80, 0, 255, 255, 255);
+        gDPSetEnvColor(POLY_XLU_DISP++, 0, 0, 255, 255);
+    } else {
+        gDPSetPrimColor(POLY_XLU_DISP++, 0, 0x80, 0, 255, 170, 255);
+        gDPSetEnvColor(POLY_XLU_DISP++, 0, 255, 0, 255);
+    }
+
+    gSPSegment(POLY_XLU_DISP++, 0x08,
+               (uintptr_t)Gfx_TwoTexScroll(gPlayState->state.gfxCtx, G_TX_RENDERTILE, gPlayState->state.frames * 0,
+                                           -(gPlayState->state.frames * 5), 32, 32, 1, gPlayState->state.frames * 0,
+                                           gPlayState->state.frames * 0, 32, 64));
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gSkulltulaTokenFlameCopyDL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
 void DrawSparkles(RandoItemId randoItemId, Actor* actor) {
     if (actor == NULL) {
         return;
@@ -306,6 +327,12 @@ void DrawSparkles(RandoItemId randoItemId, Actor* actor) {
 }
 
 void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
+    // Apply hilites with actor world pos before drawing
+    if (actor != NULL) {
+        func_800B8118(actor, gPlayState, 0);
+        func_800B8050(actor, gPlayState, 0);
+    }
+
     switch (randoItemId) {
         case RI_JUNK:
             Rando::DrawItem(Rando::CurrentJunkItem(), actor);
@@ -349,6 +376,10 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_MILK_REFILL:
             DrawMilkRefill();
             break;
+        case RI_GS_TOKEN_SWAMP:
+        case RI_GS_TOKEN_OCEAN:
+            DrawSkulltulaToken(randoItemId, actor);
+            break;
         case RI_OWL_CLOCK_TOWN_SOUTH:
         case RI_OWL_GREAT_BAY_COAST:
         case RI_OWL_IKANA_CANYON:
@@ -388,3 +419,25 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
             break;
     }
 }
+
+static RegisterShipInitFunc initializeGICopyDLs(
+    []() {
+        // Small keys
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gGiSmallKeyDL);
+        memcpy(gGiSmallKeyCopyDL, baseDL, sizeof(gGiSmallKeyCopyDL));
+        gGiSmallKeyCopyDL[5] = gsDPNoOp();
+        gGiSmallKeyCopyDL[6] = gsDPNoOp();
+
+        // Boss keys
+        baseDL = ResourceMgr_LoadGfxByName(gGiBossKeyDL);
+        memcpy(gGiBossKeyCopyDL, baseDL, sizeof(gGiBossKeyCopyDL));
+        gGiBossKeyCopyDL[5] = gsDPNoOp();
+        gGiBossKeyCopyDL[6] = gsDPNoOp();
+
+        // Token Flame
+        baseDL = ResourceMgr_LoadGfxByName(gSkulltulaTokenFlameDL);
+        memcpy(gSkulltulaTokenFlameCopyDL, baseDL, sizeof(gSkulltulaTokenFlameCopyDL));
+        gSkulltulaTokenFlameCopyDL[5] = gsDPNoOp();
+        gSkulltulaTokenFlameCopyDL[6] = gsDPNoOp();
+    },
+    {});

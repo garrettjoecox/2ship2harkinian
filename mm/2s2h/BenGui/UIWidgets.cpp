@@ -10,6 +10,7 @@
 #include <spdlog/fmt/fmt.h>
 
 namespace UIWidgets {
+
 // Automatically adds newlines to break up text longer than a specified number of characters
 // Manually included newlines will still be respected and reset the line length
 // If line is midword when it hits the limit, text should break at the last encountered space
@@ -51,10 +52,14 @@ void Tooltip(const char* text) {
 void PushStyleMenu(const ImVec4& color) {
     ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(color.x, color.y, color.z, 0.5f));
     ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(color.x, color.y, color.z, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, UIWidgets::Colors::DarkGray);
-    ImGui::PushStyleColor(ImGuiCol_Border, UIWidgets::Colors::DarkGray);
+    ImGui::PushStyleColor(ImGuiCol_PopupBg, UIWidgets::ColorValues.at(Colors::DarkGray));
+    ImGui::PushStyleColor(ImGuiCol_Border, UIWidgets::ColorValues.at(Colors::DarkGray));
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 15.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_PopupBorderSize, 3.0f);
+}
+
+void PushStyleMenu(Colors color) {
+    PushStyleMenu(UIWidgets::ColorValues.at(color));
 }
 
 void PopStyleMenu() {
@@ -62,7 +67,7 @@ void PopStyleMenu() {
     ImGui::PopStyleColor(4);
 }
 
-bool BeginMenu(const char* label, const ImVec4& color) {
+bool BeginMenu(const char* label, Colors color) {
     bool dirty = false;
     PushStyleMenu(color);
     ImGui::SetNextWindowSizeConstraints(ImVec2(200.0f, 0.0f), ImVec2(FLT_MAX, FLT_MAX));
@@ -74,8 +79,12 @@ bool BeginMenu(const char* label, const ImVec4& color) {
 }
 
 void PushStyleMenuItem(const ImVec4& color) {
-    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(color.x, color.y, color.z, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, color);
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20.0f, 15.0f));
+}
+
+void PushStyleMenuItem(Colors color) {
+    PushStyleMenuItem(ColorValues.at(color));
 }
 
 void PopStyleMenuItem() {
@@ -83,7 +92,7 @@ void PopStyleMenuItem() {
     ImGui::PopStyleColor(1);
 }
 
-bool MenuItem(const char* label, const char* shortcut, const ImVec4& color) {
+bool MenuItem(const char* label, const char* shortcut, Colors color) {
     bool dirty = false;
     PushStyleMenuItem(color);
     if (ImGui::MenuItem(label, shortcut)) {
@@ -101,6 +110,10 @@ void PushStyleButton(const ImVec4& color) {
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 5.0f);
+}
+
+void PushStyleButton(Colors color) {
+    PushStyleButton(UIWidgets::ColorValues.at(color));
 }
 
 void PopStyleButton() {
@@ -150,6 +163,10 @@ void PushStyleCheckbox(const ImVec4& color) {
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 6.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 5.0f);
+}
+
+void PushStyleCheckbox(Colors color) {
+    PushStyleCheckbox(UIWidgets::ColorValues.at(color));
 }
 
 void PopStyleCheckbox() {
@@ -298,12 +315,17 @@ void PushStyleCombobox(const ImVec4& color) {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 6.0f));
 }
 
+void PushStyleCombobox(Colors color) {
+    PushStyleCombobox(UIWidgets::ColorValues.at(color));
+}
+
 void PopStyleCombobox() {
     ImGui::PopStyleVar(4);
     ImGui::PopStyleColor(9);
 }
 
-void PushStyleSlider(const ImVec4& color) {
+void PushStyleSlider(Colors color_) {
+    const ImVec4& color = UIWidgets::ColorValues.at(color_);
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(color.x, color.y, color.z, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(color.x, color.y, color.z, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(color.x, color.y, color.z, 1.0f));
@@ -321,7 +343,7 @@ void PopStyleSlider() {
     ImGui::PopStyleColor(6);
 }
 
-bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, const IntSliderOptions& options) {
+bool SliderInt(const char* label, int32_t* value, const IntSliderOptions& options) {
     bool dirty = false;
     std::string invisibleLabelStr = "##" + std::string(label);
     const char* invisibleLabel = invisibleLabelStr.c_str();
@@ -341,10 +363,10 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
         }
     }
     if (options.showButtons) {
-        if (Button("-", { .color = options.color, .size = Sizes::Inline }) && *value > min) {
+        if (Button("-", ButtonOptions{ .color = options.color }.Size(Sizes::Inline)) && *value > options.min) {
             *value -= options.step;
-            if (*value < min)
-                *value = min;
+            if (*value < options.min)
+                *value = options.min;
             dirty = true;
         }
         ImGui::SameLine(0, 3.0f);
@@ -352,16 +374,17 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
     } else {
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
     }
-    if (ImGui::SliderScalar(invisibleLabel, ImGuiDataType_S32, value, &min, &max, options.format, options.flags)) {
+    if (ImGui::SliderScalar(invisibleLabel, ImGuiDataType_S32, value, &options.min, &options.max, options.format,
+                            options.flags)) {
         dirty = true;
     }
     if (options.showButtons) {
         ImGui::SameLine(0, 3.0f);
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-        if (Button("+", { .color = options.color, .size = Sizes::Inline }) && *value < max) {
+        if (Button("+", ButtonOptions{ .color = options.color }.Size(Sizes::Inline)) && *value < options.max) {
             *value += options.step;
-            if (*value > max)
-                *value = max;
+            if (*value > options.max)
+                *value = options.max;
             dirty = true;
         }
     }
@@ -378,11 +401,10 @@ bool SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, cons
     return dirty;
 }
 
-bool CVarSliderInt(const char* label, const char* cvarName, int32_t min, int32_t max, const int32_t defaultValue,
-                   const IntSliderOptions& options) {
+bool CVarSliderInt(const char* label, const char* cvarName, const IntSliderOptions& options) {
     bool dirty = false;
-    int32_t value = CVarGetInteger(cvarName, defaultValue);
-    if (SliderInt(label, &value, min, max, options)) {
+    int32_t value = CVarGetInteger(cvarName, options.defaultValue);
+    if (SliderInt(label, &value, options)) {
         CVarSetInteger(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
         ShipInit::Init(cvarName);
@@ -429,13 +451,13 @@ void ClampFloat(float* value, float min, float max, float step) {
     }
 }
 
-bool SliderFloat(const char* label, float* value, float min, float max, const FloatSliderOptions& options) {
+bool SliderFloat(const char* label, float* value, const FloatSliderOptions& options) {
     bool dirty = false;
     std::string invisibleLabelStr = "##" + std::string(label);
     const char* invisibleLabel = invisibleLabelStr.c_str();
     float valueToDisplay = options.isPercentage ? *value * 100.0f : *value;
-    float maxToDisplay = options.isPercentage ? max * 100.0f : max;
-    float minToDisplay = options.isPercentage ? min * 100.0f : min;
+    float maxToDisplay = options.isPercentage ? options.max * 100.0f : options.max;
+    float minToDisplay = options.isPercentage ? options.min * 100.0f : options.min;
     ImGui::PushID(label);
     ImGui::BeginGroup();
     ImGui::BeginDisabled(options.disabled);
@@ -452,9 +474,9 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
         }
     }
     if (options.showButtons) {
-        if (Button("-", { .color = options.color, .size = Sizes::Inline }) && *value > min) {
+        if (Button("-", ButtonOptions{ .color = options.color }.Size(Sizes::Inline)) && *value > options.min) {
             *value -= options.step;
-            ClampFloat(value, min, max, options.step);
+            ClampFloat(value, options.min, options.max, options.step);
             dirty = true;
         }
         ImGui::SameLine(0, 3.0f);
@@ -465,15 +487,15 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
     if (ImGui::SliderScalar(invisibleLabel, ImGuiDataType_Float, &valueToDisplay, &minToDisplay, &maxToDisplay,
                             options.format, options.flags)) {
         *value = options.isPercentage ? valueToDisplay / 100.0f : valueToDisplay;
-        ClampFloat(value, min, max, options.step);
+        ClampFloat(value, options.min, options.max, options.step);
         dirty = true;
     }
     if (options.showButtons) {
         ImGui::SameLine(0, 3.0f);
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-        if (Button("+", { .color = options.color, .size = Sizes::Inline }) && *value < max) {
+        if (Button("+", ButtonOptions{ .color = options.color }.Size(Sizes::Inline)) && *value < options.max) {
             *value += options.step;
-            ClampFloat(value, min, max, options.step);
+            ClampFloat(value, options.min, options.max, options.step);
             dirty = true;
         }
     }
@@ -490,11 +512,10 @@ bool SliderFloat(const char* label, float* value, float min, float max, const Fl
     return dirty;
 }
 
-bool CVarSliderFloat(const char* label, const char* cvarName, float min, float max, const float defaultValue,
-                     const FloatSliderOptions& options) {
+bool CVarSliderFloat(const char* label, const char* cvarName, const FloatSliderOptions& options) {
     bool dirty = false;
-    float value = CVarGetFloat(cvarName, defaultValue);
-    if (SliderFloat(label, &value, min, max, options)) {
+    float value = CVarGetFloat(cvarName, options.defaultValue);
+    if (SliderFloat(label, &value, options)) {
         CVarSetFloat(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
         ShipInit::Init(cvarName);
@@ -533,7 +554,7 @@ void DrawFlagArray32(const std::string& name, uint32_t& flags) {
         bool flag = (flags & bitMask) != 0;
         std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
-                                { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
+                                CheckboxOptions{ { .tooltip = label.c_str() } }.LabelPosition(LabelPosition::None))) {
             if (flag) {
                 flags |= bitMask;
             } else {
@@ -556,7 +577,7 @@ void DrawFlagArray16(const std::string& name, uint16_t& flags) {
         bool flag = (flags & bitMask) != 0;
         std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
-                                { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
+                                CheckboxOptions{ { .tooltip = label.c_str() } }.LabelPosition(LabelPosition::None))) {
             if (flag) {
                 flags |= bitMask;
             } else {
@@ -579,7 +600,7 @@ void DrawFlagArray8(const std::string& name, uint8_t& flags) {
         bool flag = (flags & bitMask) != 0;
         std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
-                                { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
+                                CheckboxOptions{ { .tooltip = label.c_str() } }.LabelPosition(LabelPosition::None))) {
             if (flag) {
                 flags |= bitMask;
             } else {
@@ -602,7 +623,7 @@ void DrawFlagArray8Mask(const std::string& name, uint8_t& flags) {
         bool flag = (flags & bitMask) != 0;
         std::string label = fmt::format("0x{:02X} ({})", bitMask, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
-                                { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
+                                CheckboxOptions{ { .tooltip = label.c_str() } }.LabelPosition(LabelPosition::None))) {
             if (flag) {
                 flags |= bitMask;
             } else {
