@@ -863,6 +863,10 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Skip Gorman Horse Race", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Minigames.SkipHorseRace")
         .Options(CheckboxOptions().Tooltip("Instantly win the Gorman Horse Race"));
+    AddWidget(path, "Skip Ballad of Windfish", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Minigames.SkipBalladOfWindfish")
+        .Options(CheckboxOptions().Tooltip(
+            "Play the complete Ballad after playing in one form if you have all three transformation masks."));
 
     path.column = 3;
     AddWidget(path, "Saving", WIDGET_SEPARATOR_TEXT);
