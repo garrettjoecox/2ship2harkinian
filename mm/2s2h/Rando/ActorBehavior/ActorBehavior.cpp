@@ -82,6 +82,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSshBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
+    Rando::ActorBehavior::InitEnTabBehavior();
     Rando::ActorBehavior::InitEnTalkBehavior();
     Rando::ActorBehavior::InitEnTotoBehavior();
     Rando::ActorBehavior::InitEnTrtBehavior();
