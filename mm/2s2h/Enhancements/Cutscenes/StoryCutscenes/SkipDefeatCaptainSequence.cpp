@@ -4,7 +4,7 @@
 
 extern "C" {
 #include "variables.h"
-#include "overlays/actors/ovl_En_Bsb/z_en_bsb.h"
+#include "functions.h"
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
