@@ -10,14 +10,13 @@ extern "C" {
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
-void SkipDefeatCaptainTextbox(EnBsb* captain) {
+void SkipDefeatCaptainTextbox() {
     // from func_80C0D9B4
     gPlayState->nextEntrance = Entrance_CreateFromSpawn(5);
     gSaveContext.nextCutsceneIndex = 0;
     gPlayState->transitionTrigger = 0x14;
     gPlayState->transitionType = 2;
     gSaveContext.nextTransitionType = 3;
-    captain->unk_111A = 0;
 }
 
 void SkipDefeatCaptainCutscene() {
@@ -41,8 +40,7 @@ void SkipDefeatCaptainCutscene() {
 void RegisterSkipDefeatCaptainSequence() {
     COND_VB_SHOULD(VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE, CVAR, {
         *should = false;
-        EnBsb* captain = (EnBsb*)va_arg(args, EnBsb*);
-        SkipDefeatCaptainTextbox(captain);
+        SkipDefeatCaptainTextbox();
     });
 
     COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
