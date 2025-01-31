@@ -230,8 +230,9 @@ void CosmeticEditorDrawColorTab() {
                 CosmeticEditorRandomizeElement(entry);
             }
             ImGui::SameLine();
-            ImGui::TextColored(CVarGetInteger(entry.colorChangedCvar, 0) ? UIWidgets::Colors::LightGreen
-                                                                         : UIWidgets::Colors::Gray,
+            ImGui::TextColored(CVarGetInteger(entry.colorChangedCvar, 0)
+                                   ? UIWidgets::ColorValues.at(UIWidgets::Colors::Green)
+                                   : UIWidgets::ColorValues.at(UIWidgets::Colors::Gray),
                                CVarGetInteger(entry.colorChangedCvar, 0) ? "Modified" : "Default");
             ImGui::PopID();
         }

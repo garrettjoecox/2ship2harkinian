@@ -10,10 +10,12 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterVariableFlipHop() {
-    COND_VB_SHOULD(VB_FLIP_HOP_VARIABLE, CVAR, {
+    COND_VB_SHOULD(VB_APPLY_AIR_CONTROL, CVAR, {
         Player* player = GET_PLAYER(gPlayState);
 
-        if (player->stateFlags2 & PLAYER_STATE2_80000) {
+        if (player->stateFlags2 & PLAYER_STATE2_80000 &&
+            // Deku Hopping last hop is considered a backflip/sidehop so we make sure they aren't deku hopping
+            !(player->transformation == PLAYER_FORM_DEKU && player->stateFlags3 & PLAYER_STATE3_200000)) {
             *should = false;
         }
     });

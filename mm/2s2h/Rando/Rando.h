@@ -20,7 +20,7 @@ bool IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UN
 RandoItemId ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
 RandoCheckId FindItemPlacement(RandoItemId randoItemId);
 std::string GetItemName(RandoItemId randoItemId);
-void DrawMenu();
+void RegisterMenu();
 
 } // namespace Rando
 

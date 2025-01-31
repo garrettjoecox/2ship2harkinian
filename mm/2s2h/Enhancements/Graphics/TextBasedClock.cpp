@@ -55,7 +55,9 @@ void DrawTextBasedClock() {
             s16 posX = 13 * 8;
             s16 posY = 26 * 8;
 
-            HudEditor_ModifyRectPosValues(&posX, &posY);
+            if (HudEditor_ShouldOverrideDraw()) {
+                HudEditor_ModifyRectPosValues(&posX, &posY);
+            }
 
             // scale back down and clamp to avoid negative values
             posX = std::max(posX / 8, 0);

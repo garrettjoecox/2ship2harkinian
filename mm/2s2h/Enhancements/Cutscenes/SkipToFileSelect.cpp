@@ -29,6 +29,17 @@ void RegisterSkipToFileSelect() {
             SET_NEXT_GAMESTATE(gGameState, FileSelect_Init, sizeof(FileSelectState));
         }
     });
+
+    // Allows pressing A to skip the boot logo and go to the next state (opening or file select)
+    COND_HOOK(OnConsoleLogoUpdate, true, []() {
+        ConsoleLogoState* consoleLogoState = (ConsoleLogoState*)gGameState;
+
+        if (CHECK_BTN_ANY(consoleLogoState->state.input->press.button, BTN_A | BTN_B | BTN_START)) {
+            // Force the title state to start fading to black and to last roughly 5 frames based on current fade in/out
+            consoleLogoState->visibleDuration = 0;
+            consoleLogoState->addAlpha = (255 - consoleLogoState->coverAlpha) / 5;
+        }
+    });
 }
 
 static RegisterShipInitFunc initFunc(RegisterSkipToFileSelect, { CVAR_NAME });

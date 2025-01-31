@@ -46,6 +46,7 @@ typedef enum {
 } HudEditorElementID;
 
 typedef enum {
+    HUD_EDITOR_ELEMENT_MODE_NONE = -1,
     HUD_EDITOR_ELEMENT_MODE_VANILLA,
     HUD_EDITOR_ELEMENT_MODE_HIDDEN,
     HUD_EDITOR_ELEMENT_MODE_MOVABLE_43,
@@ -53,6 +54,7 @@ typedef enum {
     HUD_EDITOR_ELEMENT_MODE_MOVABLE_RIGHT,
 } HudEditorElementMode;
 
+void HudEditor_OverrideNextElementMode(HudEditorElementMode mode);
 void HudEditor_SetActiveElement(HudEditorElementID id);
 bool HudEditor_ShouldOverrideDraw();
 bool HudEditor_IsActiveElementHidden();

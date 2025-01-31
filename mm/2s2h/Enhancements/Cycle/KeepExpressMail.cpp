@@ -1,5 +1,6 @@
 #include "libultraship/bridge.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/ShipInit.hpp"
 
 extern "C" {
 #include "z64save.h"
@@ -7,16 +8,18 @@ extern "C" {
 #include "variables.h"
 }
 
-static HOOK_ID onItemDeleteID = 0;
+#define CVAR_NAME "gEnhancements.Cycle.KeepExpressMail"
+#define CVAR CVarGetInteger(CVAR_NAME, 0)
 
-void CheckScene(s16 sceneId) {
-    if (sceneId != SCENE_MILK_BAR && sceneId != SCENE_POSTHOUSE) {
-        return;
-    }
+void RegisterKeepExpressMail() {
 
-    onItemDeleteID = REGISTER_VB_SHOULD(VB_MSG_SCRIPT_DEL_ITEM, {
+    COND_VB_SHOULD(VB_MSG_SCRIPT_DEL_ITEM, CVAR, {
         Actor* actor = va_arg(args, Actor*);
         ItemId itemId = (ItemId)va_arg(args, int);
+
+        if (gPlayState->sceneId != SCENE_MILK_BAR && gPlayState->sceneId != SCENE_POSTHOUSE) {
+            return;
+        }
 
         // Keep the express mail only on the first trade for the cycle
         // Postman checking for Madame Aroma trade cycle flag
@@ -28,28 +31,4 @@ void CheckScene(s16 sceneId) {
     });
 }
 
-void RegisterKeepExpressMail() {
-    static HOOK_ID onSceneInitID = 0;
-
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(onItemDeleteID);
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneInit>(onSceneInitID);
-    onSceneInitID = 0;
-    onItemDeleteID = 0;
-
-    if (!CVarGetInteger("gEnhancements.Cycle.KeepExpressMail", 0)) {
-        return;
-    }
-
-    // Register item hook right away after toggle
-    if (gPlayState != nullptr) {
-        CheckScene(gPlayState->sceneId);
-    }
-
-    onSceneInitID =
-        GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s16 sceneId, s8 spawnNum) {
-            GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(onItemDeleteID);
-            onItemDeleteID = 0;
-
-            CheckScene(sceneId);
-        });
-}
+static RegisterShipInitFunc initFunc(RegisterKeepExpressMail, { CVAR_NAME });
