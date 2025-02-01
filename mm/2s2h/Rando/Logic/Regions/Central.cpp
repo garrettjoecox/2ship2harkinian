@@ -281,7 +281,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_POST_OFFICE] = RandoRegion{ .sceneId = SCENE_POSTHOUSE,
         .checks = {
-            // TODO : Add Heartpiece check
+            // TODO: Trick for doing without the Bunny Hood
+            CHECK(RC_CLOCK_TOWN_WEST_POSTMAN_MINIGAME, HAS_ITEM(ITEM_MASK_BUNNY)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 7),              ENTRANCE(POST_OFFICE, 0), true),
