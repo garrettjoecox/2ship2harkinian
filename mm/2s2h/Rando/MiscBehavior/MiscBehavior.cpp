@@ -42,10 +42,4 @@ void Rando::MiscBehavior::OnFileLoad() {
         *should = false;
         BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = *item;
     });
-
-    // In Sram_OpenSave (right before this code runs) for non-owl saves, it overwrites the entrance to
-    // ENTRANCE(CUTSCENE, 0), we need to override that with our starting location (Harcoded to South Clock Town)
-    if (!gSaveContext.save.isOwlSave && IS_RANDO) {
-        gSaveContext.save.entrance = ENTRANCE(SOUTH_CLOCK_TOWN, 0);
-    }
 }

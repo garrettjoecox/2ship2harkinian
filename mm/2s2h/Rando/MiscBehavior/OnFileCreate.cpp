@@ -28,7 +28,7 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         gSaveContext.save.hasTatl = true;
         gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
         gSaveContext.save.saveInfo.playerData.threeDayResetCount = 1;
-        gSaveContext.save.isFirstCycle = false;
+        gSaveContext.save.isFirstCycle = true;
         SET_WEEKEVENTREG(WEEKEVENTREG_59_04);                                                  // Tatl
         SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
         gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
