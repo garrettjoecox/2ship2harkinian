@@ -922,6 +922,11 @@ void BenMenu::AddEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Allows the player to keep the Express Mail in their inventory after delivering it "
             "the first time, so that both deliveries can be done within one cycle"));
+    AddWidget(path, "Stop Oceanside Spider House squatter", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Cycle.StopOceansideSpiderHouseSquatter")
+        .Options(
+            CheckboxOptions().Tooltip("The Oceanside Spider House squatter will not move in until the player interacts "
+                                      "with him. Forced on for randomizers."));
     AddWidget(path, "Unstable", WIDGET_SEPARATOR_TEXT).Options(WidgetOptions().Color(Colors::Orange));
     AddWidget(path, "Disable Save Delay", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.DisableSaveDelay")
