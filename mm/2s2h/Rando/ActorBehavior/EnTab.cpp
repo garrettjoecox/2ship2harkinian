@@ -7,11 +7,11 @@ extern "C" {
 }
 
 void EnTab_OnOpenText(u16* textId, bool* loadFromMessageTable) {
-    RandoItemId randoItemId1 = RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].randoItemId;
-    RandoItemId randoItemId2 = RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].randoItemId;
+    RandoSaveCheck milkPurchaseCheck = RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK];
+    RandoSaveCheck chateauPurchaseCheck = RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU];
 
-    randoItemId1 = Rando::ConvertItem(randoItemId1, RC_MILK_BAR_PURCHASE_MILK);
-    randoItemId2 = Rando::ConvertItem(randoItemId2, RC_MILK_BAR_PURCHASE_CHATEAU);
+    RandoItemId riMilkPurchase = Rando::ConvertItem(milkPurchaseCheck.randoItemId, RC_MILK_BAR_PURCHASE_MILK);
+    RandoItemId riChateauPurchase = Rando::ConvertItem(chateauPurchaseCheck.randoItemId, RC_MILK_BAR_PURCHASE_CHATEAU);
 
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.autoFormat = false;
@@ -22,16 +22,16 @@ void EnTab_OnOpenText(u16* textId, bool* loadFromMessageTable) {
 
     std::string itemName1 = "Milk";
     std::string itemPrice1 = "20";
-    if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].cycleObtained) {
-        itemName1 = Rando::StaticData::Items[randoItemId1].name;
-        itemPrice1 = std::to_string(RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].price);
+    if (!milkPurchaseCheck.cycleObtained) {
+        itemName1 = Rando::StaticData::Items[riMilkPurchase].name;
+        itemPrice1 = std::to_string(milkPurchaseCheck.price);
     }
 
     std::string itemName2 = "Chateau Romani";
     std::string itemPrice2 = "200";
-    if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].cycleObtained) {
-        itemName2 = Rando::StaticData::Items[randoItemId2].name;
-        itemPrice2 = std::to_string(RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].price);
+    if (!chateauPurchaseCheck.cycleObtained) {
+        itemName2 = Rando::StaticData::Items[riChateauPurchase].name;
+        itemPrice2 = std::to_string(chateauPurchaseCheck.price);
     }
 
     CustomMessage::Replace(&entry.msg, "{item1}", itemName1);
