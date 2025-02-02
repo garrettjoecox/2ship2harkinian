@@ -31,6 +31,7 @@ extern "C" {
 /* Peehat */        #include "assets/objects/object_ph/object_ph.h"
 /* Redead */        #include "assets/objects/object_rd/object_rd.h"
 /* Shellblade */    #include "assets/objects/object_sb/object_sb.h"
+/* Skullfish */     #include "assets/objects/object_pr/object_pr.h"
 /* Skulltula */     #include "assets/objects/object_st/object_st.h"
 /* Slimes */        #include "assets/objects/object_slime/object_slime.h"
 /* Snapper */       #include "assets/objects/object_tl/object_tl.h"
@@ -834,6 +835,35 @@ extern void DrawShellBlade() {
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
     DrawFireRing(7.0f, 1.0f, 7.0f, -200.0f);
+}
+
+extern void DrawSkullfish() {
+    static bool initialized = false;
+    static SkelAnime skelAnime;
+    static Vec3s jointTable[5];
+    static Vec3s morphTable[5];
+    static u32 lastUpdate = 0;
+
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+    Matrix_Scale(0.02f, 0.02f, 0.02f, MTXMODE_APPLY);
+    Matrix_Translate(0, 0, 0, MTXMODE_APPLY);
+
+    if (!initialized) {
+        initialized = true;
+        SkelAnime_InitFlex(gPlayState, &skelAnime, (FlexSkeletonHeader*)&object_pr_Skel_004188,
+                       (AnimationHeader*)&object_pr_Anim_004340, jointTable, morphTable, 5);
+    }
+    if (gPlayState != NULL && lastUpdate != gPlayState->state.frames) {
+        lastUpdate = gPlayState->state.frames;
+        SkelAnime_Update(&skelAnime);
+    }
+    
+    Scene_SetRenderModeXlu(gPlayState, 0, 1);
+    SkelAnime_DrawFlexOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL, NULL, NULL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawFireRing(3.0f, 0.6f, 3.5f, -1500.0f);
 }
 
 extern void DrawSkulltula() {
