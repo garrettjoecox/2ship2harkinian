@@ -18,6 +18,7 @@ void RemoveItem(RandoItemId randoItemId);
 RandoItemId CurrentJunkItem();
 bool IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
 RandoItemId ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
+RandoCheckId FindItemPlacement(RandoItemId randoItemId);
 void RegisterMenu();
 
 } // namespace Rando

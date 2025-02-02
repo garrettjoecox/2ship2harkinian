@@ -1,5 +1,7 @@
 #include "StaticData.h"
 #include "libultraship/bridge.h"
+#include "2s2h/ShipUtils.h"
+#include "2s2h/Rando/Rando.h"
 
 extern "C" {
 extern s16 D_801CFF94[250];
@@ -182,6 +184,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_WOODFALL_SMALL_KEY,         "a",    "Woodfall Small Key",         RITYPE_SMALL_KEY,       ITEM_KEY_SMALL,                  GI_KEY_SMALL,                GID_KEY_SMALL),
     RI(RI_WOODFALL_STRAY_FAIRY,       "a",    "Woodfall Stray Fairy",       RITYPE_STRAY_FAIRY,     ITEM_STRAY_FAIRIES,              GI_STRAY_FAIRY,              GID_NONE),
 };
+// clang-format on
 
 RandoItemId GetItemIdFromName(const char* name) {
     for (auto& [randoItemId, randoStaticItem] : Items) {
@@ -294,7 +297,22 @@ bool ShouldShowGetItemCutscene(RandoItemId itemId) {
     }
 }
 
-// clang-format on
+std::string GetItemName(RandoItemId randoItemId, bool includeArticle) {
+    std::string result;
+
+    if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
+        result += Rando::StaticData::Items[randoItemId].article;
+        result += " ";
+    }
+
+    result += Rando::StaticData::Items[randoItemId].name;
+
+    if (randoItemId == RI_JUNK) {
+        result += std::string(" (") + Rando::StaticData::Items[Rando::CurrentJunkItem()].name + ")";
+    }
+
+    return result;
+}
 
 } // namespace StaticData
 

@@ -539,7 +539,7 @@ void SettingsWindow::DrawElement() {
                                        })) {
             trackerBG.w = CVAR_TRACKER_OPACITY;
         }
-        if (UIWidgets::CVarSliderFloat("Opacity", CVAR_NAME_TRACKER_OPACITY,
+        if (UIWidgets::CVarSliderFloat("Scale", CVAR_NAME_TRACKER_SCALE,
                                        {
                                            .format = "%.1f",
                                            .step = 0.10f,

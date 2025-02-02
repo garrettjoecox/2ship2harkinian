@@ -25,3 +25,13 @@ void Rando::Init() {
     Rando::CheckTracker::Init();
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveLoad>(OnSaveLoadHandler);
 }
+
+RandoCheckId Rando::FindItemPlacement(RandoItemId randoItemId) {
+    for (auto& [randoCheckId, check] : Rando::StaticData::Checks) {
+        if (RANDO_SAVE_CHECKS[randoCheckId].randoItemId == randoItemId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}

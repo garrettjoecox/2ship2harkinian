@@ -17,46 +17,61 @@ std::map<int16_t, std::vector<RandoCheckId>> tingleMap = {
     { SCENE_IKANA, { RC_IKANA_CANYON_TINGLE_MAP_01, RC_IKANA_CANYON_TINGLE_MAP_02 } }
 };
 
-void OnOpenText(u16* textId, bool* loadFromMessageTable) {
-    RandoItemId randoItemId1 = RANDO_SAVE_CHECKS[tingleMap[gPlayState->sceneId][0]].randoItemId;
-    RandoItemId randoItemId2 = RANDO_SAVE_CHECKS[tingleMap[gPlayState->sceneId][1]].randoItemId;
-
-    randoItemId1 = Rando::ConvertItem(randoItemId1, tingleMap[gPlayState->sceneId][0]);
-    randoItemId2 = Rando::ConvertItem(randoItemId2, tingleMap[gPlayState->sceneId][1]);
+void OnOpenShopText(u16* textId, bool* loadFromMessageTable) {
+    RandoCheckId randoCheckId1 = tingleMap[gPlayState->sceneId][0];
+    RandoCheckId randoCheckId2 = tingleMap[gPlayState->sceneId][1];
 
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.autoFormat = false;
 
-    entry.msg = "\x02\xC3{item1}\x01 20 Rupees\x11"
-                "\x02{item2}\x01 40 Rupees\x11"
+    entry.msg = "\x02\xC3{item1}\x01 {price1} Rupees\x11"
+                "\x02{item2}\x01 {price2} Rupees\x11"
                 "\x02No thanks";
 
-    CustomMessage::Replace(&entry.msg, "{item1}", Rando::StaticData::Items[randoItemId1].name);
-    CustomMessage::Replace(&entry.msg, "{item2}", Rando::StaticData::Items[randoItemId2].name);
+    CustomMessage::Replace(&entry.msg, "{item1}",
+                           Rando::StaticData::GetItemName(RANDO_SAVE_CHECKS[randoCheckId1].randoItemId, false));
+    CustomMessage::Replace(&entry.msg, "{item2}",
+                           Rando::StaticData::GetItemName(RANDO_SAVE_CHECKS[randoCheckId2].randoItemId, false));
+    CustomMessage::Replace(&entry.msg, "{price1}", std::to_string(RANDO_SAVE_CHECKS[randoCheckId1].price));
+    CustomMessage::Replace(&entry.msg, "{price2}", std::to_string(RANDO_SAVE_CHECKS[randoCheckId2].price));
     CustomMessage::EnsureMessageEnd(&entry.msg);
     CustomMessage::LoadCustomMessageIntoFont(entry);
     *loadFromMessageTable = false;
 };
 
+void OnOpenCantGetText(u16* textId, bool* loadFromMessageTable) {
+    auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+    entry.msg = "I'm sorry, but it seems I cannot sell this to you now.";
+    CustomMessage::LoadCustomMessageIntoFont(entry);
+    *loadFromMessageTable = false;
+};
+
 void Rando::ActorBehavior::InitEnBalBehavior() {
-    COND_VB_SHOULD(VB_ALREADY_HAVE_TINGLE_MAP, IS_RANDO, {
+    bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS];
+
+    COND_VB_SHOULD(VB_NOT_AFFORD_TINGLE_MAP, shouldRegister, {
         EnBal* enBal = va_arg(args, EnBal*);
         s32* price = va_arg(args, s32*);
-        // TODO: Allow randomization of price
-        if (gPlayState->msgCtx.choiceIndex == 0) {
-            *price = 20;
-        } else {
-            *price = 40;
-        }
+        auto randoCheckId = tingleMap[gPlayState->sceneId][gPlayState->msgCtx.choiceIndex];
 
-        if (RANDO_SAVE_CHECKS[tingleMap[gPlayState->sceneId][gPlayState->msgCtx.choiceIndex]].obtained) {
-            *should = true;
-        } else {
+        *price = RANDO_SAVE_CHECKS[randoCheckId].price;
+
+        *should = gSaveContext.save.saveInfo.playerData.rupees < *price;
+    });
+
+    COND_VB_SHOULD(VB_ALREADY_HAVE_TINGLE_MAP, shouldRegister, {
+        EnBal* enBal = va_arg(args, EnBal*);
+
+        auto randoCheckId = tingleMap[gPlayState->sceneId][gPlayState->msgCtx.choiceIndex];
+
+        if (Rando::IsItemObtainable(RANDO_SAVE_CHECKS[randoCheckId].randoItemId, randoCheckId)) {
             *should = false;
+        } else {
+            *should = true;
         }
     });
 
-    COND_VB_SHOULD(VB_TINGLE_GIVE_MAP_UNLOCK, IS_RANDO, {
+    COND_VB_SHOULD(VB_TINGLE_GIVE_MAP_UNLOCK, shouldRegister, {
         EnBal* enBal = va_arg(args, EnBal*);
         RANDO_SAVE_CHECKS[tingleMap[gPlayState->sceneId][gPlayState->msgCtx.choiceIndex]].eligible = true;
         Message_StartTextbox(gPlayState, 0x1D17, &enBal->picto.actor);
@@ -65,12 +80,13 @@ void Rando::ActorBehavior::InitEnBalBehavior() {
         *should = false;
     });
 
-    COND_ID_HOOK(OnOpenText, 0x1D11, IS_RANDO, OnOpenText);
-    COND_ID_HOOK(OnOpenText, 0x1D12, IS_RANDO, OnOpenText);
-    COND_ID_HOOK(OnOpenText, 0x1D13, IS_RANDO, OnOpenText);
-    COND_ID_HOOK(OnOpenText, 0x1D14, IS_RANDO, OnOpenText);
-    COND_ID_HOOK(OnOpenText, 0x1D15, IS_RANDO, OnOpenText);
-    COND_ID_HOOK(OnOpenText, 0x1D16, IS_RANDO, OnOpenText);
+    COND_ID_HOOK(OnOpenText, 0x1D11, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D12, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D13, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D14, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D15, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D16, shouldRegister, OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x1D09, shouldRegister, OnOpenCantGetText);
 
-    COND_VB_SHOULD(VB_HAVE_MAGIC_FOR_TINGLE, IS_RANDO, { *should = true; });
+    COND_VB_SHOULD(VB_HAVE_MAGIC_FOR_TINGLE, shouldRegister, { *should = true; });
 }

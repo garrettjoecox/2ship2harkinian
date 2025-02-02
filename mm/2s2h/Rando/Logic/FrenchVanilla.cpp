@@ -27,7 +27,8 @@ struct RandoPoolPlacement {
     RandoItemId placedItemId;
 };
 
-void ApplyFrenchVanillaLogicToSaveContext() {
+void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool,
+                                          std::vector<RandoItemId>& itemPool) {
     uint64_t tick = GetUnixTimestamp();
     std::set<RandoCheckId> allChecksThatAreInLogic;
     std::set<RandoCheckId> allChecksThatHaveBeenReachedAtLeastOnce;
@@ -46,20 +47,6 @@ void ApplyFrenchVanillaLogicToSaveContext() {
     std::vector<RandoEvent*> newlyTriggeredEvents;
     std::vector<int> amountOfNewlyTriggeredEvents;
 
-    // TODO: This should be decided by the player from the UI
-    std::vector<RandoItemId> startingItems = {
-        RI_OCARINA,
-        RI_SONG_TIME,
-        // French Vanilla not compatible with starting without these items
-        RI_SWORD_KOKIRI,
-        RI_SHIELD_HERO,
-    };
-
-    // Grant the starting items
-    for (RandoItemId startingItem : startingItems) {
-        GiveItem(ConvertItem(startingItem));
-    }
-
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
@@ -67,43 +54,7 @@ void ApplyFrenchVanillaLogicToSaveContext() {
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
         for (auto& [randoCheckId, _] : randoRegion.checks) {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
-            bool isShuffled = true;
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
-                isShuffled = false;
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_OWL &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO) {
-                isShuffled = false;
-            }
-
-            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_BARREL ||
-                 randoStaticCheck.randoCheckType == RCTYPE_CRATE ||
-                 randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
-                isShuffled = false;
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
-                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
-                    randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
-                    randoCheckId != RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) {
-                    isShuffled = false;
-                } else {
-                    int price = Ship_Random(0, 200);
-                    // We need the price to be saved in the current save context for logic, as well as the backed
-                    // up context that will be used in the actual playthrough
-                    RANDO_SAVE_CHECKS[randoCheckId].price = price;
-                    copiedSaveContext.save.shipSaveInfo.rando.randoSaveChecks[randoCheckId].price = price;
-                }
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
-                isShuffled = false;
-            }
+            bool isShuffled = checkPool.find(randoCheckId) != checkPool.end();
 
             allChecksThatAreInLogic.insert(randoCheckId);
             currentCheckPool[randoCheckId] = {

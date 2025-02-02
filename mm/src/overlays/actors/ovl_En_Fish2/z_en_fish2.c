@@ -8,6 +8,7 @@
 #include "overlays/actors/ovl_En_Mushi2/z_en_mushi2.h"
 #include "z_en_fish2.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -906,18 +907,21 @@ void func_80B2A498(EnFish2* this, PlayState* play) {
         Actor* temp_v0;
 
         Math_Vec3f_Copy(&sp80, &this->unk_318);
-        temp_v0 = Actor_Spawn(&play->actorCtx, play, ACTOR_EN_COL_MAN, sp80.x, sp80.y, sp80.z, 0,
-                              this->actor.world.rot.y, 0, 0);
-        if (temp_v0 != NULL) {
-            temp_v0->speed = 4.0f;
-            temp_v0->velocity.y = 15.0f;
-            Actor_PlaySfx(&this->actor, NA_SE_SY_PIECE_OF_HEART);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_10);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_20);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_40);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_80);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_82_01);
-            CLEAR_WEEKEVENTREG(WEEKEVENTREG_82_02);
+        if (GameInteractor_Should(VB_FISH2_SPAWN_HEART_PIECE, true, this)) {
+            temp_v0 = Actor_Spawn(&play->actorCtx, play, ACTOR_EN_COL_MAN, sp80.x, sp80.y, sp80.z, 0,
+                                  this->actor.world.rot.y, 0, 0);
+
+            if (temp_v0 != NULL) {
+                temp_v0->speed = 4.0f;
+                temp_v0->velocity.y = 15.0f;
+                Actor_PlaySfx(&this->actor, NA_SE_SY_PIECE_OF_HEART);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_10);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_20);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_40);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_81_80);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_82_01);
+                CLEAR_WEEKEVENTREG(WEEKEVENTREG_82_02);
+            }
         }
     }
 

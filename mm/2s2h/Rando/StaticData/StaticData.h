@@ -46,6 +46,7 @@ RandoItemId GetItemIdFromName(const char* name);
 u8 GetIconForZMessage(RandoItemId itemId);
 const char* GetIconTexturePath(RandoItemId itemId);
 bool ShouldShowGetItemCutscene(RandoItemId itemId);
+std::string GetItemName(RandoItemId randoItemId, bool includeArticle = true);
 
 struct RandoStaticOption {
     RandoOptionId randoOptionId;

@@ -21,18 +21,10 @@ void EnAkindonuts_ReplacePurchaseMessage(RandoCheckId randoCheckId, RandoInf ran
         return;
     }
 
-    auto randoStaticItem = Rando::StaticData::Items[Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId)];
-
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-    entry.msg = "I'll sell you {{article}}%g{{item}}%w for %r{{rupees}} Rupees%w!\xE0";
+    entry.msg = "I'll sell you %g{{item}}%w for %r{{rupees}} Rupees%w!\xE0";
 
-    if (!Ship_IsCStringEmpty(randoStaticItem.article)) {
-        CustomMessage::Replace(&entry.msg, "{{article}}", std::string(randoStaticItem.article) + " ");
-    } else {
-        CustomMessage::Replace(&entry.msg, "{{article}}", "");
-    }
-
-    CustomMessage::Replace(&entry.msg, "{{item}}", randoStaticItem.name);
+    CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
     CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(cost));
 
     CustomMessage::LoadCustomMessageIntoFont(entry);
@@ -105,6 +97,23 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
         EnAkindonuts_ReplacePurchaseMessage(RC_SOUTHERN_SWAMP_SCRUB_BEANS,
                                             RANDO_INF_PURCHASED_BEANS_FROM_SOUTHERN_SWAMP_SCRUB, 10, textId,
                                             loadFromMessageTable);
+    });
+
+    // I sell Magic Beans to Deku Scrubs,...
+    COND_ID_HOOK(OnOpenText, 0x15E1, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        if (!RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_SCRUB_BEANS].shuffled) {
+            return;
+        }
+
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "I sell %g{{item}} %wand %gMagic Beans %wto Deku Scrubs, but recently I've been thinking about "
+                    "relocating to a new area.\xE0";
+
+        CustomMessage::Replace(
+            &entry.msg, "{{item}}",
+            Rando::StaticData::GetItemName(RANDO_SAVE_CHECKS[RC_SOUTHERN_SWAMP_SCRUB_BEANS].randoItemId));
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
     });
 
     // Oh, you don't know how to use magic beans?...

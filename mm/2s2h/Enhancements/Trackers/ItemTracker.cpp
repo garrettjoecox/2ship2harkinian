@@ -69,35 +69,35 @@ void ItemTrackerWindow::LoadSettings() {
     mBgColor.y = config->GetFloat(CFG_TRACKER_ITEM("BgColorG"), 0.0f);
     mBgColor.z = config->GetFloat(CFG_TRACKER_ITEM("BgColorB"), 0.0f);
     mBgColor.w = config->GetFloat(CFG_TRACKER_ITEM("BgColorA"), 0.0f);
-    mIconSize = config->GetFloat(CFG_TRACKER_ITEM("IconSize"), 13.0f);
+    mIconSize = config->GetFloat(CFG_TRACKER_ITEM("IconSize"), 36.0f);
     mIconSpacing = config->GetFloat(CFG_TRACKER_ITEM("IconSpacing"), 12.0f);
-    mTextSize = config->GetFloat(CFG_TRACKER_ITEM("TextSize"), 13.0f);
-    mTextOffset = config->GetFloat(CFG_TRACKER_ITEM("TextOffset"), 0.0f);
+    mTextSize = config->GetFloat(CFG_TRACKER_ITEM("TextSize"), 10.0f);
+    mTextOffset = config->GetFloat(CFG_TRACKER_ITEM("TextOffset"), 11.0f);
     mWindowType =
         (TrackerWindowType)config->GetInteger(CFG_TRACKER_ITEM("WindowType"), (int8_t)TrackerWindowType::Floating);
-    mIsDraggable = config->GetInteger(CFG_TRACKER_ITEM("IsDraggable"), false);
+    mIsDraggable = config->GetInteger(CFG_TRACKER_ITEM("IsDraggable"), true);
     mOnlyDrawPaused = config->GetInteger(CFG_TRACKER_ITEM("OnlyDrawPaused"), false);
     mIncludeMapsAndCompasses = config->GetInteger(CFG_TRACKER_ITEM("IncludeMapsAndCompasses"), false);
     mCapacityModes[ItemTrackerCapacityMode::DrawCurrent] =
-        config->GetInteger(CFG_TRACKER_ITEM("DrawCurrentAmmo"), false);
+        config->GetInteger(CFG_TRACKER_ITEM("DrawCurrentAmmo"), true);
     mCapacityModes[ItemTrackerCapacityMode::DrawCurCapacity] =
         config->GetInteger(CFG_TRACKER_ITEM("DrawMaxAmmo"), false);
     mCapacityModes[ItemTrackerCapacityMode::DrawMaxCapacity] =
         config->GetInteger(CFG_TRACKER_ITEM("DrawMaxCapacity"), false);
     mItemDrawModes[SECTION_INVENTORY] = (ItemTrackerDisplayType)config->GetInteger(
-        CFG_TRACKER_ITEM("InventoryDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
-    mItemDrawModes[SECTION_MASKS] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("MasksDrawMode"),
-                                                                               (int32_t)ItemTrackerDisplayType::Hidden);
+        CFG_TRACKER_ITEM("InventoryDrawMode"), (int32_t)ItemTrackerDisplayType::MainWindow);
+    mItemDrawModes[SECTION_MASKS] = (ItemTrackerDisplayType)config->GetInteger(
+        CFG_TRACKER_ITEM("MasksDrawMode"), (int32_t)ItemTrackerDisplayType::MainWindow);
     mItemDrawModes[SECTION_EQUIPMENT] = (ItemTrackerDisplayType)config->GetInteger(
         CFG_TRACKER_ITEM("EquipmentDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
     mItemDrawModes[SECTION_MISC] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("MiscDrawMode"),
                                                                               (int32_t)ItemTrackerDisplayType::Hidden);
-    mItemDrawModes[SECTION_SONGS] = (ItemTrackerDisplayType)config->GetInteger(CFG_TRACKER_ITEM("SongsDrawMode"),
-                                                                               (int32_t)ItemTrackerDisplayType::Hidden);
+    mItemDrawModes[SECTION_SONGS] = (ItemTrackerDisplayType)config->GetInteger(
+        CFG_TRACKER_ITEM("SongsDrawMode"), (int32_t)ItemTrackerDisplayType::MainWindow);
     mItemDrawModes[SECTION_STRAY_FAIRIES] = (ItemTrackerDisplayType)config->GetInteger(
-        CFG_TRACKER_ITEM("StrayFairiesDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
+        CFG_TRACKER_ITEM("StrayFairiesDrawMode"), (int32_t)ItemTrackerDisplayType::MainWindow);
     mItemDrawModes[SECTION_DUNGEON] = (ItemTrackerDisplayType)config->GetInteger(
-        CFG_TRACKER_ITEM("DungeonDrawMode"), (int32_t)ItemTrackerDisplayType::Hidden);
+        CFG_TRACKER_ITEM("DungeonDrawMode"), (int32_t)ItemTrackerDisplayType::MainWindow);
 }
 
 void ItemTrackerWindow::BeginFloatingWindows(const char* name, ImGuiWindowFlags flags) {

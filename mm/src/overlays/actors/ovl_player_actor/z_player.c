@@ -45,6 +45,7 @@
 #include "objects/object_link_nuts/object_link_nuts.h"
 #include "objects/object_link_child/object_link_child.h"
 
+#include "2s2h/BenPort.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 
@@ -3974,7 +3975,14 @@ s32 func_808306F8(Player* this, PlayState* play) {
             ArrowMagic magicArrowType;
 
             if (var_v1 != 2) {
-                Player_PlaySfx(this, D_8085CFB0[var_v1 - 1]);
+                // 2S2H [Port] When using action swap, D_8085CFB0 is indexed with -1 leading
+                // to UB sent into Player_PlaySfx. On console this resolves as 1 and nothing noticable happens.
+                // For the port, sometimes this UB would crash so we are opting to just request NA_SE_NONE instead.
+                if (var_v1 - 1 < 0) {
+                    Player_PlaySfx(this, NA_SE_NONE);
+                } else {
+                    Player_PlaySfx(this, D_8085CFB0[var_v1 - 1]);
+                }
             }
 
             if (!Player_IsHoldingHookshot(this) && (func_808305BC(play, this, &item, &arrowType) > 0)) {
@@ -13791,7 +13799,15 @@ s32 Player_UpperAction_7(Player* this, PlayState* play) {
         if (this->unk_B28 >= 0) {
             if (index != 0) {
                 if (!func_80831194(play, this)) {
-                    Player_PlaySfx(this, D_8085D5FC[this->unk_B28 - 1]);
+                    // 2S2H [Port] When using action swap without arrows, D_8085D5FC is indexed with -1 leading
+                    // to UB sent into Player_PlaySfx. On console this resolves as 58104 and causes a crash.
+                    // For the port hard crashing is not desirable, so we are opting to clear the game state
+                    if (this->unk_B28 - 1 < 0) {
+                        Ship_HandleConsoleCrashAsReset();
+                        Player_PlaySfx(this, NA_SE_NONE);
+                    } else {
+                        Player_PlaySfx(this, D_8085D5FC[this->unk_B28 - 1]);
+                    }
                 }
 
                 if (this->transformation == PLAYER_FORM_DEKU) {

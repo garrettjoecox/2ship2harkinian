@@ -8160,6 +8160,10 @@ s16 func_800E0238(Camera* camera) {
 }
 
 void Camera_SetFocalActor(Camera* camera, Actor* actor) {
+    if (!GameInteractor_Should(VB_CAMERA_SET_FOCAL_ACTOR, true, actor)) {
+        return;
+    }
+
     camera->focalActor = actor;
     if (actor == &GET_PLAYER(camera->play)->actor) {
         camera->focalActorPosRot = Actor_GetWorldPosShapeRot(actor);

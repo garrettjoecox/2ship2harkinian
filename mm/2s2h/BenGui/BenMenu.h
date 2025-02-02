@@ -39,6 +39,12 @@ static const std::unordered_map<int32_t, const char*> cremiaRewardOptions = {
     { CREMIA_REWARD_ALWAYS_RUPEE, "Rupee" },
 };
 
+static const std::unordered_map<int32_t, const char*> gibdoTradeSequenceOptions = {
+    { GIBDO_TRADE_SEQUENCE_VANILLA, "Vanilla" },
+    { GIBDO_TRADE_SEQUENCE_MM3D, "MM3D" },
+    { GIBDO_TRADE_SEQUENCE_NO_TRADE, "No trade" },
+};
+
 static const std::unordered_map<int32_t, const char*> clockTypeOptions = {
     { CLOCK_TYPE_ORIGINAL, "Original" },
     { CLOCK_TYPE_3DS, "MM3D style" },

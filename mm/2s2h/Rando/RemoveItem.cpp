@@ -62,7 +62,7 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_SNOWHEAD_SMALL_KEY:
             DUNGEON_KEY_COUNT(DUNGEON_INDEX_SNOWHEAD_TEMPLE)--;
-            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_WOODFALL_TEMPLE]--;
+            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_SNOWHEAD_TEMPLE]--;
             break;
         case RI_GREAT_BAY_BOSS_KEY:
         case RI_GREAT_BAY_MAP:
@@ -72,7 +72,7 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_GREAT_BAY_SMALL_KEY:
             DUNGEON_KEY_COUNT(DUNGEON_INDEX_GREAT_BAY_TEMPLE)--;
-            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_WOODFALL_TEMPLE]--;
+            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_GREAT_BAY_TEMPLE]--;
             break;
         case RI_STONE_TOWER_BOSS_KEY:
         case RI_STONE_TOWER_MAP:
@@ -82,7 +82,7 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_STONE_TOWER_SMALL_KEY:
             DUNGEON_KEY_COUNT(DUNGEON_INDEX_STONE_TOWER_TEMPLE)--;
-            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_WOODFALL_TEMPLE]--;
+            gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_STONE_TOWER_TEMPLE]--;
             break;
         case RI_PROGRESSIVE_MAGIC:
             if (gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {

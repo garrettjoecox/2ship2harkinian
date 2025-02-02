@@ -2,7 +2,7 @@
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
 
-#define CVAR_NAME "gEnhancements.Cheats.DisableTakkuriSteal"
+#define CVAR_NAME "gEnhancements.DifficultyOptions.DisableTakkuriSteal"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterDisableTakkuriSteal() {

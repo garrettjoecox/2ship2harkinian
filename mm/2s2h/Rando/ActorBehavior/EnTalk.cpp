@@ -7,16 +7,6 @@ extern "C" {
 #include "variables.h"
 }
 
-RandoCheckId FindItemPlacement(RandoItemId randoItemId) {
-    for (auto& [randoCheckId, check] : Rando::StaticData::Checks) {
-        if (RANDO_SAVE_CHECKS[randoCheckId].randoItemId == randoItemId) {
-            return randoCheckId;
-        }
-    }
-
-    return RC_UNKNOWN;
-}
-
 void ApplyRemainsHint(u16* textId, bool* loadFromMessageTable) {
     static int remainsHintIndex = 0;
 
@@ -57,7 +47,7 @@ void ApplyRemainsHint(u16* textId, bool* loadFromMessageTable) {
         }
 
         icon = Rando::StaticData::GetIconForZMessage(randoItemId);
-        RandoCheckId randoCheckId = FindItemPlacement(randoItemId);
+        RandoCheckId randoCheckId = Rando::FindItemPlacement(randoItemId);
         CustomMessage::Replace(&msg, "{{location}}",
                                Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
     }

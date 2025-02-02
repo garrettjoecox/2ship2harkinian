@@ -26,8 +26,13 @@ void ItemTrackerSettingsWindow::DrawElement() {
         return;
     }
 
-    UIWidgets::WindowButton("Show/Hide Item Tracker", "gWindows.ItemTracker", mItemTrackerWindow,
-                            { .size = UIWidgets::Sizes::Inline });
+    if (CVarGetInteger("gWindows.ItemTracker", 0)) {
+        UIWidgets::WindowButton("Hide Item Tracker", "gWindows.ItemTracker", mItemTrackerWindow,
+                                { .size = UIWidgets::Sizes::Inline });
+    } else {
+        UIWidgets::WindowButton("Show Item Tracker", "gWindows.ItemTracker", mItemTrackerWindow,
+                                { .size = UIWidgets::Sizes::Inline });
+    }
 
     ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 8.0f, 8.0f });
     ImGui::BeginTable("itemTrackerSettingsTable", 2, ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersV);

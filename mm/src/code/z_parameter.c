@@ -6174,7 +6174,10 @@ void Interface_DrawClock(PlayState* play) {
     s16 finalHoursClockSlots[8];
     s16 index;
 
+    GameInteractor_ExecuteBeforeInterfaceClockDraw();
+
     if (GameInteractor_Should(VB_PREVENT_CLOCK_DISPLAY, false)) {
+        GameInteractor_ExecuteAfterInterfaceClockDraw();
         return;
     }
 
@@ -6808,6 +6811,8 @@ void Interface_DrawClock(PlayState* play) {
     }
 
     CLOSE_DISPS(play->state.gfxCtx);
+
+    GameInteractor_ExecuteAfterInterfaceClockDraw();
 }
 
 void Interface_SetPerfectLetters(PlayState* play, s16 perfectLettersType) {
@@ -8420,8 +8425,9 @@ void Interface_Draw(PlayState* play) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
                 gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
 
-                gDPLoadTextureBlock(OVERLAY_DISP++, gGoldSkulltulaCounterIconTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 24,
-                                    24, // 2S2H [Port] This last 24 was 18 in the minibuild, not sure why
+                // @bug: This texture has a size of 24x18, but the original code reads in 24x24, reading garbage data
+                // 2S2H [Port] We are opting to fix this by using the correct size
+                gDPLoadTextureBlock(OVERLAY_DISP++, gGoldSkulltulaCounterIconTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 24, 18,
                                     0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
                                     G_TX_NOLOD, G_TX_NOLOD);
 

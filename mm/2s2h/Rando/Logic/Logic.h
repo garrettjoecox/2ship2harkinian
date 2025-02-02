@@ -20,10 +20,13 @@ namespace Logic {
 
 void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& reachableRegions);
 RandoRegionId GetRegionIdFromEntrance(s32 entrance);
-void ApplyFrenchVanillaLogicToSaveContext();
-void ApplyGlitchlessLogicToSaveContext();
-void ApplyNearlyNoLogicToSaveContext();
-void ApplyNoLogicToSaveContext();
+void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool,
+                                          std::vector<RandoItemId>& itemPool);
+void ApplyGlitchlessLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool,
+                                       std::vector<RandoItemId>& itemPool);
+void ApplyNearlyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool,
+                                     std::vector<RandoItemId>& itemPool);
+void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool, std::vector<RandoItemId>& itemPool);
 
 struct RandoEvent {
     std::string name;

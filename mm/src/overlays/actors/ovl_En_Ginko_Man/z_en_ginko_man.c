@@ -90,18 +90,20 @@ void EnGinkoMan_Idle(EnGinkoMan* this, PlayState* play) {
 
     EnGinkoMan_SwitchAnimation(this, play);
     if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
-        if (HS_GET_BANK_RUPEES() == 0) {
-            Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, GINKO_ANIM_LEGSMACKING);
-            Message_StartTextbox(play, 0x44C, &this->actor);
-            this->curTextId = 0x44C; // would you like to make an account
-        } else {
-            Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, GINKO_ANIM_SITTING);
-            if ((CURRENT_DAY == 3) && (gSaveContext.save.isNight == true)) {
-                Message_StartTextbox(play, 0x467, &this->actor);
-                this->curTextId = 0x467;
+        if (GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {
+            if (HS_GET_BANK_RUPEES() == 0) {
+                Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, GINKO_ANIM_LEGSMACKING);
+                Message_StartTextbox(play, 0x44C, &this->actor);
+                this->curTextId = 0x44C; // would you like to make an account
             } else {
-                Message_StartTextbox(play, 0x466, &this->actor);
-                this->curTextId = 0x466;
+                Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, GINKO_ANIM_SITTING);
+                if ((CURRENT_DAY == 3) && (gSaveContext.save.isNight == true)) {
+                    Message_StartTextbox(play, 0x467, &this->actor);
+                    this->curTextId = 0x467;
+                } else {
+                    Message_StartTextbox(play, 0x466, &this->actor);
+                    this->curTextId = 0x466;
+                }
             }
         }
         EnGinkoMan_SetupDialogue(this);
@@ -115,6 +117,8 @@ void EnGinkoMan_DepositDialogue(EnGinkoMan* this, PlayState* play) {
     if (!Message_ShouldAdvance(play)) {
         return;
     }
+
+    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {}
 
     switch (this->curTextId) {
         case 0x44C:
@@ -338,6 +342,8 @@ void EnGinkoMan_WaitForDialogueInput(EnGinkoMan* this, PlayState* play) {
     if (!Message_ShouldAdvance(play)) {
         return;
     }
+
+    if (!GameInteractor_Should(VB_CONTINUE_BANKER_DIALOGUE, true, this)) {}
 
     switch (this->curTextId) {
         case 0x44E:

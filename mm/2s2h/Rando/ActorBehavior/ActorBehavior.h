@@ -27,6 +27,7 @@ void InitEnCowBehavior();
 void InitEnDnhBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
+void InitEnFish2Behavior();
 void InitEnFsnBehavior();
 void InitEnFuBehavior();
 void InitEnGamelupyBehavior();

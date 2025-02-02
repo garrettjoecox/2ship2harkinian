@@ -16,19 +16,6 @@ void EnGirlA_SetupAction(EnGirlA* enGirlA, EnGirlAActionFunc action);
 
 #define RANDO_DESC_TEXT_ID 0x083F
 #define RANDO_CHOICE_TEXT_ID 0x0840
-#define RANDO_BOMB_SHOP_NEW_STOCK_HINT_TEXT_ID 0x648
-#define RANDO_BOMB_SHOP_GOT_NEW_STOCK_1_TEXT_ID 0x649
-#define RANDO_BOMB_SHOP_GOT_NEW_STOCK_2_TEXT_ID 0x65A
-#define RANDO_BOMB_SHOP_GOT_NEW_STOCK_3_TEXT_ID 0x65C
-#define RANDO_BOMB_SHOP_GOT_NEW_STOCK_4_TEXT_ID 0x65E
-#define RANDO_BOMB_SHOP_MISSED_NEW_STOCK_1_TEXT_ID 0x64A
-#define RANDO_BOMB_SHOP_MISSED_NEW_STOCK_2_TEXT_ID 0x660
-#define RANDO_BOMB_SHOP_MISSED_NEW_STOCK_3_TEXT_ID 0x661
-#define RANDO_BOMB_SHOP_MISSED_NEW_STOCK_4_TEXT_ID 0x65B // Same contents as above, but a different ID
-#define RANDO_CURIOSITY_SHOP_BARGAIN_1_TEXT_ID 0x29D4
-#define RANDO_CURIOSITY_SHOP_BARGAIN_2_TEXT_ID 0x29D8 // Same contents as above, but a different ID
-#define RANDO_CURIOSITY_SHOP_STOLEN_BOMB_SHOP_1_TEXT_ID 0x29D3
-#define RANDO_CURIOSITY_SHOP_STOLEN_BOMB_SHOP_2_TEXT_ID 0x29D7 // Same contents as above, but a different ID
 
 static const std::vector<std::string> flavorTexts = {
     "Buy it, you won't regret it!",   "A must-have for any adventurer!", "A great gift for a friend!",
@@ -122,34 +109,12 @@ void EnGirlA_RandoInit(EnGirlA* enGirlA, PlayState* play) {
     }
 }
 
-void renameBombBags(u16* textId, bool* loadFromMessageTable) {
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-    auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-    auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-    entry.autoFormat = false;
-    CustomMessage::Replace(&entry.msg, "bomb bags",
-                           std::string(randoStaticItem.article) + " " + std::string(randoStaticItem.name));
-    CustomMessage::LoadCustomMessageIntoFont(entry);
-    *loadFromMessageTable = false;
-}
-
-void renameBigBombBags(u16* textId, bool* loadFromMessageTable) {
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-    auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-    auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-    entry.autoFormat = false;
-    CustomMessage::Replace(&entry.msg, "Big Bomb Bags",
-                           std::string(randoStaticItem.article) + " " + std::string(randoStaticItem.name));
-    CustomMessage::LoadCustomMessageIntoFont(entry);
-    *loadFromMessageTable = false;
-}
-
 void renameStolenBombBag(u16* textId, bool* loadFromMessageTable) {
     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-    entry.msg = "Tonight's special, stolen from the Bomb Shop: %r" + std::string(randoStaticItem.name) +
-                "%w. Check it out!\x19\xA8";
+    entry.msg = "Tonight's special, stolen from the Bomb Shop: %r{{itemName}}%w. Check it out!\x19\xA8";
+    CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
     CustomMessage::LoadCustomMessageIntoFont(entry);
     *loadFromMessageTable = false;
 }
@@ -158,7 +123,8 @@ void renameSpecialBargain(u16* textId, bool* loadFromMessageTable) {
     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CURIOSITY_SHOP_SPECIAL_ITEM];
     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-    entry.msg = "Tonight's bargain: %r" + std::string(randoStaticItem.name) + "%w. Check it out!\x19\xA8";
+    entry.msg = "Tonight's bargain: %r{{itemName}}%w. Check it out!\x19\xA8";
+    CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
     CustomMessage::LoadCustomMessageIntoFont(entry);
     *loadFromMessageTable = false;
 }
@@ -302,6 +268,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         }
     });
 
+    // Shop item description
     COND_ID_HOOK(OnOpenText, RANDO_DESC_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         RandoCheckId randoCheckId = IdentifyActiveShopItem();
 
@@ -313,23 +280,25 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        // Not using formatting here, to ensure the item name and price stay on one line
         entry.autoFormat = false;
-
-        CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                   " Rupees");
+        entry.msg = "\x01{{itemName}}: {{rupees}} Rupees\x11\x00";
+        entry.msg += '\x00';
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
+        CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(randoSaveCheck.price));
 
         if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, randoCheckId) && randoSaveCheck.obtained) {
-            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
+            entry.msg += "Out of Stock";
         } else {
-            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!",
-                                   flavorTexts[rand() % flavorTexts.size()]);
+            entry.msg += flavorTexts[rand() % flavorTexts.size()];
         }
+        entry.msg += "\x1A\xBF";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // Shop item purchase
     COND_ID_HOOK(OnOpenText, RANDO_CHOICE_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         RandoCheckId randoCheckId = IdentifyActiveShopItem();
 
@@ -341,12 +310,12 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        // Not using formatting here, to ensure the item name and price stay on one line
         entry.autoFormat = false;
         entry.firstItemCost = randoSaveCheck.price;
-
-        CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                   " Rupees");
+        entry.msg = "\x01{{itemName}}: {{rupees}} Rupees\x02\x11\xC2I'll buy it\x11No thanks\xBF";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
+        CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(randoSaveCheck.price));
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
@@ -364,13 +333,14 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        // Not using formatting here, to ensure the item name and price stay on one line
         entry.autoFormat = false;
         entry.firstItemCost = randoSaveCheck.price;
-
-        CustomMessage::Replace(&entry.msg, "Blue Potion: 60 Rupees",
-                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                   " Rupees");
-
+        entry.msg = "\x01{{itemName}}: {{itemPrice}} Rupees\x11\x00";
+        entry.msg += '\x00';
+        entry.msg += "I need a mushroom to make this.\x1A";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
+        CustomMessage::Replace(&entry.msg, "{{itemPrice}}", std::to_string(randoSaveCheck.price));
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -384,13 +354,9 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             return;
         }
 
-        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
-
-        CustomMessage::Replace(&entry.msg, "something, so come back later.",
-                               std::string(randoStaticItem.name) + ", take it!");
+        entry.msg = "I used this to make %r{{itemName}}%w, take it!\x19";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
 
         // Mark the item as eligible for purchase
         randoSaveCheck.eligible = true;
@@ -410,103 +376,58 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
     });
 
     // Bomb Shop "We're expecting new stock" (hint)
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_NEW_STOCK_HINT_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-                     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-
-                     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-                     entry.msg = "We're expecting to get our %r" + std::string(randoStaticItem.name) +
-                                 "%w back in stock pretty soon...\x19\xA8";
-
-                     CustomMessage::LoadCustomMessageIntoFont(entry);
-                     *loadFromMessageTable = false;
-                 });
+    COND_ID_HOOK(OnOpenText, 0x648, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg =
+            "If nothing devastating happens to Mommy tonight, we should be able to sell %r{{itemName}}%w.\x19\xA8";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Bomb Shop "We should have had..."
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_1_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-                     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-
-                     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-                     entry.msg = "Actually, we should have had " + std::string(randoStaticItem.article) + " %r" +
-                                 std::string(randoStaticItem.name) +
-                                 "%w in stock, but there was an accident getting it here to the store.\x19\xA8";
-
-                     CustomMessage::LoadCustomMessageIntoFont(entry);
-                     *loadFromMessageTable = false;
-                 });
+    COND_ID_HOOK(OnOpenText, 0x64A, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "Thanks to a mishap, we did not receive our %r{{itemName}}%w stock. Maybe next time...\x19\xA8";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Bomb Shop "I thought we could finally sell"
-    COND_ID_HOOK(
-        OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_2_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-            auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+    COND_ID_HOOK(OnOpenText, 0x660, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
 
-            auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-            entry.msg = "It's such a shame... I thought we could finally sell " + std::string(randoStaticItem.article) +
-                        " %r" + std::string(randoStaticItem.name) + "%w...\x19\xA8";
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "It's over... Now we'll never sell %r{{itemName}}%w...\x19\xA8";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
 
-            CustomMessage::LoadCustomMessageIntoFont(entry);
-            *loadFromMessageTable = false;
-        });
-
-    // Bomb Shop "Don't go picking up bomb bags"
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_3_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameBombBags(textId, loadFromMessageTable); });
-
-    // Ditto, duplicate textbox
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_MISSED_NEW_STOCK_4_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameBombBags(textId, loadFromMessageTable); });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Bomb Shop "We just got a larger bomb bag in stock"
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_1_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-                     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+    COND_ID_HOOK(OnOpenText, 0x649, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
-                     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-                     entry.msg = "We just got " + std::string(randoStaticItem.article) + " %r" +
-                                 std::string(randoStaticItem.name) + "%w in stock.\x19\xA8";
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "We just got some new stock: %r{{itemName}}%w.\x19\xA8";
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", randoStaticItem.name);
 
-                     CustomMessage::LoadCustomMessageIntoFont(entry);
-                     *loadFromMessageTable = false;
-                 });
-
-    // Bomb Shop "We can finally sell Big Bomb Bags!"
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_2_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameBigBombBags(textId, loadFromMessageTable); });
-
-    // Bomb Shop "Our lifelong dream to sell Big Bomb Bags"
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_3_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameBigBombBags(textId, loadFromMessageTable); });
-
-    // Bomb Shop "Please try our Big Bomb Bag"
-    COND_ID_HOOK(OnOpenText, RANDO_BOMB_SHOP_GOT_NEW_STOCK_4_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) {
-                     auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM];
-                     auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-                     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-                     entry.autoFormat = false;
-                     CustomMessage::Replace(&entry.msg, "Big Bomb Bag", std::string(randoStaticItem.name));
-                     CustomMessage::LoadCustomMessageIntoFont(entry);
-                     *loadFromMessageTable = false;
-                 });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Curiosity Shop "Tonight's special was stolen" (check that is shared with Bomb Shop)
-    COND_ID_HOOK(OnOpenText, RANDO_CURIOSITY_SHOP_STOLEN_BOMB_SHOP_1_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameStolenBombBag(textId, loadFromMessageTable); });
-
-    COND_ID_HOOK(OnOpenText, RANDO_CURIOSITY_SHOP_STOLEN_BOMB_SHOP_2_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameStolenBombBag(textId, loadFromMessageTable); });
-
+    COND_ID_HOOK(OnOpenText, 0x29D3, IS_RANDO, renameStolenBombBag);
+    COND_ID_HOOK(OnOpenText, 0x29D7, IS_RANDO, renameStolenBombBag);
     // Curiosity Shop "Tonight's bargain is" (special item check)
-    COND_ID_HOOK(OnOpenText, RANDO_CURIOSITY_SHOP_BARGAIN_1_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameSpecialBargain(textId, loadFromMessageTable); });
-
-    COND_ID_HOOK(OnOpenText, RANDO_CURIOSITY_SHOP_BARGAIN_2_TEXT_ID, IS_RANDO,
-                 [](u16* textId, bool* loadFromMessageTable) { renameSpecialBargain(textId, loadFromMessageTable); });
+    COND_ID_HOOK(OnOpenText, 0x29D4, IS_RANDO, renameSpecialBargain);
+    COND_ID_HOOK(OnOpenText, 0x29D8, IS_RANDO, renameSpecialBargain);
 
     // Magic Potion Shop Hag CANBUY_RESULT_CANNOT_GET_NOW (this text ID does not exist and just softlocks)
     COND_ID_HOOK(OnOpenText, 0x643, IS_RANDO, ReplaceCannotBuyMessage);

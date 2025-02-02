@@ -10,6 +10,18 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipOnePointCutscenes() {
+    COND_VB_SHOULD(VB_CAMERA_SET_FOCAL_ACTOR, CVAR, {
+        Actor* actor = va_arg(args, Actor*);
+
+        switch (actor->id) {
+            case ACTOR_EN_BAL:
+                *should = false;
+                break;
+            default:
+                break;
+        }
+    });
+
     COND_VB_SHOULD(VB_START_CUTSCENE, CVAR, {
         s16* csId = va_arg(args, s16*);
         Actor* actor = va_arg(args, Actor*);
@@ -42,9 +54,14 @@ void RegisterSkipOnePointCutscenes() {
                 actor->csId = -1;
                 *should = false;
                 break;
+            case ACTOR_EN_BOX: // Chest
+                // Currently this breaks the treasure chest minigame, so we're not skipping there
+                if (gPlayState->sceneId != SCENE_TAKARAYA) {
+                    *should = false;
+                }
+                break;
             case ACTOR_BG_SPDWEB: // Spider Web
             case ACTOR_DOOR_SHUTTER:
-            case ACTOR_EN_BOX:       // Chest
             case ACTOR_BG_NUMA_HANA: // Big wooden flower in Woodfall Temple
             case ACTOR_BG_LADDER:
             case ACTOR_OBJ_RAILLIFT: // Moving Platform
@@ -68,6 +85,18 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_OBJ_CHAN:
             case ACTOR_EN_MM:
             case ACTOR_BG_F40_BLOCK:
+            case ACTOR_EN_BAL:
+            case ACTOR_BG_TOBIRA01:
+            case ACTOR_OBJ_BIGICICLE:
+            case ACTOR_OBJ_HAKAISI:
+            case ACTOR_BG_HAKA_BOMBWALL:
+            case ACTOR_EN_DRAGON:
+            case ACTOR_BG_DBLUE_BALANCE:
+            case ACTOR_BG_DBLUE_WATERFALL:
+            case ACTOR_OBJ_ICEBLOCK:
+            case ACTOR_BG_IKNIN_SUSCEIL:
+            case ACTOR_BG_IKANA_DHARMA:
+            case ACTOR_OBJ_HUGEBOMBIWA:
                 *should = false;
                 break;
             default:

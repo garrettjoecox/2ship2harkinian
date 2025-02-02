@@ -60,32 +60,6 @@ static void DrawGeneralTab() {
         UIWidgets::PopStyleSlider();
 
         UIWidgets::CVarCheckbox("Generate Spoiler File", "gRando.GenerateSpoiler");
-
-        UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
-        UIWidgets::Tooltip(
-            "Glitchless - The items are shuffled in a way that guarantees the seed is beatable without "
-            "glitches\n\n"
-            "No Logic - The items are shuffled completely randomly, this can result in unbeatable seeds, and "
-            "will require heavy use of glitches\n\n"
-            "Nearly No Logic - The items are shuffled completely randomly, with the following exceptions:\n"
-            "- Oath to Order and Remains cannot be placed on the Moon\n"
-            "- Deku Mask, Zora Mask, Sonata, and Bossa Nova cannot be placed in their respective Temples or on "
-            "the Moon\n\n"
-            "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
-            "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
-            "Vanilla - The items are not shuffled.");
-
-        if (CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, RO_LOGIC_NO_LOGIC) != RO_LOGIC_VANILLA) {
-            UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
-                                    Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
-            UIWidgets::CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
-            UIWidgets::CVarCheckbox("Shuffle Mundane Checks", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar);
-            UIWidgets::Tooltip(
-                "This will shuffle freestanding rupees and drops from pots, crates, etc. Not everything is covered "
-                "here yet, consult the check tracker for more detailed information.");
-            UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
-            UIWidgets::CVarCheckbox("Shuffle Boss Remains", Rando::StaticData::Options[RO_SHUFFLE_BOSS_REMAINS].cvar);
-        }
     }
     ImGui::SeparatorText("Enhancements");
     UIWidgets::CVarCheckbox("Container Style Matches Contents", "gRando.CSMC");
@@ -132,24 +106,147 @@ static void DrawGeneralTab() {
     ImGui::EndChild();
 }
 
+static void DrawLogicConditionsTab() {
+    f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
+    f32 halfHeight = ImGui::GetContentRegionAvail().y / 3 - (ImGui::GetStyle().ItemSpacing.y * 2);
+    ImGui::BeginChild("randoLogicColumn1", ImVec2(columnWidth, halfHeight));
+    UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
+    UIWidgets::Tooltip(
+        "Glitchless - The items are shuffled in a way that guarantees the seed is beatable without "
+        "glitches\n\n"
+        "No Logic - The items are shuffled completely randomly, this can result in unbeatable seeds, and "
+        "will require heavy use of glitches\n\n"
+        "Nearly No Logic - The items are shuffled completely randomly, with the following exceptions:\n"
+        "- Oath to Order and Remains cannot be placed on the Moon\n"
+        "- Deku Mask, Zora Mask, Sonata, and Bossa Nova cannot be placed in their respective Temples or on "
+        "the Moon\n\n"
+        "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
+        "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
+        "Vanilla - The items are not shuffled.");
+    ImGui::EndChild();
+    ImGui::BeginChild("randoLogicTricks", ImVec2(0, 0));
+    ImGui::SeparatorText("Tricks & Glitches");
+    ImGui::EndChild();
+}
+
 static void DrawLocationsTab() {
+    f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
+    f32 halfHeight = ImGui::GetContentRegionAvail().y / 2 - (ImGui::GetStyle().ItemSpacing.y * 2);
+    ImGui::SeparatorText("Shuffle Options");
+    ImGui::BeginChild("randoLocationsColumn1", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Shuffle Songs", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
+    CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
+    CVarCheckbox("Shuffle Boss Remains", Rando::StaticData::Options[RO_SHUFFLE_BOSS_REMAINS].cvar);
+    CVarCheckbox("Shuffle Cows", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Shuffle Gold Skulltula Tokens", Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
+    CVarSliderInt(
+        "Shuffle Gold Skulltula Tokens", "gPlaceholderInt",
+        IntSliderOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).Min(1).Max(30).DefaultValue(30));
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoLocationsColumn2", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Shuffle Pot Drops", Rando::StaticData::Options[RO_SHUFFLE_POT_DROPS].cvar);
+    CVarCheckbox("Shuffle Crate Drops", Rando::StaticData::Options[RO_SHUFFLE_CRATE_DROPS].cvar);
+    CVarCheckbox("Shuffle Barrel Drops", Rando::StaticData::Options[RO_SHUFFLE_BARREL_DROPS].cvar);
+    CVarCheckbox("Shuffle Hive Drops", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Shuffle Freestanding Items", Rando::StaticData::Options[RO_SHUFFLE_FREESTANDING_ITEMS].cvar);
+    CVarCheckbox("Shuffle Wonder Items", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoLocationsColumn3", ImVec2(columnWidth, halfHeight));
+    ImGui::EndChild();
+    ImGui::BeginChild("randoLocationsExclusions", ImVec2(0, 0));
+    ImGui::SeparatorText("Exclusions");
+    ImGui::TextWrapped("These checks will be gauranteed junk items, and marked as skipped in the check tracker.");
+    ImGui::EndChild();
 }
 
 static void DrawItemsTab() {
+    f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
+    f32 halfHeight = ImGui::GetContentRegionAvail().y / 3 - (ImGui::GetStyle().ItemSpacing.y * 2);
+    ImGui::BeginChild("randoItemsColumn1", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Bronze Scale", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Deku Stick Bag", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Deku Nut Bag", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Skeleton Key", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Child Wallet", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Infinite Upgrades", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoItemsColumn2", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Plentiful Items", Rando::StaticData::Options[RO_PLENTIFUL_ITEMS].cvar);
+    CVarCheckbox("Boss Souls", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Enemy Souls", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoItemsColumn3", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Song of Double Time", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Inverted Song of Time", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Saria's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Sun's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    ImGui::EndChild();
+    ImGui::BeginChild("randoItemsStarting", ImVec2(0, 0));
+    ImGui::SeparatorText("Starting Items");
+    CVarSliderInt(
+        "Starting Health", "gPlaceholderInt",
+        IntSliderOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).Min(3).Max(20).DefaultValue(3));
+    ImGui::EndChild();
+}
+
+static void DrawHintsTab() {
+    f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
+    f32 halfHeight = ImGui::GetContentRegionAvail().y / 2 - (ImGui::GetStyle().ItemSpacing.y * 2);
+    ImGui::BeginChild("randoHintsColumn1", ImVec2(columnWidth, halfHeight));
+    CVarCheckbox("Spider House", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Happy Mask Salesman Purchaseable", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Gossip Stones", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Boss Remains", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Saria's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Song of Soaring", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Hookshot Location", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    ImGui::EndChild();
 }
 
 void Rando::RegisterMenu() {
     mBenMenu->AddSidebarEntry("Rando", "General", 1);
     WidgetPath path = { "Rando", "General", 1 };
     mBenMenu->AddWidget(path, "General", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawGeneralTab(); });
-    // mBenMenu->AddSidebarEntry("Rando", "Locations", 1);
-    // path.sidebarName = "Locations";
-    // mBenMenu->AddWidget(path, "Locations", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-    //     DrawLocationsTab();
-    // });
-    // mBenMenu->AddSidebarEntry("Rando", "Items", 1);
-    // path.sidebarName = "Items";
-    // mBenMenu->AddWidget(path, "Items", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-    //     DrawItemsTab();
-    // });
+    mBenMenu->AddSidebarEntry("Rando", "Logic/Conditions", 1);
+    path.sidebarName = "Logic/Conditions";
+    mBenMenu->AddWidget(path, "Logic/Conditions", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        DrawLogicConditionsTab();
+    });
+    mBenMenu->AddSidebarEntry("Rando", "Locations", 1);
+    path.sidebarName = "Locations";
+    mBenMenu->AddWidget(path, "Locations", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawLocationsTab(); });
+    mBenMenu->AddSidebarEntry("Rando", "Items", 1);
+    path.sidebarName = "Items";
+    mBenMenu->AddWidget(path, "Items", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawItemsTab(); });
+    mBenMenu->AddSidebarEntry("Rando", "Hints", 1);
+    path.sidebarName = "Hints";
+    mBenMenu->AddWidget(path, "Hints", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawHintsTab(); });
 }

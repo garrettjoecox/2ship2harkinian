@@ -122,6 +122,7 @@ typedef enum {
     VB_HAVE_KAMAROS_MASK,
     VB_START_CUTSCENE,
     VB_QUEUE_CUTSCENE,
+    VB_CAMERA_SET_FOCAL_ACTOR,
     VB_GIVE_ITEM_FROM_MNK,
     VB_TERMINA_FIELD_BE_EMPTY,
     VB_FASTER_FIRST_CYCLE,
@@ -155,6 +156,7 @@ typedef enum {
     VB_PASS_SECOND_BANK_THRESHOLD,
     VB_PASS_SECOND_BANK_THRESHOLD_ALT,
     VB_CLEAR_B_BUTTON_FOR_HORSEBACK,
+    VB_NOT_AFFORD_TINGLE_MAP,
     VB_ALREADY_HAVE_TINGLE_MAP,
     VB_TINGLE_GIVE_MAP_UNLOCK,
     VB_OWL_STATUE_ACTIVATE,
@@ -203,7 +205,15 @@ typedef enum {
     VB_GORON_ROLL_INCREASE_SPIKE_LEVEL,
     VB_GORON_ROLL_DISABLE_SPIKE_MODE,
     VB_DEKU_LINK_SPIN_ON_LAST_HOP,
+    VB_BALLAD_PLAYED_FORM,
+    VB_CONTINUE_BANKER_DIALOGUE,
+    VB_FISH2_SPAWN_HEART_PIECE,
+    VB_PLAY_DEFEAT_CAPTAIN_SEQUENCE,
     VB_CLAMP_ANIMATION_SPEED,
+    VB_GIBDO_TRADE_SEQUENCE_SUFFICIENT_QUANTITY_PRESENTED,
+    VB_GIBDO_TRADE_SEQUENCE_ACCEPT_RED_POTION,
+    VB_GIBDO_TRADE_SEQUENCE_TAKE_MORE_THAN_ONE_ITEM,
+    VB_GIBDO_TRADE_SEQUENCE_DO_TRADE,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -478,6 +488,8 @@ class GameInteractor {
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
+    DEFINE_HOOK(AfterInterfaceClockDraw, ());
+    DEFINE_HOOK(BeforeInterfaceClockDraw, ());
 
     DEFINE_HOOK(OnSceneInit, (s8 sceneId, s8 spawnNum));
     DEFINE_HOOK(OnRoomInit, (s8 sceneId, s8 roomNum));
@@ -531,6 +543,8 @@ void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, Sav
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
+void GameInteractor_ExecuteAfterInterfaceClockDraw();
+void GameInteractor_ExecuteBeforeInterfaceClockDraw();
 
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum);
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum);

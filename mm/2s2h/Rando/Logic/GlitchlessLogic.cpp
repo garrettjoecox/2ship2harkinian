@@ -15,27 +15,12 @@ namespace Rando {
 
 namespace Logic {
 
-void ApplyGlitchlessLogicToSaveContext() {
+void ApplyGlitchlessLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool,
+                                       std::vector<RandoItemId>& itemPool) {
     uint64_t tick = GetUnixTimestamp();
-
-    // TODO: This should be decided by the player from the UI
-    std::vector<RandoItemId> startingItems = {
-        RI_SWORD_KOKIRI,
-        RI_SHIELD_HERO,
-        RI_OCARINA,
-        RI_SONG_TIME,
-    };
-
-    // Grant the starting items
-    for (RandoItemId startingItem : startingItems) {
-        GiveItem(ConvertItem(startingItem));
-    }
 
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
-
-    std::vector<RandoItemId> itemPool;
-    std::unordered_map<RandoCheckId, bool> checkPool;
 
     std::set<RandoRegionId> regionsInLogic = { RR_MAX };
     std::unordered_map<RandoCheckId, bool> checksInLogic;
@@ -46,94 +31,6 @@ void ApplyGlitchlessLogicToSaveContext() {
     std::vector<RandoCheckId> checksWithJunk;
     std::vector<int> checksWithJunkWeights;
     int weight = 1;
-
-    // First loop through all regions and add checks/items to the pool
-    for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
-        for (auto& [randoCheckId, _] : randoRegion.checks) {
-            auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
-            // Skip checks that are already in the pool
-            if (checkPool.find(randoCheckId) != checkPool.end()) {
-                continue;
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
-                continue;
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_OWL &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO) {
-                continue;
-            }
-
-            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_BARREL ||
-                 randoStaticCheck.randoCheckType == RCTYPE_CRATE ||
-                 randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
-                continue;
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
-                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
-                    randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
-                    randoCheckId != RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) {
-                    continue;
-                } else {
-                    int price = Ship_Random(0, 200);
-                    // We need the price to be saved in the current save context for logic, as well as the backed
-                    // up context that will be used in the actual playthrough
-                    RANDO_SAVE_CHECKS[randoCheckId].price = price;
-                    copiedSaveContext.save.shipSaveInfo.rando.randoSaveChecks[randoCheckId].price = price;
-                }
-            }
-
-            if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
-                RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
-                continue;
-            }
-
-            checkPool.insert({ randoCheckId, true });
-            itemPool.push_back(randoStaticCheck.randoItemId);
-        }
-    }
-
-    // Add sword and shield to the pool if they aren't in the starting items
-    if (std::find(startingItems.begin(), startingItems.end(), RI_SWORD_KOKIRI) == startingItems.end()) {
-        itemPool.push_back(RI_SWORD_KOKIRI);
-    }
-    if (std::find(startingItems.begin(), startingItems.end(), RI_SHIELD_HERO) == startingItems.end()) {
-        itemPool.push_back(RI_SHIELD_HERO);
-    }
-
-    // Add other items that don't have a vanilla location like Sun's Song or Song of Double Time
-
-    // Remove starting items from the pool (but only one per entry in startingItems)
-    for (RandoItemId startingItem : startingItems) {
-        auto it = std::find(itemPool.begin(), itemPool.end(), startingItem);
-        if (it != itemPool.end()) {
-            itemPool.erase(it);
-        }
-    }
-
-    if (checkPool.empty()) {
-        throw std::runtime_error("No checks in logic");
-    }
-    if (itemPool.empty()) {
-        throw std::runtime_error("No items in logic");
-    }
-    // Add/Remove junk items to/from the pool to make the item pool size match the check pool size
-    while (checkPool.size() != itemPool.size()) {
-        if (checkPool.size() > itemPool.size()) {
-            itemPool.push_back(RI_JUNK);
-        } else {
-            for (int i = 0; i < itemPool.size(); i++) {
-                if (Rando::StaticData::Items[itemPool[i]].randoItemType == RITYPE_JUNK) {
-                    itemPool.erase(itemPool.begin() + i);
-                    break;
-                }
-            }
-        }
-    }
 
     // Inital shuffle of the item pool (Following shuffles done at the end of the loop)
     if (itemPool.size() > 1) {

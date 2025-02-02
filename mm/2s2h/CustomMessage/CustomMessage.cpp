@@ -39,6 +39,7 @@ void CustomMessage::ReplaceColorChars(std::string* msg) {
     CustomMessage::Replace(msg, "%y", "\x04");
     CustomMessage::Replace(msg, "%g", "\x02");
     CustomMessage::Replace(msg, "%b", "\x03");
+    CustomMessage::Replace(msg, "%p", "\x06");
 }
 
 void CustomMessage::AddLineBreaks(std::string* msg) {

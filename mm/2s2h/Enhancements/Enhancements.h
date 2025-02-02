@@ -27,6 +27,12 @@ enum CremiaRewardsOptions {
     CREMIA_REWARD_ALWAYS_RUPEE,
 };
 
+enum GibdoTradeSequenceOptions {
+    GIBDO_TRADE_SEQUENCE_VANILLA,
+    GIBDO_TRADE_SEQUENCE_MM3D,
+    GIBDO_TRADE_SEQUENCE_NO_TRADE,
+};
+
 enum DekuGuardSearchBallsOptions {
     DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
     DEKU_GUARD_SEARCH_BALLS_NEVER,

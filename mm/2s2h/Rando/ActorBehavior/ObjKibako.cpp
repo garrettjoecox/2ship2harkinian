@@ -258,7 +258,7 @@ void Rando::ActorBehavior::InitObjKibakoBehavior() {
         *should = false;
 
         EnItem00* spawn = CustomItem::Spawn(
-            actor->home.pos.x, actor->home.pos.y, actor->home.pos.z, 0,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
             CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, OBJKIBAKO_RC,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];

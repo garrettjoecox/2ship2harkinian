@@ -803,6 +803,15 @@ void BenMenu::AddEnhancements() {
                      .Min(1)
                      .Max(30)
                      .DefaultValue(30));
+    AddWidget(path, "Beaver Race Rings Collected", WIDGET_CVAR_SLIDER_INT)
+        .CVar("gEnhancements.Minigames.BeaverRaceRingsCollected")
+        .Options(IntSliderOptions()
+                     .Tooltip("Sets the number of rings required for both Beavers. If the slider is set to 20, the "
+                              "first Beaver will require 20 rings, and the second Beaver will require 25 rings, which "
+                              "are their vanilla values.")
+                     .Min(1)
+                     .Max(20)
+                     .DefaultValue(20));
     AddWidget(path, "Swamp Archery Perfect Score", WIDGET_CVAR_SLIDER_INT)
         .CVar("gEnhancements.Minigames.SwampArcheryScore")
         .Options(IntSliderOptions()
@@ -854,6 +863,10 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Skip Gorman Horse Race", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Minigames.SkipHorseRace")
         .Options(CheckboxOptions().Tooltip("Instantly win the Gorman Horse Race"));
+    AddWidget(path, "Skip Ballad of Windfish", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Minigames.SkipBalladOfWindfish")
+        .Options(CheckboxOptions().Tooltip(
+            "Play the complete Ballad after playing in one form if you have all three transformation masks."));
 
     path.column = 3;
     AddWidget(path, "Saving", WIDGET_SEPARATOR_TEXT);
@@ -1041,7 +1054,8 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Songs.BetterSongOfDoubleTime")
         .Options(CheckboxOptions().Tooltip(
             "When playing the Song of Double Time, you can now choose the exact time you want to go "
-            "to, similar to the 3DS version."));
+            "to, similar to the 3DS version.\n\n"
+            "Holding Z allows decreasing the time adjustment factor, while holding R will increase the factor"));
     AddWidget(path, "Enable Sun's Song", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Songs.EnableSunsSong")
         .Options(CheckboxOptions().Tooltip(
@@ -1074,6 +1088,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Faster Song Playback", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Songs.FasterSongPlayback")
         .Options(CheckboxOptions().Tooltip("Speeds up the playback of songs."));
+    AddWidget(path, "Skip Song of Time cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Songs.SkipSoTCutscenes")
+        .Options(CheckboxOptions().Tooltip("Skips the cutscenes when playing any of the Song of Time songs"));
 
     // Time Savers
     path = { "Enhancements", "Time Savers", 1 };
@@ -1139,11 +1156,26 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Timesavers.GalleryTwofer")
         .Options(CheckboxOptions().Tooltip("When getting a perfect score at the Shooting Gallery, receive both rewards "
                                            "back to back instead of having to play twice."));
+    AddWidget(path, "Fast Marine Lab Fish", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Timesavers.MarineLabHP")
+        .Options(CheckboxOptions().Tooltip("Only requires a single fish to be fed for the Piece of Heart to spawn. "
+                                           "Requires a Scene Reload to take effect."));
 
     // Fixes
     path = { "Enhancements", "Fixes", 1 };
     AddSidebarEntry("Enhancements", "Fixes", 3);
     AddWidget(path, "Fixes", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Fix Console Crashes", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Fixes.ConsoleCrashes")
+        .Options(CheckboxOptions()
+                     .Tooltip("Fixes crashes that would typically happen on Console. "
+                              "Disabling this option will simply soft reset 2Ship when encountering these "
+                              "crashes instead of actually crashing the program.\n\n"
+                              "Includes the following:\n"
+                              "- HESS/Weirdshot crashes\n"
+                              "- Action Swap crash without arrow ammo\n"
+                              "- Owl Warp menu crash when moving the cursor with Index-Warp active")
+                     .DefaultValue(true));
     AddWidget(path, "Fix Ammo Count Color", WIDGET_CVAR_CHECKBOX)
         .CVar("gFixes.FixAmmoCountEnvColor")
         .Options(CheckboxOptions().Tooltip("Fixes a missing gDPSetEnvColor, which causes the ammo count to be "
@@ -1155,9 +1187,6 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Fix Fierce Deity Z-Target movement", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Fixes.FierceDeityZTargetMovement")
         .Options(CheckboxOptions().Tooltip("Fixes Fierce Deity movement being choppy when Z-targeting"));
-    AddWidget(path, "Fix Hess and Weirdshot Crash", WIDGET_CVAR_CHECKBOX)
-        .CVar("gEnhancements.Fixes.HessCrash")
-        .Options(CheckboxOptions().Tooltip("Fixes a crash that can occur when performing a HESS or Weirdshot."));
     AddWidget(path, "Fix Text Control Characters", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Fixes.ControlCharacters")
         .Options(CheckboxOptions().Tooltip("Fixes certain control characters not functioning properly "
@@ -1224,12 +1253,12 @@ void BenMenu::AddEnhancements() {
     path = { "Enhancements", "Difficulty Options", 1 };
     AddSidebarEntry("Enhancements", "Difficulty Options", 3);
     AddWidget(path, "Disable Takkuri Steal", WIDGET_CVAR_CHECKBOX)
-        .CVar("gEnhancements.Cheats.DisableTakkuriSteal")
+        .CVar("gEnhancements.DifficultyOptions.DisableTakkuriSteal")
         .Options(CheckboxOptions().Tooltip(
             "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal "
             "other items."));
     AddWidget(path, "Deku Guard Search Balls", WIDGET_CVAR_COMBOBOX)
-        .CVar("gEnhancements.Cheats.DekuGuardSearchBalls")
+        .CVar("gEnhancements.DifficultyOptions.DekuGuardSearchBalls")
         .Options(
             ComboboxOptions()
                 .Tooltip("Choose when to show the Deku Palace Guards' search balls\n"
@@ -1244,6 +1273,18 @@ void BenMenu::AddEnhancements() {
             CheckboxOptions().Tooltip("Reduces the amount of rupees required to receive the rewards from the bank.\n"
                                       "From: 200 -> 1000 -> 5000\n"
                                       "To:   100 ->  500 -> 1000"));
+    AddWidget(path, "Gibdo Trade Sequence Options", WIDGET_CVAR_COMBOBOX)
+        .CVar("gEnhancements.DifficultyOptions.GibdoTradeSequence")
+        .Options(
+            ComboboxOptions()
+                .Tooltip(
+                    "Changes the way the Gibdo Trade Sequence works\n"
+                    "-Vanilla: Works normally\n"
+                    "-MM3D: Gibdos will only take one quantity of the item they request, as they do in MM3D. The Gibdo "
+                    "requesting a blue potion will also accept a red potion.\n"
+                    "-No trade: Gibdos will vanish without taking items")
+                .DefaultIndex(GibdoTradeSequenceOptions::GIBDO_TRADE_SEQUENCE_VANILLA)
+                .ComboMap(gibdoTradeSequenceOptions));
 
     path.column = 2;
     AddWidget(path, "Damage Multiplier", WIDGET_CVAR_COMBOBOX)
@@ -1275,8 +1316,8 @@ void BenMenu::AddEnhancements() {
     // Item Tracker Settings
     path = { "Enhancements", "Item Tracker", 1 };
     AddSidebarEntry("Enhancements", "Item Tracker", 1);
-    AddWidget(path, "Popout Item Tracker", WIDGET_WINDOW_BUTTON)
-        .CVar("gWindows.ItemTracker")
+    AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.ItemTrackerSettings")
         .WindowName("Item Tracker Settings");
 }
 

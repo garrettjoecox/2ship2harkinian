@@ -66,7 +66,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
             actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
             // Freestanding PoH & HC cannot be picked up by boomerangs
             CustomItem::KILL_ON_TOUCH |
-                (randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING ? 0 : CustomItem::ABLE_TO_ZORA_RANG),
+                (randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING ? CustomItem::ABLE_TO_ZORA_RANG : 0),
             randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];

@@ -70,6 +70,14 @@ void GameInteractor_ExecuteBeforeMoonCrashSaveReset() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeMoonCrashSaveReset>();
 }
 
+void GameInteractor_ExecuteAfterInterfaceClockDraw() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterInterfaceClockDraw>();
+}
+
+void GameInteractor_ExecuteBeforeInterfaceClockDraw() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeInterfaceClockDraw>();
+}
+
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum) {
     SPDLOG_DEBUG("OnSceneInit: sceneId: {}, spawnNum: {}", sceneId, spawnNum);
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSceneInit>(sceneId, spawnNum);

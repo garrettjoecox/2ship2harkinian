@@ -467,8 +467,8 @@ void func_80A6FEEC(EnMm3* this, PlayState* play) {
 s32 func_80A6FFAC(EnMm3* this, PlayState* play) {
     switch (GET_PLAYER_FORM) {
         case PLAYER_FORM_HUMAN:
-            if (GameInteractor_Should(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, Player_GetMask(play) == PLAYER_MASK_BUNNY),
-                GET_PLAYER(play)) {
+            if (GameInteractor_Should(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, Player_GetMask(play) == PLAYER_MASK_BUNNY,
+                                      GET_PLAYER(play))) {
                 if (this->unk_2B2 & 0x10) {
                     return true;
                 }

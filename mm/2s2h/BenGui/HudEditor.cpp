@@ -6,6 +6,7 @@ extern "C" int16_t OTRGetRectDimensionFromLeftEdge(float v);
 extern "C" int16_t OTRGetRectDimensionFromRightEdge(float v);
 
 HudEditorElementID hudEditorActiveElement = HUD_EDITOR_ELEMENT_NONE;
+HudEditorElementMode hudEditorOverrideNextElemMode = HUD_EDITOR_ELEMENT_MODE_NONE;
 
 HudEditorElement hudEditorElements[HUD_EDITOR_ELEMENT_MAX] = {
     HUD_EDITOR_ELEMENT(HUD_EDITOR_ELEMENT_B, "B Button", "B", 167, 17, 100, 255, 120, 255),
@@ -30,10 +31,18 @@ HudEditorElement hudEditorElements[HUD_EDITOR_ELEMENT_MAX] = {
     HUD_EDITOR_ELEMENT(HUD_EDITOR_ELEMENT_SKULLTULA_COUNTER, "Skulltulas", "Skulltulas", 26, 190, 255, 255, 255, 255),
 };
 
+// Allows specifying an override mode to the next active element.
+// Must be called again with HUD_EDITOR_ELEMENT_MODE_NONE when done overriding.
+extern "C" void HudEditor_OverrideNextElementMode(HudEditorElementMode mode) {
+    hudEditorOverrideNextElemMode = mode;
+}
+
 extern "C" bool HudEditor_ShouldOverrideDraw() {
     return hudEditorActiveElement != HUD_EDITOR_ELEMENT_NONE &&
-           CVarGetInteger(hudEditorElements[hudEditorActiveElement].modeCvar, HUD_EDITOR_ELEMENT_MODE_VANILLA) !=
-               HUD_EDITOR_ELEMENT_MODE_VANILLA;
+           (hudEditorOverrideNextElemMode != HUD_EDITOR_ELEMENT_MODE_NONE
+                ? hudEditorOverrideNextElemMode
+                : CVarGetInteger(hudEditorElements[hudEditorActiveElement].modeCvar,
+                                 HUD_EDITOR_ELEMENT_MODE_VANILLA)) != HUD_EDITOR_ELEMENT_MODE_VANILLA;
 }
 
 extern "C" void HudEditor_SetActiveElement(HudEditorElementID id) {
@@ -41,14 +50,16 @@ extern "C" void HudEditor_SetActiveElement(HudEditorElementID id) {
 }
 
 extern "C" bool HudEditor_IsActiveElementHidden() {
-    return hudEditorActiveElement != HUD_EDITOR_ELEMENT_NONE
-               ? CVarGetInteger(hudEditorElements[hudEditorActiveElement].modeCvar, HUD_EDITOR_ELEMENT_MODE_VANILLA) ==
-                     HUD_EDITOR_ELEMENT_MODE_HIDDEN
-               : false;
+    return hudEditorActiveElement != HUD_EDITOR_ELEMENT_NONE &&
+           (hudEditorOverrideNextElemMode != HUD_EDITOR_ELEMENT_MODE_NONE
+                ? hudEditorOverrideNextElemMode
+                : CVarGetInteger(hudEditorElements[hudEditorActiveElement].modeCvar,
+                                 HUD_EDITOR_ELEMENT_MODE_VANILLA)) == HUD_EDITOR_ELEMENT_MODE_HIDDEN;
 }
 
 extern "C" f32 HudEditor_GetActiveElementScale() {
-    return hudEditorActiveElement != HUD_EDITOR_ELEMENT_NONE
+    return (hudEditorActiveElement != HUD_EDITOR_ELEMENT_NONE &&
+            hudEditorOverrideNextElemMode == HUD_EDITOR_ELEMENT_MODE_NONE)
                ? CVarGetFloat(hudEditorElements[hudEditorActiveElement].scaleCvar, 1.0f)
                : 1.0f;
 }

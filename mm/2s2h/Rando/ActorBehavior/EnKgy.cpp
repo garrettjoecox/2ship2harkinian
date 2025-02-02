@@ -13,12 +13,12 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         RandoSaveCheck& randoGildedSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD];
         RandoSaveCheck& randoRazorSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD];
 
-        refActor->actor.textId = 0xc3d;
-
         if (randoRazorSwordSaveCheck.obtained) {
             randoGildedSwordSaveCheck.eligible = true;
         } else {
             randoRazorSwordSaveCheck.eligible = true;
+            // Skip ahead to the textbox that normally plays after receiving the sword
+            refActor->actor.textId = 0xC52;
         }
 
         *should = false;
@@ -34,112 +34,106 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         *should = randoGildedSwordSaveCheck.obtained;
     });
 
-    COND_ID_HOOK(OnOpenText, 0xc3a, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
-        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
-        CustomMessage::Replace(&entry.msg, "your sword", "you");
-
-        CustomMessage::LoadCustomMessageIntoFont(entry);
-        *loadFromMessageTable = false;
-    });
-
+    // "If you want your sword sharpened..." (Razor Sword upgrade)
     COND_ID_HOOK(OnOpenText, 0xc3b, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
 
         RandoSaveCheck& randoRazorSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD];
         if (!randoRazorSwordSaveCheck.obtained) {
-            entry.autoFormat = false;
-            std::string itemName;
-            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].article)) {
-                itemName += Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].article;
-                itemName += " ";
-            }
-            itemName += Rando::StaticData::Items[randoRazorSwordSaveCheck.randoItemId].name;
-
-            std::string finalMsg = "If you want \x04{itemName}";
-            finalMsg += '\x00';
-            finalMsg += ",\x11it will cost you\x01 100 Rupees";
-            finalMsg += '\x00';
-            finalMsg += ".";
-            CustomMessage::Replace(&finalMsg, "{itemName}", itemName);
-            entry.msg.replace(entry.msg.begin(), entry.msg.begin() + 289, finalMsg);
-            entry.msg.replace(entry.msg.end() - 80, entry.msg.end() - 25, "So, do we have a deal");
-        } else {
-            RandoSaveCheck& randoGildedSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD];
-            std::string itemName = Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].name;
+            entry.msg = "\nIf you want %y{itemName}%w, it will cost you %p100 Rupees%w.\n\x10";
+            entry.msg += "So, do we have a deal?\n\xC2%gI'll buy it\nNo thanks\xBF";
+            CustomMessage::Replace(&entry.msg, "{itemName}",
+                                   Rando::StaticData::GetItemName(randoRazorSwordSaveCheck.randoItemId));
         }
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "With gold dust I can forge the strongest of swords"
     COND_ID_HOOK(OnOpenText, 0xc3d, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
         std::string itemName = "40 Rupees";
 
         if (!RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD].eligible) {
-            RandoSaveCheck& randoGildedSwordSaveCheck = RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD];
-            if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].article)) {
-                itemName = Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].article;
-                itemName += " ";
-            } else {
-                itemName = "";
-            }
-            itemName += Rando::StaticData::Items[randoGildedSwordSaveCheck.randoItemId].name;
+            itemName =
+                Rando::StaticData::GetItemName(RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD].randoItemId);
         }
-        std::string finalMsg = ", I can offer you\x11\x04{itemName}";
-        finalMsg += '\x00';
-        finalMsg += "!\xE0\xBF";
-        CustomMessage::Replace(&finalMsg, "{itemName}", itemName);
-        entry.msg.replace(entry.msg.begin() + 78, entry.msg.end() - 1, finalMsg);
+        entry.msg = "Want to know a secret? If you bring me some gold dust, I can offer you %r{itemName}%w.\xE0";
+        CustomMessage::Replace(&entry.msg, "{itemName}", itemName);
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "Reforge your sword?"
     COND_ID_HOOK(OnOpenText, 0xc3e, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.msg.replace(entry.msg.begin(), entry.msg.end() - 20, "Back for more");
+        entry.msg = "Back for more?\n\xC2%gYes\nNo";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "Come back tomorrow morning"
     COND_ID_HOOK(OnOpenText, 0xc42, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.msg.replace(entry.msg.begin(), entry.msg.end() - 2, "Thanks for your business.");
+        entry.msg = "Thanks for your business.\x19";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "Your sword has already been reforged! Unless..."
     COND_ID_HOOK(OnOpenText, 0xc45, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
-
-        std::string finalMsg = "Did you bring the \x01gold dust";
-        finalMsg += '\x00';
-        finalMsg += "?";
-        entry.msg.replace(entry.msg.begin(), entry.msg.end() - 2, finalMsg);
+        entry.msg = "Did you bring the %rgold dust%w?\x19";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "We can use it to reforge your sword"
     COND_ID_HOOK(OnOpenText, 0xc46, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
-        entry.msg.replace(entry.msg.begin() + 61, entry.msg.begin() + 138, "");
+        entry.msg = "That's it, alright. I'll just take that off your hands and give you this. Don't tell anyone!\x19";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
 
+    // "Gold dust is the prize for winning the Goron race in spring?"
+    COND_ID_HOOK(OnOpenText, 0xc49, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "Huh? You say that gold dust can be found at %r{location}%w?\x19";
+        RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_BOTTLE_GOLD_DUST);
+        CustomMessage::Replace(&entry.msg, "{location}",
+                               Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
+
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
+
+    // "Gold dust happens to be first prize at the racetrack"
+    COND_ID_HOOK(OnOpenText, 0xc4b, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.msg = "Gold dust can be found at %p{location}%w.\x10";
+        entry.msg += "Bring me that, and my %r{itemName}%w is all yours.\xE0";
+        RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_BOTTLE_GOLD_DUST);
+        CustomMessage::Replace(
+            &entry.msg, "{itemName}",
+            Rando::StaticData::Items[RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD].randoItemId].name);
+        CustomMessage::Replace(&entry.msg, "{location}",
+                               Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
+
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
+
+    // "Your sword is already as strong as I can make it!"
     COND_ID_HOOK(OnOpenText, 0xc4c, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        entry.autoFormat = false;
-        entry.msg.replace(entry.msg.begin() + 24, entry.msg.end() - 2, "I'm not made of Randomizer Checks!");
+        entry.msg = "Hey, what is this? I'm not made of Randomizer Checks!\x19";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
