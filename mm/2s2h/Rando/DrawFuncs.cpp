@@ -852,18 +852,18 @@ extern void DrawSkullfish() {
     if (!initialized) {
         initialized = true;
         SkelAnime_InitFlex(gPlayState, &skelAnime, (FlexSkeletonHeader*)&object_pr_Skel_004188,
-                       (AnimationHeader*)&object_pr_Anim_004340, jointTable, morphTable, 5);
+                           (AnimationHeader*)&object_pr_Anim_004340, jointTable, morphTable, 5);
     }
     if (gPlayState != NULL && lastUpdate != gPlayState->state.frames) {
         lastUpdate = gPlayState->state.frames;
         SkelAnime_Update(&skelAnime);
     }
-    
+
     Scene_SetRenderModeXlu(gPlayState, 0, 1);
     SkelAnime_DrawFlexOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
-    DrawFireRing(3.0f, 0.6f, 3.5f, -1500.0f);
+    DrawFireRing(3.2f, 0.3f, 3.5f, -2500.0f);
 }
 
 extern void DrawSkulltula() {
