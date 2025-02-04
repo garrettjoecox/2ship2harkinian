@@ -169,7 +169,41 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
         u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
         MsgScript* script = va_arg(args, MsgScript*);
+        MsgEventCallback* callback = va_arg(args, MsgEventCallback*);
+        MsgScript** scriptPtr = va_arg(args, MsgScript**);
+
         Player* player = GET_PLAYER(gPlayState);
+        EnTab* tabActor = (EnTab*) actor;
+
+        // Override script during initial MSCRIPT_BEGIN_TEXT
+        if (cmdId == MSCRIPT_CMD_14) {
+            u16 textId = MSCRIPT_GET_16(script, 1);
+            if (textId == 0x2B0A) {
+                *scriptPtr = standardDialogueOverrideScript;
+            }
+        }
+
+        // Override callback function depending on actor state for MSCRIPT_BRANCH_ON_CALLBACK_2
+        if (cmdId == MSCRIPT_CMD_40) {
+            if (tabDialogueState != TAB_D_SHOP_DIALOGUE) {
+                *callback = EnTab_OverrideBottleCheckCallback;
+            } else {
+                if (gPlayState->msgCtx.choiceIndex == 0) {
+                    if (RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].cycleObtained) {
+                        LUSLOG_DEBUG("Reset callback to vanilla behavior");
+                        *callback = func_80BE0D38;
+                    } else {
+                        *callback = EnTab_OverrideBottleCheckCallback;
+                    }
+                } else if (gPlayState->msgCtx.choiceIndex == 1) {
+                    if (RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].cycleObtained) {
+                        *callback = func_80BE0D38;
+                    } else {
+                        *callback = EnTab_OverrideBottleCheckCallback;
+                    }
+                }
+            }
+        }
 
         // Use check prices instead of vanilla for MSCRIPT_BRANCH_ON_RUPEES
         if (cmdId == MSCRIPT_CMD_08) {
