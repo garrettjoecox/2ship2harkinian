@@ -23,6 +23,7 @@ void DrawOctorok();
 void DrawPeehat();
 void DrawRedead();
 void DrawShellBlade();
+void DrawSkullfish();
 void DrawSkulltula();
 void DrawSlime();
 void DrawSnapper();
