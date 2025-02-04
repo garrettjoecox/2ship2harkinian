@@ -6,7 +6,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Tab/z_en_tab.h"
 
 MsgScript D_80BE19A0[];
-s32 func_80BE0D38(Actor* thisx, PlayState* play);  // Standard dialogue mscript callback that does bottle check
+s32 func_80BE0D38(Actor* thisx, PlayState* play); // Standard dialogue mscript callback that does bottle check
 }
 
 enum TabDialogueState {
@@ -38,7 +38,7 @@ MsgScript standardDialogueOverrideScript[] = {
     /* 0x0034 0x03 */ MSCRIPT_BEGIN_TEXT(0x2B0E),
     /* 0x0037 0x01 */ MSCRIPT_AWAIT_TEXT(),
     /* 0x0038 0x03 */ MSCRIPT_JUMP(0x0048 - 0x003B),
-    /* 0x003B 0x05 */ MSCRIPT_BRANCH_ON_RUPEES(0x00C8, 0x004F - 0x0040) ,
+    /* 0x003B 0x05 */ MSCRIPT_BRANCH_ON_RUPEES(0x00C8, 0x004F - 0x0040),
     /* 0x0040 0x03 */ MSCRIPT_JUMP(0x0049 - 0x0043),
     /* 0x0043 0x01 */ MSCRIPT_PLAY_CANCEL(),
     /* 0x0044 0x03 */ MSCRIPT_BEGIN_TEXT(0x2B0D),
@@ -82,21 +82,19 @@ static TabDialogueState tabDialogueState = TAB_D_IDLE;
 int32_t EnTab_OverrideBottleCheckCallback(Actor* thisx, PlayState* play) {
     // Should always return true - as if the player always has an empty bottle!
     // See func_80BE0D38 in z_en_tab.c
-    return true;   
+    return true;
 }
 
 void EnTab_UpdateDialogueState(u16* textId, bool* loadFromMessageTable) {
-    switch (*textId) 
-    {
-    case 0x2B0A:
-        tabDialogueState = TAB_D_INITIAL_DIALOGUE;
-        break;
-    case 0x2B0B:
-        tabDialogueState = TAB_D_SHOP_DIALOGUE;
-        LUSLOG_DEBUG("it's shopping time!");
-        break;
-    default:
-        tabDialogueState = TAB_D_IDLE;
+    switch (*textId) {
+        case 0x2B0A:
+            tabDialogueState = TAB_D_INITIAL_DIALOGUE;
+            break;
+        case 0x2B0B:
+            tabDialogueState = TAB_D_SHOP_DIALOGUE;
+            break;
+        default:
+            tabDialogueState = TAB_D_IDLE;
     }
 }
 
@@ -173,7 +171,7 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
         MsgScript** scriptPtr = va_arg(args, MsgScript**);
 
         Player* player = GET_PLAYER(gPlayState);
-        EnTab* tabActor = (EnTab*) actor;
+        EnTab* tabActor = (EnTab*)actor;
 
         // Override script during initial MSCRIPT_BEGIN_TEXT
         if (cmdId == MSCRIPT_CMD_14) {
@@ -190,7 +188,6 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
             } else {
                 if (gPlayState->msgCtx.choiceIndex == 0) {
                     if (RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].cycleObtained) {
-                        LUSLOG_DEBUG("Reset callback to vanilla behavior");
                         *callback = func_80BE0D38;
                     } else {
                         *callback = EnTab_OverrideBottleCheckCallback;
