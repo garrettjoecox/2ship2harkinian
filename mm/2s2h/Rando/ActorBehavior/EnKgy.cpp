@@ -15,6 +15,10 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
 
         if (randoRazorSwordSaveCheck.obtained) {
             randoGildedSwordSaveCheck.eligible = true;
+
+            // Normally this bit is set to zero when you get your sword back. The DoNotResetRazorSword enhancement uses
+            // this bit, so we need to clear it
+            gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_KAJIYA].unk_14 &= ~4;
         } else {
             randoRazorSwordSaveCheck.eligible = true;
             // Skip ahead to the textbox that normally plays after receiving the sword
