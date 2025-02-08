@@ -21,6 +21,7 @@ void InitEnAob01Behavior();
 void InitEnAzBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
+void InitEnBjtBehavior();
 void InitEnBomBowlManBehavior();
 void InitEnBoxBehavior();
 void InitEnCowBehavior();

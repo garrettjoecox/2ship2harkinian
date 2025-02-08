@@ -26,7 +26,6 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 case ACTOR_EN_PST:
                     actor->flags |= ACTOR_FLAG_TALK_REQUESTED; // Prevent softlock
                     [[fallthrough]];
-                case ACTOR_EN_BJT:
                 case ACTOR_EN_NB:
                     func_80832558(gPlayState, player, func_80837B60);
                     *should = false;
