@@ -104,13 +104,11 @@ void Rando::MiscBehavior::CheckQueueReset() {
 
 /// @brief Should only be used for non-unique items like junk or refills.
 /// @param itemId the item ID to attempt to give to the player
-void Rando::MiscBehavior::QueueNonCheckItem(RandoItemId itemId) 
-{
+void Rando::MiscBehavior::QueueNonCheckItem(RandoItemId itemId) {
     queued = true;
 
     GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
-        .showGetItemCutscene =
-            Rando::StaticData::ShouldShowGetItemCutscene(ConvertItem(itemId)),
+        .showGetItemCutscene = Rando::StaticData::ShouldShowGetItemCutscene(ConvertItem(itemId)),
         .param = (int16_t)RC_UNKNOWN,
         .giveItem =
             [](Actor* actor, PlayState* play) {
@@ -157,8 +155,7 @@ void Rando::MiscBehavior::QueueNonCheckItem(RandoItemId itemId)
                     randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
                 } else {
                     auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                    randoItemId =
-                        Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
+                    randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
                 }
 
                 Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);

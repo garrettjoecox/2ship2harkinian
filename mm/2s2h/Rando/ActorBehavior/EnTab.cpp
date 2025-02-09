@@ -83,7 +83,7 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
                     Rando::MiscBehavior::QueueNonCheckItem(chateauRefillRandoItem);
                 }
             }
-            
+
             EnTab* enTab = (EnTab*)actor;
             Player* player = GET_PLAYER(gPlayState);
             enTab->actor.parent = &player->actor;
