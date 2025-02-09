@@ -261,9 +261,8 @@ void func_809A3A74(ObjPzlblock* this, PlayState* play) {
     }
 
     if (sp20 != -1) {
-        if (GameInteractor_Should(VB_PZL_BLOCK_BEGIN_MOVE,
-                                  (this->unk_16E[sp20] >= 11) && func_809A34E0(this, sp20) && func_809A35EC(this, sp20),
-                                  this)) {
+        if (GameInteractor_Should(VB_BLOCK_BEGIN_MOVE, (this->unk_16E[sp20] >= 11), this) &&
+            func_809A34E0(this, sp20) && func_809A35EC(this, sp20)) {
             if (!func_809A33E0(this, play, (this->dyna.pushForce > 0.0f) ? 90 : 120)) {
                 func_809A376C(this, sp20);
                 func_809A3BA4(this);
@@ -282,8 +281,8 @@ void func_809A3BA4(ObjPzlblock* this) {
 }
 
 void func_809A3BC0(ObjPzlblock* this, PlayState* play) {
-    if (GameInteractor_Should(VB_PZL_BLOCK_BE_FINISHED_PULLING, Math_StepToF(this->unk_164, this->unk_168, 2.3f),
-                              this)) {
+    if (GameInteractor_Should(VB_BLOCK_BE_FINISHED_PULLING, Math_StepToF(this->unk_164, this->unk_168, 2.3f),
+                              this->unk_164, this->unk_168, 2.3f, 2.3f)) {
         Player* player = GET_PLAYER(play);
         s32 params = OBJPZLBLOCK_GET_ROTZ(&this->dyna.actor);
         s32 pad;

@@ -6,6 +6,7 @@
 
 #include "z_obj_iceblock.h"
 #include "objects/object_ice_block/object_ice_block.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -1140,7 +1141,7 @@ void func_80A25D28(ObjIceblock* this, PlayState* play) {
     sp34 = true;
     if (sp30 == -1) {
         sp34 = false;
-    } else if (!(this->unk_1B0 & 2) && (this->unk_26E[sp30] >= 11)) {
+    } else if (!(this->unk_1B0 & 2) && GameInteractor_Should(VB_BLOCK_BEGIN_MOVE, this->unk_26E[sp30] >= 11, this)) {
         sp34 = true;
         if (!func_80A24118(this, play, (this->dyna.pushForce > 0.0f) ? 59.9f : 89.9f, &sp24)) {
             func_80A232C4(this, sp30);
@@ -1174,7 +1175,7 @@ void func_80A25E50(ObjIceblock* this, PlayState* play) {
         func_80A23B88(this);
         func_80A2541C(this, play);
         func_80A25BA0(this);
-    } else if (sp38) {
+    } else if (GameInteractor_Should(VB_BLOCK_BE_FINISHED_PULLING, sp38, this->unk_264, this->unk_268, temp_f2, 3.5f)) {
         if (func_80A24118(this, play, 59.9f, &sp28)) {
             Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);
         }
