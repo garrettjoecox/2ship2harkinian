@@ -155,7 +155,7 @@ void CosmeticEditorRandomizeElement(CosmeticEditorElement element) {
 
     CVarSetColor(element.colorCvar, colorSelected);
     CVarSetInteger(element.colorChangedCvar, true);
-    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
 }
 
 void CosmeticEditorRandomizeAllElements() {
@@ -217,13 +217,13 @@ void CosmeticEditorDrawColorTab() {
 
                 CVarSetColor(entry.colorCvar, colorSelected);
                 CVarSetInteger(entry.colorChangedCvar, true);
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::SameLine();
             if (ImGui::Button(ICON_FA_UNDO, ImVec2(27.0f, 27.0f))) {
                 CVarClear(entry.colorCvar);
                 CVarClear(entry.colorChangedCvar);
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::SameLine();
             if (ImGui::Button(ICON_FA_RECYCLE, ImVec2(27.0f, 27.0f))) {

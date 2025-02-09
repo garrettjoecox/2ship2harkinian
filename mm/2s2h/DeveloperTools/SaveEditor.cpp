@@ -363,7 +363,7 @@ void DrawGeneralTab() {
 
     ImGui::BeginGroup();
     ImGui::Text("Player Name");
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::Colors::Gray);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::ColorValues.at(UIWidgets::Colors::Gray));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
     static char playerNameBuf[9];
@@ -613,7 +613,7 @@ void DrawAmmoInput(InventorySlot slot) {
         ImVec2(x * INV_GRID_WIDTH + INV_GRID_PADDING + 7.0f,
                y * INV_GRID_HEIGHT + INV_GRID_TOP_MARGIN + INV_GRID_PADDING + (INV_GRID_ICON_SIZE - 2.0f)));
     ImGui::PushItemWidth(24.0f);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::Colors::Gray);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::ColorValues.at(UIWidgets::Colors::Gray));
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
     if (ImGui::InputScalar("##ammoInput", ImGuiDataType_S8, &AMMO(currentItemId))) {
@@ -741,7 +741,7 @@ void DrawSlot(InventorySlot slot) {
           DPAD_GET_CUR_FORM_BTN_SLOT(EQUIP_SLOT_D_LEFT) == slot ||
           DPAD_GET_CUR_FORM_BTN_SLOT(EQUIP_SLOT_D_DOWN) == slot ||
           DPAD_GET_CUR_FORM_BTN_SLOT(EQUIP_SLOT_D_UP) == slot))) {
-        ImGui::PushStyleColor(ImGuiCol_Border, UIWidgets::Colors::White);
+        ImGui::PushStyleColor(ImGuiCol_Border, UIWidgets::ColorValues.at(UIWidgets::Colors::White));
     } else {
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
     }
@@ -755,8 +755,13 @@ void DrawSlot(InventorySlot slot) {
             (const char*)gItemIcons[currentItemId]);
     }
 
-    if (ImGui::ImageButton(textureId, ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), 0,
-                           ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, currentItemId == ITEM_NONE ? 0.4f : 1.0f))) {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    bool buttonPressed =
+        ImGui::ImageButton((const char*)gItemIcons[safeItemsForInventorySlot[slot][0]], textureId,
+                           ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1),
+                           ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, currentItemId == ITEM_NONE ? 0.4f : 1.0f));
+    ImGui::PopStyleVar();
+    if (buttonPressed) {
         if (safeMode && safeItemsForInventorySlot[slot].size() < 2) {
             NextItemInSlot(slot);
         } else {
@@ -786,9 +791,13 @@ void DrawSlot(InventorySlot slot) {
             }
             ItemId id = safeMode ? safeItemsForInventorySlot[selectedInventorySlot][pickerIndex]
                                  : static_cast<ItemId>(pickerIndex);
-            if (ImGui::ImageButton(
-                    Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName((const char*)gItemIcons[id]),
-                    ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), 0)) {
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            bool buttonPressed = ImGui::ImageButton(
+                (const char*)gItemIcons[id],
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName((const char*)gItemIcons[id]),
+                ImVec2(INV_GRID_ICON_SIZE, INV_GRID_ICON_SIZE));
+            ImGui::PopStyleVar();
+            if (buttonPressed) {
                 gSaveContext.save.saveInfo.inventory.items[selectedInventorySlot] = id;
                 ImGui::CloseCurrentPopup();
             }
@@ -1584,7 +1593,7 @@ void DrawRegEditorTab() {
         ImGui::BeginGroup();
         ImGui::Text("%02X (%d)", i + gRegEditor->regPage * REG_PER_PAGE, i + gRegEditor->regPage * REG_PER_PAGE);
         ImGui::SameLine();
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::Colors::Gray);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, UIWidgets::ColorValues.at(UIWidgets::Colors::Gray));
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
         ImGui::InputScalar(

@@ -113,6 +113,19 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_PROGRESSIVE_WALLET:
             Rando::GiveItem(Rando::ConvertItem(randoItemId));
             break;
+        case RI_BOMB_BAG_20:
+        case RI_BOMB_BAG_30:
+        case RI_BOMB_BAG_40:
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            INV_CONTENT(ITEM_BOMBCHU) = ITEM_BOMBCHU;
+            AMMO(ITEM_BOMB) = AMMO(ITEM_BOMBCHU) = CUR_CAPACITY(UPG_BOMB_BAG);
+            break;
+        case RI_WALLET_ADULT:
+        case RI_WALLET_GIANT:
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            // Fill Rupees to max, this may be opt-in later
+            gSaveContext.rupeeAccumulator = CUR_CAPACITY(UPG_WALLET);
+            break;
         case RI_GS_TOKEN_SWAMP:
             // Set QUEST_QUIVER to match bug mentioned in z_parameter.c
             SET_QUEST_ITEM(QUEST_QUIVER);

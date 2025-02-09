@@ -18,7 +18,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS, 2),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Hit Beehive", WEEKEVENTREG_83_02, HAS_ITEM(ITEM_BOW)),
+            EVENT_WEEKEVENTREG("Hit Beehive", WEEKEVENTREG_83_02, (HAS_ITEM(ITEM_BOW) || (CAN_BE_DEKU && HAS_MAGIC))),
         },
     };
     Regions[RR_PIRATES_FORTRESS_CAPTAIN_ROOM] = RandoRegion{ .name = "Captain Room", .sceneId = SCENE_PIRATE,

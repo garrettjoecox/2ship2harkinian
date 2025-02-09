@@ -186,6 +186,85 @@ std::map<RandoItemId, RandoStaticItem> Items = {
 };
 // clang-format on
 
+std::vector<RandoItemId> StartingItemsMap = {
+    RI_ARROW_FIRE,
+    RI_ARROW_ICE,
+    RI_ARROW_LIGHT,
+    RI_BOMBERS_NOTEBOOK,
+    RI_BOTTLE_EMPTY,
+    RI_DEED_LAND,
+    RI_DEED_MOUNTAIN,
+    RI_DEED_OCEAN,
+    RI_DEED_SWAMP,
+    RI_DOUBLE_DEFENSE,
+    RI_GREAT_FAIRY_SWORD,
+    RI_GREAT_SPIN_ATTACK,
+    RI_HOOKSHOT,
+    RI_LENS,
+    RI_LETTER_TO_KAFEI,
+    RI_LETTER_TO_MAMA,
+    RI_MASK_ALL_NIGHT,
+    RI_MASK_BLAST,
+    RI_MASK_BREMEN,
+    RI_MASK_BUNNY,
+    RI_MASK_CAPTAIN,
+    RI_MASK_CIRCUS_LEADER,
+    RI_MASK_COUPLE,
+    RI_MASK_DEKU,
+    RI_MASK_DON_GERO,
+    RI_MASK_FIERCE_DEITY,
+    RI_MASK_GARO,
+    RI_MASK_GIANT,
+    RI_MASK_GIBDO,
+    RI_MASK_GORON,
+    RI_MASK_GREAT_FAIRY,
+    RI_MASK_KAFEIS_MASK,
+    RI_MASK_KAMARO,
+    RI_MASK_KEATON,
+    RI_MASK_POSTMAN,
+    RI_MASK_ROMANI,
+    RI_MASK_SCENTS,
+    RI_MASK_STONE,
+    RI_MASK_TRUTH,
+    RI_MASK_ZORA,
+    RI_MOONS_TEAR,
+    RI_OCARINA,
+    RI_PENDANT_OF_MEMORIES,
+    RI_PICTOGRAPH_BOX,
+    RI_POWDER_KEG,
+    RI_PROGRESSIVE_BOMB_BAG,
+    RI_PROGRESSIVE_BOMB_BAG,
+    RI_PROGRESSIVE_BOMB_BAG,
+    RI_PROGRESSIVE_BOW,
+    RI_PROGRESSIVE_BOW,
+    RI_PROGRESSIVE_BOW,
+    RI_PROGRESSIVE_MAGIC,
+    RI_PROGRESSIVE_MAGIC,
+    RI_PROGRESSIVE_SWORD,
+    RI_PROGRESSIVE_SWORD,
+    RI_PROGRESSIVE_SWORD,
+    RI_PROGRESSIVE_WALLET,
+    RI_PROGRESSIVE_WALLET,
+    RI_REMAINS_GOHT,
+    RI_REMAINS_GYORG,
+    RI_REMAINS_ODOLWA,
+    RI_REMAINS_TWINMOLD,
+    RI_ROOM_KEY,
+    RI_SHIELD_HERO,
+    RI_SHIELD_MIRROR,
+    RI_SONG_ELEGY,
+    RI_SONG_EPONA,
+    RI_SONG_HEALING,
+    RI_PROGRESSIVE_LULLABY,
+    RI_PROGRESSIVE_LULLABY,
+    RI_SONG_NOVA,
+    RI_SONG_OATH,
+    RI_SONG_SOARING,
+    RI_SONG_SONATA,
+    RI_SONG_STORMS,
+    RI_SONG_TIME,
+};
+
 RandoItemId GetItemIdFromName(const char* name) {
     for (auto& [randoItemId, randoStaticItem] : Items) {
         if (strcmp(name, randoStaticItem.spoilerName) == 0) {
@@ -266,6 +345,18 @@ const char* GetIconTexturePath(RandoItemId randoItemId) {
         case RI_WOODFALL_MAP:
         case RI_STONE_TOWER_MAP:
             return (const char*)gItemIcons[ITEM_COMPASS];
+        case RI_PROGRESSIVE_BOMB_BAG:
+            return (const char*)gItemIcons[ITEM_BOMB_BAG_20];
+        case RI_PROGRESSIVE_BOW:
+            return (const char*)gItemIcons[ITEM_BOW];
+        case RI_PROGRESSIVE_SWORD:
+            return (const char*)gItemIcons[ITEM_SWORD_KOKIRI];
+        case RI_PROGRESSIVE_WALLET:
+            return (const char*)gItemIcons[ITEM_WALLET_ADULT];
+        case RI_PROGRESSIVE_LULLABY:
+            return (const char*)gItemIcons[ITEM_SONG_LULLABY];
+        case RI_PROGRESSIVE_MAGIC:
+            return (const char*)gItemIcons[ITEM_MAGIC_JAR_SMALL];
         default:
             break;
     }
