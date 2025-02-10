@@ -24,6 +24,13 @@ void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool
         RANDO_SAVE_CHECKS[randoCheckId].randoItemId = itemPool.back();
         itemPool.pop_back();
     }
+
+    // Set unshuffled locations with their vanilla item
+    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+        if (!RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
+            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].randoItemId = randoStaticCheck.randoItemId;
+        }
+    }
 }
 
 } // namespace Logic
