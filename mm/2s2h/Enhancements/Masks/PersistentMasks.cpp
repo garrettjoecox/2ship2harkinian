@@ -217,6 +217,17 @@ void RegisterPersistentMasks() {
             }
         }
     });
+
+    // Prevent persistent Bunny Hood from being used as an Item Action. Normally, the currently equipped mask converts
+    // to PLAYER_IA_NONE
+    COND_VB_SHOULD(VB_GET_ITEM_ACTION_FROM_MASK, CVAR, {
+        Player* player = GET_PLAYER(gPlayState);
+        PlayerItemAction playerItemAction = (PlayerItemAction)va_arg(args, int);
+
+        if (player && STATE_CVAR && playerItemAction == PLAYER_IA_MASK_BUNNY) {
+            *should = true;
+        }
+    });
 }
 
 static RegisterShipInitFunc initFunc(RegisterPersistentMasks, { CVAR_NAME });

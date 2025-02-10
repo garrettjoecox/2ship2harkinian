@@ -29,7 +29,7 @@ s32 GetNormalizedCost() {
         }
     }
 
-    return MAX(10, MIN(500, 10 + (obtainedChecks * (500 - 10)) / (maxChecks)));
+    return MAX(10, MIN(250, 10 + (obtainedChecks * (250 - 10)) / (maxChecks)));
 }
 
 RandoCheckId GetRandomCheck(bool repeatableOnlyObtained = false) {
@@ -42,7 +42,8 @@ RandoCheckId GetRandomCheck(bool repeatableOnlyObtained = false) {
     std::vector<RandoCheckId> availableChecks;
     for (auto& [randoCheckId, _] : Rando::StaticData::Checks) {
         RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (saveCheck.shuffled && (!repeatableOnlyObtained || !saveCheck.obtained)) {
+        if (saveCheck.shuffled && Rando::StaticData::Items[saveCheck.randoItemId].randoItemType != RITYPE_JUNK &&
+            (!repeatableOnlyObtained || !saveCheck.obtained)) {
             availableChecks.push_back(randoCheckId);
         }
     }
@@ -54,7 +55,8 @@ RandoCheckId GetRandomCheck(bool repeatableOnlyObtained = false) {
     if (repeatableOnlyObtained) {
         Ship_Random_Seed(gGameState->frames);
     } else {
-        Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + enGs->unk_195);
+        uint32_t seed = gPlayState->sceneId + enGs->actor.home.pos.x + enGs->actor.home.pos.z;
+        Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + seed);
     }
     return availableChecks[Ship_Random(0, availableChecks.size() - 1)];
 }
@@ -83,17 +85,11 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         entry.autoFormat = false;
         auto& saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-        entry.msg = "They say %g{{article}}{{item}}%w is hidden at %y{{location}}%w.";
+        entry.msg = "They say %g{{item}}%w is hidden at %y{{location}}%w.";
 
-        if (!Ship_IsCStringEmpty(Rando::StaticData::Items[saveCheck.randoItemId].article)) {
-            CustomMessage::Replace(&entry.msg, "{{article}}",
-                                   std::string(Rando::StaticData::Items[saveCheck.randoItemId].article) + " ");
-        } else {
-            CustomMessage::Replace(&entry.msg, "{{article}}", "");
-        }
-
-        CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[saveCheck.randoItemId].name);
-        CustomMessage::Replace(&entry.msg, "{{location}}", readableCheckNamesForGs[randoCheckId]);
+        CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::GetItemName(saveCheck.randoItemId));
+        CustomMessage::Replace(&entry.msg, "{{location}}",
+                               Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
 
         // Replace colors before line break calculation
         CustomMessage::ReplaceColorChars(&entry.msg);
@@ -128,17 +124,11 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
             } else {
                 RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-                entry.msg = "Wise choice... They say %g{{article}}{{item}}%w is hidden at %y{{location}}%w.";
+                entry.msg = "Wise choice... They say %g{{item}}%w is hidden at %y{{location}}%w.";
 
-                if (!Ship_IsCStringEmpty(Rando::StaticData::Items[saveCheck.randoItemId].article)) {
-                    CustomMessage::Replace(&entry.msg, "{{article}}",
-                                           std::string(Rando::StaticData::Items[saveCheck.randoItemId].article) + " ");
-                } else {
-                    CustomMessage::Replace(&entry.msg, "{{article}}", "");
-                }
-
-                CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[saveCheck.randoItemId].name);
-                CustomMessage::Replace(&entry.msg, "{{location}}", readableCheckNamesForGs[randoCheckId]);
+                CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::GetItemName(saveCheck.randoItemId));
+                CustomMessage::Replace(&entry.msg, "{{location}}",
+                                       Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
 
                 gSaveContext.rupeeAccumulator -= cost;
                 cost *= 2;

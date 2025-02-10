@@ -7349,8 +7349,10 @@ void func_8083827C(Player* this, PlayState* play) {
                                 sp48 = func_80835CD8(play, this, &D_8085D154, &sp4C, &sp60, &sp5C);
                                 sp44 = this->actor.world.pos.y;
 
-                                if (WaterBox_GetSurface1(play, &play->colCtx, sp4C.x, sp4C.z, &sp44, &sp58) &&
-                                    ((sp44 - sp48) > 50.0f)) {
+                                if (GameInteractor_Should(
+                                        VB_LINK_DIVE_OVER_WATER,
+                                        WaterBox_GetSurface1(play, &play->colCtx, sp4C.x, sp4C.z, &sp44, &sp58) &&
+                                            ((sp44 - sp48) > 50.0f))) {
                                     func_80834DB8(this, &gPlayerAnim_link_normal_run_jump_water_fall, 6.0f, play);
                                     Player_SetAction(play, this, Player_Action_27, 0);
                                     return;
@@ -21081,7 +21083,8 @@ PlayerItemAction func_8085B854(PlayState* play, Player* this, ItemId itemId) {
     PlayerItemAction itemAction = Player_ItemToItemAction(this, itemId);
 
     if ((itemAction >= PLAYER_IA_MASK_MIN) && (itemAction <= PLAYER_IA_MASK_MAX) &&
-        (itemAction == GET_IA_FROM_MASK(this->currentMask))) {
+        GameInteractor_Should(VB_GET_ITEM_ACTION_FROM_MASK, itemAction == GET_IA_FROM_MASK(this->currentMask),
+                              itemAction)) {
         itemAction = PLAYER_IA_NONE;
     }
 

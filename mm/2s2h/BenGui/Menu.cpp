@@ -272,14 +272,14 @@ void Menu::MenuDrawItem(WidgetInfo& widget, uint32_t width, UIWidgets::Colors me
                 };
             } break;
             case WIDGET_AUDIO_BACKEND: {
-                auto currentAudioBackend = Ship::Context::GetInstance()->GetAudio()->GetAudioBackend();
+                auto currentAudioBackend = Ship::Context::GetInstance()->GetAudio()->GetCurrentAudioBackend();
                 UIWidgets::ComboboxOptions options = {};
                 options.color = menuThemeIndex;
                 options.tooltip = "Sets the audio API used by the game. Requires a relaunch to take effect.";
                 options.disabled = Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size() <= 1;
                 options.disabledTooltip = "Only one audio API is available on this platform.";
                 if (UIWidgets::Combobox("Audio API", &currentAudioBackend, audioBackendsMap, options)) {
-                    Ship::Context::GetInstance()->GetAudio()->SetAudioBackend(currentAudioBackend);
+                    Ship::Context::GetInstance()->GetAudio()->SetCurrentAudioBackend(currentAudioBackend);
                 }
             } break;
             case WIDGET_VIDEO_BACKEND: {

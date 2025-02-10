@@ -235,7 +235,7 @@ void HudEditorWindow::DrawElement() {
                 break;
             }
         }
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
 
     for (int i = HUD_EDITOR_ELEMENT_B; i < HUD_EDITOR_ELEMENT_MAX; i++) {
@@ -266,14 +266,14 @@ void HudEditorWindow::DrawElement() {
 
             CVarSetColor(hudEditorElements[i].colorCvar, colorSelected);
             CVarSetInteger(hudEditorElements[i].colorChangedCvar, true);
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_REFRESH)) {
             float color[4] = { defaultColor[0], defaultColor[1], defaultColor[2], defaultColor[3] };
             CVarClear(hudEditorElements[i].colorCvar);
             CVarClear(hudEditorElements[i].colorChangedCvar);
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         }
         ImGui::SameLine();
         if (UIWidgets::CVarCombobox("Mode", hudEditorElements[i].modeCvar, modeNames,

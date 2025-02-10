@@ -4,7 +4,6 @@
 
 extern "C" {
 #include "overlays/actors/ovl_Bg_Dblue_Movebg/z_bg_dblue_movebg.h"
-#include "overlays/actors/ovl_Obj_Pzlblock/z_obj_pzlblock.h"
 #include "overlays/actors/ovl_Obj_Oshihiki/z_obj_oshihiki.h"
 }
 
@@ -32,13 +31,17 @@ void RegisterFasterPushAndPull() {
 
     COND_VB_SHOULD(VB_SKATE_BLOCK_BEGIN_MOVE, CVAR, { *should = true; });
 
-    COND_VB_SHOULD(VB_PZL_BLOCK_BEGIN_MOVE, CVAR, { *should = true; });
+    COND_VB_SHOULD(VB_BLOCK_BEGIN_MOVE, CVAR, { *should = true; });
 
-    COND_VB_SHOULD(VB_PZL_BLOCK_BE_FINISHED_PULLING, CVAR, {
-        ObjPzlblock* objPzlblock = va_arg(args, ObjPzlblock*);
+    COND_VB_SHOULD(VB_BLOCK_BE_FINISHED_PULLING, CVAR, {
+        f32* pValue = va_arg(args, f32*);
+        f32 target = (f32)va_arg(args, f64);
+        f32 step = (f32)va_arg(args, f64);
+        f32 maxStep = (f32)va_arg(args, f64);
+        step = CLAMP_MAX(step, maxStep);
         // This is actually the same exact condition, but because we're hooking and running it here it effectively
         // doubles the speed
-        *should = Math_StepToF(objPzlblock->unk_164, objPzlblock->unk_168, 2.3f);
+        *should = Math_StepToF(pValue, target, step);
     });
 }
 

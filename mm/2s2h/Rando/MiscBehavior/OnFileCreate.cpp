@@ -28,7 +28,7 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         gSaveContext.save.hasTatl = true;
         gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
         gSaveContext.save.saveInfo.playerData.threeDayResetCount = 1;
-        gSaveContext.save.isFirstCycle = false;
+        gSaveContext.save.isFirstCycle = true;
         SET_WEEKEVENTREG(WEEKEVENTREG_59_04);                                                  // Tatl
         SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
         gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
@@ -58,16 +58,65 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 // Persist options to the save
                 gSaveContext.save.shipSaveInfo.rando.finalSeed = finalSeed;
                 for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
-                    RANDO_SAVE_OPTIONS[randoOptionId] = CVarGetInteger(randoStaticOption.cvar, 0);
+                    uint32_t defaults = 0;
+                    switch (randoOptionId) {
+                        case RO_STARTING_ITEMS_2:
+                            defaults = 2149581312;
+                            break;
+                        case RO_STARTING_ITEMS_3:
+                            defaults = 2048;
+                            break;
+                        case RO_STARTING_HEALTH:
+                            defaults = 3;
+                            break;
+                        default:
+                            break;
+                    }
+                    RANDO_SAVE_OPTIONS[randoOptionId] = (uint32_t)CVarGetInteger(randoStaticOption.cvar, defaults);
                 }
 
-                // TODO: This should be driven by the UI
-                std::vector<RandoItemId> startingItems = {
-                    RI_PROGRESSIVE_SWORD,
-                    RI_SHIELD_HERO,
-                    RI_OCARINA,
-                    RI_SONG_TIME,
-                };
+                if (RANDO_SAVE_OPTIONS[RO_STARTING_HEALTH] != 3) {
+                    gSaveContext.save.saveInfo.playerData.healthCapacity =
+                        gSaveContext.save.saveInfo.playerData.health = RANDO_SAVE_OPTIONS[RO_STARTING_HEALTH] * 0x10;
+                }
+
+                if (RANDO_SAVE_OPTIONS[RO_STARTING_CONSUMABLES]) {
+                    GiveItem(RI_DEKU_STICK);
+                    GiveItem(RI_DEKU_NUT);
+                    AMMO(ITEM_DEKU_STICK) = CUR_CAPACITY(UPG_DEKU_STICKS);
+                    AMMO(ITEM_DEKU_NUT) = CUR_CAPACITY(UPG_DEKU_NUTS);
+                }
+
+                std::vector<RandoItemId> startingItems = {};
+                for (size_t i = 0; i < Rando::StaticData::StartingItemsMap.size(); i++) {
+                    RandoItemId itemId = Rando::StaticData::StartingItemsMap[i];
+                    RandoOptionId optionId;
+                    if (i < 32) {
+                        optionId = RO_STARTING_ITEMS_1;
+                    } else if (i < 64) {
+                        optionId = RO_STARTING_ITEMS_2;
+                    } else {
+                        optionId = RO_STARTING_ITEMS_3;
+                    }
+                    uint32_t startingItemsBits = RANDO_SAVE_OPTIONS[optionId];
+                    if ((startingItemsBits & (1 << i)) != 0) {
+                        startingItems.push_back(itemId);
+                    }
+                }
+
+                if (RANDO_SAVE_OPTIONS[RO_STARTING_MAPS_AND_COMPASSES]) {
+                    std::vector<RandoItemId> MapsAndCompasses = {
+                        RI_GREAT_BAY_COMPASS,     RI_GREAT_BAY_MAP,          RI_SNOWHEAD_COMPASS,
+                        RI_SNOWHEAD_MAP,          RI_STONE_TOWER_COMPASS,    RI_STONE_TOWER_MAP,
+                        RI_TINGLE_MAP_CLOCK_TOWN, RI_TINGLE_MAP_GREAT_BAY,   RI_TINGLE_MAP_ROMANI_RANCH,
+                        RI_TINGLE_MAP_SNOWHEAD,   RI_TINGLE_MAP_STONE_TOWER, RI_TINGLE_MAP_WOODFALL,
+                        RI_WOODFALL_COMPASS,      RI_WOODFALL_MAP,
+                    };
+
+                    for (RandoItemId itemId : MapsAndCompasses) {
+                        startingItems.push_back(itemId);
+                    }
+                }
 
                 std::unordered_map<RandoCheckId, bool> checkPool;
                 std::vector<RandoItemId> itemPool;
@@ -76,8 +125,23 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
                     for (auto& [randoCheckId, _] : randoRegion.checks) {
                         auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+
+                        // Initialize the check with it's vanilla item
+                        if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoStaticCheck.randoItemId;
+                        }
+
                         // Skip checks that are already in the pool
                         if (checkPool.find(randoCheckId) != checkPool.end()) {
+                            continue;
+                        }
+
+                        // TODO: Until we have a way to get up to the moon without just being able to kill majora, we're
+                        // going to just disable all moon checks
+                        if (randoStaticCheck.sceneId == SCENE_LAST_BS || randoStaticCheck.sceneId == SCENE_LAST_DEKU ||
+                            randoStaticCheck.sceneId == SCENE_LAST_GORON ||
+                            randoStaticCheck.sceneId == SCENE_LAST_LINK ||
+                            randoStaticCheck.sceneId == SCENE_LAST_ZORA) {
                             continue;
                         }
 
@@ -255,6 +319,10 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 // Grant the starting items
                 for (RandoItemId startingItem : startingItems) {
                     GiveItem(ConvertItem(startingItem));
+                }
+
+                if (RANDO_SAVE_OPTIONS[RO_STARTING_RUPEES]) {
+                    gSaveContext.save.saveInfo.playerData.rupees = CUR_CAPACITY(UPG_WALLET);
                 }
 
                 if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_VANILLA) {

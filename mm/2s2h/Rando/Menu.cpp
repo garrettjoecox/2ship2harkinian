@@ -201,10 +201,110 @@ static void DrawItemsTab() {
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
     ImGui::BeginChild("randoItemsStarting", ImVec2(0, 0));
+    ImGui::BeginChild("randoStartingItemsColumn1", ImVec2(columnWidth, 0));
+    ImGui::SeparatorText("Starting Options");
+    CVarCheckbox("Wallet Full", Rando::StaticData::Options[RO_STARTING_RUPEES].cvar);
+    CVarCheckbox("Consumables Full", Rando::StaticData::Options[RO_STARTING_CONSUMABLES].cvar);
+    CVarCheckbox("Maps and Compasses", Rando::StaticData::Options[RO_STARTING_MAPS_AND_COMPASSES].cvar);
+    CVarSliderInt("Health", Rando::StaticData::Options[RO_STARTING_HEALTH].cvar,
+                  IntSliderOptions()
+                      .Min(1)
+                      .Max(20)
+                      .DefaultValue(3)
+                      .LabelPosition(LabelPosition::None)
+                      .Format("%d Hearts")
+                      .Color(Colors::Red));
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoStartingItemsColumn2", ImVec2(columnWidth, 0));
     ImGui::SeparatorText("Starting Items");
-    CVarSliderInt(
-        "Starting Health", "gPlaceholderInt",
-        IntSliderOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).Min(3).Max(20).DefaultValue(3));
+    int checkedItemIndex = 0;
+    for (size_t i = 0; i < Rando::StaticData::StartingItemsMap.size(); i++) {
+        RandoItemId itemId = Rando::StaticData::StartingItemsMap[i];
+        std::string itemName = Rando::StaticData::Items[itemId].name;
+        RandoOptionId optionId;
+        uint32_t defaults = 0;
+        if (i < 32) {
+            optionId = RO_STARTING_ITEMS_1;
+        } else if (i < 64) {
+            optionId = RO_STARTING_ITEMS_2;
+            defaults = -2145385984;
+        } else {
+            optionId = RO_STARTING_ITEMS_3;
+            defaults = 2048;
+        }
+        uint32_t startingItems = CVarGetInteger(Rando::StaticData::Options[optionId].cvar, defaults);
+
+        bool checked = (startingItems & (1 << i)) != 0;
+        if (checked) {
+            const char* texturePath = Rando::StaticData::GetIconTexturePath(itemId);
+            ImTextureID textureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(texturePath);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
+            if (ImGui::ImageButton(std::to_string(i).c_str(), textureId, ImVec2(columnWidth / 8, columnWidth / 8),
+                                   ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1))) {
+                startingItems &= ~(1 << i);
+                CVarSetInteger(Rando::StaticData::Options[optionId].cvar, startingItems);
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            }
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar(2);
+            UIWidgets::Tooltip(itemName.c_str());
+            checkedItemIndex++;
+        }
+        if (checkedItemIndex % 8 != 0) {
+            ImGui::SameLine(0, 0);
+        }
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoStartingItemsColumn3", ImVec2(columnWidth, 0));
+    ImGui::SeparatorText("Available Items");
+    int uncheckedItemIndex = 0;
+    for (size_t i = 0; i < Rando::StaticData::StartingItemsMap.size(); i++) {
+        RandoItemId itemId = Rando::StaticData::StartingItemsMap[i];
+        std::string itemName = Rando::StaticData::Items[itemId].name;
+        RandoOptionId optionId;
+        uint32_t defaults = 0;
+        if (i < 32) {
+            optionId = RO_STARTING_ITEMS_1;
+        } else if (i < 64) {
+            optionId = RO_STARTING_ITEMS_2;
+            defaults = -2145385984;
+        } else {
+            optionId = RO_STARTING_ITEMS_3;
+            defaults = 2048;
+        }
+        uint32_t startingItems = CVarGetInteger(Rando::StaticData::Options[optionId].cvar, defaults);
+
+        bool checked = (startingItems & (1 << i)) != 0;
+        if (!checked) {
+            const char* texturePath = Rando::StaticData::GetIconTexturePath(itemId);
+            ImTextureID textureId = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(texturePath);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
+            if (ImGui::ImageButton(std::to_string(i).c_str(), textureId, ImVec2(columnWidth / 8, columnWidth / 8),
+                                   ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1))) {
+                startingItems |= (1 << i);
+                CVarSetInteger(Rando::StaticData::Options[optionId].cvar, startingItems);
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            }
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar(2);
+            UIWidgets::Tooltip(itemName.c_str());
+            uncheckedItemIndex++;
+        }
+        if (uncheckedItemIndex % 8 != 0) {
+            ImGui::SameLine(0, 0);
+        }
+    }
+    ImGui::EndChild();
     ImGui::EndChild();
 }
 

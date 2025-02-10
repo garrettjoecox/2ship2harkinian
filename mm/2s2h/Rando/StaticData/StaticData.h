@@ -41,6 +41,7 @@ struct RandoStaticItem {
 };
 
 extern std::map<RandoItemId, RandoStaticItem> Items;
+extern std::vector<RandoItemId> StartingItemsMap;
 
 RandoItemId GetItemIdFromName(const char* name);
 u8 GetIconForZMessage(RandoItemId itemId);

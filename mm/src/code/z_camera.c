@@ -50,6 +50,10 @@
 #include "z64view.h"
 #include "overlays/actors/ovl_En_Horse/z_en_horse.h"
 
+#include "2s2h/BenPort.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
+
 void func_800DDFE0(Camera* camera);
 s32 Camera_ChangeMode(Camera* camera, s16 mode);
 s16 Camera_ChangeSettingFlags(Camera* camera, s16 setting, s16 flags);
@@ -62,8 +66,6 @@ SwingAnimation D_801EDC30[4];
 Vec3f D_801EDDD0;
 Vec3f D_801EDDE0;
 Vec3f D_801EDDF0;
-#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
-#include "2s2h/GameInteractor/GameInteractor.h"
 
 // Camera will reload its paramData. Usually that means setting the read-only data from what is stored in
 // CameraModeValue arrays. Although sometimes some read-write data is reset as well
@@ -565,6 +567,13 @@ s32 func_800CBC84(Camera* camera, Vec3f* from, CameraCollision* to, s32 arg3) {
 
         toNewPos.y += 5.0f;
         if ((arg3 != 0) && func_800CB7CC(camera)) {
+            // 2S2H [Port] Remote hookshot hookslide in Great Bay Temple can lead to a crash when the player is over a
+            // void due to the floor poly for the player being NULL.
+            // We check for NULL and handle the crash appropriately, with safe fallback using a goto into the else path.
+            if (camera->focalActor->floorPoly == NULL) {
+                Ship_HandleConsoleCrashAsReset();
+                goto SkipFocalActorFloorPoly;
+            }
             to->poly = camera->focalActor->floorPoly;
             floorBgId = camera->focalActor->floorBgId;
             to->norm.x = COLPOLY_GET_NORMAL(to->poly->normal.x);
@@ -579,6 +588,7 @@ s32 func_800CBC84(Camera* camera, Vec3f* from, CameraCollision* to, s32 arg3) {
                 floorPolyY = to->pos.y;
             }
         } else {
+        SkipFocalActorFloorPoly: // 2S2H [Port] Safe crash handling
             floorPolyY = BgCheck_CameraRaycastFloor2(colCtx, floorPoly, &floorBgId, &toNewPos);
         }
 
