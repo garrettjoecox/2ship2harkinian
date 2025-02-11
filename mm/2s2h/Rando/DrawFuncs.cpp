@@ -21,6 +21,36 @@ extern "C" {
 #include "assets/objects/object_gi_reserve00/object_gi_reserve00.h"
 }
 
+// Soul Effects
+void DrawEnLight(Color_RGB8 flameColor, Vec3f flameSize) {
+    Gfx* sp68;
+    static s8 unk_144 = (s8)(Rand_ZeroOne() * 255.0f);
+    static u32 lastUpdate = 0;
+
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+    Matrix_ReplaceRotation(&gPlayState->billboardMtxF);
+
+    gSPSegment(POLY_XLU_DISP++, 0x08,
+               (uintptr_t)Gfx_TwoTexScroll(gPlayState->state.gfxCtx, 0, 0, 0, 0x10, 0x20, 1, (unk_144 * 2) & 0x3F,
+                                           (unk_144 * -6) & 0x7F, 0x10, 0x20));
+    sp68 = (Gfx*)gameplay_keep_DL_01ACF0;
+    gDPSetPrimColor(POLY_XLU_DISP++, 0xC0, 0xC0, flameColor.r, flameColor.g, flameColor.b, 0);
+    gDPSetEnvColor(POLY_XLU_DISP++, flameColor.r, flameColor.g, flameColor.b, 0);
+    Matrix_Scale(flameSize.x, flameSize.y, flameSize.z, MTXMODE_APPLY);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_XLU_DISP++, sp68);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+
+    if (gPlayState != NULL && lastUpdate != gPlayState->state.frames) {
+        lastUpdate = gPlayState->state.frames;
+        unk_144++;
+    }
+}
+
 // Boss Souls
 extern void DrawGoht() {
     OPEN_DISPS(gPlayState->state.gfxCtx);
@@ -47,6 +77,7 @@ extern void DrawGoht() {
     SkelAnime_DrawFlexOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawEnLight({ 10, 138, 46 }, { 30.0f, 30.0f, 30.0f });
 }
 
 extern void DrawGyorg() {
@@ -74,6 +105,7 @@ extern void DrawGyorg() {
     SkelAnime_DrawFlexOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawEnLight({ 19, 99, 165 }, { 3.0f, 3.0f, 3.0f });
 }
 
 extern void DrawOdolwa() {
@@ -101,6 +133,7 @@ extern void DrawOdolwa() {
     SkelAnime_DrawFlexOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawEnLight({ 145, 20, 133 }, { 25.0f, 25.0f, 25.0f });
 }
 
 extern void DrawTwinmold() {
@@ -128,6 +161,7 @@ extern void DrawTwinmold() {
     SkelAnime_DrawOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawEnLight({ 168, 180, 20 }, { 3.0f, 3.0f, 3.0f });
 }
 
 extern void DrawMajora() {
@@ -139,6 +173,7 @@ extern void DrawMajora() {
 
     OPEN_DISPS(gPlayState->state.gfxCtx);
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+    Matrix_ReplaceRotation(&gPlayState->billboardMtxF);
     Matrix_Scale(0.04f, 0.04f, 0.04f, MTXMODE_APPLY);
     Matrix_Translate(0, 0, 0, MTXMODE_APPLY);
 
@@ -157,4 +192,5 @@ extern void DrawMajora() {
     SkelAnime_DrawOpa(gPlayState, skelAnime.skeleton, skelAnime.jointTable, NULL, NULL, NULL);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
+    DrawEnLight({ 232, 128, 21 }, { 3.0f, 3.0f, 3.0f });
 }
