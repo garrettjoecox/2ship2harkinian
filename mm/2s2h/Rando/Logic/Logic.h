@@ -106,6 +106,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
     ((RANDO_SAVE_CHECKS[rc].price < 100) || (RANDO_SAVE_CHECKS[rc].price <= 200 && CUR_UPG_VALUE(UPG_WALLET) >= 1) || \
      (CUR_UPG_VALUE(UPG_WALLET) >= 2))
 #define HAS_ALL_STRAY_FAIRIES(dungeonIndex) (gSaveContext.save.saveInfo.inventory.strayFairies[dungeonIndex] >= 15)
+#define HAS_SOUL(soul) (gSaveContext.save.shipSaveInfo.rando.enemySouls[soul - RANDO_INF_OBTAINED_SOUL_OF_GOHT])
 
 #define EVENT(name, isApplied, onApply, onRemove, condition)                                    \
     {                                                                                           \
@@ -217,8 +218,8 @@ inline uint32_t MoonMaskCount() {
 inline bool CanKillEnemy(ActorId EnemyId) {
     switch (EnemyId) {
         case ACTOR_BOSS_01: // Odolwa
-            return (CAN_USE_SWORD || CAN_BE_GORON || CAN_BE_ZORA || CAN_USE_EXPLOSIVE || CAN_USE_MAGIC_ARROW(FIRE) ||
-                    CAN_USE_MAGIC_ARROW(LIGHT));
+            return ((CAN_USE_SWORD || CAN_BE_GORON || CAN_BE_ZORA || CAN_USE_EXPLOSIVE || CAN_USE_MAGIC_ARROW(FIRE) ||
+                     CAN_USE_MAGIC_ARROW(LIGHT)));
         case ACTOR_BOSS_02: // Twinmold
             return (HAS_ITEM(ITEM_BOW) || (HAS_ITEM(ITEM_MASK_GIANT) && HAS_MAGIC && CAN_USE_HUMAN_SWORD));
         case ACTOR_BOSS_03: // Gyorg

@@ -22,7 +22,8 @@ bool FindSoul(int16_t actorId) {
     for (auto& soul : soulMap) {
         for (auto& actor : std::get<1>(soul.second)) {
             if (actor == actorId) {
-                if (gSaveContext.save.shipSaveInfo.rando.enemySouls[std::get<2>(soul.second)] == 1) {
+                if (gSaveContext.save.shipSaveInfo.rando
+                        .enemySouls[(std::get<2>(soul.second) - RANDO_INF_OBTAINED_SOUL_OF_GOHT)] == 1) {
                     isFound = true;
                 }
             }
@@ -36,7 +37,8 @@ extern void SoulObtained(RandoItemId randoItemId) {
     auto it = soulMap.find(randoItemId);
     if (it != soulMap.end()) {
         for (auto& actorList : std::get<1>(it->second)) {
-            gSaveContext.save.shipSaveInfo.rando.enemySouls[std::get<2>(it->second)] = 1;
+            gSaveContext.save.shipSaveInfo.rando
+                .enemySouls[(std::get<2>(it->second) - RANDO_INF_OBTAINED_SOUL_OF_GOHT)] = 1;
         }
     }
 }

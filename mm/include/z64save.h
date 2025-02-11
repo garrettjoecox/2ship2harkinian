@@ -386,7 +386,7 @@ typedef struct RandoSaveInfo {
     u32 finalSeed;
     u32 randoSaveOptions[RO_MAX]; // Type here may change in the future
     s8 foundDungeonKeys[9]; // Tracks the number of dungeon keys found, opposed to the number of keys in the inventory
-    s8 enemySouls[RI_SOUL_TWINMOLD - RI_SOUL_GOHT]; // Tracks Collected Enemy Souls
+    s8 enemySouls[RANDO_INF_OBTAINED_SOUL_OF_TWINMOLD - RANDO_INF_OBTAINED_SOUL_OF_GOHT]; // Tracks Collected Enemy Souls
 } RandoSaveInfo;
 
 // These are values added by 2S2H that we need to be persisted to the save file
