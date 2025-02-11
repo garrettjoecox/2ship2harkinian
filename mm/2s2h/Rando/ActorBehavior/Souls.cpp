@@ -11,6 +11,7 @@ extern "C" {
 std::unordered_map<RandoItemId, std::tuple<std::function<void()>, std::vector<ActorId>, RandoInf>> soulMap = {
     { RI_SOUL_GOHT, { DrawGoht, { ACTOR_BOSS_HAKUGIN }, RANDO_INF_OBTAINED_SOUL_OF_GOHT } },
     { RI_SOUL_GYORG, { DrawGyorg, { ACTOR_BOSS_03 }, RANDO_INF_OBTAINED_SOUL_OF_GYORG } },
+    { RI_SOUL_MAJORA, { DrawMajora, { ACTOR_BOSS_07 }, RANDO_INF_OBTAINED_SOUL_OF_MAJORA } },
     { RI_SOUL_ODOLWA, { DrawOdolwa, { ACTOR_BOSS_01 }, RANDO_INF_OBTAINED_SOUL_OF_ODOLWA } },
     { RI_SOUL_TWINMOLD, { DrawTwinmold, { ACTOR_BOSS_02 }, RANDO_INF_OBTAINED_SOUL_OF_TWINMOLD } },
 };

@@ -4,6 +4,7 @@
 // Boss Functions
 void DrawGoht();
 void DrawGyorg();
+void DrawMajora();
 void DrawOdolwa();
 void DrawTwinmold();
 
