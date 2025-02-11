@@ -42,4 +42,14 @@ void Rando::MiscBehavior::OnFileLoad() {
         *should = false;
         BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = *item;
     });
+
+    // Fix vanilla bug where the player can often use magic before it's aquired.
+    COND_VB_SHOULD(VB_GRANT_MAGIC_UPON_REQUEST, IS_RANDO, {
+        if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+            *should = false;
+            gSaveContext.isMagicRequested = false;
+            gSaveContext.save.saveInfo.playerData.magic = 0;
+            gSaveContext.magicToAdd = 0;
+        }
+    });
 }

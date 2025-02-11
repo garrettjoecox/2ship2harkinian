@@ -103,7 +103,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 13),                ENTRANCE(IKANA_CANYON, 14), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Break the curse of Sharp, Composer Brother", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
+            EVENT(RE_BREAK_SHARP_CURSE, CAN_PLAY_SONG(STORMS)),
         },
     };
     Regions[RR_IKANA_CANYON_GROTTO] = RandoRegion{ .name = "Ikana Canyon Grotto", .sceneId = SCENE_KAKUSIANA,
@@ -136,7 +136,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_IKANA_CANYON_GROTTO, true), // TODO: Grotto mapping
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_BLUE_POTION_REFILL, CUR_UPG_VALUE(UPG_WALLET) >= 1),
+            EVENT(RE_ACCESS_BLUE_POTION_REFILL, CUR_UPG_VALUE(UPG_WALLET) >= 1),
         },
     };
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
@@ -147,7 +147,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),
-            EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
+            EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), RANDO_EVENTS[RE_BREAK_SHARP_CURSE]),
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
             EXIT(ENTRANCE(IKANA_CASTLE, 1),                 ENTRANCE(IKANA_CANYON, 8), true),
@@ -157,9 +157,6 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             // May consider cutting Deku and Goron from this since getting down as them may be seen as a trick. But its possible and is pretty easy to do.
             CONNECTION(RR_IKANA_CANYON_LOWER, true),
-        },
-        .events = {
-            EVENT_OWL_WARP(OWL_WARP_IKANA_CANYON),
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
@@ -266,7 +263,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 6),                 ENTRANCE(SAKONS_HIDEOUT, 0), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Help Kafei get the Sun Mask", WEEKEVENTREG_ESCAPED_SAKONS_HIDEOUT, CanKillEnemy(ACTOR_EN_WF)), // Was gonna do Babas too, but it does not seem to like it when I do both
+            EVENT(RE_RETRIEVE_SUN_MASK, CanKillEnemy(ACTOR_EN_WF)),
         },
     };
     Regions[RR_SECRET_SHRINE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_RANDOM,
@@ -301,11 +298,11 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SECRET_SHRINE] = RandoRegion{ .sceneId = SCENE_RANDOM,
         .checks = {
-            CHECK(RC_SECRET_SHRINE_DINALFOS_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x02)),
-            CHECK(RC_SECRET_SHRINE_WIZZROBE_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x03)),
-            CHECK(RC_SECRET_SHRINE_WART_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x04)),
-            CHECK(RC_SECRET_SHRINE_GARO_MASTER_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x05)),
-            CHECK(RC_SECRET_SHRINE_PIECE_OF_HEART_CHEST, Flags_GetSceneClear(SCENE_RANDOM, 0x02) && Flags_GetSceneClear(SCENE_RANDOM, 0x03) && Flags_GetSceneClear(SCENE_RANDOM, 0x04) && Flags_GetSceneClear(SCENE_RANDOM, 0x05)),
+            CHECK(RC_SECRET_SHRINE_DINALFOS_CHEST, RANDO_EVENTS[RE_SECRET_SHRINE_DINALFOS]),
+            CHECK(RC_SECRET_SHRINE_WIZZROBE_CHEST, RANDO_EVENTS[RE_SECRET_SHRINE_WIZZROBE]),
+            CHECK(RC_SECRET_SHRINE_WART_CHEST, RANDO_EVENTS[RE_SECRET_SHRINE_WART]),
+            CHECK(RC_SECRET_SHRINE_GARO_MASTER_CHEST, RANDO_EVENTS[RE_SECRET_SHRINE_GARO_MASTER]),
+            CHECK(RC_SECRET_SHRINE_PIECE_OF_HEART_CHEST, RANDO_EVENTS[RE_SECRET_SHRINE_DINALFOS] && RANDO_EVENTS[RE_SECRET_SHRINE_WIZZROBE] && RANDO_EVENTS[RE_SECRET_SHRINE_WART] && RANDO_EVENTS[RE_SECRET_SHRINE_GARO_MASTER]),
             CHECK(RC_SECRET_SHRINE_POT_04, CAN_BE_ZORA),
             CHECK(RC_SECRET_SHRINE_POT_05, CAN_BE_ZORA),
             CHECK(RC_SECRET_SHRINE_POT_06, CAN_BE_ZORA),
@@ -318,10 +315,10 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Allow opting in to health checks
-            EVENT("Kill Dinalfos", Flags_GetSceneClear(SCENE_RANDOM, 0x02), Flags_SetSceneClear(SCENE_RANDOM, 0x02), Flags_UnsetSceneClear(SCENE_RANDOM, 0x02), /* CHECK_MAX_HP(4) && */ CanKillEnemy(ACTOR_EN_DINOFOS)),
-            EVENT("Kill Wizzrobe", Flags_GetSceneClear(SCENE_RANDOM, 0x03), Flags_SetSceneClear(SCENE_RANDOM, 0x03), Flags_UnsetSceneClear(SCENE_RANDOM, 0x03), /* CHECK_MAX_HP(8) && */ CanKillEnemy(ACTOR_EN_WIZ)),
-            EVENT("Kill Wart", Flags_GetSceneClear(SCENE_RANDOM, 0x04), Flags_SetSceneClear(SCENE_RANDOM, 0x04), Flags_UnsetSceneClear(SCENE_RANDOM, 0x04), /* CHECK_MAX_HP(12) && */ CanKillEnemy(ACTOR_BOSS_04)),
-            EVENT("Kill Garo Master", Flags_GetSceneClear(SCENE_RANDOM, 0x05), Flags_SetSceneClear(SCENE_RANDOM, 0x05), Flags_UnsetSceneClear(SCENE_RANDOM, 0x05), /* CHECK_MAX_HP(16) && */ CanKillEnemy(ACTOR_EN_JSO2)),
+            EVENT(RE_SECRET_SHRINE_DINALFOS, /* CHECK_MAX_HP(4) && */ CanKillEnemy(ACTOR_EN_DINOFOS)),
+            EVENT(RE_SECRET_SHRINE_WIZZROBE, /* CHECK_MAX_HP(8) && */ CanKillEnemy(ACTOR_EN_WIZ)),
+            EVENT(RE_SECRET_SHRINE_WART, /* CHECK_MAX_HP(12) && */ CanKillEnemy(ACTOR_BOSS_04)),
+            EVENT(RE_SECRET_SHRINE_GARO_MASTER, /* CHECK_MAX_HP(16) && */ CanKillEnemy(ACTOR_EN_JSO2)),
         },
     };
     Regions[RR_STONE_TOWER_BOTTOM] = RandoRegion{ .name = "Bottom", .sceneId = SCENE_F40,
@@ -404,9 +401,6 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
-        },
-        .events = {
-            EVENT_OWL_WARP(OWL_WARP_STONE_TOWER),
         },
         .oneWayEntrances = {
             ENTRANCE(STONE_TOWER, 3), // From Song of Soaring

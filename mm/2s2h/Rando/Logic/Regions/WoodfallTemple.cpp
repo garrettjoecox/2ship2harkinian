@@ -30,7 +30,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(WOODFALL_TEMPLE, 1),                       ONE_WAY_EXIT, CanKillEnemy(ACTOR_BOSS_01)),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Clear Woodfall Temple", WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE, CanKillEnemy(ACTOR_BOSS_01)),
+            EVENT(RE_CLEARED_WOODFALL_TEMPLE, CanKillEnemy(ACTOR_BOSS_01)),
         },
         .oneWayEntrances = {
             ENTRANCE(ODOLWAS_LAIR, 0), // From Woodfall Temple Pre-Boss Room
@@ -66,7 +66,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(WOODFALL, 3),                     ENTRANCE(WOODFALL_TEMPLE, 2), true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_DEKU_PRINCESS, true),
+            EVENT(RE_ACCESS_DEKU_PRINCESS, true),
         },
         .oneWayEntrances = {
             ENTRANCE(WOODFALL_TEMPLE, 1), // From boss room
@@ -95,18 +95,12 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_WOODFALL_TEMPLE_WATER_ROOM_UPPER, true),
             CONNECTION(RR_WOODFALL_TEMPLE_MAIN_ROOM, true),
-            CONNECTION(RR_WOODFALL_TEMPLE_PRE_BOSS_ROOM, CHECK_WEEKEVENTREG(WEEKEVENTREG_12_01)),
+            CONNECTION(RR_WOODFALL_TEMPLE_PRE_BOSS_ROOM, RANDO_EVENTS[RE_WOODFALL_LIGHT_MIDDLE_TORCH]),
             CONNECTION(RR_WOODFALL_TEMPLE_DARK_ROOM, true),
         },
         .events = {
-            EVENT(
-                "Light Corner Torch", 
-                Flags_GetSceneSwitch(SCENE_MITURIN, 0x09), 
-                Flags_SetSceneSwitch(SCENE_MITURIN, 0x09), 
-                Flags_ClearSceneSwitch(SCENE_MITURIN, 0x09), 
-                HAS_ITEM(ITEM_BOW) && CHECK_WEEKEVENTREG(WEEKEVENTREG_12_01)
-            ),
-            EVENT_WEEKEVENTREG("Light Middle Torch", WEEKEVENTREG_12_01, HAS_ITEM(ITEM_BOW)),
+            EVENT(RE_WOODFALL_LIGHT_CORNER_TORCH, HAS_ITEM(ITEM_BOW) && RANDO_EVENTS[RE_WOODFALL_LIGHT_MIDDLE_TORCH]),
+            EVENT(RE_WOODFALL_LIGHT_MIDDLE_TORCH, HAS_ITEM(ITEM_BOW)),
         },
     };
     Regions[RR_WOODFALL_TEMPLE_MAIN_ROOM] = RandoRegion{ .name = "Main Room", .sceneId = SCENE_MITURIN,
@@ -125,7 +119,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_WOODFALL_TEMPLE_ENTRANCE, true),
             CONNECTION(RR_WOODFALL_TEMPLE_WATER_ROOM, true), // It's a little tight for goron but possible
             CONNECTION(RR_WOODFALL_TEMPLE_MAZE_ROOM, KEY_COUNT(WOODFALL_TEMPLE) >= 1),
-            CONNECTION(RR_WOODFALL_TEMPLE_MAIN_ROOM_UPPER, Flags_GetSceneSwitch(SCENE_MITURIN, 0x09) || HAS_ITEM(ITEM_HOOKSHOT)),
+            CONNECTION(RR_WOODFALL_TEMPLE_MAIN_ROOM_UPPER, RANDO_EVENTS[RE_WOODFALL_LIGHT_CORNER_TORCH] || HAS_ITEM(ITEM_HOOKSHOT)),
         },
     };
     Regions[RR_WOODFALL_TEMPLE_MAP_ROOM] = RandoRegion{ .name = "Map Room", .sceneId = SCENE_MITURIN,

@@ -28,16 +28,6 @@ void ApplyNearlyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& che
                                      std::vector<RandoItemId>& itemPool);
 void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool, std::vector<RandoItemId>& itemPool);
 
-struct RandoEvent {
-    std::string name;
-    bool applyWhenAccessible;
-    std::function<bool()> isApplied;
-    std::function<void()> onApply;
-    std::function<void()> onRemove;
-    std::function<bool()> condition;
-    std::string conditionString;
-};
-
 struct RandoRegionExit {
     s32 returnEntrance;
     std::function<bool()> condition;
@@ -50,7 +40,7 @@ struct RandoRegion {
     std::unordered_map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::unordered_map<s32, RandoRegionExit> exits;
     std::unordered_map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
-    std::vector<RandoEvent> events;
+    std::vector<std::pair<RandoEvent, std::function<bool()>>> events;
     std::set<s32> oneWayEntrances;
 };
 
@@ -80,13 +70,13 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 // Be careful here, as some checks require you to play the song as a specific form
 #define CAN_PLAY_SONG(song) (HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_##song))
 #define CAN_RIDE_EPONA (CAN_PLAY_SONG(EPONA))
-#define GBT_REGULAR_WATER_FLOW (!Flags_GetSceneSwitch(SCENE_SEA, 0x33) && !Flags_GetSceneSwitch(SCENE_SEA, 0x36))
-#define GBT_REVERSE_WATER_FLOW (Flags_GetSceneSwitch(SCENE_SEA, 0x33) && Flags_GetSceneSwitch(SCENE_SEA, 0x36))
-#define GBT_EITHER_FLOW (!Flags_GetSceneSwitch(SCENE_SEA, 0x33) || Flags_GetSceneSwitch(SCENE_SEA, 0x36))
-#define GBT_RED_SWITCH_FLOW (Flags_GetSceneSwitch(SCENE_SEA, 0x34) && Flags_GetSceneSwitch(SCENE_SEA, 0x35))
-#define GBT_GREEN_SWITCH_FLOW                                                          \
-    (Flags_GetSceneSwitch(SCENE_SEA, 0x37) && Flags_GetSceneSwitch(SCENE_SEA, 0x38) && \
-     Flags_GetSceneSwitch(SCENE_SEA, 0x39))
+#define GBT_REGULAR_WATER_FLOW (!RANDO_EVENTS[RE_GREAT_BAY_YELLOW_TOGGLE] && !RANDO_EVENTS[RE_GREAT_BAY_RED_TOGGLE])
+#define GBT_REVERSE_WATER_FLOW (RANDO_EVENTS[RE_GREAT_BAY_YELLOW_TOGGLE] && RANDO_EVENTS[RE_GREAT_BAY_RED_TOGGLE])
+#define GBT_EITHER_FLOW (!RANDO_EVENTS[RE_GREAT_BAY_YELLOW_TOGGLE] || RANDO_EVENTS[RE_GREAT_BAY_RED_TOGGLE])
+#define GBT_RED_SWITCH_FLOW (RANDO_EVENTS[RE_GREAT_BAY_RED_SWITCH_1] && RANDO_EVENTS[RE_GREAT_BAY_RED_SWITCH_2])
+#define GBT_GREEN_SWITCH_FLOW                                                                  \
+    (RANDO_EVENTS[RE_GREAT_BAY_GREEN_SWITCH_1] && RANDO_EVENTS[RE_GREAT_BAY_GREEN_SWITCH_2] && \
+     RANDO_EVENTS[RE_GREAT_BAY_GREEN_SWITCH_3])
 #define ONE_WAY_EXIT -1
 #define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
 #define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
@@ -95,7 +85,7 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 // TODO: Maybe not reliable because of theif bird stealing bottle
 #define HAS_BOTTLE (INV_CONTENT(ITEM_BOTTLE) != ITEM_NONE)
 #define CAN_USE_PROJECTILE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
-#define CAN_ACCESS(randoAccess) (RANDO_ACCESS[RANDO_ACCESS_##randoAccess])
+#define CAN_ACCESS(access) (RANDO_EVENTS[RE_ACCESS_##access])
 #define CAN_GROW_BEAN_PLANT        \
     (HAS_ITEM(ITEM_MAGIC_BEANS) && \
      (CAN_PLAY_SONG(STORMS) || (HAS_BOTTLE && (CAN_ACCESS(SPRING_WATER) || CAN_ACCESS(HOT_SPRING_WATER)))))
@@ -108,10 +98,9 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 #define HAS_ALL_STRAY_FAIRIES(dungeonIndex) (gSaveContext.save.saveInfo.inventory.strayFairies[dungeonIndex] >= 15)
 #define HAS_SOUL(soul) (gSaveContext.save.shipSaveInfo.rando.enemySouls[soul - RANDO_INF_OBTAINED_SOUL_OF_GOHT])
 
-#define EVENT(name, isApplied, onApply, onRemove, condition)                                    \
-    {                                                                                           \
-        name, false, [] { return isApplied; }, [] { return onApply; }, [] { return onRemove; }, \
-            [] { return condition; }, LogicString(#condition)                                   \
+#define EVENT(randoEvent, condition)         \
+    {                                        \
+        randoEvent, [] { return condition; } \
     }
 #define EXIT(toEntrance, fromEntrance, condition)                           \
     {                                                                       \
@@ -131,72 +120,6 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
             [] { return condition; }, LogicString(#condition) \
         }                                                     \
     }
-#define EVENT_OWL_WARP(owlId)                                                                            \
-    {                                                                                                    \
-        "Owl Statue", false, [] { return CAN_OWL_WARP(owlId); }, [] { SET_OWL_WARP(owlId); },            \
-            [] { CLEAR_OWL_WARP(owlId); },                                                               \
-            [] { return RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD; }, \
-            "CAN_USE_SWORD"                                                                              \
-    }
-#define EVENT_WEEKEVENTREG(name, flag, condition)                                               \
-    {                                                                                           \
-        name, false, [] { return CHECK_WEEKEVENTREG(flag); }, [] { SET_WEEKEVENTREG(flag); },   \
-            [] { CLEAR_WEEKEVENTREG(flag); }, [] { return condition; }, LogicString(#condition) \
-    }
-#define EVENT_RANDOINF(name, flag, condition)                                                    \
-    {                                                                                            \
-        name, false, [] { return Flags_GetRandoInf(flag); }, [] { Flags_SetRandoInf(flag); },    \
-            [] { Flags_ClearRandoInf(flag); }, [] { return condition; }, LogicString(#condition) \
-    }
-#define EVENT_ACCESS(flag, condition)                                                                                \
-    {                                                                                                                \
-        convertEnumToReadableName(#flag), true, [] { return RANDO_ACCESS[flag] > 0; }, [] { RANDO_ACCESS[flag]++; }, \
-            [] { RANDO_ACCESS[flag]--; }, [] { return condition; }, LogicString(#condition)                          \
-    }
-// TODO: This is for sure not the right place for these
-inline void Flags_SetSceneSwitch(s32 scene, s32 flag) {
-    if (((flag & ~0x1F) >> 5) == 0) {
-        gSaveContext.cycleSceneFlags[scene].switch0 |= 1 << (flag & 0x1F);
-    } else {
-        gSaveContext.cycleSceneFlags[scene].switch1 |= 1 << (flag & 0x1F);
-    }
-}
-
-inline void Flags_ClearSceneSwitch(s32 scene, s32 flag) {
-    if (((flag & ~0x1F) >> 5) == 0) {
-        gSaveContext.cycleSceneFlags[scene].switch0 &= ~(1 << (flag & 0x1F));
-    } else {
-        gSaveContext.cycleSceneFlags[scene].switch1 &= ~(1 << (flag & 0x1F));
-    }
-}
-
-inline bool Flags_GetSceneSwitch(s32 scene, s32 flag) {
-    if (gPlayState != NULL && gPlayState->sceneId == scene) {
-        return gPlayState->actorCtx.sceneFlags.switches[(flag & ~0x1F) >> 5] & (1 << (flag & 0x1F));
-    }
-
-    if (((flag & ~0x1F) >> 5) == 0) {
-        return gSaveContext.cycleSceneFlags[scene].switch0 & (1 << (flag & 0x1F));
-    } else {
-        return gSaveContext.cycleSceneFlags[scene].switch1 & (1 << (flag & 0x1F));
-    }
-}
-
-inline bool Flags_GetSceneClear(s32 scene, s32 roomNumber) {
-    if (gPlayState != NULL && gPlayState->sceneId == scene) {
-        return (gPlayState->actorCtx.sceneFlags.clearedRoom & (1 << roomNumber));
-    }
-
-    return (gSaveContext.cycleSceneFlags[scene].clearedRoom & (1 << roomNumber));
-}
-
-inline void Flags_SetSceneClear(s32 scene, s32 roomNumber) {
-    gSaveContext.cycleSceneFlags[scene].clearedRoom |= (1 << roomNumber);
-}
-
-inline void Flags_UnsetSceneClear(s32 scene, s32 roomNumber) {
-    gSaveContext.cycleSceneFlags[scene].clearedRoom &= ~(1 << roomNumber);
-}
 
 inline std::string LogicString(std::string condition) {
     if (condition == "true")

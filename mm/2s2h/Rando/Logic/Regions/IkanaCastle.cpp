@@ -13,7 +13,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IGOS_DU_IKANAS_LAIR, 0),          ENTRANCE(IKANA_CASTLE, 6), true)
         },
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x25) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
+            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (RANDO_EVENTS[RE_IKANA_CASTLE_MAIN_SUNLIGHT] && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
         }
     };
     Regions[RR_IKANA_CASTLE_BUBBLE_ROOM] = RandoRegion{ .name = "Bubble Room", .sceneId = SCENE_CASTLE,
@@ -51,7 +51,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_IKANA_CASTLE_FLOORMASTER_ROOM] = RandoRegion{ .name = "Floormaster Room", .sceneId = SCENE_CASTLE,
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, true),
-            CONNECTION(RR_IKANA_CASTLE_WIZZROBE_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x27) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR))),
+            CONNECTION(RR_IKANA_CASTLE_WIZZROBE_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (RANDO_EVENTS[RE_IKANA_CASTLE_RIGHT_SUNLIGHT] && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR))),
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CASTLE, 5), // From Inner Roof
@@ -67,20 +67,14 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_INNER_ROOF] = RandoRegion{ .name = "Inner Roof", .sceneId = SCENE_CASTLE,
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(IKANA_CASTLE, 5),                          ONE_WAY_EXIT, Flags_GetSceneSwitch(SCENE_CASTLE, 0x27)),
-            EXIT(ENTRANCE(IKANA_CASTLE, 4),                          ONE_WAY_EXIT, Flags_GetSceneSwitch(SCENE_CASTLE, 0x25))
+            EXIT(ENTRANCE(IKANA_CASTLE, 5),                          ONE_WAY_EXIT, RANDO_EVENTS[RE_IKANA_CASTLE_RIGHT_SUNLIGHT]),
+            EXIT(ENTRANCE(IKANA_CASTLE, 4),                          ONE_WAY_EXIT, RANDO_EVENTS[RE_IKANA_CASTLE_MAIN_SUNLIGHT])
         },
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_REDEAD_WALKWAY, true)
         },
         .events = {
-            EVENT( // Opening sunlight in the main room of Ikana Castle
-                "Open Sunlight for Ikana Castle Main Room", 
-                Flags_GetSceneSwitch(SCENE_CASTLE, 0x25),
-                Flags_SetSceneSwitch(SCENE_CASTLE, 0x25),
-                Flags_ClearSceneSwitch(SCENE_CASTLE, 0x25), 
-                true
-            ),
+            EVENT(RE_IKANA_CASTLE_MAIN_SUNLIGHT, true),
         }
     };
     Regions[RR_IKANA_CASTLE_MAIN_ROOM] = RandoRegion{ .name = "Main Room", .sceneId = SCENE_CASTLE,
@@ -94,7 +88,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_IKANA_CASTLE_CEILING_ROOM, CAN_USE_MAGIC_ARROW(FIRE)),
             CONNECTION(RR_IKANA_CASTLE_FLOORMASTER_ROOM, CAN_USE_MAGIC_ARROW(FIRE)),
-            CONNECTION(RR_IKANA_CASTLE_BEFORE_THRONE, CAN_USE_MAGIC_ARROW(LIGHT) || (Flags_GetSceneSwitch(SCENE_CASTLE, 0x25) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
+            CONNECTION(RR_IKANA_CASTLE_BEFORE_THRONE, CAN_USE_MAGIC_ARROW(LIGHT) || (RANDO_EVENTS[RE_IKANA_CASTLE_MAIN_SUNLIGHT] && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CASTLE, 4), // From Inner Roof Powder Keg Hole
@@ -109,13 +103,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_IKANA_CASTLE_FRONT_ENTRANCE, true)
         },
         .events = {
-            EVENT( // Opening sunlight in the right side of Ikana Castle
-                "Open Sunlight for Ikana Castle Right Room",
-                Flags_GetSceneSwitch(SCENE_CASTLE, 0x27),
-                Flags_SetSceneSwitch(SCENE_CASTLE, 0x27),
-                Flags_ClearSceneSwitch(SCENE_CASTLE, 0x27),
-                true
-            ),
+            EVENT(RE_IKANA_CASTLE_RIGHT_SUNLIGHT, true),
         }
     };
     Regions[RR_IKANA_CASTLE_REDEAD_WALKWAY] = RandoRegion{ .name = "Redead Walkway", .sceneId = SCENE_CASTLE,

@@ -36,7 +36,7 @@ void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>
     // Used across all iterations
     std::unordered_map<RandoCheckId, RandoPoolEntry> currentCheckPool;
     std::set<RandoRegionId> currentReachableRegions = { RR_MAX };
-    std::set<RandoEvent*> currentEventsTriggered;
+    std::set<std::pair<RandoEvent, std::function<bool()>>*> currentEventsTriggered;
 
     // Used for backtracking
     std::vector<RandoPoolPlacement> placements;
@@ -44,7 +44,7 @@ void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>
     std::vector<int> amountOfNewlyAccessibleRegions;
     std::vector<RandoCheckId> newlyAccessibleChecks;
     std::vector<int> amountOfNewlyAccessibleChecks;
-    std::vector<RandoEvent*> newlyTriggeredEvents;
+    std::vector<std::pair<RandoEvent, std::function<bool()>>*> newlyTriggeredEvents;
     std::vector<int> amountOfNewlyTriggeredEvents;
 
     SaveContext copiedSaveContext;
@@ -124,10 +124,10 @@ void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>
                     // Event is not already triggered
                     !currentEventsTriggered.contains(&randoEvent) &&
                     // Event condition is met
-                    randoEvent.condition()) {
+                    randoEvent.second()) {
                     currentEventsTriggered.insert(&randoEvent);
                     newlyTriggeredEvents.push_back(&randoEvent);
-                    randoEvent.onApply();
+                    RANDO_EVENTS[randoEvent.first]++;
                 }
             }
         }
@@ -167,7 +167,7 @@ void ApplyFrenchVanillaLogicToSaveContext(std::unordered_map<RandoCheckId, bool>
             }
             amountOfNewlyAccessibleChecks.pop_back();
             for (int i = 0; i < amountOfNewlyTriggeredEvents.back(); i++) {
-                newlyTriggeredEvents.back()->onRemove();
+                RANDO_EVENTS[newlyTriggeredEvents.back()->first]--;
                 currentEventsTriggered.erase(newlyTriggeredEvents.back());
                 newlyTriggeredEvents.pop_back();
             }

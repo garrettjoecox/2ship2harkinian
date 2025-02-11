@@ -14,7 +14,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Should this be a check?
-            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
+            EVENT(RE_ACCESS_SEAHORSE, RANDO_EVENTS[RE_ACCESS_PIRATE_PICTURE] && HAS_ITEM(ITEM_PICTOGRAPH_BOX)),
         },
     };
     Regions[RR_GREAT_BAY_COAST_COW_GROTTO] = RandoRegion{ .name = "Great Bay Coast Cow Grotto", .sceneId = SCENE_KAKUSIANA,
@@ -70,9 +70,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_COAST_COW_GROTTO, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT), // TODO: Grotto mapping
             CONNECTION(RR_GREAT_BAY_COAST_FISHERMAN_GROTTO, true), // TODO: Grotto mapping
         },
-        .events = {
-            EVENT_OWL_WARP(OWL_WARP_GREAT_BAY_COAST),
-        },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
             ENTRANCE(GREAT_BAY_COAST, 12), // From being captured in Pirate Fortress Moat
@@ -88,7 +85,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MARINE_RESEARCH_LAB] = RandoRegion{ .sceneId = SCENE_LABO,
         .checks = {
-            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME) && RANDO_ACCESS[RANDO_ACCESS_ZORA_EGG] >= 7),
+            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME) && RANDO_EVENTS[RE_ACCESS_ZORA_EGG] >= 7),
             CHECK(RC_GREAT_BAY_COAST_MARINE_LAB_FISH_PIECE_OF_HEART, HAS_BOTTLE && CAN_ACCESS(FISH)),
         },
         .exits = { //     TO                                         FROM
@@ -100,7 +97,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
         },
         .connections = {
-            CONNECTION(RR_PINNACLE_ROCK_INNER, RANDO_ACCESS[RANDO_ACCESS_SEAHORSE] && CAN_BE_ZORA)
+            CONNECTION(RR_PINNACLE_ROCK_INNER, RANDO_EVENTS[RE_ACCESS_SEAHORSE] && CAN_BE_ZORA)
         }
     };
     Regions[RR_PINNACLE_ROCK_INNER] = RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
@@ -124,9 +121,9 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PINNACLE_ROCK_ENTRANCE, true)
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
         },
     };
     Regions[RR_WATERFALL_RAPIDS] = RandoRegion{ .sceneId = SCENE_35TAKI,
@@ -181,9 +178,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE, CAN_BE_ZORA),
             CONNECTION(RR_ZORA_CAPE_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
         },
-        .events = {
-            EVENT_OWL_WARP(OWL_WARP_ZORA_CAPE),
-        },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
             ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
@@ -212,7 +206,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(ZORA_HALL, 3),                    ENTRANCE(ZORA_HALL_ROOMS, 2), true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_GREEN_POTION_REFILL, CAN_BE_ZORA),
+            EVENT(RE_ACCESS_GREEN_POTION_REFILL, CAN_BE_ZORA),
         },
     };
     Regions[RR_ZORA_HALL_MIKAUS_ROOM] = RandoRegion{ .name = "Mikau's Room", .sceneId = SCENE_BANDROOM,

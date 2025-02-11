@@ -50,7 +50,7 @@ void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
 void to_json(json& j, const RandoSaveInfo& rando) {
     j = json{
         { "randoInf", rando.randoInf },
-        { "randoAccess", rando.randoAccess },
+        { "randoEvents", rando.randoEvents },
         { "randoSaveChecks", rando.randoSaveChecks },
         { "finalSeed", rando.finalSeed },
         { "randoSaveOptions", rando.randoSaveOptions },
@@ -60,7 +60,7 @@ void to_json(json& j, const RandoSaveInfo& rando) {
 
 void from_json(const json& j, RandoSaveInfo& rando) {
     j.at("randoInf").get_to(rando.randoInf);
-    j.at("randoAccess").get_to(rando.randoAccess);
+    j.at("randoEvents").get_to(rando.randoEvents);
     j.at("randoSaveChecks").get_to(rando.randoSaveChecks);
     j.at("finalSeed").get_to(rando.finalSeed);
     j.at("randoSaveOptions").get_to(rando.randoSaveOptions);

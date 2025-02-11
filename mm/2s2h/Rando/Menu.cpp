@@ -138,9 +138,9 @@ static void DrawLocationsTab() {
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
     CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
+    CVarCheckbox("Shuffle Tingle Maps", Rando::StaticData::Options[RO_SHUFFLE_TINGLE_SHOPS].cvar);
     CVarCheckbox("Shuffle Boss Remains", Rando::StaticData::Options[RO_SHUFFLE_BOSS_REMAINS].cvar);
-    CVarCheckbox("Shuffle Cows", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Shuffle Cows", Rando::StaticData::Options[RO_SHUFFLE_COWS].cvar);
     CVarCheckbox("Shuffle Gold Skulltula Tokens", Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
     CVarSliderInt(
         "Shuffle Gold Skulltula Tokens", "gPlaceholderInt",
@@ -312,14 +312,32 @@ static void DrawHintsTab() {
     f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
     f32 halfHeight = ImGui::GetContentRegionAvail().y / 2 - (ImGui::GetStyle().ItemSpacing.y * 2);
     ImGui::BeginChild("randoHintsColumn1", ImVec2(columnWidth, halfHeight));
-    CVarCheckbox("Spider House", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
-    CVarCheckbox("Happy Mask Salesman Purchaseable", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
-    CVarCheckbox("Gossip Stones", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
-    CVarCheckbox("Boss Remains", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox(
+        "Spider House", Rando::StaticData::Options[RO_HINTS_SPIDER_HOUSES].cvar,
+        CheckboxOptions(
+            { { .tooltip =
+                    "Swamp Spider House: Hinted at his normal location within the Swamp Spider House\n\nOcean Spider "
+                    "House: Hinted in South Clock Town day 1, by the main standing on the scaffolding." } }));
+    CVarCheckbox(
+        "Gossip Stone Static Hint", Rando::StaticData::Options[RO_HINTS_GOSSIP_STONES].cvar,
+        CheckboxOptions(
+            { { .tooltip = "Each gossip stone will give a static hint about the contents of a random location." } }));
+    CVarCheckbox(
+        "Gossip Stone Purchaseable", Rando::StaticData::Options[RO_HINTS_PURCHASEABLE].cvar,
+        CheckboxOptions({ { .tooltip = "Gossip stones will offer a hint for a scaling rupee cost. This cost ranges "
+                                       "from 10-250 rupees depending on how many checks are remaining in your seed. "
+                                       "The hint will gauranteed be a check you have not obtained yet." } }));
+    CVarCheckbox(
+        "Boss Remains", Rando::StaticData::Options[RO_HINTS_BOSS_REMAINS].cvar,
+        CheckboxOptions(
+            { { .tooltip =
+                    "Lists the location of the Boss remains on the guard recruitment posters around Clock Town" } }));
+    CVarCheckbox(
+        "General Actor Hints", "gPlaceholderBool",
+        CheckboxOptions({ { .disabled = true,
+                            .disabledTooltip = "Soon you will be able to disable these. Currently hinted:\n- Bomb Shop "
+                                               "4th Item\n- Lottery\n- Great Fairy Fountains\n- Mountain Smithy" } })
+            .DefaultValue(true));
     CVarCheckbox("Saria's Song", "gPlaceholderBool",
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Song of Soaring", "gPlaceholderBool",

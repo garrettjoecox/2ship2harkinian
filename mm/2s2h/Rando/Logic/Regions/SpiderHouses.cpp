@@ -140,7 +140,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER, true)
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_BUGS, true),
+            EVENT(RE_ACCESS_BUGS, true),
         },
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_CENTER_ROOM_LOWER] = RandoRegion{ .name = "Lower Center Room", .sceneId = SCENE_KINSTA1,
@@ -161,7 +161,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_BIG_POT_ROOM_LOWER, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
+            EVENT(RE_ACCESS_SPRING_WATER, true),
         },
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_CENTER_ROOM_UPPER] = RandoRegion{ .name = "Upper Center Room", .sceneId = SCENE_KINSTA1,
@@ -191,20 +191,20 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_CENTER_ROOM_LOWER, true)
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_BUGS, true),
+            EVENT(RE_ACCESS_BUGS, true),
         },
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LOWER] = RandoRegion{ .name = "Lower Gold Room", .sceneId = SCENE_KINSTA1,
         .checks = {
             CHECK(RC_SWAMP_SKULLTULA_GOLD_ROOM_HIVE, CAN_USE_PROJECTILE),
             CHECK(RC_SWAMP_SKULLTULA_GOLD_ROOM_PILLAR, CanKillEnemy(ACTOR_EN_SW)),
-            CHECK(RC_SWAMP_SKULLTULA_GOLD_ROOM_WALL, (Flags_GetSceneSwitch(SCENE_KINSTA1, 0x0d) && CAN_USE_PROJECTILE || HAS_ITEM(ITEM_BOMBCHU)) || (HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)),
+            CHECK(RC_SWAMP_SKULLTULA_GOLD_ROOM_WALL, (RANDO_EVENTS[RE_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LADDER] && CAN_USE_PROJECTILE || HAS_ITEM(ITEM_BOMBCHU)) || (HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)),
             CHECK(RC_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LOWER_POT_01, true),
             CHECK(RC_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LOWER_POT_02, true),
         },
         .connections = {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_CENTER_ROOM_LOWER, true),
-            CONNECTION(RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER, Flags_GetSceneSwitch(SCENE_KINSTA1, 0x0d))
+            CONNECTION(RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER, RANDO_EVENTS[RE_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LADDER])
         }
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER] = RandoRegion{ .name = "Upper Gold Room", .sceneId = SCENE_KINSTA1,
@@ -223,13 +223,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_TREE_ROOM, true)
         },
         .events = {
-            EVENT( // Spawn Ladder in Gold Room
-                "Spawn Ladder in Gold Room", 
-                Flags_GetSceneSwitch(SCENE_KINSTA1, 0x0d),
-                Flags_SetSceneSwitch(SCENE_KINSTA1, 0x0d),
-                Flags_ClearSceneSwitch(SCENE_KINSTA1, 0x0d), 
-                true
-            ),
+            EVENT(RE_SWAMP_SPIDER_HOUSE_GOLD_ROOM_LADDER, true),
         }
     };
     Regions[RR_SWAMP_SPIDER_HOUSE_MONUMENT_ROOM] = RandoRegion{ .name = "Monument Room", .sceneId = SCENE_KINSTA1,
@@ -266,7 +260,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER, true)
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_BUGS, true),
+            EVENT(RE_ACCESS_BUGS, true),
         },
     };
 }, {});

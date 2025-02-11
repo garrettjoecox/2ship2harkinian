@@ -381,7 +381,7 @@ typedef struct RandoSaveCheck {
 
 typedef struct RandoSaveInfo {
     u16 randoInf[(RANDO_INF_MAX + 15) / 16];
-    u8 randoAccess[RANDO_ACCESS_MAX];
+    u8 randoEvents[RE_MAX]; // This is purely for logic tracking, not to be used for anything else
     RandoSaveCheck randoSaveChecks[RC_MAX];
     u32 finalSeed;
     u32 randoSaveOptions[RO_MAX]; // Type here may change in the future

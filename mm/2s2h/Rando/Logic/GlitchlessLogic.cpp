@@ -24,7 +24,7 @@ void ApplyGlitchlessLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& c
 
     std::set<RandoRegionId> regionsInLogic = { RR_MAX };
     std::unordered_map<RandoCheckId, bool> checksInLogic;
-    std::set<RandoEvent*> eventsInLogic;
+    std::set<std::pair<RandoEvent, std::function<bool()>>*> eventsInLogic;
 
     RandoCheckId checkWithJunk = RC_UNKNOWN;
     std::set<RandoItemId> nonJunkItemsThatWeHaveTried;
@@ -80,10 +80,9 @@ void ApplyGlitchlessLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& c
 
             // Apply any new events
             for (auto& randoEvent : randoRegion.events) {
-                if (!eventsInLogic.contains(&randoEvent) && randoEvent.condition()) {
-                    randoEvent.onApply();
+                if (!eventsInLogic.contains(&randoEvent) && randoEvent.second()) {
+                    RANDO_EVENTS[randoEvent.first]++;
                     eventsInLogic.insert(&randoEvent);
-                    SPDLOG_TRACE("Event: {}", randoEvent.name);
                     eventsInLogicChanged = true;
                 }
             }

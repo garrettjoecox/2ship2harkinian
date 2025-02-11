@@ -26,7 +26,7 @@ nlohmann::json GenerateFromSaveContext() {
             continue;
         }
 
-        if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
+        if (randoStaticCheck.randoCheckType == RCTYPE_SHOP || randoStaticCheck.randoCheckType == RCTYPE_TINGLE_SHOP) {
             spoiler["checks"][randoStaticCheck.name] = nlohmann::json::object();
             spoiler["checks"][randoStaticCheck.name]["randoItemId"] =
                 Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].spoilerName;

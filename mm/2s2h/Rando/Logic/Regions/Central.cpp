@@ -53,7 +53,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_BOMB_SHOP_ITEM_02, CAN_AFFORD(RC_BOMB_SHOP_ITEM_02)),
             // Upon saving the Bomb Shop lady, one item in the shop gets replaced with the other for the remainder of the cycle.
             CHECK(RC_BOMB_SHOP_ITEM_03, CAN_AFFORD(RC_BOMB_SHOP_ITEM_03)),
-            CHECK(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) && CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG)),
+            CHECK(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) && RANDO_EVENTS[RE_SAVE_BOMB_SHOP_LADY]),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 6),              ENTRANCE(BOMB_SHOP, 0), true),
@@ -147,7 +147,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0),        ENTRANCE(NORTH_CLOCK_TOWN, 4), CAN_BE_DEKU),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Save Bomb Shop lady", WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
+            EVENT(RE_SAVE_BOMB_SHOP_LADY, CAN_USE_SWORD || CAN_BE_ZORA || CAN_BE_GORON),
         },
     };
     Regions[RR_CLOCK_TOWN_SOUTH] = RandoRegion{ .sceneId = SCENE_CLOCKTOWER,
@@ -172,9 +172,6 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_MAX, true),
-        },
-        .events = {
-            EVENT_OWL_WARP(OWL_WARP_CLOCK_TOWN),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
@@ -213,7 +210,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CURIOSITY_SHOP_FRONT] = RandoRegion{ .name = "Front", .sceneId = SCENE_AYASHIISHOP,
         .checks = {
             CHECK(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM, CAN_AFFORD(RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM)),
-            CHECK(RC_CURIOSITY_SHOP_SPECIAL_ITEM, CAN_AFFORD(RC_CURIOSITY_SHOP_SPECIAL_ITEM) && (CHECK_WEEKEVENTREG(WEEKEVENTREG_RECOVERED_STOLEN_BOMB_BAG) || CHECK_WEEKEVENTREG(WEEKEVENTREG_SAKON_DEAD))),
+            CHECK(RC_CURIOSITY_SHOP_SPECIAL_ITEM, CAN_AFFORD(RC_CURIOSITY_SHOP_SPECIAL_ITEM) && (RANDO_EVENTS[RE_SAVE_BOMB_SHOP_LADY] || CHECK_WEEKEVENTREG(WEEKEVENTREG_SAKON_DEAD))),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 4),              ENTRANCE(CURIOSITY_SHOP, 0), true)
@@ -230,7 +227,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_INN] = RandoRegion{ .sceneId = SCENE_YADOYA,
         .checks = {
-            CHECK(RC_STOCK_POT_INN_COUPLES_MASK, HAS_ITEM(ITEM_MASK_KAFEIS_MASK) && Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) && CHECK_WEEKEVENTREG(WEEKEVENTREG_ESCAPED_SAKONS_HIDEOUT)),
+            CHECK(RC_STOCK_POT_INN_COUPLES_MASK, HAS_ITEM(ITEM_MASK_KAFEIS_MASK) && Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) && RANDO_EVENTS[RE_RETRIEVE_SUN_MASK]),
             CHECK(RC_STOCK_POT_INN_GRANDMA_LONG_STORY, HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GRANDMA_SHORT_STORY, HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST,Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY)),
@@ -248,8 +245,8 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 10),             ENTRANCE(STOCK_POT_INN, 1), true), // From upstairs
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_FISH, true),
-            EVENT_ACCESS(RANDO_ACCESS_BUGS, true),
+            EVENT(RE_ACCESS_FISH, true),
+            EVENT(RE_ACCESS_BUGS, true),
         },
     };
     Regions[RR_LOTTERY_SHOP] = RandoRegion{ .sceneId = SCENE_TAKARAKUJI,

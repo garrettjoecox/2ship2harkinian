@@ -14,7 +14,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_CHEST, HAS_ITEM(ITEM_BOW)),
             CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_SMALL_CRATE_01, true),
             CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_SMALL_CRATE_02, true),
-            CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_SWITCH_CHEST, (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x0c) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0c))),
+            CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_SWITCH_CHEST, true),
             CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_POT_01, true),
             CHECK(RC_STONE_TOWER_TEMPLE_ENTRANCE_POT_02, true),
         },
@@ -23,17 +23,11 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_SWITCH_ROOM, true),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM, (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x03) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x03)) || CAN_USE_MAGIC_ARROW(LIGHT)),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM, (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) || CAN_USE_MAGIC_ARROW(LIGHT)),
             CONNECTION(RR_STONE_TOWER_TEMPLE_BRIDGE, false) //This is one way, not sure how to go about doing this with a connection.
         },
         .events = {
-            EVENT( // Spawns Stray Fairy chest in inverted
-                "Spawn Stray Fairy chest in Inverted Entrance",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x05),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x05),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x05),
-                CAN_USE_MAGIC_ARROW(LIGHT)
-            )
+            EVENT(RE_STONE_TOWER_STRAY_FAIRY_INVERTED_ENTRANCE, CAN_USE_MAGIC_ARROW(LIGHT)),
         }
     };
     Regions[RR_STONE_TOWER_TEMPLE_SWITCH_ROOM] = RandoRegion{ .name = "Switch Room", .sceneId = SCENE_INISIE_N,
@@ -95,7 +89,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_STONE_TOWER_TEMPLE_DEEP_POOL_ROOM] = RandoRegion{ .name = "Deep Pool Room", .sceneId = SCENE_INISIE_N,
         .checks = {
             // TODO : Go back and add stay fairy chest that spawns from inverted.
-            CHECK(RC_STONE_TOWER_TEMPLE_COMPASS_CHEST, (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x03) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x03))),
+            CHECK(RC_STONE_TOWER_TEMPLE_COMPASS_CHEST, (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) || CAN_USE_MAGIC_ARROW(LIGHT)),
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_BRIDGE_POT_01, true),
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_BRIDGE_POT_02, true),
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_UNDERWATER_LOWER_POT_01, CAN_BE_ZORA),
@@ -103,36 +97,13 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_UNDERWATER_LOWER_POT_03, CAN_BE_ZORA),
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_UNDERWATER_UPPER_POT_01, CAN_BE_ZORA),
             CHECK(RC_STONE_TOWER_TEMPLE_WATER_ROOM_UNDERWATER_UPPER_POT_02, CAN_BE_ZORA),
-            CHECK(RC_STONE_TOWER_TEMPLE_WATER_SUN_SWITCH_CHEST, CAN_BE_ZORA && (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x0b) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0b)))
+            CHECK(RC_STONE_TOWER_TEMPLE_WATER_SUN_SWITCH_CHEST, CAN_BE_ZORA)
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_SHALLOW_POOL_ROOM, CAN_BE_ZORA),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_ENTRANCE, Flags_GetSceneSwitch(SCENE_INISIE_R, 0x03) || CAN_USE_MAGIC_ARROW(LIGHT)),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_ENTRANCE, (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) || CAN_USE_MAGIC_ARROW(LIGHT)),
             CONNECTION(RR_STONE_TOWER_TEMPLE_MIRROR_PILLAR_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 2),
         },
-        .events = {
-            EVENT( // Spawns Stray Fairy chest in ISTT Wind Room
-                "Spawn Stray Fairy chest #1 in ISTT Wind Room",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x07),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x07),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x07),
-                CAN_BE_ZORA
-            ),
-            EVENT( // Spawns Stray Fairy chest in ISTT Wind Room
-                "Spawn Stray Fairy chest #2 in ISTT Wind Room",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x1d),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x1d),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x1d),
-                CAN_USE_MAGIC_ARROW(FIRE)
-            ),
-            EVENT( // Gets rid of Sun Block
-                "Remove the Sun Block",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x03),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x03),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x03),
-                (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) || CAN_USE_MAGIC_ARROW(LIGHT)
-            )
-        }
     };
     Regions[RR_STONE_TOWER_TEMPLE_MIRROR_PILLAR_ROOM] = RandoRegion{ .name = "Mirror Pillar Room", .sceneId = SCENE_INISIE_N,
         .checks = {
@@ -204,7 +175,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_TEMPLE_SPIKED_BAR_ROOM_UPPER] = RandoRegion{ .name = "Spiked Bar Room Upper", .sceneId = SCENE_INISIE_N,
         .checks = {
-            CHECK(RC_STONE_TOWER_TEMPLE_BEFORE_WATER_BRIDGE_CHEST, CAN_USE_EXPLOSIVE || (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x16) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x16))),
+            CHECK(RC_STONE_TOWER_TEMPLE_BEFORE_WATER_BRIDGE_CHEST, CAN_USE_EXPLOSIVE),
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_GARO_MASTER_ROOM, HAS_ITEM(ITEM_HOOKSHOT)),
@@ -225,7 +196,7 @@ static RegisterShipInitFunc initFunc([]() {
     // Inverted Temple
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE] = RandoRegion{ .name = "Entrace", .sceneId = SCENE_INISIE_R,
         .checks = {
-            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_CHEST, (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x05) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x05))),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_CHEST, RANDO_EVENTS[RE_STONE_TOWER_STRAY_FAIRY_INVERTED_ENTRANCE]),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_SMALL_CRATE_01, true),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_SMALL_CRATE_02, true),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_SMALL_CRATE_03, true),
@@ -237,14 +208,14 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_WIND_ROOM, CAN_USE_MAGIC_ARROW(LIGHT)),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, HAS_ITEM(ITEM_HOOKSHOT) && (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x0c) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0c)))
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, HAS_ITEM(ITEM_HOOKSHOT))
         }
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_WIND_ROOM] = RandoRegion{ .name = "Wind Room", .sceneId = SCENE_INISIE_R,
         .checks = {
-            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_UPPER_CHEST, CAN_BE_DEKU && CAN_PLAY_SONG(ELEGY) && (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x1d) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x1d))),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_UPPER_CHEST, CAN_BE_DEKU && CAN_PLAY_SONG(ELEGY)),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_MIDDLE_CHEST, CAN_BE_DEKU),
-            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_LOWER_CHEST, CAN_BE_DEKU && (Flags_GetSceneSwitch(SCENE_INISIE_R, 0x1D) || CAN_USE_MAGIC_ARROW(FIRE))),
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_EAST_LOWER_CHEST, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_UPDRAFTS_BRIDGE_POT_01, CAN_BE_DEKU),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_UPDRAFTS_BRIDGE_POT_02, CAN_BE_DEKU),
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_UPDRAFTS_LEDGE_POT_01, CAN_BE_DEKU),
@@ -261,15 +232,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE, true),
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_LAVA_FLIP_ROOM, KEY_COUNT(STONE_TOWER_TEMPLE) >= 3 && CAN_BE_DEKU),
         },
-        .events = {
-                EVENT( // Spawns Stray Fairy chest in STT Deep Water Room
-                "Spawn Stray Fairy chest in STT Deep Water Room",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0b),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x0b),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x0b),
-                true
-            ),
-        }
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_LAVA_FLIP_ROOM] = RandoRegion{ .name = "Flipped Lava Room", .sceneId = SCENE_INISIE_R,
         .connections = {
@@ -347,17 +309,8 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_UNDER_BRIDGE, true),
             CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE, true),
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, HAS_ITEM(ITEM_HOOKSHOT) && (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x0c) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0c)))
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP, HAS_ITEM(ITEM_HOOKSHOT))
         },
-        .events = {
-                EVENT( // Spawns Stray Fairy chest in STT
-                "Spawn Stray Fairy chest in STT Entrance",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x0c),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x0c),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x0c),
-                true
-            ),
-        }
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_ENTRANCE_TOP] = RandoRegion{ .name = "Top of Entrance", .sceneId = SCENE_INISIE_R,
         .connections = {
@@ -377,17 +330,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_UPPER] = RandoRegion{ .name = "Spiked Bar Room Upper", .sceneId = SCENE_INISIE_R,
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_LOWER, HAS_ITEM(ITEM_HOOKSHOT) || (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x16) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x16)))
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
         },
-        .events = {
-                EVENT( // Spawns Stray Fairy chest in STT Spiked Bar Room
-                "Spawn Stray Fairy chest in STT Spiked Bar Room",
-                Flags_GetSceneSwitch(SCENE_INISIE_R, 0x16),
-                Flags_SetSceneSwitch(SCENE_INISIE_R, 0x16),
-                Flags_ClearSceneSwitch(SCENE_INISIE_R, 0x16),
-                true
-            ),
-        }
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_LOWER] = RandoRegion{ .name = "Spiked Bar Room Lower", .sceneId = SCENE_INISIE_R,
         .checks = {
@@ -415,7 +359,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(STONE_TOWER_TEMPLE_INVERTED, 1),           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_STONE_TOWER_TEMPLE)),
         },
         .connections = {
-            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_UPPER, HAS_ITEM(ITEM_HOOKSHOT) || (Flags_GetSceneSwitch(SCENE_INISIE_N, 0x16) || Flags_GetSceneSwitch(SCENE_INISIE_R, 0x16))),
+            CONNECTION(RR_STONE_TOWER_TEMPLE_INVERTED_SPIKED_BAR_ROOM_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
     };
     Regions[RR_STONE_TOWER_TEMPLE_INVERTED_TWINMOLD_BOSS_ENTRANCE] = RandoRegion{ .name = "Twinmold Boss Entrance", .sceneId = SCENE_INISIE_R,

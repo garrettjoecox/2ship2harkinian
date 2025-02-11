@@ -65,5 +65,5 @@ void ApplyRemainsHint(u16* textId, bool* loadFromMessageTable) {
 
 void Rando::ActorBehavior::InitEnTalkBehavior() {
     // "Recruiting Soldiers..." Posters around Clock Town
-    COND_ID_HOOK(OnOpenText, 0x1C06, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS], ApplyRemainsHint);
+    COND_ID_HOOK(OnOpenText, 0x1C06, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_BOSS_REMAINS], ApplyRemainsHint);
 }

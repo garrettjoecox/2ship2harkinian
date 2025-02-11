@@ -18,21 +18,21 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PIRATES_FORTRESS, 2),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Hit Beehive", WEEKEVENTREG_83_02, (HAS_ITEM(ITEM_BOW) || (CAN_BE_DEKU && HAS_MAGIC))),
+            EVENT(RE_PIRATE_FORTRESS_BEEHIVE_HIT, (HAS_ITEM(ITEM_BOW) || (CAN_BE_DEKU && HAS_MAGIC))),
         },
     };
     Regions[RR_PIRATES_FORTRESS_CAPTAIN_ROOM] = RandoRegion{ .name = "Captain Room", .sceneId = SCENE_PIRATE,
         .checks = {
             // TODO: Zora Egg Here
-            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_01, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02)),
-            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_02, CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02)),
-            CHECK(RC_PIRATE_FORTRESS_INTERIOR_HOOKSHOT_CHEST,      CHECK_WEEKEVENTREG(WEEKEVENTREG_83_02))
+            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_01, RANDO_EVENTS[RE_PIRATE_FORTRESS_BEEHIVE_HIT]),
+            CHECK(RC_PIRATE_FORTRESS_CAPTAIN_ROOM_BARREL_02, RANDO_EVENTS[RE_PIRATE_FORTRESS_BEEHIVE_HIT]),
+            CHECK(RC_PIRATE_FORTRESS_INTERIOR_HOOKSHOT_CHEST, RANDO_EVENTS[RE_PIRATE_FORTRESS_BEEHIVE_HIT])
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 1),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0), true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
         },
     };
     Regions[RR_PIRATES_FORTRESS_INSIDE_3_GUARD_ROOM] = RandoRegion{ .name = "3 Guard Room", .sceneId = SCENE_PIRATE,
@@ -46,7 +46,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM] = RandoRegion{ .name = "Chest Egg Room", .sceneId = SCENE_PIRATE,
@@ -63,7 +63,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
         },
     };
     Regions[RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD] = RandoRegion{ .name = "Green Guard Room", .sceneId = SCENE_PIRATE,
@@ -83,7 +83,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD] = RandoRegion{ .name = "Maze Room", .sceneId = SCENE_PIRATE,
@@ -94,7 +94,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD] = RandoRegion{ .name = "Orange Guard Room", .sceneId = SCENE_PIRATE,
@@ -122,7 +122,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
         },
     };
     Regions[RR_PIRATES_FORTRESS_LEFT_PLATFORM] = RandoRegion{ .name = "Left Platform", .sceneId = SCENE_KAIZOKU,
@@ -160,7 +160,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
         .oneWayEntrances = {
             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
@@ -210,7 +210,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_PLAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_PLAZA_RIGHT_EXIT] = RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
@@ -246,7 +246,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_PLAZA, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_PLAZA] = RandoRegion{ .name = "Plaza", .sceneId = SCENE_KAIZOKU,
@@ -268,7 +268,7 @@ static RegisterShipInitFunc initFunc([]() {
             )),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+            EVENT(RE_ACCESS_PIRATE_PICTURE, true),
         },
     };
     Regions[RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM] = RandoRegion{ .name = "Right Clam Room", .sceneId = SCENE_PIRATE,
@@ -284,7 +284,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, true),
         },
         .events = {
-            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT(RE_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
         },
     };
     Regions[RR_PIRATES_FORTRESS_SEWERS_POSTGATE] = RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,

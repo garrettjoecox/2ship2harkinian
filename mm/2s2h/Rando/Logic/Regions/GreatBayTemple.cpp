@@ -174,13 +174,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,  true),
         },
         .events = {
-            EVENT( // Green Switch in the room above the central water wheel
-                "Opened first Green Switch", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x37),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x37),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x37), 
-                CAN_USE_MAGIC_ARROW(ICE)
-            ),
+            EVENT(RE_GREAT_BAY_GREEN_SWITCH_1, CAN_USE_MAGIC_ARROW(ICE)),
         }
     };
     Regions[RR_GREAT_BAY_TEMPLE_GREEN_PIPE_2] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -223,13 +217,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM,      CAN_USE_MAGIC_ARROW(FIRE)),
         },
         .events = {
-            EVENT( // Green Switch in the room with the many frozen waterflows
-                "Opened second Green Switch", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x38),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x38),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x38), 
-                CAN_USE_MAGIC_ARROW(FIRE)
-            ),
+            EVENT(RE_GREAT_BAY_GREEN_SWITCH_2, CAN_USE_MAGIC_ARROW(FIRE)),
         }
     };
     Regions[RR_GREAT_BAY_TEMPLE_MAP_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -274,13 +262,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM, CAN_BE_ZORA),
         },
         .events = {
-            EVENT( // Green Switch in the room before the boss
-                "Opened third Green Switch", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x39),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x39),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x39), 
-                true
-            ),
+            EVENT(RE_GREAT_BAY_GREEN_SWITCH_3, true),
         }
     };
     Regions[RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -295,13 +277,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_BEFORE_WART,     KEY_COUNT(GREAT_BAY_TEMPLE) >= 1),
         },
         .events = {
-           EVENT( // Red Valve in the room before Wart
-                "Opened first Red Valve", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x34),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x34),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x34), 
-                CAN_USE_MAGIC_ARROW(ICE)
-            ),
+           EVENT(RE_GREAT_BAY_RED_SWITCH_1, CAN_USE_MAGIC_ARROW(ICE)),
         }
     };
     Regions[RR_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -321,13 +297,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_MAP_ROOM, true),
         },
         .events = {
-           EVENT( // Red Valve in the room next to the map room
-                "Opened second Red Valve", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x35),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x35),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x35), 
-                CAN_USE_MAGIC_ARROW(ICE)
-            ),
+           EVENT(RE_GREAT_BAY_RED_SWITCH_2, CAN_USE_MAGIC_ARROW(ICE)),
         }
     };
     Regions[RR_GREAT_BAY_TEMPLE_WART] = RandoRegion{ .sceneId = SCENE_SEA,
@@ -362,20 +332,8 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_GREAT_BAY_TEMPLE_ENTRANCE,      true),
         },
         .events = {
-            EVENT( // Red Switch toggle in the Waterwheel room near entrance
-                "Red Switch Toggle", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x36),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x36),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x36), 
-                GBT_RED_SWITCH_FLOW && HAS_ITEM(ITEM_HOOKSHOT)
-            ),
-            EVENT( // Yellow Switch toggle in the Waterwheel room near entrance
-                "Yellow Switch Toggle", 
-                Flags_GetSceneSwitch(SCENE_SEA, 0x33),
-                Flags_SetSceneSwitch(SCENE_SEA, 0x33),
-                Flags_ClearSceneSwitch(SCENE_SEA, 0x33), 
-                true
-            ),
+            EVENT(RE_GREAT_BAY_RED_TOGGLE, GBT_RED_SWITCH_FLOW && HAS_ITEM(ITEM_HOOKSHOT)),
+            EVENT(RE_GREAT_BAY_YELLOW_TOGGLE, true),
         }
     };
 }, {});

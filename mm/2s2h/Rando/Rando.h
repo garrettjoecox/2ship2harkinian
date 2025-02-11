@@ -7,7 +7,7 @@
 #define IS_RANDO (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO)
 #define RANDO_SAVE_CHECKS gSaveContext.save.shipSaveInfo.rando.randoSaveChecks
 #define RANDO_SAVE_OPTIONS gSaveContext.save.shipSaveInfo.rando.randoSaveOptions
-#define RANDO_ACCESS gSaveContext.save.shipSaveInfo.rando.randoAccess
+#define RANDO_EVENTS gSaveContext.save.shipSaveInfo.rando.randoEvents
 
 namespace Rando {
 

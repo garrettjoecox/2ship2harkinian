@@ -47,7 +47,7 @@ void OnOpenCantGetText(u16* textId, bool* loadFromMessageTable) {
 };
 
 void Rando::ActorBehavior::InitEnBalBehavior() {
-    bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS];
+    bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_TINGLE_SHOPS];
 
     COND_VB_SHOULD(VB_NOT_AFFORD_TINGLE_MAP, shouldRegister, {
         EnBal* enBal = va_arg(args, EnBal*);

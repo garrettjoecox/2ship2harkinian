@@ -33,10 +33,6 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
         gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
 
-        // Fix a vanilla bug, where you can use magic items prior to getting magic because your magic meter is
-        // initialized with a value of 48
-        gSaveContext.save.saveInfo.playerData.magic = 0;
-
         // Remove Sword & Shield
         SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
         BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_NONE;
@@ -178,6 +174,19 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                         if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
                             RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
                             continue;
+                        }
+
+                        if (randoStaticCheck.randoCheckType == RCTYPE_COW &&
+                            RANDO_SAVE_OPTIONS[RO_SHUFFLE_COWS] == RO_GENERIC_NO) {
+                            continue;
+                        }
+
+                        if (randoStaticCheck.randoCheckType == RCTYPE_TINGLE_SHOP &&
+                            RANDO_SAVE_OPTIONS[RO_SHUFFLE_TINGLE_SHOPS] == RO_GENERIC_NO) {
+                            continue;
+                        } else {
+                            int price = Ship_Random(0, 200);
+                            RANDO_SAVE_CHECKS[randoCheckId].price = price;
                         }
 
                         if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {

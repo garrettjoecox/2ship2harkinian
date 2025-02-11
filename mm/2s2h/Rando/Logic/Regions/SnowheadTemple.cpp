@@ -44,7 +44,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Cleared Snowhead Temple", WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE, CanKillEnemy(ACTOR_BOSS_HAKUGIN)),
+            EVENT(RE_CLEARED_SNOWHEAD_TEMPLE, CanKillEnemy(ACTOR_BOSS_HAKUGIN)),
         },
         .oneWayEntrances = {
             ENTRANCE(GOHTS_LAIR, 0), // Snowhead Temple Boss Room

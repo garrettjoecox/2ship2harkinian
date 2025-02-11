@@ -4773,7 +4773,7 @@ s32 Magic_Consume(PlayState* play, s16 magicToConsume, s16 type) {
 }
 
 void Magic_UpdateAddRequest(void) {
-    if (gSaveContext.isMagicRequested) {
+    if (GameInteractor_Should(VB_GRANT_MAGIC_UPON_REQUEST, gSaveContext.isMagicRequested)) {
         gSaveContext.save.saveInfo.playerData.magic += 4;
         Audio_PlaySfx(NA_SE_SY_GAUGE_UP - SFX_FLAG);
 

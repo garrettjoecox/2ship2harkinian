@@ -48,10 +48,12 @@ void ApplyOceanSpiderHouseHint(u16* textId, bool* loadFromMessageTable) {
 }
 
 void Rando::ActorBehavior::InitEnSshBehavior() {
+    bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_SPIDER_HOUSES];
+
     // "Recruiting Soldiers..." Posters around Clock Town
-    COND_ID_HOOK(OnOpenText, 0x915, IS_RANDO, ApplySwampSpiderHouseHint);
-    COND_ID_HOOK(OnOpenText, 0x1130, IS_RANDO, ApplyOceanSpiderHouseHint);
-    COND_ID_HOOK(OnOpenText, 0x1131, IS_RANDO, ApplyOceanSpiderHouseHint);
+    COND_ID_HOOK(OnOpenText, 0x915, shouldRegister, ApplySwampSpiderHouseHint);
+    COND_ID_HOOK(OnOpenText, 0x1130, shouldRegister, ApplyOceanSpiderHouseHint);
+    COND_ID_HOOK(OnOpenText, 0x1131, shouldRegister, ApplyOceanSpiderHouseHint);
 
     COND_ID_HOOK(ShouldActorInit, ACTOR_EN_SSH, IS_RANDO, [](Actor* actor, bool* should) {
         // Skip first dialog
