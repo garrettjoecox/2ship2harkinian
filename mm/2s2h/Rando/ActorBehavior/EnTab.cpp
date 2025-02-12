@@ -7,6 +7,11 @@ extern "C" {
 #include "overlays/actors/ovl_En_Tab/z_en_tab.h"
 }
 
+#define ENTAB_EMPTY_BOTTLE_CHECK_FAILED_SCRIPT_POS 0x000F
+#define MSCRIPT_OFFER_ITEM_CMD_LEN 0x5
+
+static bool isInitialGiveItemMscriptCommandExecution = false;
+
 int32_t EnTab_OverrideBottleCheckCallback(Actor* thisx, PlayState* play) {
     // Should always return true - as if the player always has an empty bottle!
     // See func_80BE0D38 in z_en_tab.c
@@ -52,39 +57,26 @@ void EnTab_OnOpenShopText(u16* textId, bool* loadFromMessageTable) {
 
 void Rando::ActorBehavior::InitEnTabBehavior() {
     // Give the randomized items instead if they haven't already been purchased
-    // Otherwise, give RI refills to handle case where player has no bottle yet
+    // Otherwise, give vanilla refills but check for bottles first
     COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS], {
         GetItemId* item = va_arg(args, GetItemId*);
         Actor* actor = va_arg(args, Actor*);
 
         if (actor->id == ACTOR_EN_TAB) {
-            *should = false;
+            RandoCheckId checkId =
+                gPlayState->msgCtx.choiceIndex == 0 ? RC_MILK_BAR_PURCHASE_MILK : RC_MILK_BAR_PURCHASE_CHATEAU;
 
-            if (gPlayState->msgCtx.choiceIndex == 0) {
-                if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].cycleObtained) {
-                    RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].eligible = true;
-                } else {
-                    RandoItemId milkRefillRandoItem = Rando::ConvertItem(RI_MILK_REFILL);
-                    if (milkRefillRandoItem == RI_JUNK) {
-                        milkRefillRandoItem = Rando::CurrentJunkItem();
-                    }
-                    Rando::MiscBehavior::QueueNonCheckItem(milkRefillRandoItem);
-                }
-            } else {
-                if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].cycleObtained) {
-                    RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].eligible = true;
-                } else {
-                    RandoItemId chateauRefillRandoItem = Rando::ConvertItem(RI_CHATEAU_ROMANI_REFILL);
-                    if (chateauRefillRandoItem == RI_JUNK) {
-                        chateauRefillRandoItem = Rando::CurrentJunkItem();
-                    }
-                    Rando::MiscBehavior::QueueNonCheckItem(chateauRefillRandoItem);
-                }
+            if (!RANDO_SAVE_CHECKS[checkId].cycleObtained) {
+                RANDO_SAVE_CHECKS[checkId].eligible = true;
+                *should = false;
+            } else if (!Inventory_HasEmptyBottle()) {
+                *should = false;
             }
 
-            EnTab* enTab = (EnTab*)actor;
+            // Update actor parent to avoid looping over MSCRIPT_OFFER_ITEM infinitely
             Player* player = GET_PLAYER(gPlayState);
-            enTab->actor.parent = &player->actor;
+            EnTab* tabActor = (EnTab*)actor;
+            tabActor->actor.parent = &player->actor;
         }
     });
 
@@ -94,19 +86,49 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
         Actor* actor = va_arg(args, Actor*);
         MsgScript* script = va_arg(args, MsgScript*);
         MsgEventCallback* callback = va_arg(args, MsgEventCallback*);
-        MsgScript** scriptPtr = va_arg(args, MsgScript**);
 
-        Player* player = GET_PLAYER(gPlayState);
-        EnTab* tabActor = (EnTab*)actor;
+        // Override actor parent to skip item grant if the player is trying to buy
+        // vanilla milk items and does not have a bottle
+        if (cmdId == MSCRIPT_CMD_06) {
+            LUSLOG_INFO("----- Handling MSCRIPT_OFFER_ITEM");
+            RandoCheckId checkId =
+                gPlayState->msgCtx.choiceIndex == 0 ? RC_MILK_BAR_PURCHASE_MILK : RC_MILK_BAR_PURCHASE_CHATEAU;
 
-        // Override callback function depending on actor state for MSCRIPT_BRANCH_ON_CALLBACK_2
-        if (cmdId == MSCRIPT_CMD_40) {
-            *callback = EnTab_OverrideBottleCheckCallback;
+            if (RANDO_SAVE_CHECKS[checkId].cycleObtained && isInitialGiveItemMscriptCommandExecution &&
+                !Inventory_HasEmptyBottle()) {
+                // Make sure that skip branch is taken in Mscript handler by setting actor parent to player
+                Player* player = GET_PLAYER(gPlayState);
+                EnTab* tabActor = (EnTab*)actor;
+                tabActor->actor.parent = &player->actor;
+
+                // Update skip offset to point to Open Bottle Failure MsgScript data
+                s16 skipOffset = 0;
+                if (gPlayState->msgCtx.choiceIndex == 0) {
+                    skipOffset = ENTAB_EMPTY_BOTTLE_CHECK_FAILED_SCRIPT_POS - 0x004F - MSCRIPT_OFFER_ITEM_CMD_LEN;
+                } else {
+                    skipOffset = ENTAB_EMPTY_BOTTLE_CHECK_FAILED_SCRIPT_POS - 0x0040 - MSCRIPT_OFFER_ITEM_CMD_LEN;
+                }
+
+                script[3] = skipOffset >> 8;   // upper byte of skipOffset
+                script[4] = skipOffset & 0xFF; // lower byte of skipOffset
+
+                // Add helpful error sound to alert player of custom bottle check behavior
+                Audio_PlaySfx(NA_SE_SY_ERROR);
+            } else {
+                // Write vanilla values to skip offset for script command
+                s16 skipOffset = 0;
+                script[3] = skipOffset >> 8;
+                script[4] = skipOffset & 0xFF;
+            }
+
+            if (isInitialGiveItemMscriptCommandExecution) {
+                isInitialGiveItemMscriptCommandExecution = false;
+            }
         }
 
         // Use check prices instead of vanilla for MSCRIPT_BRANCH_ON_RUPEES
         if (cmdId == MSCRIPT_CMD_08) {
-            s16 checkPrice;
+            s16 checkPrice = 0;
             if (gPlayState->msgCtx.choiceIndex == 0) {
                 checkPrice = 20;
 
@@ -125,25 +147,38 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
             script[2] = checkPrice & 0xFF; // lower byte of price
         }
 
+        // MSCRIPT_BEGIN_TEXT
+        if (cmdId == MSCRIPT_CMD_14) {
+            isInitialGiveItemMscriptCommandExecution = true;
+        }
+
+        // Need to reset actor parent which otherwise would've been reset by vanilla Give Item cutscene in MSCRIPT_DONE
+        if (cmdId == MSCRIPT_CMD_16) {
+            Player* player = GET_PLAYER(gPlayState);
+            EnTab* tabActor = (EnTab*)actor;
+            tabActor->actor.parent = NULL;
+        }
+
         // Charge Link the randomized price when calling MSCRIPT_CHANGE_RUPEES
+        // Will not charge Link when purchasing vanilla refills without an empty bottle
         if (cmdId == MSCRIPT_CMD_20) {
-            s16 rupeeChangeAmt;
-            if (gPlayState->msgCtx.choiceIndex == 0) {
-                rupeeChangeAmt = -20;
+            RandoCheckId checkId =
+                gPlayState->msgCtx.choiceIndex == 0 ? RC_MILK_BAR_PURCHASE_MILK : RC_MILK_BAR_PURCHASE_CHATEAU;
+            s16 rupeeChangeAmt = gPlayState->msgCtx.choiceIndex == 0 ? -20 : -200;
 
-                if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].cycleObtained) {
-                    rupeeChangeAmt = -RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_MILK].price;
-                }
-            } else {
-                rupeeChangeAmt = -200;
-
-                if (!RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].cycleObtained) {
-                    rupeeChangeAmt = -RANDO_SAVE_CHECKS[RC_MILK_BAR_PURCHASE_CHATEAU].price;
-                }
+            if (!RANDO_SAVE_CHECKS[checkId].cycleObtained) {
+                rupeeChangeAmt = -RANDO_SAVE_CHECKS[checkId].price;
+            } else if (!Inventory_HasEmptyBottle()) {
+                rupeeChangeAmt = 0;
             }
 
             script[1] = rupeeChangeAmt >> 8;   // upper byte of price
             script[2] = rupeeChangeAmt & 0xFF; // lower byte of price
+        }
+
+        // Override callback function depending on actor state for MSCRIPT_BRANCH_ON_CALLBACK_2
+        if (cmdId == MSCRIPT_CMD_40) {
+            *callback = EnTab_OverrideBottleCheckCallback;
         }
     });
 
