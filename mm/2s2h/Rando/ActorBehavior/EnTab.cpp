@@ -5,7 +5,6 @@
 extern "C" {
 #include "variables.h"
 #include "overlays/actors/ovl_En_Tab/z_en_tab.h"
-
 }
 
 int32_t EnTab_OverrideBottleCheckCallback(Actor* thisx, PlayState* play) {
@@ -54,7 +53,7 @@ void EnTab_OnOpenShopText(u16* textId, bool* loadFromMessageTable) {
 void Rando::ActorBehavior::InitEnTabBehavior() {
     // Give the randomized items instead if they haven't already been purchased
     // Otherwise, give RI refills to handle case where player has no bottle yet
-    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS], {
         GetItemId* item = va_arg(args, GetItemId*);
         Actor* actor = va_arg(args, Actor*);
 
@@ -90,7 +89,7 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
     });
 
     // Use the randomized prices for message script branching/game state updates
-    COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO, {
+    COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS], {
         u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
         MsgScript* script = va_arg(args, MsgScript*);
@@ -148,5 +147,5 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
         }
     });
 
-    COND_ID_HOOK(OnOpenText, 0x2B0B, IS_RANDO, EnTab_OnOpenShopText);
+    COND_ID_HOOK(OnOpenText, 0x2B0B, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS], EnTab_OnOpenShopText);
 }
