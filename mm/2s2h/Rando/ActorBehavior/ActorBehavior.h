@@ -68,6 +68,7 @@ void InitEnTrtBehavior();
 void InitEnYbBehavior();
 void InitEnZogBehavior();
 void InitEnZotBehavior();
+void InitEnZowBehavior();
 void InitItemBHeartBehavior();
 void InitObjKibakoBehavior();
 void InitObjMoonStoneBehavior();
