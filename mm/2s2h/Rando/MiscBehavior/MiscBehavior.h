@@ -10,7 +10,6 @@ namespace MiscBehavior {
 void Init();
 void OnFileLoad();
 
-void QueueNonCheckItem(RandoItemId itemId);
 void CheckQueue();
 void CheckQueueReset();
 void InitFileSelect();
