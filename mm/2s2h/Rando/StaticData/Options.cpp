@@ -15,6 +15,7 @@ namespace StaticData {
 std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_HINTS_BOSS_REMAINS),
     RO(RO_HINTS_GOSSIP_STONES),
+    RO(RO_HINTS_HOOKSHOT),
     RO(RO_HINTS_PURCHASEABLE),
     RO(RO_HINTS_SPIDER_HOUSES),
     RO(RO_LOGIC),

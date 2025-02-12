@@ -24,10 +24,12 @@ void ApplyHookshotHint(u16* textId, bool* loadFromMessageTable) {
 }
 
 void Rando::ActorBehavior::InitEnZowBehavior() {
-    COND_ID_HOOK(OnOpenText, 0x12FD, IS_RANDO, ApplyHookshotHint);
-    COND_ID_HOOK(OnOpenText, 0x12FA, IS_RANDO, ApplyHookshotHint);
-    COND_ID_HOOK(OnOpenText, 0x1301, IS_RANDO, ApplyHookshotHint);
-    COND_ID_HOOK(OnOpenText, 0x12FF, IS_RANDO, ApplyHookshotHint);
-    COND_ID_HOOK(OnOpenText, 0x12F8, IS_RANDO, ApplyHookshotHint);
-    COND_ID_HOOK(OnOpenText, 0x12F3, IS_RANDO, ApplyHookshotHint);
+    bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_HOOKSHOT];
+
+    COND_ID_HOOK(OnOpenText, 0x12FD, shouldRegister, ApplyHookshotHint);
+    COND_ID_HOOK(OnOpenText, 0x12FA, shouldRegister, ApplyHookshotHint);
+    COND_ID_HOOK(OnOpenText, 0x1301, shouldRegister, ApplyHookshotHint);
+    COND_ID_HOOK(OnOpenText, 0x12FF, shouldRegister, ApplyHookshotHint);
+    COND_ID_HOOK(OnOpenText, 0x12F8, shouldRegister, ApplyHookshotHint);
+    COND_ID_HOOK(OnOpenText, 0x12F3, shouldRegister, ApplyHookshotHint);
 }
