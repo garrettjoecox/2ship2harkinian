@@ -90,7 +90,6 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
         // Override actor parent to skip item grant if the player is trying to buy
         // vanilla milk items and does not have a bottle
         if (cmdId == MSCRIPT_CMD_06) {
-            LUSLOG_INFO("----- Handling MSCRIPT_OFFER_ITEM");
             RandoCheckId checkId =
                 gPlayState->msgCtx.choiceIndex == 0 ? RC_MILK_BAR_PURCHASE_MILK : RC_MILK_BAR_PURCHASE_CHATEAU;
 
