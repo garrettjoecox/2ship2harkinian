@@ -6,7 +6,6 @@ extern "C" {
 #include "variables.h"
 #include "overlays/actors/ovl_En_Tab/z_en_tab.h"
 
-s32 func_80BE0D38(Actor* thisx, PlayState* play); // Standard dialogue mscript callback that does bottle check
 }
 
 int32_t EnTab_OverrideBottleCheckCallback(Actor* thisx, PlayState* play) {
