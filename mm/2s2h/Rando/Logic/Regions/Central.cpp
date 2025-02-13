@@ -19,7 +19,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_TERMINA_FIELD, CAN_GROW_BEAN_PLANT)
         },
         .events = {
-            EVENT(RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO, true), // need Ocarina or WEEKEVENTREG_74_40, which is set when getting RC_ASTRAL_OBSERVATORY_MOON_TEAR
+            EVENT(RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO, true), // need Ocarina OR WEEKEVENTREG_74_40, which is set when getting RC_ASTRAL_OBSERVATORY_MOON_TEAR
         },
     };
     Regions[RR_ASTRAL_OBSERVATORY_PASSAGE] = RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
