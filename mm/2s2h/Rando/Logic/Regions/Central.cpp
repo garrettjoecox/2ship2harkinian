@@ -18,6 +18,9 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_TERMINA_FIELD, CAN_GROW_BEAN_PLANT)
         },
+        .events = {
+            EVENT(RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO, true), // need Ocarina or WEEKEVENTREG_74_40, which is set when getting RC_ASTRAL_OBSERVATORY_MOON_TEAR
+        },
     };
     Regions[RR_ASTRAL_OBSERVATORY_PASSAGE] = RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
         .checks = {
@@ -389,9 +392,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TERMINA_FIELD_SCRUB_GROTTO] = RandoRegion{ .name = "Termina Field Scrub", .sceneId = SCENE_KAKUSIANA,
         .checks = {
+            CHECK(RC_TERMINA_FIELD_GROTTO_SCRUB, CUR_UPG_VALUE(UPG_WALLET) >= 1 && RANDO_EVENTS[RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO]),
             CHECK(RC_TERMINA_FIELD_SCRUB_LARGE_CRATE, true),
             CHECK(RC_TERMINA_FIELD_SCRUB_POT,         true),
-            // TODO: Add scrub HP
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),                ENTRANCE(GROTTOS, 9), true), // TODO: Grotto mapping

@@ -56,6 +56,7 @@ void InitEnOwlBehavior();
 void InitEnPmBehavior();
 void InitEnRuppecrowBehavior();
 void InitEnRzBehavior();
+void InitEnScopenutsBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitEnSob1Behavior();
