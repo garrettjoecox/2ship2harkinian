@@ -16,6 +16,18 @@ std::unordered_map<int32_t, const char*> logicOptions = {
     { RO_LOGIC_VANILLA, "Vanilla" },
 };
 
+std::unordered_map<int32_t, const char*> accessDungeonOptions = {
+    { RO_ACCESS_DUNGEONS_FORM_AND_SONG, "Requires Transformation & Song" },
+    { RO_ACCESS_DUNGEONS_FORM_ONLY, "Requires Transformation" },
+};
+
+std::unordered_map<int32_t, const char*> accessTrialsOptions = {
+    { RO_ACCESS_TRIALS_20_MASKS, "2-6-12-20 Masks" },
+    { RO_ACCESS_TRIALS_REMAINS, "Requires Associated Remains" },
+    { RO_ACCESS_TRIALS_FORMS, "Requires Assocaited Transformation" },
+    { RO_ACCESS_TRIALS_OPEN, "Open" },
+};
+
 namespace BenGui {
 extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 extern std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
@@ -108,7 +120,7 @@ static void DrawGeneralTab() {
 
 static void DrawLogicConditionsTab() {
     f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
-    f32 halfHeight = ImGui::GetContentRegionAvail().y / 3 - (ImGui::GetStyle().ItemSpacing.y * 2);
+    f32 halfHeight = ImGui::GetContentRegionAvail().y / 2 - (ImGui::GetStyle().ItemSpacing.y * 2);
     ImGui::BeginChild("randoLogicColumn1", ImVec2(columnWidth, halfHeight));
     UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
     UIWidgets::Tooltip(
@@ -123,6 +135,18 @@ static void DrawLogicConditionsTab() {
         "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
         "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
         "Vanilla - The items are not shuffled.");
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("randoLogicColumn2", ImVec2(columnWidth, halfHeight));
+    UIWidgets::CVarCombobox("Dungeon Access", Rando::StaticData::Options[RO_ACCESS_DUNGEONS].cvar,
+                            accessDungeonOptions);
+    UIWidgets::CVarSliderInt("Majora Access Remains Required",
+                             Rando::StaticData::Options[RO_ACCESS_MAJORA_REMAINS_COUNT].cvar,
+                             IntSliderOptions().Min(0).Max(4).DefaultValue(0));
+    UIWidgets::CVarSliderInt("Moon Access Remains Required",
+                             Rando::StaticData::Options[RO_ACCESS_MOON_REMAINS_COUNT].cvar,
+                             IntSliderOptions().Min(0).Max(4).DefaultValue(4));
+    UIWidgets::CVarCombobox("Trials Access", Rando::StaticData::Options[RO_ACCESS_TRIALS].cvar, accessTrialsOptions);
     ImGui::EndChild();
     ImGui::BeginChild("randoLogicTricks", ImVec2(0, 0));
     ImGui::SeparatorText("Tricks & Glitches");

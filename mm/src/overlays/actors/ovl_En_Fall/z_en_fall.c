@@ -23,6 +23,7 @@
 #include "objects/object_moonston/object_moonston.h"
 
 #include "2s2h/BenPort.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 
@@ -334,8 +335,10 @@ void EnFall_CrashingMoon_HandleGiantsCutscene(EnFall* this, PlayState* play) {
                 break;
 
             case 2:
-                if (CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
-                    CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) {
+                if (GameInteractor_Should(VB_MEET_MOON_REQUIREMENTS, CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD))) {
                     if (CHECK_WEEKEVENTREG(WEEKEVENTREG_93_04)) {
                         if (CutsceneManager_IsNext(12)) {
                             CutsceneManager_Start(12, &this->actor);

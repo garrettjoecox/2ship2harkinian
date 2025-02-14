@@ -145,11 +145,15 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL,        1),             ENTRANCE(ZORA_CAPE, 2), true),
-            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && CAN_PLAY_SONG(BOSSA_NOVA)),
+            EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 0),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && HAS_ITEM(ITEM_HOOKSHOT) && (CAN_PLAY_SONG(BOSSA_NOVA) || RANDO_SAVE_OPTIONS[RO_ACCESS_DUNGEONS] == RO_ACCESS_DUNGEONS_FORM_ONLY)),
         },
         .connections = {
             CONNECTION(RR_ZORA_CAPE, CAN_BE_ZORA),
         },
+        .oneWayEntrances = {
+            ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
+            ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
+        }
     };
     Regions[RR_ZORA_CAPE_GROTTO] = RandoRegion{ .name = "Zora Cape Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
@@ -177,11 +181,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE, CAN_BE_ZORA),
             CONNECTION(RR_ZORA_CAPE_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
-        },
-        .oneWayEntrances = {
-            ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
-            ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
-        },
+        }
     };
     Regions[RR_ZORA_HALL_EVANS_ROOM] = RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,
         .checks = {

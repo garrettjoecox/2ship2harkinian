@@ -37,7 +37,7 @@ void ApplyToSaveContext(nlohmann::json spoiler) {
             optionId = RO_STARTING_ITEMS_3;
         }
         uint32_t startingItemsBits = RANDO_SAVE_OPTIONS[optionId];
-        if ((startingItemsBits & (1 << i)) != 0) {
+        if ((startingItemsBits & (1 << (i % 32))) != 0) {
             startingItems.push_back(itemId);
         }
     }

@@ -62,7 +62,6 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
      (IS_DEKU && HAS_ITEM(ITEM_MASK_DEKU)) || (IS_GORON && HAS_ITEM(ITEM_MASK_GORON)))
 #define CHECK_MAX_HP(TARGET_HP) ((TARGET_HP * 16) <= gSaveContext.save.saveInfo.playerData.healthCapacity)
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
-#define HAS_MOON_MASKS(target) (MoonMaskCount() >= target)
 #define CAN_HOOK_SCARECROW (HAS_ITEM(ITEM_OCARINA_OF_TIME) && HAS_ITEM(ITEM_HOOKSHOT))
 #define CAN_USE_EXPLOSIVE ((HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || HAS_ITEM(ITEM_MASK_BLAST)))
 #define CAN_USE_HUMAN_SWORD (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI)
@@ -135,6 +134,20 @@ inline uint32_t MoonMaskCount() {
         }
     }
     return count;
+}
+
+inline uint32_t RemainsCount() {
+    uint32_t count = 0;
+    for (int i = QUEST_REMAINS_ODOLWA; i <= QUEST_REMAINS_TWINMOLD; i++) {
+        if (CHECK_QUEST_ITEM(i)) {
+            count++;
+        }
+    }
+    return count;
+}
+
+inline bool MeetsMoonRequirements() {
+    return CAN_PLAY_SONG(OATH) && RemainsCount() >= RANDO_SAVE_OPTIONS[RO_ACCESS_MOON_REMAINS_COUNT];
 }
 
 inline bool CanKillEnemy(ActorId EnemyId) {

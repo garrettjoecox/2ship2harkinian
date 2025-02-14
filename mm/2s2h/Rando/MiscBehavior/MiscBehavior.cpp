@@ -1,5 +1,6 @@
 #include <libultraship/libultraship.h>
 #include "MiscBehavior.h"
+#include "2s2h/Rando/Logic/Logic.h"
 
 extern "C" {
 #include "variables.h"
@@ -52,4 +53,7 @@ void Rando::MiscBehavior::OnFileLoad() {
             gSaveContext.magicToAdd = 0;
         }
     });
+
+    // Fix vanilla bug where the player can often use magic before it's aquired.
+    COND_VB_SHOULD(VB_MEET_MOON_REQUIREMENTS, IS_RANDO, { *should = Rando::Logic::MeetsMoonRequirements(); });
 }

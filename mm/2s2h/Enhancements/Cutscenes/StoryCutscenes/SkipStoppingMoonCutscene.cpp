@@ -18,8 +18,10 @@ void RegisterSkipStoppingMoon() {
         s16* csId = va_arg(args, s16*);
         if (gPlayState->sceneId == SCENE_OKUJOU) {
             if (*csId == 12) {
-                if (CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
-                    CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) {
+                if (GameInteractor_Should(VB_MEET_MOON_REQUIREMENTS, CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) &&
+                                                                         CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD))) {
                     *should = false;
                     GameInteractor::Instance->events.emplace_back(GIEventTransition{
                         .entrance = ENTRANCE(THE_MOON, 0),

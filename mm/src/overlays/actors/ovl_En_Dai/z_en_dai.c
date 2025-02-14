@@ -7,6 +7,7 @@
 #include "z_en_dai.h"
 
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_2000000)
 
@@ -451,8 +452,11 @@ void func_80B3EE8C(EnDai* this, PlayState* play) {
 void func_80B3EEDC(EnDai* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if ((player->transformation == PLAYER_FORM_GORON) && (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
-        (play->msgCtx.lastPlayedSong == OCARINA_SONG_GORON_LULLABY)) {
+    if (GameInteractor_Should(VB_OPEN_SNOWHEAD_FROM_SONG,
+                              (player->transformation == PLAYER_FORM_GORON) &&
+                                  (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
+                                  (play->msgCtx.lastPlayedSong == OCARINA_SONG_GORON_LULLABY),
+                              this)) {
         EnDai_ChangeAnim(this, ENDAI_ANIM_1);
         this->actionFunc = func_80B3EE8C;
     } else if (!(player->stateFlags2 & PLAYER_STATE2_8000000)) {

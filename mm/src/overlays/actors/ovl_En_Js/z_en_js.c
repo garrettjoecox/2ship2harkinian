@@ -5,6 +5,7 @@
  */
 
 #include "z_en_js.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10)
 
@@ -410,6 +411,10 @@ void EnJs_TakeMask(s32 itemActions, s32 childType) {
 }
 
 s32 func_809692A8(s32 arg0) {
+    bool result = false;
+    if (GameInteractor_Should(VB_JS_OVERRIDE_MASK_CHECK, false, &arg0, &result)) {
+        return result;
+    }
     switch (arg0) {
         case 1:
         case 2:
@@ -436,6 +441,10 @@ s32 func_809692A8(s32 arg0) {
 
 s32 func_8096933C(s32 arg0) {
     s32 sp1C;
+    bool result = false;
+    if (GameInteractor_Should(VB_JS_OVERRIDE_MASK_CHECK, false, &arg0, &result)) {
+        return result;
+    }
 
     switch (arg0) {
         case 1:
@@ -878,7 +887,7 @@ void func_8096A184(EnJs* this, PlayState* play) {
 
     if (GET_PLAYER_FORM != PLAYER_FORM_HUMAN) {
         textId = 0x220B;
-    } else if (func_80968E38(0) >= 20) {
+    } else if (GameInteractor_Should(VB_JS_CONSIDER_ELIGIBLE_FOR_DEITY, func_80968E38(0) >= 20)) {
         textId = 0x2202;
     } else {
         textId = 0x21FC;

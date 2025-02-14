@@ -54,21 +54,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 // Persist options to the save
                 gSaveContext.save.shipSaveInfo.rando.finalSeed = finalSeed;
                 for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
-                    uint32_t defaults = 0;
-                    switch (randoOptionId) {
-                        case RO_STARTING_ITEMS_2:
-                            defaults = 2149581312;
-                            break;
-                        case RO_STARTING_ITEMS_3:
-                            defaults = 2048;
-                            break;
-                        case RO_STARTING_HEALTH:
-                            defaults = 3;
-                            break;
-                        default:
-                            break;
-                    }
-                    RANDO_SAVE_OPTIONS[randoOptionId] = (uint32_t)CVarGetInteger(randoStaticOption.cvar, defaults);
+                    RANDO_SAVE_OPTIONS[randoOptionId] =
+                        (uint32_t)CVarGetInteger(randoStaticOption.cvar, randoStaticOption.defaultValue);
                 }
 
                 if (RANDO_SAVE_OPTIONS[RO_STARTING_HEALTH] != 3) {
@@ -95,7 +82,7 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                         optionId = RO_STARTING_ITEMS_3;
                     }
                     uint32_t startingItemsBits = RANDO_SAVE_OPTIONS[optionId];
-                    if ((startingItemsBits & (1 << i)) != 0) {
+                    if ((startingItemsBits & (1 << (i % 32))) != 0) {
                         startingItems.push_back(itemId);
                     }
                 }
@@ -132,12 +119,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                             continue;
                         }
 
-                        // TODO: Until we have a way to get up to the moon without just being able to kill majora, we're
-                        // going to just disable all moon checks
-                        if (randoStaticCheck.sceneId == SCENE_LAST_BS || randoStaticCheck.sceneId == SCENE_LAST_DEKU ||
-                            randoStaticCheck.sceneId == SCENE_LAST_GORON ||
-                            randoStaticCheck.sceneId == SCENE_LAST_LINK ||
-                            randoStaticCheck.sceneId == SCENE_LAST_ZORA) {
+                        // TODO: We may never shuffle these 2 pots, leaving this decision for later
+                        if (randoStaticCheck.sceneId == SCENE_LAST_BS) {
                             continue;
                         }
 
