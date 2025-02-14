@@ -61,13 +61,19 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         // Prevent the original item from spawning
         *should = false;
 
+        s16 itemParams = CustomItem::KILL_ON_TOUCH;
+        // Freestanding PoH & HC cannot be picked up by boomerangs
+        if (randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) {
+            itemParams |= CustomItem::ABLE_TO_ZORA_RANG;
+        }
+        // The heart piece in the bio baba grotto beehive needs to be tossed to fall to the ground
+        if (randoStaticCheck.randoCheckId == RC_TERMINA_FIELD_BIO_BABA_GROTTO) {
+            itemParams |= CustomItem::TOSS_ON_SPAWN;
+        }
+
         // If it hasn't been collected yet, spawn a dummy item
         CustomItem::Spawn(
-            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
-            // Freestanding PoH & HC cannot be picked up by boomerangs
-            CustomItem::KILL_ON_TOUCH |
-                (randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING ? CustomItem::ABLE_TO_ZORA_RANG : 0),
-            randoStaticCheck.randoCheckId,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, itemParams, randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
                 switch (randoStaticCheck.flagType) {
