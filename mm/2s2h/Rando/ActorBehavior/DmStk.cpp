@@ -1,12 +1,43 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/ShipUtils.h"
+#include "2s2h/Rando/Logic/Logic.h"
 
 extern "C" {
 #include "functions.h"
 #include "variables.h"
 #include "overlays/actors/ovl_Dm_Char02/z_dm_char02.h"
+#include "overlays/actors/ovl_Dm_Stk/z_dm_stk.h"
 
 void DmChar02_PlaySfxForCutscenes(DmChar02* dmChar02, PlayState* play);
+void DmStk_ClockTower_Idle(DmStk* dmStk, PlayState* play);
+}
+
+void ApplyOathHint(u16* textId, bool* loadFromMessageTable) {
+    std::string msg;
+
+    if (Rando::Logic::RemainsCount() < RANDO_SAVE_OPTIONS[RO_ACCESS_MOON_REMAINS_COUNT]) {
+        msg = "You think you can defeat me? The Giants are trapped and powerless to stop me. Even if they were free, "
+              "they couldn't save you.";
+    } else {
+        msg = "I can hear the Giants Melody coming from "
+              "%y{{location}}%w. But it's too late! They can't help you now!";
+    }
+
+    if (gPlayState->sceneId != SCENE_OKUJOU) {
+        return;
+    }
+
+    RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_SONG_OATH);
+    CustomMessage::Replace(&msg, "{{location}}", Ship_GetSceneName(Rando::StaticData::Checks[randoCheckId].sceneId));
+
+    CustomMessage::Entry entry = {
+        .nextMessageID = (u16)0xFFFF,
+        .msg = msg,
+    };
+
+    CustomMessage::LoadCustomMessageIntoFont(entry);
+    *loadFromMessageTable = false;
 }
 
 void DmChar02_UpdateCustom(Actor* actor, PlayState* play) {
@@ -77,4 +108,27 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
         *should = !randoSaveCheck.obtained;
     });
+
+    COND_ID_HOOK(OnOpenText, 0x1C18, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_OATH_TO_ORDER], ApplyOathHint);
+
+    COND_ID_HOOK(
+        ShouldActorUpdate, ACTOR_DM_STK, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_OATH_TO_ORDER],
+        [](Actor* actor, bool* should) {
+            DmStk* dmStk = (DmStk*)actor;
+
+            if ((dmStk->actionFunc != DmStk_ClockTower_Idle || CAN_PLAY_SONG(OATH))) {
+                return;
+            }
+
+            if ((dmStk->actor.xzDistToPlayer < 200.0f) && Player_IsFacingActor(&dmStk->actor, 0x3000, gPlayState)) {
+                Actor_OfferTalk(&dmStk->actor, gPlayState, 200.0f);
+            }
+
+            if (Actor_ProcessTalkRequest(&dmStk->actor, &gPlayState->state)) {
+                Message_StartTextbox(gPlayState, 0x1C18, &dmStk->actor);
+                if ((Message_GetState(&gPlayState->msgCtx) == TEXT_STATE_DONE) && Message_ShouldAdvance(gPlayState)) {
+                    Message_CloseTextbox(gPlayState);
+                }
+            }
+        });
 }

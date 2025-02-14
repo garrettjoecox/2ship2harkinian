@@ -358,6 +358,9 @@ static void DrawHintsTab() {
         CheckboxOptions(
             { { .tooltip =
                     "Lists the location of the Boss remains on the guard recruitment posters around Clock Town" } }));
+    CVarCheckbox("Oath to Order", Rando::StaticData::Options[RO_HINTS_OATH_TO_ORDER].cvar,
+                 CheckboxOptions({ { .tooltip = "Once you have the Moon Access Requirments, talking to Skull Kid on "
+                                                "the Clock Tower Rooftop will hint the location of Oath to Order" } }));
     CVarCheckbox(
         "General Actor Hints", "gPlaceholderBool",
         CheckboxOptions({ { .disabled = true,
