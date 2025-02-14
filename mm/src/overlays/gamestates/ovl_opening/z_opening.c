@@ -11,6 +11,8 @@
 #include "z64view.h"
 #include "regs.h"
 
+#include "2s2h/GameInteractor/GameInteractor.h"
+
 void TitleSetup_SetupTitleScreen(TitleSetupState* this) {
     static s32 sOpeningEntrances[] = { ENTRANCE(CUTSCENE, 0), ENTRANCE(CUTSCENE, 1) };
     static s32 sOpeningCutscenes[] = { 0xFFFA, 0xFFFA };
@@ -26,6 +28,8 @@ void TitleSetup_SetupTitleScreen(TitleSetupState* this) {
 
     gSaveContext.save.time = CLOCK_TIME(8, 0);
     gSaveContext.save.day = 1;
+
+    GameInteractor_ExecuteOnSaveLoad(gSaveContext.fileNum);
 
     STOP_GAMESTATE(&this->state);
     SET_NEXT_GAMESTATE(&this->state, Play_Init, sizeof(PlayState));

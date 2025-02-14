@@ -741,6 +741,8 @@ void Sram_ResetSave(void) {
     gSaveContext.save.isOwlSave = false;
 
     memset(&gSaveContext.save.saveInfo, 0, sizeof(SaveInfo));
+    // 2S2H
+    memset(&gSaveContext.save.shipSaveInfo, 0, sizeof(ShipSaveInfo));
 }
 
 /**

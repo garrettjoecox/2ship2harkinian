@@ -9,8 +9,10 @@
 #include "z64view.h"
 #include "libc/alloca.h"
 #include "overlays/gamestates/ovl_title/z_title.h"
+
 #include <libultraship/bridge.h>
 #include "2s2h/DeveloperTools/BetterMapSelect.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 void MapSelect_LoadConsoleLogo(MapSelectState* this) {
     STOP_GAMESTATE(&this->state);
@@ -34,6 +36,8 @@ void MapSelect_LoadGame(MapSelectState* this, u32 entrance, s32 spawn) {
             gSaveContext.cycleSceneFlags[i].clearedRoom = gSaveContext.save.saveInfo.permanentSceneFlags[i].clearedRoom;
             gSaveContext.cycleSceneFlags[i].collectible = gSaveContext.save.saveInfo.permanentSceneFlags[i].collectible;
         }
+
+        GameInteractor_ExecuteOnSaveLoad(gSaveContext.fileNum);
         // #endregion
     }
 
