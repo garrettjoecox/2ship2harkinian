@@ -371,7 +371,8 @@ static void DrawHintsTab() {
     CVarCheckbox(
         "Hookshot Location", Rando::StaticData::Options[RO_HINTS_HOOKSHOT].cvar,
         CheckboxOptions(
-            { { .tooltip = "The Zora in Great Bay Coast, near Pirates Fortress, will hint the location of the Hookshot." } }));
+            { { .tooltip =
+                    "The Zora in Great Bay Coast, near Pirates Fortress, will hint the location of the Hookshot." } }));
     ImGui::EndChild();
 }
 
