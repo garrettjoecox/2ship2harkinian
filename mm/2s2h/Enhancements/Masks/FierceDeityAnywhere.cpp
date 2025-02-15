@@ -9,6 +9,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "overlays/actors/ovl_En_Firefly/z_en_firefly.h"
 #include "overlays/actors/ovl_En_Fz/z_en_fz.h"
+#include "overlays/actors/ovl_En_M_Thunder/z_en_m_thunder.h"
 #include "overlays/actors/ovl_En_Neo_Reeba/z_en_neo_reeba.h"
 }
 
@@ -135,6 +136,23 @@ void RegisterFierceDeityAnywhere() {
     });
 
     /*
+     * If this is a sword beam collision, only handle it if the collided actor is an enemy. We don't want the sword
+     * beams to collide with other objects and trigger their collision behavior, such as burning spiderwebs.
+     */
+    COND_VB_SHOULD(VB_PERFORM_AC_COLLISION, CVAR, {
+        Collider* at = va_arg(args, Collider*);
+        Collider* ac = va_arg(args, Collider*);
+        /*
+         * If the AT actor is EnMThunder with a subtype > ENMTHUNDER_SUBTYPE_SPIN_REGULAR, it is a sword beam. If the AC
+         * actor is not an enemy/boss, then do not handle the sword beam collision.
+         */
+        if (at->actor->id == ACTOR_EN_M_THUNDER && ((EnMThunder*)at->actor)->subtype > 1 &&
+            ac->actor->category != ACTORCAT_ENEMY && ac->actor->category != ACTORCAT_BOSS) {
+            *should = false;
+        }
+    });
+
+    /*
      * Define a custom damage effect for sword beams for the Big Octo, which handles drawing damage effects differently
      * from most enemies. We cannot easily piggyback off of the light arrows effect like we do for everybody else.
      */
@@ -147,8 +165,19 @@ void RegisterFierceDeityAnywhere() {
             enBigOkuta->drawDmgEffAlpha = 4.0f;
             Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_CLEAR_TAG,
                         enBigOkuta->bodyCollider.info.bumper.hitPos.x, enBigOkuta->bodyCollider.info.bumper.hitPos.y,
-                        enBigOkuta->bodyCollider.info.bumper.hitPos.z, 0, 0, 0,
+                        enBigOkuta->bodyCollider.info.bumper.hitPos.z, 0, 0, 3,
                         CLEAR_TAG_PARAMS(CLEAR_TAG_LARGE_LIGHT_RAYS));
+        }
+    });
+
+    /*
+     * If it's a light ray effect type with yellow color, and the player is in the Fierce Deity form, assume it's
+     * actually supposed to be the blue light ray effect.
+     */
+    COND_ID_HOOK(ShouldActorInit, ACTOR_EN_CLEAR_TAG, CVAR, [](Actor* actor, bool* result) {
+        if ((actor->params == CLEAR_TAG_SMALL_LIGHT_RAYS || actor->params == CLEAR_TAG_LARGE_LIGHT_RAYS) &&
+            actor->world.rot.z == 0 && GET_PLAYER(gPlayState)->transformation == PLAYER_FORM_FIERCE_DEITY) {
+            actor->world.rot.z = 3;
         }
     });
 }

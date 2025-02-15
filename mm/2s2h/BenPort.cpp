@@ -62,6 +62,7 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/ShipUtils.h"
 #include "2s2h/ShipInit.hpp"
+#include "2s2h/PresetManager/PresetManager.h"
 
 // Resource Types/Factories
 #include "resource/type/Blob.h"
@@ -456,9 +457,9 @@ void Ben_ProcessDroppedFiles(std::string filePath) {
         handled = Rando::Spoiler::HandleFileDropped(filePath);
     }
 
-    // if (!handled) {
-    //     handled = Presets_HandleFileDropped(filePath);
-    // }
+    if (!handled) {
+        handled = PresetManager_HandleFileDropped(filePath);
+    }
 
     if (!handled) {
         auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();

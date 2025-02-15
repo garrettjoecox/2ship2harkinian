@@ -9,6 +9,7 @@
 #include "DeveloperTools/CollisionViewer.h"
 #include "DeveloperTools/EventLog.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
+#include "2s2h/PresetManager/PresetManager.h"
 #include "HudEditor.h"
 #include "Notification.h"
 #include <variant>
@@ -412,6 +413,11 @@ void BenMenu::AddSettings() {
                      .DefaultValue(1.0f)
                      .Format("%.1f")
                      .Step(0.1f));
+
+    path.column = 1;
+    path.sidebarName = "Presets";
+    AddSidebarEntry("Settings", "Presets", 1);
+    AddWidget(path, "Presets", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { PresetManager_Draw(); });
 }
 int32_t motionBlurStrength;
 
@@ -791,6 +797,13 @@ void BenMenu::AddEnhancements() {
                      .Min(1)
                      .Max(30)
                      .DefaultValue(30));
+    AddWidget(path, "Bombers Hide-and-Seek Count", WIDGET_CVAR_SLIDER_INT)
+        .CVar("gEnhancements.Minigames.BombersHideAndSeek")
+        .Options(IntSliderOptions()
+                     .Tooltip("Sets the number of Bomber Kids you have to find to complete the hide-and-seek game.")
+                     .Min(1)
+                     .Max(5)
+                     .DefaultValue(5));
     AddWidget(path, "Beaver Race Rings Collected", WIDGET_CVAR_SLIDER_INT)
         .CVar("gEnhancements.Minigames.BeaverRaceRingsCollected")
         .Options(IntSliderOptions()
@@ -1148,6 +1161,9 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Timesavers.MarineLabHP")
         .Options(CheckboxOptions().Tooltip("Only requires a single fish to be fed for the Piece of Heart to spawn. "
                                            "Requires a Scene Reload to take effect."));
+    AddWidget(path, "Fast Dampe Flame Digging", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Timesavers.DampeDiggingSkip")
+        .Options(CheckboxOptions().Tooltip("Only requires digging up one flame to spawn the big poe."));
 
     // Fixes
     path = { "Enhancements", "Fixes", 1 };

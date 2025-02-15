@@ -251,6 +251,13 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             // ITEM_POTION_RED will put a Red Potion bottle on the first bottle slot
             Item_Give(gPlayState, ITEM_LONGSHOT);
             break;
+        case RI_SOUL_GOHT:
+        case RI_SOUL_GYORG:
+        case RI_SOUL_MAJORA:
+        case RI_SOUL_ODOLWA:
+        case RI_SOUL_TWINMOLD:
+            Flags_SetRandoInf(RANDO_INF_OBTAINED_SOUL_OF_GOHT + (randoItemId - RI_SOUL_GOHT));
+            break;
         case RI_JUNK:
         case RI_NONE:
             break;

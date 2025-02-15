@@ -198,6 +198,11 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 itemPool.push_back(RI_SHIELD_HERO);
 
                 // Add other items that don't have a vanilla location like Sun's Song or Song of Double Time
+                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_SOULS] == RO_GENERIC_YES) {
+                    for (int i = RI_SOUL_GOHT; i <= RI_SOUL_TWINMOLD; i++) {
+                        itemPool.push_back((RandoItemId)i);
+                    }
+                }
 
                 // Remove starting items from the pool (but only one per entry in startingItems)
                 for (RandoItemId startingItem : startingItems) {
