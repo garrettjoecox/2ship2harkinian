@@ -6,7 +6,8 @@
 
 #include "z_dm_char08.h"
 #include "objects/object_kamejima/object_kamejima.h"
-#include "BenPort.h"
+#include "2s2h/BenPort.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "stdlib.h"
 
 #define FLAGS (ACTOR_FLAG_2000000)
@@ -308,8 +309,11 @@ void DmChar08_WaitForSong(DmChar08* this, PlayState* play) {
     } else {
         sSuccessSoundAlreadyPlayed = false;
     }
-    if ((player->transformation == PLAYER_FORM_ZORA) && (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
-        (play->msgCtx.lastPlayedSong == OCARINA_SONG_NEW_WAVE)) {
+    if (GameInteractor_Should(VB_OPEN_GREAT_BAY_FROM_SONG,
+                              (player->transformation == PLAYER_FORM_ZORA) &&
+                                  (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
+                                  (play->msgCtx.lastPlayedSong == OCARINA_SONG_NEW_WAVE),
+                              this)) {
         if ((player2->actor.world.pos.x > -5780.0f) && (player2->actor.world.pos.x < -5385.0f)) {
             if ((player2->actor.world.pos.z > 1120.0f) && (player2->actor.world.pos.z < 2100.0f)) {
                 this->actionFunc = DmChar08_SetupAppearCs;

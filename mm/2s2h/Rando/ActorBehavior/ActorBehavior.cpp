@@ -32,7 +32,9 @@ void Rando::ActorBehavior::Init() {
 }
 
 void Rando::ActorBehavior::OnFileLoad() {
+    Rando::ActorBehavior::InitDmChar01Behavior();
     Rando::ActorBehavior::InitDmChar05Behavior();
+    Rando::ActorBehavior::InitDmChar08Behavior();
     Rando::ActorBehavior::InitDmHinaBehavior();
     Rando::ActorBehavior::InitDmStkBehavior();
     Rando::ActorBehavior::InitDoorWarp1VBehavior();
@@ -47,6 +49,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnBomBowlManBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
     Rando::ActorBehavior::InitEnCowBehavior();
+    Rando::ActorBehavior::InitEnDaiBehavior();
     Rando::ActorBehavior::InitEnDnhBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
@@ -65,6 +68,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnInBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
     Rando::ActorBehavior::InitEnJgBehavior();
+    Rando::ActorBehavior::InitEnJsBehavior();
     Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKitanBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
@@ -85,6 +89,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSshBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
+    Rando::ActorBehavior::InitEnTabBehavior();
     Rando::ActorBehavior::InitEnTalkBehavior();
     Rando::ActorBehavior::InitEnTotoBehavior();
     Rando::ActorBehavior::InitEnTrtBehavior();
@@ -97,6 +102,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitObjTaruBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();
     Rando::ActorBehavior::InitObjWarpstoneBehavior();
+    Rando::ActorBehavior::InitSoulsBehavior();
 
     COND_HOOK(ShouldVanillaBehavior, IS_RANDO, MiscVanillaBehaviorHandler);
 }

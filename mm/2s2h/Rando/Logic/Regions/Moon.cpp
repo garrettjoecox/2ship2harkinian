@@ -82,15 +82,34 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MOON] = RandoRegion{ .sceneId = SCENE_SOUGEN,
         .checks = {
-            // TODO: Need to shuffle all masks before we can make this 20
-            CHECK(RC_MOON_FIERCE_DEITY_MASK, HAS_MOON_MASKS(/* 20 */ 13)),
+            CHECK(RC_MOON_FIERCE_DEITY_MASK, MoonMaskCount() >= 20),
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(MOON_DEKU_TRIAL, 0),              ENTRANCE(THE_MOON, 0), HAS_MOON_MASKS(1)),
-            EXIT(ENTRANCE(MOON_GORON_TRIAL, 0),             ENTRANCE(THE_MOON, 0), HAS_MOON_MASKS(2)),
-            EXIT(ENTRANCE(MOON_LINK_TRIAL, 0),              ENTRANCE(THE_MOON, 0), HAS_MOON_MASKS(3)),
-            EXIT(ENTRANCE(MOON_ZORA_TRIAL, 0),              ENTRANCE(THE_MOON, 0), HAS_MOON_MASKS(4)),
-            EXIT(ENTRANCE(MAJORAS_LAIR, 0),                          ONE_WAY_EXIT, true),
+            EXIT(ENTRANCE(MOON_DEKU_TRIAL, 0),              ENTRANCE(THE_MOON, 0), 
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_20_MASKS && MoonMaskCount() >= 2) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_REMAINS && CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA)) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_FORMS && CAN_BE_DEKU) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_OPEN)
+            ),
+            EXIT(ENTRANCE(MOON_GORON_TRIAL, 0),             ENTRANCE(THE_MOON, 0), 
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_20_MASKS && MoonMaskCount() >= 6) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_REMAINS && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT)) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_FORMS && CAN_BE_GORON) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_OPEN)
+            ),
+            EXIT(ENTRANCE(MOON_ZORA_TRIAL, 0),              ENTRANCE(THE_MOON, 0),
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_20_MASKS && MoonMaskCount() >= 12) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_REMAINS && CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG)) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_FORMS && CAN_BE_ZORA) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_OPEN)
+            ),
+            EXIT(ENTRANCE(MOON_LINK_TRIAL, 0),              ENTRANCE(THE_MOON, 0),
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_20_MASKS && MoonMaskCount() >= 20) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_REMAINS && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_FORMS) ||
+                (RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] == RO_ACCESS_TRIALS_OPEN)
+            ),
+            EXIT(ENTRANCE(MAJORAS_LAIR, 0),                          ONE_WAY_EXIT, RemainsCount() >= RANDO_SAVE_OPTIONS[RO_ACCESS_MAJORA_REMAINS_COUNT]),
         },
         .oneWayEntrances = {
             ENTRANCE(THE_MOON, 0), // From rooftop and trials

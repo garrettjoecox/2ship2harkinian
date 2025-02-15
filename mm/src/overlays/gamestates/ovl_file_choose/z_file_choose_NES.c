@@ -2422,9 +2422,9 @@ void FileSelect_Main(GameState* thisx) {
 
     FileSelect_PulsateCursor(&this->state);
     gFileSelectUpdateFuncs[this->menuMode](&this->state);
-    FileSelect_UpdateAndDrawSkybox(this);
 
     FrameInterpolation_StartRecord();
+    FileSelect_UpdateAndDrawSkybox(this);
     gFileSelectDrawFuncs[this->menuMode](&this->state);
     FrameInterpolation_StopRecord();
 

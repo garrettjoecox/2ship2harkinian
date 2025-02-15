@@ -1639,6 +1639,10 @@ void CollisionCheck_SetBounce(Collider* at, Collider* ac) {
  */
 s32 CollisionCheck_SetATvsAC(PlayState* play, Collider* at, ColliderInfo* atInfo, Vec3f* atPos, Collider* ac,
                              ColliderInfo* acInfo, Vec3f* acPos, Vec3f* hitPos) {
+    if (!GameInteractor_Should(VB_PERFORM_AC_COLLISION, true, at, ac)) {
+        return 0;
+    }
+
     f32 damage;
     u32 effect;
 

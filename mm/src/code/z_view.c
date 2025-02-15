@@ -444,7 +444,8 @@ s32 View_ApplyPerspective(View* view) {
         }
     }
 
-    if (dont_interpolate) {
+    // Ignore camera heuristics when not in the PlayState or the game is paused as the camera moves a lot in Kaleido
+    if (dont_interpolate && gPlayState != NULL && R_PAUSE_BG_PRERENDER_STATE == PRERENDER_FILTER_STATE_NONE) {
         FrameInterpolation_DontInterpolateCamera();
     }
 

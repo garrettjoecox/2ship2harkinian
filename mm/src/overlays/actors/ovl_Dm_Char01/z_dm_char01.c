@@ -8,7 +8,8 @@
 #include "z_dm_char01.h"
 #include "objects/object_mtoride/object_mtoride.h"
 #include "overlays/actors/ovl_Obj_Etcetera/z_obj_etcetera.h"
-#include "BenPort.h"
+#include "2s2h/BenPort.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20 | ACTOR_FLAG_2000000)
 
@@ -179,8 +180,11 @@ void func_80AA8698(DmChar01* this, PlayState* play) {
         D_80AAAAB4 = false;
     }
 
-    if ((player->transformation == PLAYER_FORM_DEKU) && (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
-        (play->msgCtx.lastPlayedSong == OCARINA_SONG_SONATA)) {
+    if (GameInteractor_Should(VB_OPEN_WOODFALL_FROM_SONG,
+                              (player->transformation == PLAYER_FORM_DEKU) &&
+                                  (play->msgCtx.ocarinaMode == OCARINA_MODE_EVENT) &&
+                                  (play->msgCtx.lastPlayedSong == OCARINA_SONG_SONATA),
+                              this)) {
 
         if ((player2->actor.world.pos.x > -40.0f) && (player2->actor.world.pos.x < 40.0f) &&
             (player2->actor.world.pos.z > 1000.0f) && (player2->actor.world.pos.z < 1078.0f)) {

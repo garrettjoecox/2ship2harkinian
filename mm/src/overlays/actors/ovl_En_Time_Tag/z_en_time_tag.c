@@ -105,8 +105,10 @@ void EnTimeTag_RooftopOath_Cutscene(EnTimeTag* this, PlayState* play) {
         this->actionFunc = EnTimeTag_RooftopOath_DoNothing;
         gSaveContext.timerStates[TIMER_ID_MOON_CRASH] = TIMER_STATE_OFF;
 
-        if (CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
-            CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)) {
+        if (GameInteractor_Should(VB_MEET_MOON_REQUIREMENTS, CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) &&
+                                                                 CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) &&
+                                                                 CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) &&
+                                                                 CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD))) {
             SET_WEEKEVENTREG(WEEKEVENTREG_25_02);
         }
     } else {

@@ -13,6 +13,7 @@
 #include "overlays/actors/ovl_Item_B_Heart/z_item_b_heart.h"
 #include "overlays/effects/ovl_Effect_Ss_Fhg_Flash/z_eff_ss_fhg_flash.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #include "objects/gameplay_keep/gameplay_keep.h"
 
@@ -1286,7 +1287,9 @@ void func_80B0813C(BossHakugin* this, PlayState* play) {
         DECR(this->unk_019C);
     }
 
-    if ((this->unk_0964.base.acFlags & AC_HIT) && (this->unk_0964.info.acHitInfo->toucher.dmgFlags == DMG_FIRE_ARROW)) {
+    if (GameInteractor_Should(VB_GOHT_UNFREEZE,
+                              (this->unk_0964.base.acFlags & AC_HIT) &&
+                                  (this->unk_0964.info.acHitInfo->toucher.dmgFlags == DMG_FIRE_ARROW))) {
         this->unk_0964.base.atFlags &= ~AT_HIT;
         this->unk_0964.base.acFlags &= ~AC_HIT;
         this->unk_0964.base.ocFlags1 &= ~OC1_HIT;

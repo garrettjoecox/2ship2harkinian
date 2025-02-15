@@ -54,21 +54,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 // Persist options to the save
                 gSaveContext.save.shipSaveInfo.rando.finalSeed = finalSeed;
                 for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
-                    uint32_t defaults = 0;
-                    switch (randoOptionId) {
-                        case RO_STARTING_ITEMS_2:
-                            defaults = 2149581312;
-                            break;
-                        case RO_STARTING_ITEMS_3:
-                            defaults = 2048;
-                            break;
-                        case RO_STARTING_HEALTH:
-                            defaults = 3;
-                            break;
-                        default:
-                            break;
-                    }
-                    RANDO_SAVE_OPTIONS[randoOptionId] = (uint32_t)CVarGetInteger(randoStaticOption.cvar, defaults);
+                    RANDO_SAVE_OPTIONS[randoOptionId] =
+                        (uint32_t)CVarGetInteger(randoStaticOption.cvar, randoStaticOption.defaultValue);
                 }
 
                 if (RANDO_SAVE_OPTIONS[RO_STARTING_HEALTH] != 3) {
@@ -132,12 +119,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                             continue;
                         }
 
-                        // TODO: Until we have a way to get up to the moon without just being able to kill majora, we're
-                        // going to just disable all moon checks
-                        if (randoStaticCheck.sceneId == SCENE_LAST_BS || randoStaticCheck.sceneId == SCENE_LAST_DEKU ||
-                            randoStaticCheck.sceneId == SCENE_LAST_GORON ||
-                            randoStaticCheck.sceneId == SCENE_LAST_LINK ||
-                            randoStaticCheck.sceneId == SCENE_LAST_ZORA) {
+                        // TODO: We may never shuffle these 2 pots, leaving this decision for later
+                        if (randoStaticCheck.sceneId == SCENE_LAST_BS) {
                             continue;
                         }
 
@@ -215,6 +198,11 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                 itemPool.push_back(RI_SHIELD_HERO);
 
                 // Add other items that don't have a vanilla location like Sun's Song or Song of Double Time
+                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_SOULS] == RO_GENERIC_YES) {
+                    for (int i = RI_SOUL_GOHT; i <= RI_SOUL_TWINMOLD; i++) {
+                        itemPool.push_back((RandoItemId)i);
+                    }
+                }
 
                 // Remove starting items from the pool (but only one per entry in startingItems)
                 for (RandoItemId startingItem : startingItems) {

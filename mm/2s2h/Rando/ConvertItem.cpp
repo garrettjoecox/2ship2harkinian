@@ -415,6 +415,12 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             return !CHECK_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_SNOWHEAD);
         case RI_TINGLE_MAP_STONE_TOWER:
             return !CHECK_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_STONE_TOWER);
+        case RI_SOUL_GOHT:
+        case RI_SOUL_GYORG:
+        case RI_SOUL_MAJORA:
+        case RI_SOUL_ODOLWA:
+        case RI_SOUL_TWINMOLD:
+            return !Flags_GetRandoInf(RANDO_INF_OBTAINED_SOUL_OF_GOHT + (randoItemId - RI_SOUL_GOHT));
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong. We just simply check the inventory state
         // Masks

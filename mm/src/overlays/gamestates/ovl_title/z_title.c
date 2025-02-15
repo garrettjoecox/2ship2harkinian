@@ -13,6 +13,7 @@
 
 #include "build.h"
 #include "BenPort.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include <stdlib.h>
 
@@ -204,7 +205,10 @@ void ConsoleLogo_Main(GameState* thisx) {
     gSPSegment(POLY_OPA_DISP++, 0x01, this->staticSegment);
 
     ConsoleLogo_UpdateCounters(this);
+    FrameInterpolation_StartRecord();
     ConsoleLogo_Draw(&this->state);
+    FrameInterpolation_StopRecord();
+
     if (this->exit) {
         gSaveContext.seqId = (u8)NA_BGM_DISABLED;
         gSaveContext.ambienceId = AMBIENCE_ID_DISABLED;

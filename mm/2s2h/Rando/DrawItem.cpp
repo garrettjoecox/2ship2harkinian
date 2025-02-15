@@ -2,6 +2,7 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/ShipInit.hpp"
+#include "2s2h/Rando/DrawFuncs.h"
 
 extern "C" {
 #include "variables.h"
@@ -399,6 +400,21 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_PROGRESSIVE_SWORD:
         case RI_PROGRESSIVE_WALLET:
             Rando::DrawItem(Rando::ConvertItem(randoItemId), actor);
+            break;
+        case RI_SOUL_GOHT:
+            DrawGoht();
+            break;
+        case RI_SOUL_GYORG:
+            DrawGyorg();
+            break;
+        case RI_SOUL_MAJORA:
+            DrawMajora();
+            break;
+        case RI_SOUL_ODOLWA:
+            DrawOdolwa();
+            break;
+        case RI_SOUL_TWINMOLD:
+            DrawTwinmold();
             break;
         case RI_NONE:
         case RI_UNKNOWN:
