@@ -36,4 +36,6 @@ void Rando::ActorBehavior::InitEnScopenutsBehavior() {
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
+
+    COND_VB_SHOULD(VB_SCOPENUTS_HAVE_NO_OCARINA, IS_RANDO, { *should = false; });
 }

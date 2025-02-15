@@ -217,6 +217,7 @@ typedef enum {
     VB_GIBDO_TRADE_SEQUENCE_DO_TRADE,
     VB_GET_ITEM_ACTION_FROM_MASK,
     VB_GRANT_MAGIC_UPON_REQUEST,
+    VB_SCOPENUTS_HAVE_NO_OCARINA,
 } GIVanillaBehavior;
 
 typedef enum {
