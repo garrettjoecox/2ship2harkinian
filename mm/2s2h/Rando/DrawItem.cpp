@@ -92,7 +92,7 @@ void DrawSong(RandoItemId randoItemId) {
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 177, 211, 255);
             break;
         case RI_SONG_HEALING:
-            gDPSetEnvColor(POLY_XLU_DISP++, 255, 192, 203, 255);
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 150, 230, 255);
             break;
         case RI_SONG_STORMS:
             gDPSetEnvColor(POLY_XLU_DISP++, 146, 146, 146, 255);
@@ -101,16 +101,16 @@ void DrawSong(RandoItemId randoItemId) {
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 255, 98, 255);
             break;
         case RI_SONG_SOARING:
-            gDPSetEnvColor(POLY_XLU_DISP++, 255, 177, 177, 255);
+            gDPSetEnvColor(POLY_XLU_DISP++, 200, 160, 255, 255);
             break;
         case RI_SONG_ELEGY:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 98, 0, 255);
             break;
         case RI_SONG_LULLABY_INTRO:
-            gDPSetEnvColor(POLY_XLU_DISP++, 255, 194, 194, 255);
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 100, 100, 255);
             break;
         case RI_SONG_LULLABY:
-            gDPSetEnvColor(POLY_XLU_DISP++, 255, 100, 100, 255);
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 20, 20, 255);
             break;
         case RI_SONG_OATH:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 0, 98, 255);
