@@ -11,10 +11,17 @@ extern "C" {
 
 void DmChar02_PlaySfxForCutscenes(DmChar02* dmChar02, PlayState* play);
 void DmStk_ClockTower_Idle(DmStk* dmStk, PlayState* play);
+void DmStk_ClockTower_WaitForDeflectionToEnd(DmStk* DmStk, PlayState* play);
 }
 
 void ApplyOathHint(u16* textId, bool* loadFromMessageTable) {
+    DmStk* dmStk =
+        (DmStk*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_DM_STK, ACTORCAT_ITEMACTION, 1000.0f);
     std::string msg;
+    
+    if (dmStk == NULL || dmStk->actionFunc != DmStk_ClockTower_Idle) {
+        return;
+    }
 
     if (Rando::Logic::RemainsCount() < RANDO_SAVE_OPTIONS[RO_ACCESS_MOON_REMAINS_COUNT]) {
         msg = "You think you can defeat me? The Giants are trapped and powerless to stop me. Even if they were free, "
@@ -22,10 +29,6 @@ void ApplyOathHint(u16* textId, bool* loadFromMessageTable) {
     } else {
         msg = "I can hear the Giants Melody coming from "
               "%y{{location}}%w. But it's too late! They can't help you now!";
-    }
-
-    if (gPlayState->sceneId != SCENE_OKUJOU) {
-        return;
     }
 
     RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_SONG_OATH);
@@ -109,7 +112,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         *should = !randoSaveCheck.obtained;
     });
 
-    COND_ID_HOOK(OnOpenText, 0x1C18, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_OATH_TO_ORDER], ApplyOathHint);
+    COND_ID_HOOK(OnOpenText, 0x2013, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_OATH_TO_ORDER], ApplyOathHint);
 
     COND_ID_HOOK(
         ShouldActorUpdate, ACTOR_DM_STK, IS_RANDO && RANDO_SAVE_OPTIONS[RO_HINTS_OATH_TO_ORDER],
@@ -125,7 +128,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
             }
 
             if (Actor_ProcessTalkRequest(&dmStk->actor, &gPlayState->state)) {
-                Message_StartTextbox(gPlayState, 0x1C18, &dmStk->actor);
+                Message_StartTextbox(gPlayState, 0x2013, &dmStk->actor);
                 if ((Message_GetState(&gPlayState->msgCtx) == TEXT_STATE_DONE) && Message_ShouldAdvance(gPlayState)) {
                     Message_CloseTextbox(gPlayState);
                 }
