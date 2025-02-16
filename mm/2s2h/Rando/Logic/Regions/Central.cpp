@@ -18,9 +18,6 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_TERMINA_FIELD, CAN_GROW_BEAN_PLANT)
         },
-        .events = {
-            EVENT(RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO, true),
-        },
     };
     Regions[RR_ASTRAL_OBSERVATORY_PASSAGE] = RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
         .checks = {
@@ -48,6 +45,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_ASTRAL_OBSERVATORY_PASSAGE, true),
+        },
+        .events = {
+            EVENT(RE_TERMINA_FIELD_SCRUB_ENTERED_GROTTO, true),
         },
     };
     Regions[RR_BOMB_SHOP] = RandoRegion{ .sceneId = SCENE_BOMYA,

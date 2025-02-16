@@ -9,7 +9,6 @@ extern "C" {
 void func_80BCB078(EnScopenuts* enScopenuts, PlayState* play);
 
 void func_80BCB1C8(EnScopenuts* enScopenuts, PlayState* play);
-s32 func_80BCC2AC(EnScopenuts* enScopenuts, Path* path, s32 arg2_);
 f32 func_80BCC448(Path* path, s32 arg1, Vec3f* arg2, Vec3s* arg3);
 }
 

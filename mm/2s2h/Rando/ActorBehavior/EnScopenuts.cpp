@@ -37,5 +37,5 @@ void Rando::ActorBehavior::InitEnScopenutsBehavior() {
         *loadFromMessageTable = false;
     });
 
-    COND_VB_SHOULD(VB_SCOPENUTS_HAVE_NO_OCARINA, IS_RANDO, { *should = false; });
+    COND_VB_SHOULD(VB_SCOPENUTS_CONSIDER_FIRST_CYCLE, IS_RANDO, { *should = false; });
 }

@@ -686,7 +686,7 @@ void EnScopenuts_Init(Actor* thisx, PlayState* play) {
     EnScopenuts* this = THIS;
 
     if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_74_40) &&
-        GameInteractor_Should(VB_SCOPENUTS_HAVE_NO_OCARINA,
+        GameInteractor_Should(VB_SCOPENUTS_CONSIDER_FIRST_CYCLE,
                               gSaveContext.save.saveInfo.inventory.items[ITEM_OCARINA_OF_TIME] == ITEM_NONE)) {
         Actor_Kill(&this->actor);
         return;
