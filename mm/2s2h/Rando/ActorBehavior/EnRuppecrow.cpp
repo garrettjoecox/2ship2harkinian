@@ -28,6 +28,10 @@ void Rando::ActorBehavior::InitEnRuppecrowBehavior() {
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM), actor);
             });
 
+        // Apply rupee drop heavy gravity
+        rupee->actor.gravity = -5.0f;
+        rupee->actor.velocity.y = 0.0f;
+
         Actor_PlaySfx(&refActor->actor, NA_SE_EV_RUPY_FALL);
 
         *should = false;

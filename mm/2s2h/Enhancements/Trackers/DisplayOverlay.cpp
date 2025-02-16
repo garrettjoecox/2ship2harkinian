@@ -39,7 +39,7 @@ void DrawInGameTimer(uint32_t timer) {
             textureIndex = textToDecode[i] - '0';
         }
         if (textToDecode[i] == '.') {
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 8.0f);
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (8.0f * windowScale));
             ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(digitList[textureIndex]),
                          ImVec2(8.0f * windowScale, 8.0f * windowScale), ImVec2(0, 0.5f), ImVec2(1, 1));
         } else {
@@ -74,10 +74,7 @@ void DisplayOverlayWindow::Draw() {
     ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(gTimerClockIconTex),
                  ImVec2(16.0f * windowScale, 16.0f * windowScale));
     ImGui::SameLine(0, 10.0f);
-    // DrawInGameTimer(TOTAL_GAMEPLAY_TIME); // TODO: Once LUS is bumped to include the Texture Alpha changes, this can
-    // take over.
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (2.0f * windowScale));
-    ImGui::Text(formatTimeDisplay(TOTAL_GAMEPLAY_TIME).c_str());
+    DrawInGameTimer(TOTAL_GAMEPLAY_TIME);
 
     ImGui::End();
 

@@ -124,9 +124,15 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         Math_Vec3f_Copy(&actor->world.pos, &GET_PLAYER(play)->actor.world.pos);
     }
 
+    // Player range check accounting for goron rolling behavior. Matches EnItem00 range check.
+    bool playerInGoronRoll = player->stateFlags3 & PLAYER_STATE3_1000;
+    bool playerInRangeOfPickup =
+        playerInGoronRoll ? ((actor->xzDistToPlayer <= 60.0f) && (fabsf(actor->playerHeightRel) <= fabsf(100.0f)))
+                          : ((actor->xzDistToPlayer <= 30.0f) && (fabsf(actor->playerHeightRel) <= fabsf(50.0f)));
+
     if (CUSTOM_ITEM_FLAGS & CustomItem::KILL_ON_TOUCH) {
         // Pretty self explanatory, if the player is within range, kill the actor and call the action function
-        if ((actor->xzDistToPlayer <= 30.0f) && (fabsf(actor->playerHeightRel) <= fabsf(35.0f))) {
+        if (playerInRangeOfPickup) {
             if (enItem00->actionFunc != NULL) {
                 enItem00->actionFunc(enItem00, play);
                 CUSTOM_ITEM_FLAGS |= CustomItem::CALLED_ACTION;
@@ -135,8 +141,7 @@ void CustomItem00_Update(Actor* actor, PlayState* play) {
         }
     } else if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_OVERHEAD) {
         // If the item hasn't been picked up (unk152 == -1) and the player is within range
-        if (enItem00->unk152 == -1 && (actor->xzDistToPlayer <= 30.0f) &&
-            (fabsf(actor->playerHeightRel) <= fabsf(35.0f))) {
+        if (enItem00->unk152 == -1 && playerInRangeOfPickup) {
             // Fire the action function
             if (enItem00->actionFunc != NULL) {
                 enItem00->actionFunc(enItem00, play);

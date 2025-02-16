@@ -370,8 +370,11 @@ static void DrawHintsTab() {
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Song of Soaring", "gPlaceholderBool",
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
-    CVarCheckbox("Hookshot Location", "gPlaceholderBool",
-                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox(
+        "Hookshot Location", Rando::StaticData::Options[RO_HINTS_HOOKSHOT].cvar,
+        CheckboxOptions(
+            { { .tooltip =
+                    "The Zora in Great Bay Coast, near Pirates Fortress, will hint the location of the Hookshot." } }));
     ImGui::EndChild();
 }
 
