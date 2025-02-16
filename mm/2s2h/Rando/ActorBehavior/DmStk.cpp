@@ -15,10 +15,10 @@ void DmStk_ClockTower_WaitForDeflectionToEnd(DmStk* DmStk, PlayState* play);
 }
 
 void ApplyOathHint(u16* textId, bool* loadFromMessageTable) {
-    DmStk* dmStk =
-        (DmStk*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_DM_STK, ACTORCAT_ITEMACTION, 1000.0f);
+    DmStk* dmStk = (DmStk*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_DM_STK,
+                                            ACTORCAT_ITEMACTION, 1000.0f);
     std::string msg;
-    
+
     if (dmStk == NULL || dmStk->actionFunc != DmStk_ClockTower_Idle) {
         return;
     }
