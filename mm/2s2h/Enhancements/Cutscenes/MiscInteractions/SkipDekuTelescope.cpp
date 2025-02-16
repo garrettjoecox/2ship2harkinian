@@ -18,7 +18,7 @@ f32 func_80BCC448(Path* path, s32 arg1, Vec3f* arg2, Vec3s* arg3);
 
 // has reached point
 s32 modified_func_80BCC2AC(EnScopenuts* enScopenuts, Path* path, s32 arg2_) {
-    Vec3s* points = (Vec3s*)Lib_SegmentedToVirtual(path->points);
+    Vec3s* points = path->points;
     s32 count = path->count;
     s32 index = arg2_;
     s32 sp50 = false;
