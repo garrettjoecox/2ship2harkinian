@@ -38,8 +38,8 @@ void RegisterSkipLearningGoronLullaby() {
         *should = false;
 
         // Set action func which puts Baby to sleep, sets calm week event flag
-        enGk->csAnimIndex = 1;  // ENGK_ANIM_1
-        enGk->animIndex = 1;  // ENGK_ANIM_1
+        enGk->csAnimIndex = 1; // ENGK_ANIM_1
+        enGk->animIndex = 1;   // ENGK_ANIM_1
         enGk->actionFunc = func_80B5227C;
 
         // Activate torches
