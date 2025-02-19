@@ -40,9 +40,9 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_BOMBS_5,                    "",     "5 Bombs",                    RITYPE_JUNK,            ITEM_BOMBS_5,                    GI_BOMBS_5,                  GID_BOMB),
     RI(RI_BOTTLE_CHATEAU_ROMANI,      "a",    "Bottle of Chateau Romani",   RITYPE_MAJOR,           ITEM_CHATEAU,                    GI_CHATEAU,                  GID_CHATEAU),
     RI(RI_BOTTLE_EMPTY,               "an",   "Empty Bottle",               RITYPE_MAJOR,           ITEM_BOTTLE,                     GI_BOTTLE,                   GID_BOTTLE),
-    RI(RI_BOTTLE_GOLD_DUST,           "a",    "Bottle With Gold Dust",      RITYPE_MAJOR,           ITEM_GOLD_DUST,                  GI_GOLD_DUST,                GID_GOLD_DUST),
+    RI(RI_BOTTLE_GOLD_DUST,           "a",    "Bottle With Gold Dust",      RITYPE_MAJOR,           ITEM_GOLD_DUST,                  GI_GOLD_DUST,                GID_SEAHORSE), // bottle of gold dust
     RI(RI_BOTTLE_MILK,                "a",    "Bottle of Milk",             RITYPE_MAJOR,           ITEM_MILK_BOTTLE,                GI_MILK_BOTTLE,              GID_MILK),
-    RI(RI_BOTTLE_RED_POTION,          "a",    "Bottle with Red Potion",     RITYPE_MAJOR,           ITEM_POTION_RED,                 GI_POTION_RED_BOTTLE,        GID_POTION_RED),
+    RI(RI_BOTTLE_RED_POTION,          "a",    "Bottle with Red Potion",     RITYPE_MAJOR,           ITEM_POTION_RED,                 GI_POTION_RED_BOTTLE,        GID_57), // bottle of red potion
     RI(RI_BOW,                        "a",    "Bow",                        RITYPE_MAJOR,           ITEM_BOW,                        GI_QUIVER_30,                GID_BOW),
     RI(RI_CHATEAU_ROMANI_REFILL,      "a",    "Chateau Romani Refill",      RITYPE_JUNK,            ITEM_CHATEAU_2,                  GI_CHATEAU,                  GID_CHATEAU),
     RI(RI_CLOCK_TOWN_STRAY_FAIRY,     "a",    "Clock Town Stray Fairy",     RITYPE_STRAY_FAIRY,     ITEM_STRAY_FAIRIES,              GI_STRAY_FAIRY,              GID_NONE),
