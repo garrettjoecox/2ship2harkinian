@@ -9,6 +9,7 @@
 #include "interface/parameter_static/parameter_static.h"
 #include "interface/do_action_static/do_action_static.h"
 #include "misc/story_static/story_static.h"
+#include "archives/icon_item_24_static/icon_item_24_static_yar.h"
 
 #include "2s2h_assets.h"
 
@@ -295,7 +296,7 @@ s16 sFinalHoursClockColorTargetIndex = 0;
  */
 Gfx* Gfx_DrawTexRectRGBA16(Gfx* gfx, TexturePtr texture, s16 textureWidth, s16 textureHeight, s16 rectLeft, s16 rectTop,
                            s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy) {
-    gDPLoadTextureBlock(gfx++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, textureWidth, textureHeight, 0,
+    gDPLoadTextureBlock(gfx++, texture, G_IM_FMT_RGBA, G_IM_SIZ_32b, textureWidth, textureHeight, 0,
                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                         G_TX_NOLOD);
 
@@ -8345,6 +8346,8 @@ void Interface_Draw(PlayState* play) {
                     HudEditor_SetActiveElement(HUD_EDITOR_ELEMENT_KEY_COUNTER);
                     OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, gSmallKeyCounterIconTex, 16, 16, 26, 190, 16, 16,
                                                       1 << 10, 1 << 10);
+                    OVERLAY_DISP = Gfx_DrawTexRectRGBA16(OVERLAY_DISP, gQuestIconBossKeyTex, 24, 24, 26, 190, 16, 16,
+                                                      (1 << 10) * 1.5f, (1 << 10) * 1.5f);
 
                     // Small Key Counter
                     gDPPipeSync(OVERLAY_DISP++);
