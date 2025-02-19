@@ -9,6 +9,8 @@ extern "C" {
 #include "variables.h"
 #include "overlays/actors/ovl_En_Gk/z_en_gk.h"
 #include "functions.h"
+
+void func_80B5227C(EnGk* enGkActor, PlayState* play);
 }
 
 #define CVAR_NAME "gEnhancements.Cutscenes.SkipStoryCutscenes"
@@ -27,9 +29,17 @@ void RegisterSkipLearningGoronLullaby() {
 
         EnGk* enGk = (EnGk*)actor;
 
-        // Reset cutscene flags state
+        // Reset baby Goron cutscene flags state
         enGk->unk_1E4 &= ~0x20;
         *should = false;
+
+        // Set action func which puts Baby to sleep, sets calm week event flag
+        enGk->csAnimIndex = 1;  // ENGK_ANIM_1
+        enGk->animIndex = 1;  // ENGK_ANIM_1
+        enGk->actionFunc = func_80B5227C;
+
+        // Activate torches
+        Flags_SetSwitch(gPlayState, ENGK_GET_SWITCH_FLAG(&enGk->actor));
 
         if (IS_RANDO) {
             SET_WEEKEVENTREG(WEEKEVENTREG_24_80); // Ensure Goron Elder check is available
