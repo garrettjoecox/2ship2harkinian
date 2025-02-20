@@ -39,15 +39,18 @@ void Warp() {
         // to leave it as a hidden cvar. This is incompatible with the SkipToFileSelect enhancement. To enable it open
         // the Console and type: `set gDeveloperTools.WarpPoint.BootToWarpPoint 1`
         gSaveContext.gameMode = GAMEMODE_NORMAL;
-        Sram_InitNewSave();
+        Sram_InitDebugSave();
         gSaveContext.sceneLayer = 0;
         gSaveContext.save.time = CLOCK_TIME(8, 0);
         gSaveContext.save.day = 1;
         gSaveContext.save.cutsceneIndex = 0;
         gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
         gSaveContext.save.linkAge = 0;
+        // Using dummy file num to bypass debug save setup in map select and manually execute save init/load hooks after
+        gSaveContext.fileNum = 0xFE;
+        MapSelect_LoadGame((MapSelectState*)gGameState, entrance, 0);
+        // Then back to debug file num
         gSaveContext.fileNum = 0xFF;
-        MapSelect_LoadGame((MapSelectState*)gGameState, CVarGetInteger(WARP_POINT_CVAR "Entrance", 0), 0);
         // These two lines allow randomizer to be used with BootToWarpPoint. Not sure how reliable this is, might remove
         GameInteractor_ExecuteOnSaveInit(gSaveContext.fileNum);
         GameInteractor_ExecuteOnSaveLoad(gSaveContext.fileNum);
