@@ -17,7 +17,8 @@ void RegisterSkipBiggoronSnowheadLullabyCutscene() {
         s16* csId = va_arg(args, s16*);
         Actor* actor = va_arg(args, Actor*);
 
-        if (*csId != BIGGORON_GORON_LULLABY_CSID || actor == NULL || actor->id != ACTOR_EN_DAI || gPlayState->sceneId != SCENE_12HAKUGINMAE) {
+        if (*csId != BIGGORON_GORON_LULLABY_CSID || actor == NULL || actor->id != ACTOR_EN_DAI ||
+            gPlayState->sceneId != SCENE_12HAKUGINMAE) {
             return;
         }
 
