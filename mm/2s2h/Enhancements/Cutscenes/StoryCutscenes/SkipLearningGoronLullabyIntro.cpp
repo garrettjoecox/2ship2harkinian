@@ -22,6 +22,8 @@ void RegisterSkipLearningGoronLullabyIntro() {
         // Always consider lullaby known so we don't go into the cutscene to learn it
         *should = true;
 
+        // Goron Elder sets this reg at the end of the cutscene
+        // Manually set it here as it is skipped
         SET_WEEKEVENTREG(WEEKEVENTREG_24_40);
 
         if (IS_RANDO) {
