@@ -15,7 +15,7 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipLearningGoronLullabyIntro() {
-    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, CVAR, {
+    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, CVAR || IS_RANDO, {
         // Always consider lullaby known so we don't go into the cutscene to learn it
         *should = true;
 
@@ -46,4 +46,4 @@ void RegisterSkipLearningGoronLullabyIntro() {
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipLearningGoronLullabyIntro, { CVAR_NAME });
+static RegisterShipInitFunc initFunc(RegisterSkipLearningGoronLullabyIntro, { CVAR_NAME, "IS_RANDO" });
