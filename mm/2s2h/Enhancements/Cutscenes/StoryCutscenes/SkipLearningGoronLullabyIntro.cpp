@@ -15,10 +15,7 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipLearningGoronLullabyIntro() {
-    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, CVAR || IS_RANDO, {
-        EnJg* ObjectActor = va_arg(args, EnJg*);
-        Player* player = GET_PLAYER(gPlayState);
-
+    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, CVAR, {
         // Always consider lullaby known so we don't go into the cutscene to learn it
         *should = true;
 
@@ -26,11 +23,7 @@ void RegisterSkipLearningGoronLullabyIntro() {
         // Manually set it here as it is skipped
         SET_WEEKEVENTREG(WEEKEVENTREG_24_40);
 
-        if (IS_RANDO) {
-            if (!RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].obtained) {
-                RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].eligible = true;
-            }
-        } else {
+        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_JG, true)) {
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                 .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                 .giveItem =
@@ -53,4 +46,4 @@ void RegisterSkipLearningGoronLullabyIntro() {
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipLearningGoronLullabyIntro, { CVAR_NAME, "IS_RANDO" });
+static RegisterShipInitFunc initFunc(RegisterSkipLearningGoronLullabyIntro, { CVAR_NAME });
