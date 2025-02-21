@@ -180,7 +180,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_IKANA_GRAVEYARD_UPPER, CAN_PLAY_SONG(SONATA)),
-            CONNECTION(RR_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
+            CONNECTION(RR_IKANA_GRAVEYARD_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_GRAVEYARD, 4), // Exiting Dampe's house

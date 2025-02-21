@@ -13,7 +13,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IGOS_DU_IKANAS_LAIR, 0),          ENTRANCE(IKANA_CASTLE, 6), true)
         },
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, CAN_USE_MAGIC_ARROW(LIGHT) || (RANDO_EVENTS[RE_IKANA_CASTLE_MAIN_SUNLIGHT] && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR)))
+            CONNECTION(RR_IKANA_CASTLE_MAIN_ROOM, CAN_USE_MAGIC_ARROW(LIGHT))
         }
     };
     Regions[RR_IKANA_CASTLE_BUBBLE_ROOM] = RandoRegion{ .name = "Bubble Room", .sceneId = SCENE_CASTLE,
@@ -74,7 +74,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_IKANA_CASTLE_REDEAD_WALKWAY, true)
         },
         .events = {
-            EVENT(RE_IKANA_CASTLE_MAIN_SUNLIGHT, true),
+            EVENT(RE_IKANA_CASTLE_MAIN_SUNLIGHT, CAN_BE_GORON && HAS_ITEM(ITEM_POWDER_KEG)),
         }
     };
     Regions[RR_IKANA_CASTLE_MAIN_ROOM] = RandoRegion{ .name = "Main Room", .sceneId = SCENE_CASTLE,

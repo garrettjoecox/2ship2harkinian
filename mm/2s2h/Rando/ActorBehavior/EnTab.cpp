@@ -84,6 +84,11 @@ void Rando::ActorBehavior::InitEnTabBehavior() {
     COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO && RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS], {
         u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
+
+        if (actor->id != ACTOR_EN_TAB) { // Mr. Barten
+            return;
+        }
+
         MsgScript* script = va_arg(args, MsgScript*);
         MsgEventCallback* callback = va_arg(args, MsgEventCallback*);
 

@@ -5,7 +5,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Dai/z_en_dai.h"
 }
 
-// This handles opening great bay temple without needing the New Wave Bossa Nova
+// This handles opening Snowhead Temple without needing the Goron Lullaby
 void Rando::ActorBehavior::InitEnDaiBehavior() {
     bool shouldRegister = IS_RANDO && RANDO_SAVE_OPTIONS[RO_ACCESS_DUNGEONS] == RO_ACCESS_DUNGEONS_FORM_ONLY;
 
