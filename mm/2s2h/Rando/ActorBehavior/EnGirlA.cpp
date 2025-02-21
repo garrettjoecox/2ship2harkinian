@@ -193,10 +193,13 @@ RandoCheckId IdentifyShopItem(Actor* actor) {
         case SCENE_GORONSHOP:
             switch (actor->params) {
                 case 30:
+                case 33:
                     return RC_GORON_SHOP_ITEM_01;
                 case 31:
+                case 34:
                     return RC_GORON_SHOP_ITEM_02;
                 case 32:
+                case 35:
                     return RC_GORON_SHOP_ITEM_03;
             }
             break;
