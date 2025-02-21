@@ -23,7 +23,7 @@ void RegisterSkipLearningGoronLullabyIntro() {
         // Manually set it here as it is skipped
         SET_WEEKEVENTREG(WEEKEVENTREG_24_40);
 
-        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_JG, true)) {
+        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_JG, !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO))) {
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                 .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                 .giveItem =
