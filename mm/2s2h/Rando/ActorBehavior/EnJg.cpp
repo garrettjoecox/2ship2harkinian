@@ -7,12 +7,18 @@ extern "C" {
 }
 
 void Rando::ActorBehavior::InitEnJgBehavior() {
-    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, IS_RANDO, {
-        EnJg* ObjectActor = va_arg(args, EnJg*);
-        Player* player = GET_PLAYER(gPlayState);
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_JG, IS_RANDO, {
+        // Do not grant vanilla Lullaby Intro item so that we can override it with rando item
+        *should = false;
+    });
 
+    COND_VB_SHOULD(VB_JG_THINK_YOU_KNOW_LULLABY, IS_RANDO, {
         // Always consider lullaby known so we don't go into the cutscene to learn it
         *should = true;
+
+        // Goron Elder sets this reg at the end of the cutscene
+        // Manually set it here as it is skipped
+        SET_WEEKEVENTREG(WEEKEVENTREG_24_40);
 
         if (!RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].obtained) {
             RANDO_SAVE_CHECKS[RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO].eligible = true;
