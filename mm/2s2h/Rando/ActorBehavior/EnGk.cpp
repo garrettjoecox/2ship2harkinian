@@ -43,8 +43,12 @@ void Rando::ActorBehavior::InitEnGKBehavior() {
             return;
         }
 
+        *should = false;
+
         SET_WEEKEVENTREG(WEEKEVENTREG_24_80); // Ensure Goron Elder check is available
-        RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
+        if (!RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].obtained) {
+            RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
+        }
     });
 
     // Played Full Lullaby for Baby Goron
