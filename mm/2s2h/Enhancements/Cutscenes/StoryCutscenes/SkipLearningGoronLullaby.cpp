@@ -47,10 +47,7 @@ void RegisterSkipLearningGoronLullaby() {
 
         isGoronSleepQueued = true;
 
-        if (IS_RANDO) {
-            SET_WEEKEVENTREG(WEEKEVENTREG_24_80); // Ensure Goron Elder check is available
-            RANDO_SAVE_CHECKS[RC_GORON_SHRINE_FULL_LULLABY].eligible = true;
-        } else {
+        if (GameInteractor_Should(VB_GIVE_ITEM_FROM_GK_LULLABY, !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY))) {
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
                 .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
                 .giveItem =
