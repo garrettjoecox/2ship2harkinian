@@ -22,6 +22,9 @@ void RegisterSkipSoTCutscenes() {
         if ((gSaveContext.save.entrance == ENTRANCE(CUTSCENE, 0) ||
              gSaveContext.save.entrance == ENTRANCE(CUTSCENE, 1)) &&
             gSaveContext.save.cutsceneIndex == 0xFFF7) {
+            gSaveContext.save.cutsceneIndex = 0;
+
+            // Normally set by EnTest6
             gSaveContext.save.eventDayCount = 0;
             gSaveContext.save.day = 0;
             gSaveContext.save.time = CLOCK_TIME(6, 0) - 1;
@@ -30,12 +33,13 @@ void RegisterSkipSoTCutscenes() {
                 // Loads to flash back montage before going to Dawn of... in clock town
                 // Use ENTRANCE(SOUTH_CLOCK_TOWN, 10) if we ever add a story cutscene skip for the flash backs
                 gSaveContext.save.entrance = ENTRANCE(LOST_WOODS, 1);
+
+                // Re-execute VB_PLAY_TRANSITION_CS with the new entrance so that skip story cutscene hooks see it
+                GameInteractor_Should(VB_PLAY_TRANSITION_CS, true);
             } else {
                 // Directly to Dawn of... in clock town
                 gSaveContext.save.entrance = ENTRANCE(SOUTH_CLOCK_TOWN, 0);
             }
-
-            gSaveContext.save.cutsceneIndex = 0;
         }
     });
 
