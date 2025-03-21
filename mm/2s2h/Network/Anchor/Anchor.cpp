@@ -122,6 +122,7 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 }
 
 static bool justReset = false;
+static bool sGainedControl = false;
 
 void Anchor::RegisterHooks() {
     COND_HOOK(OnSceneSpawnActors, isConnected, [&]() {
@@ -152,11 +153,17 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, isConnected, [&](Actor* actor) { SendPacket_PlayerUpdate(); });
+    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, isConnected, [&](Actor* actor) { 
+        sGainedControl = true;
+        SendPacket_PlayerUpdate(); 
+    });
 
     COND_HOOK(OnPlayerSfx, isConnected, [&](u16 sfxId) { SendPacket_PlayerSfx(sfxId); });
 
-    COND_HOOK(OnSaveLoad, isConnected, [&](s16 fileNum) { SendPacket_RequestTeamState(); });
+    COND_HOOK(OnSaveLoad, isConnected, [&](s16 fileNum) { 
+        sGainedControl = false;
+        SendPacket_RequestTeamState(); 
+    });
 
     COND_HOOK(OnConsoleLogoUpdate, isConnected, [&]() {
         if (!justReset) {
@@ -241,6 +248,11 @@ bool Anchor::IsSaveLoaded() {
     }
 
     if (gSaveContext.gameMode != GAMEMODE_NORMAL) {
+        return false;
+    }
+
+    // Not in daytelop
+    if (!sGainedControl) {
         return false;
     }
 
