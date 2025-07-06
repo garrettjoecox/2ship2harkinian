@@ -41,6 +41,8 @@ void ObjTokeiStep_DrawOpen(Actor* actor, PlayState* play);
 void ObjTokeiStep_DoNothing(ObjTokeiStep* objTokeiStep, PlayState* play);
 void func_80A42198(EnTest4* thisx);
 void func_80A425E4(EnTest4* thisx, PlayState* play);
+char** ResourceMgr_ListFiles(const char* searchMask, int* resultSize);
+void gfx_texture_cache_clear();
 }
 
 bool safeMode = true;
@@ -2142,6 +2144,92 @@ void DrawRandoTab() {
     ImGui::EndChild();
 }
 
+int paletteSearchResultsCount;
+char** paletteSearchResults;
+char* activePalette = nullptr;
+char searchString[64] = "";
+
+void DrawBlahTab() {
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
+    ImGui::BeginChild("playerTab", ImVec2(0, 0), true);
+
+    if (ImGui::InputText("Search Palettes", searchString, ARRAY_COUNT(searchString))) {
+        paletteSearchResults =
+            ResourceMgr_ListFiles(("*" + std::string(searchString)).c_str(), &paletteSearchResultsCount);
+    }
+
+    if (ImGui::BeginCombo("Active Palette", activePalette)) {
+        for (int i = 0; i < paletteSearchResultsCount; i++) {
+            if (ImGui::Selectable(paletteSearchResults[i])) {
+                activePalette = paletteSearchResults[i];
+                break;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    if (activePalette != nullptr) {
+        auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(activePalette);
+        // This data is not in RGBA format, we'll need to convert it
+        auto data = (uint8_t*)res->GetRawPointer();
+
+        // Draw 16x16 grid of color pickers
+        for (int i = 0; i < 256; i++) {
+            if (i % 16 != 0) {
+                ImGui::SameLine();
+            }
+
+            ImGui::PushID(i);
+
+            uint16_t col16 = (data[i * 2] << 8) | data[i * 2 + 1]; // Big endian load
+            uint8_t a = col16 & 1;
+            uint8_t r = col16 >> 11;
+            uint8_t g = (col16 >> 6) & 0x1f;
+            uint8_t b = (col16 >> 1) & 0x1f;
+            float color[3] = { r / 31.0f, g / 31.0f, b / 31.0f };
+
+            if (ImGui::ColorEdit3("##paletteColor", color, ImGuiColorEditFlags_NoInputs)) {
+                r = color[0] * 31;
+                g = color[1] * 31;
+                b = color[2] * 31;
+                col16 = (r << 11) | (g << 6) | (b << 1) | a;
+                data[i * 2] = col16 >> 8;
+                data[i * 2 + 1] = col16 & 0xff;
+            }
+
+            ImGui::PopID();
+        }
+
+        if (ImGui::Button("Save Changes")) {
+            gfx_texture_cache_clear();
+        }
+        if (ImGui::Button("Log Output")) {
+            for (int i = 0; i < 256; i++) {
+                uint16_t col16 = (data[i * 2] << 8) | data[i * 2 + 1];
+                uint8_t a = col16 & 1;
+                uint8_t r = col16 >> 11;
+                uint8_t g = (col16 >> 6) & 0x1f;
+                uint8_t b = (col16 >> 1) & 0x1f;
+                SPDLOG_INFO("PatchPalette(\"{}\", {}, {}, {}, {});", activePalette, i, r, g, b);
+            }
+        }
+    }
+
+    ImGui::EndChild();
+    ImGui::PopStyleVar(2);
+    ImGui::PopStyleColor(1);
+}
+
+// void PatchPalette(const char* path, int index, uint8_t r, uint8_t g, uint8_t b) {
+//     auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(path);
+//     auto data = (uint8_t*)res->GetRawPointer();
+//     uint16_t col16 = (r << 11) | (g << 6) | (b << 1) | 1;
+//     data[index * 2] = col16 >> 8;
+//     data[index * 2 + 1] = col16 & 0xff;
+// }
+
 void SaveEditorWindow::DrawElement() {
     if (ImGui::BeginTabBar("SaveContextTabBar", ImGuiTabBarFlags_NoCloseWithMiddleMouseButton)) {
         if (ImGui::BeginTabItem("General")) {
@@ -2191,11 +2279,19 @@ void SaveEditorWindow::DrawElement() {
             }
         }
 
+        if (ImGui::BeginTabItem("Blah")) {
+            DrawBlahTab();
+            ImGui::EndTabItem();
+        }
+
         ImGui::EndTabBar();
     }
 }
 
 void SaveEditorWindow::InitElement() {
+
+    paletteSearchResults = ResourceMgr_ListFiles("*TLUT*", &paletteSearchResultsCount);
+
     initSafeItemsForInventorySlot();
     randoItemIdComboboxMap.clear();
     for (auto& [_, randoItem] : Rando::StaticData::Items) {
