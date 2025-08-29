@@ -206,12 +206,12 @@ inline DungeonIndex GetDungeonIndexFromItem(RandoItemId itemId) {
         case RI_STONE_TOWER_STRAY_FAIRY:
             return DUNGEON_INDEX_STONE_TOWER_TEMPLE;
         default:
-            return DUNGEON_INDEX_MAX; // Not a dungeon item
+            return (DungeonIndex)-1; // Not a dungeon item
     }
 }
 
 inline bool IsDungeonItem(RandoItemId itemId) {
-    return GetDungeonIndexFromItem(itemId) != DUNGEON_INDEX_MAX;
+    return GetDungeonIndexFromItem(itemId) != (DungeonIndex)-1;
 }
 
 inline DungeonIndex GetDungeonIndexFromCheck(RandoCheckId checkId) {
@@ -234,15 +234,15 @@ inline DungeonIndex GetDungeonIndexFromCheck(RandoCheckId checkId) {
                 case SCENE_INISIE_BS:    // Stone Tower Boss
                     return DUNGEON_INDEX_STONE_TOWER_TEMPLE;
                 default:
-                    return DUNGEON_INDEX_MAX; // Not in a dungeon
+                    return (DungeonIndex)-1; // Not in a dungeon
             }
         }
     }
-    return DUNGEON_INDEX_MAX; // Check not found
+    return (DungeonIndex)-1; // Check not found
 }
 
 inline bool IsCheckInDungeon(RandoCheckId checkId) {
-    return GetDungeonIndexFromCheck(checkId) != DUNGEON_INDEX_MAX;
+    return GetDungeonIndexFromCheck(checkId) != (DungeonIndex)-1;
 }
 
 inline bool CanKillEnemy(ActorId EnemyId) {

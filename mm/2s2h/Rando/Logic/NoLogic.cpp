@@ -16,7 +16,7 @@ void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool
     if (restrictDungeonItems) {
         // Separate dungeon items from general items
         std::vector<RandoItemId> generalItems;
-        std::vector<std::vector<RandoItemId>> dungeonItems(DUNGEON_INDEX_MAX);
+        std::vector<std::vector<RandoItemId>> dungeonItems(4); // 4 dungeons
         
         for (auto it = itemPool.begin(); it != itemPool.end();) {
             if (IsDungeonItem(*it)) {
@@ -43,7 +43,7 @@ void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool
         
         // Separate checks by dungeon and general
         std::vector<RandoCheckId> generalChecks;
-        std::vector<std::vector<RandoCheckId>> dungeonChecks(DUNGEON_INDEX_MAX);
+        std::vector<std::vector<RandoCheckId>> dungeonChecks(4); // 4 dungeons
         
         for (auto& [randoCheckId, _] : checkPool) {
             if (randoCheckId == RC_UNKNOWN) {
@@ -59,7 +59,7 @@ void ApplyNoLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& checkPool
         }
         
         // Place dungeon items in their respective dungeons
-        for (size_t dungeonIndex = 0; dungeonIndex < DUNGEON_INDEX_MAX; dungeonIndex++) {
+        for (size_t dungeonIndex = 0; dungeonIndex < 4; dungeonIndex++) {
             auto& checks = dungeonChecks[dungeonIndex];
             auto& items = dungeonItems[dungeonIndex];
             
