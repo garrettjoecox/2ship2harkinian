@@ -97,8 +97,32 @@ void ApplyGlitchlessLogicToSaveContext(std::unordered_map<RandoCheckId, bool>& c
                     RandoItemId randoItemId;
 
                     if (isShuffled) {
-                        randoItemId = itemPool.back();
-                        itemPool.pop_back();
+                        // Check if dungeon items should be restricted to their own dungeons
+                        if (RANDO_SAVE_OPTIONS[RO_RESTRICT_DUNGEON_ITEMS] == RO_GENERIC_ON && 
+                            IsCheckInDungeon(randoCheckId)) {
+                            
+                            DungeonIndex checkDungeon = GetDungeonIndexFromCheck(randoCheckId);
+                            
+                            // Try to find a matching dungeon item in the pool
+                            auto dungeonItemIt = std::find_if(itemPool.begin(), itemPool.end(), 
+                                [checkDungeon](RandoItemId itemId) {
+                                    return GetDungeonIndexFromItem(itemId) == checkDungeon;
+                                });
+                            
+                            if (dungeonItemIt != itemPool.end()) {
+                                // Found a matching dungeon item, use it
+                                randoItemId = *dungeonItemIt;
+                                itemPool.erase(dungeonItemIt);
+                            } else {
+                                // No matching dungeon item, use general item
+                                randoItemId = itemPool.back();
+                                itemPool.pop_back();
+                            }
+                        } else {
+                            // Original logic - use last item in pool
+                            randoItemId = itemPool.back();
+                            itemPool.pop_back();
+                        }
 
                         if (Rando::StaticData::Items[randoItemId].randoItemType == RITYPE_JUNK ||
                             Rando::StaticData::Items[randoItemId].randoItemType == RITYPE_HEALTH) {

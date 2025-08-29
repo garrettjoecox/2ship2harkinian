@@ -40,6 +40,7 @@ std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_SHUFFLE_SHOPS,               RO_GENERIC_OFF),
 	RO(RO_SHUFFLE_SNOWBALL_DROPS,      RO_GENERIC_OFF),
     RO(RO_SHUFFLE_TINGLE_SHOPS,        RO_GENERIC_OFF),
+    RO(RO_RESTRICT_DUNGEON_ITEMS,      RO_GENERIC_OFF),
     RO(RO_STARTING_CONSUMABLES,        RO_GENERIC_OFF),
     RO(RO_STARTING_HEALTH,             3),
     RO(RO_STARTING_ITEMS_1,            0),

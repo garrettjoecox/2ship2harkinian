@@ -187,6 +187,64 @@ inline bool MeetsMoonRequirements() {
     return RemainsCount() >= RANDO_SAVE_OPTIONS[RO_ACCESS_MOON_REMAINS_COUNT];
 }
 
+inline DungeonIndex GetDungeonIndexFromItem(RandoItemId itemId) {
+    switch (itemId) {
+        case RI_WOODFALL_BOSS_KEY:
+        case RI_WOODFALL_SMALL_KEY:
+        case RI_WOODFALL_STRAY_FAIRY:
+            return DUNGEON_INDEX_WOODFALL_TEMPLE;
+        case RI_SNOWHEAD_BOSS_KEY:
+        case RI_SNOWHEAD_SMALL_KEY:
+        case RI_SNOWHEAD_STRAY_FAIRY:
+            return DUNGEON_INDEX_SNOWHEAD_TEMPLE;
+        case RI_GREAT_BAY_BOSS_KEY:
+        case RI_GREAT_BAY_SMALL_KEY:
+        case RI_GREAT_BAY_STRAY_FAIRY:
+            return DUNGEON_INDEX_GREAT_BAY_TEMPLE;
+        case RI_STONE_TOWER_BOSS_KEY:
+        case RI_STONE_TOWER_SMALL_KEY:
+        case RI_STONE_TOWER_STRAY_FAIRY:
+            return DUNGEON_INDEX_STONE_TOWER_TEMPLE;
+        default:
+            return DUNGEON_INDEX_MAX; // Not a dungeon item
+    }
+}
+
+inline bool IsDungeonItem(RandoItemId itemId) {
+    return GetDungeonIndexFromItem(itemId) != DUNGEON_INDEX_MAX;
+}
+
+inline DungeonIndex GetDungeonIndexFromCheck(RandoCheckId checkId) {
+    // Find the region that contains this check
+    for (const auto& [regionId, region] : Regions) {
+        if (region.checks.find(checkId) != region.checks.end()) {
+            // Map scene IDs to dungeon indices
+            switch (region.sceneId) {
+                case SCENE_MITURIN:      // Woodfall Temple
+                case SCENE_MITURIN_BS:   // Woodfall Boss
+                    return DUNGEON_INDEX_WOODFALL_TEMPLE;
+                case SCENE_HAKUGIN:      // Snowhead Temple
+                case SCENE_HAKUGIN_BS:   // Snowhead Boss
+                    return DUNGEON_INDEX_SNOWHEAD_TEMPLE;
+                case SCENE_SEA:          // Great Bay Temple
+                case SCENE_SEA_BS:       // Great Bay Boss
+                    return DUNGEON_INDEX_GREAT_BAY_TEMPLE;
+                case SCENE_INISIE_N:     // Stone Tower Temple (normal)
+                case SCENE_INISIE_R:     // Stone Tower Temple (inverted)
+                case SCENE_INISIE_BS:    // Stone Tower Boss
+                    return DUNGEON_INDEX_STONE_TOWER_TEMPLE;
+                default:
+                    return DUNGEON_INDEX_MAX; // Not in a dungeon
+            }
+        }
+    }
+    return DUNGEON_INDEX_MAX; // Check not found
+}
+
+inline bool IsCheckInDungeon(RandoCheckId checkId) {
+    return GetDungeonIndexFromCheck(checkId) != DUNGEON_INDEX_MAX;
+}
+
 inline bool CanKillEnemy(ActorId EnemyId) {
     switch (EnemyId) {
         case ACTOR_BOSS_01: // Odolwa

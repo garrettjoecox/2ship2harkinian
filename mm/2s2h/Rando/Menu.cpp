@@ -214,6 +214,9 @@ static void DrawLocationsTab() {
             .Min(1)
             .Max(STRAY_FAIRY_SCATTERED_TOTAL)
             .DefaultValue(STRAY_FAIRY_SCATTERED_TOTAL));
+    CVarCheckbox("Restrict Dungeon Items", Rando::StaticData::Options[RO_RESTRICT_DUNGEON_ITEMS].cvar,
+                 CheckboxOptions({ { .tooltip = "Restricts keys and stray fairies to only be shuffled within their own dungeon.\n"
+                                                "Boss keys, small keys, and stray fairies will only appear in checks within the same dungeon." } }));
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoLocationsColumn2", ImVec2(columnWidth, halfHeight));
