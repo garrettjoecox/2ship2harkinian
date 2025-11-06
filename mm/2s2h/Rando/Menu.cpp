@@ -47,6 +47,13 @@ std::unordered_map<int32_t, const char*> trapItemsOptions = {
 };
 
 // clang-format off
+std::unordered_map<int32_t, const char*> entranceShuffleOptions = {
+    { RO_ENTRANCE_SHUFFLE_OFF, "Off" },
+    { RO_ENTRANCE_SHUFFLE_INTERIORS_ONLY, "Interiors Only" },
+    { RO_ENTRANCE_SHUFFLE_DUNGEONS_ONLY, "Dungeons Only" },
+    { RO_ENTRANCE_SHUFFLE_FULL, "Full" },
+};
+
 std::vector<int32_t> incompatibleWithVanilla = {
     RO_SHUFFLE_BOSS_SOULS,
     RO_SHUFFLE_SWIM,
@@ -440,6 +447,7 @@ static void DrawShufflesTab() {
     CVarCheckbox("Shuffle Freestanding Items", Rando::StaticData::Options[RO_SHUFFLE_FREESTANDING_ITEMS].cvar);
     CVarCheckbox("Shuffle Wonder Items", "gPlaceholderBool",
                  CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCombobox("Shuffle Entrances", Rando::StaticData::Options[RO_SHUFFLE_ENTRANCES].cvar, &entranceShuffleOptions);
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoLocationsColumn3", ImVec2(columnWidth, halfHeight));
