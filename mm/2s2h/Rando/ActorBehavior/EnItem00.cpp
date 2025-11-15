@@ -54,12 +54,16 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-        if (!randoSaveCheck.shuffled || randoSaveCheck.cycleObtained) {
+        if (!randoSaveCheck.shuffled) {
             return;
         }
 
         // Prevent the original item from spawning
         *should = false;
+
+        if (randoSaveCheck.cycleObtained) {
+            return;
+        }
 
         s16 itemParams = CustomItem::KILL_ON_TOUCH;
         // Freestanding PoH & HC cannot be picked up by boomerangs

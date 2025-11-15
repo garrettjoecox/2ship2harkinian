@@ -2,6 +2,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/ShipUtils.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 extern s16 D_801CFF94[250];
@@ -364,17 +365,23 @@ bool ShouldShowGetItemCutscene(RandoItemId itemId) {
     }
 }
 
-std::string GetItemName(RandoItemId randoItemId, bool includeArticle) {
+std::string GetItemName(RandoItemId randoItemId, bool includeArticle, s16 multiWorldTeamIndex) {
     std::string result;
 
-    if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
+    bool isForYou = multiWorldTeamIndex == -1 || Anchor::Instance->roomState.teams.size() < 2 ||
+                    Anchor::Instance->roomState.teams[multiWorldTeamIndex] ==
+                        std::string(CVarGetString("gNetwork.Anchor.TeamId", "default"));
+
+    if (!isForYou) {
+        result += Anchor::Instance->roomState.teams[multiWorldTeamIndex] + "'s ";
+    } else if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
         result += Rando::StaticData::Items[randoItemId].article;
         result += " ";
     }
 
     result += Rando::StaticData::Items[randoItemId].name;
 
-    if (randoItemId == RI_JUNK) {
+    if (randoItemId == RI_JUNK && isForYou) {
         result += std::string(" (") + Rando::StaticData::Items[Rando::CurrentJunkItem()].name + ")";
     }
 

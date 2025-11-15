@@ -720,12 +720,14 @@ void GameInteractor_ExecuteOnSaveLoad(s16 fileNum);
 void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, SaveContext* saveContext);
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
+void GameInteractor_ExecuteAfterOwlSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
 void GameInteractor_ExecuteOnInterfaceDrawStart();
 void GameInteractor_ExecuteAfterInterfaceClockDraw();
 void GameInteractor_ExecuteBeforeInterfaceClockDraw();
 
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum);
+void GameInteractor_ExecuteOnSceneSpawnActors();
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum);
 void GameInteractor_ExecuteAfterRoomSceneCommands(s16 sceneId, s8 roomNum);
 void GameInteractor_ExecuteOnPlayDrawWorldEnd();
@@ -741,6 +743,7 @@ void GameInteractor_ExecuteOnActorKill(Actor* actor);
 void GameInteractor_ExecuteOnActorDestroy(Actor* actor);
 void GameInteractor_ExecuteOnPlayerPostLimbDraw(Player* player, s32 limbIndex);
 void GameInteractor_ExecuteOnBossDefeated(s16 actorId);
+void GameInteractor_ExecuteOnPlayerSfx(u16 sfxId);
 
 void GameInteractor_ExecuteOnSceneFlagSet(s16 sceneId, FlagType flagType, u32 flag);
 void GameInteractor_ExecuteOnSceneFlagUnset(s16 sceneId, FlagType flagType, u32 flag);

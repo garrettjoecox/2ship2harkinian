@@ -32,6 +32,7 @@
 #include "DeveloperTools/ActorViewer.h"
 #include "DeveloperTools/CollisionViewer.h"
 #include "DeveloperTools/EventLog.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 namespace BenGui {
 // MARK: - Delegates
@@ -60,6 +61,7 @@ std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
 std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
 std::shared_ptr<TimesplitsWindow> mTimesplitsWindow;
 std::shared_ptr<TimesplitsSettingsWindow> mTimesplitsSettingsWindow;
+std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
 
 UIWidgets::Colors GetMenuThemeColor() {
     return mBenMenu->GetMenuThemeColor();
@@ -162,6 +164,9 @@ void SetupGuiElements() {
     mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(
         "gWindows.CheckTrackerSettings", "Check Tracker Settings");
     gui->AddGuiWindow(mRandoCheckTrackerSettingsWindow);
+
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>("gWindows.AnchorRoom", "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
 }
 
 void Destroy() {
@@ -188,5 +193,7 @@ void Destroy() {
     mAudioEditorWindow = nullptr;
     mItemTrackerWindow = nullptr;
     mItemTrackerSettingsWindow = nullptr;
+
+    mAnchorRoomWindow = nullptr;
 }
 } // namespace BenGui

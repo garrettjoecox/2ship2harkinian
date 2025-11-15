@@ -498,12 +498,22 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
             DrawOwlStatue();
             break;
         case RI_PROGRESSIVE_LULLABY:
+            Rando::DrawItem(RI_SONG_LULLABY, actor);
+            break;
         case RI_PROGRESSIVE_MAGIC:
+            Rando::DrawItem(RI_SINGLE_MAGIC, actor);
+            break;
         case RI_PROGRESSIVE_BOW:
+            Rando::DrawItem(RI_BOW, actor);
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
+            Rando::DrawItem(RI_BOMB_BAG_20, actor);
+            break;
         case RI_PROGRESSIVE_SWORD:
+            Rando::DrawItem(RI_SWORD_KOKIRI, actor);
+            break;
         case RI_PROGRESSIVE_WALLET:
-            Rando::DrawItem(Rando::ConvertItem(randoItemId), actor);
+            Rando::DrawItem(RI_WALLET_ADULT, actor);
             break;
         case RI_SOUL_GOHT:
             DrawGoht();

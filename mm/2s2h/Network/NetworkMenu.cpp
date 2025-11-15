@@ -11,7 +11,7 @@ using namespace UIWidgets;
 
 void RegisterNetworkMenu() {
     // Add Network Menu
-    BenGui::mBenMenu->AddMenuEntry("Network", "gSettings.Menu.NetworkSidebarSection");
+    // BenGui::mBenMenu->AddMenuEntry("Network", "gSettings.Menu.NetworkSidebarSection");
     WidgetPath path;
 
 #ifndef ENABLE_NETWORKING
