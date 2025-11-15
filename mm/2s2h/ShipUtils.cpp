@@ -344,3 +344,17 @@ std::string convertEnumToReadableName(const std::string& input) {
 
     return result;
 }
+
+bool isStringEmpty(std::string str) {
+    // Remove spaces at the beginning of the string
+    std::string::size_type start = str.find_first_not_of(' ');
+    // Remove spaces at the end of the string
+    std::string::size_type end = str.find_last_not_of(' ');
+
+    // Check if the string is empty after stripping spaces
+    if (start == std::string::npos || end == std::string::npos) {
+        return true; // The string is empty
+    } else {
+        return false; // The string is not empty
+    }
+}

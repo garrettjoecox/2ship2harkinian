@@ -22,6 +22,7 @@ extern std::string Ship_FormatTimeDisplay(uint32_t value);
 extern std::map<uint32_t, ImVec4> itemColorMap;
 extern ImVec4 Ship_GetItemColorTint(uint32_t itemId);
 extern uint32_t Ship_Hash(std::string str);
+bool isStringEmpty(std::string str);
 
 extern "C" {
 #endif

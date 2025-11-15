@@ -40,10 +40,7 @@
 //#include <functions.h>
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 
-#ifdef ENABLE_CROWD_CONTROL
-#include "Enhancements/crowd-control/CrowdControl.h"
-CrowdControl* CrowdControl::Instance;
-#endif
+#include "2s2h/Network/Sail/Sail.h"
 
 #include <libultraship/libultraship.h>
 #include <libultraship/controller/controldeck/ControlDeck.h>
@@ -113,6 +110,7 @@ CrowdControl* CrowdControl::Instance;
 OTRGlobals* OTRGlobals::Instance;
 GameInteractor* GameInteractor::Instance;
 AudioCollection* AudioCollection::Instance;
+Sail* Sail::Instance;
 
 extern "C" char** cameraStrings;
 bool prevAltAssets = false;
@@ -703,6 +701,7 @@ extern "C" void InitOTR() {
     OTRGlobals::Instance = new OTRGlobals();
     GameInteractor::Instance = new GameInteractor();
     AudioCollection::Instance = new AudioCollection();
+    Sail::Instance = new Sail();
     LoadGuiTextures();
     BenGui::SetupGuiElements();
     ShipInit::InitAll();
@@ -732,15 +731,12 @@ extern "C" void InitOTR() {
     }
 
     srand(now);
-#ifdef ENABLE_CROWD_CONTROL
-    CrowdControl::Instance = new CrowdControl();
-    CrowdControl::Instance->Init();
-    if (CVarGetInteger("gCrowdControl", 0)) {
-        CrowdControl::Instance->Enable();
-    } else {
-        CrowdControl::Instance->Disable();
-    }
+#ifdef ENABLE_NETWORKING
+    SDLNet_Init();
 #endif
+    if (CVarGetInteger("gNetwork.Sail.Enabled", 0)) {
+        Sail::Instance->Enable();
+    }
 
     std::shared_ptr<Ship::Config> conf = OTRGlobals::Instance->context->GetConfig();
     Ship::Context::GetInstance()->GetFileDropMgr()->RegisterDropHandler(BinarySaveConverter_HandleFileDropped);
@@ -754,9 +750,11 @@ extern "C" void SaveManager_ThreadPoolWait() {
 extern "C" void DeinitOTR() {
     SaveManager_ThreadPoolWait();
     OTRAudio_Exit();
-#ifdef ENABLE_CROWD_CONTROL
-    CrowdControl::Instance->Disable();
-    CrowdControl::Instance->Shutdown();
+    if (CVarGetInteger("gNetwork.Sail.Enabled", 0)) {
+        Sail::Instance->Disable();
+    }
+#ifdef ENABLE_NETWORKING
+    SDLNet_Quit();
 #endif
 
     // Destroying gui here because we have shared ptrs to LUS objects which output to SPDLOG which is destroyed before
