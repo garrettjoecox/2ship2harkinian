@@ -106,7 +106,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-        if (!randoSaveCheck.shuffled || randoSaveCheck.cycleObtained) {
+        if (!randoSaveCheck.shuffled) {
             return;
         }
 

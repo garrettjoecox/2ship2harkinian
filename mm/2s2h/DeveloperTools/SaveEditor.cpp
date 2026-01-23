@@ -8,6 +8,7 @@
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
 #include "2s2h/ShipUtils.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -2295,13 +2296,15 @@ void DrawRandoTab() {
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
 
-    ImGui::BeginTable("Check List", 5);
+    ImGui::BeginTable("Check List", 6);
     ImGui::TableSetupColumn("Shuffled", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
     ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
+    ImGui::TableSetupColumn("CycleObtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed,
+                            30.0f);
     ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
     ImGui::TableSetupColumn("Check Name");
     ImGui::TableSetupColumn("Reward");
-    ImGui::TableSetupScrollFreeze(5, 1);
+    ImGui::TableSetupScrollFreeze(6, 1);
     ImGui::TableHeadersRow();
 
     for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
@@ -2324,6 +2327,9 @@ void DrawRandoTab() {
         UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
         UIWidgets::Tooltip("Eligible");
         ImGui::TableNextColumn();
+        UIWidgets::Checkbox((hiddenName + "cycleObtained").c_str(), &randoSaveCheck.cycleObtained);
+        UIWidgets::Tooltip("CycleObtained");
+        ImGui::TableNextColumn();
         UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
         UIWidgets::Tooltip("Obtained");
         ImGui::TableNextColumn();
@@ -2333,6 +2339,10 @@ void DrawRandoTab() {
         ImGui::TableNextColumn();
         UIWidgets::ComboboxWithSearch((hiddenName + "reward").c_str(), &randoSaveCheck.randoItemId,
                                       &randoItemIdComboboxMap, { .labelPosition = UIWidgets::LabelPosition::None });
+        if (Anchor::Instance->roomState.teams.size() > 1) {
+            ImGui::SameLine();
+            ImGui::Text("%s", Anchor::Instance->roomState.teams[randoSaveCheck.multiWorldTeamIndex].c_str());
+        }
     }
 
     ImGui::EndTable();

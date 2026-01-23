@@ -2136,6 +2136,7 @@ void Sram_StartWriteToFlashOwlSave(SramContext* sramCtx) {
 
     sramCtx->startWriteOsTime = osGetTime();
     sramCtx->status = 7;
+    GameInteractor_ExecuteAfterOwlSave();
 }
 
 void Sram_UpdateWriteToFlashOwlSave(SramContext* sramCtx) {

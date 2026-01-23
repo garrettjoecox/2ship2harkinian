@@ -3,6 +3,7 @@
 #include "2s2h/ShipUtils.h"
 #include "2s2h/Rando/Rando.h"
 #include "2s2h_assets.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 extern s16 D_801CFF94[250];
@@ -551,16 +552,28 @@ bool ShouldShowGetItemCutscene(RandoItemId itemId) {
 std::string GetItemName(RandoItemId randoItemId, bool includeArticle, RandoCheckId randoCheckId) {
     std::string result;
 
-    if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
+    s16 multiWorldTeamIndex = -1;
+    if (randoCheckId != RC_UNKNOWN) {
+        multiWorldTeamIndex = RANDO_SAVE_CHECKS[randoCheckId].multiWorldTeamIndex;
+    }
+
+    bool isForYou = multiWorldTeamIndex == -1 || Anchor::Instance->roomState.teams.size() < 2 ||
+                    Anchor::Instance->roomState.teams[multiWorldTeamIndex] ==
+                        std::string(CVarGetString("gNetwork.Anchor.TeamId", "default"));
+
+    if (!isForYou) {
+        result += Anchor::Instance->roomState.teams[multiWorldTeamIndex] + "'s ";
+    } else if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
         result += Rando::StaticData::Items[randoItemId].article;
         result += " ";
     }
 
     result += Rando::StaticData::Items[randoItemId].name;
 
-    if (randoItemId == RI_JUNK && (randoCheckId == RC_UNKNOWN ||
-                                   (Rando::StaticData::Checks[randoCheckId].randoCheckType != RCTYPE_SHOP &&
-                                    Rando::StaticData::Checks[randoCheckId].randoCheckType != RCTYPE_TINGLE_SHOP))) {
+    if (randoItemId == RI_JUNK && isForYou &&
+        (randoCheckId == RC_UNKNOWN ||
+         (Rando::StaticData::Checks[randoCheckId].randoCheckType != RCTYPE_SHOP &&
+          Rando::StaticData::Checks[randoCheckId].randoCheckType != RCTYPE_TINGLE_SHOP))) {
         result += std::string(" (") + Rando::StaticData::Items[Rando::CurrentJunkItem(randoCheckId)].name + ")";
     }
 
@@ -574,7 +587,9 @@ std::string GetItemName(RandoItemId randoItemId, bool includeArticle, RandoCheck
         fakeItemName.insert(letterIndex, 1, letterToDouble);
         result.clear();
 
-        if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
+        if (!isForYou) {
+            result += Anchor::Instance->roomState.teams[multiWorldTeamIndex] + "'s ";
+        } else if (includeArticle && !Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
             result += Rando::StaticData::Items[randoItemId].article;
             result += " ";
         }

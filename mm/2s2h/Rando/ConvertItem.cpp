@@ -4,6 +4,7 @@
 #include "2s2h/ShipUtils.h"
 #include "2s2h/ShipInit.hpp"
 #include <cassert>
+#include "2s2h/Network/Anchor/Anchor.h"
 
 // Copied from z_player.c, we could instead move this to a header file, idk
 typedef struct GetItemEntry {
@@ -194,6 +195,13 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
     bool hasObtainedCheck = false;
     if (randoCheckId != RC_UNKNOWN) {
         hasObtainedCheck = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+    }
+
+    bool isForYou = randoCheckId == RC_UNKNOWN || Anchor::Instance->roomState.teams.size() < 2 ||
+                    Anchor::Instance->roomState.teams[RANDO_SAVE_CHECKS[randoCheckId].multiWorldTeamIndex] ==
+                        std::string(CVarGetString("gNetwork.Anchor.TeamId", "default"));
+    if (!isForYou) {
+        return !hasObtainedCheck;
     }
 
     u8 vanillaCantObtain = false;
@@ -653,6 +661,17 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
 }
 
 RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId) {
+    bool isForYou = randoCheckId == RC_UNKNOWN || Anchor::Instance->roomState.teams.size() < 2 ||
+                    Anchor::Instance->roomState.teams[RANDO_SAVE_CHECKS[randoCheckId].multiWorldTeamIndex] ==
+                        std::string(CVarGetString("gNetwork.Anchor.TeamId", "default"));
+    if (!isForYou) {
+        if (IsItemObtainable(randoItemId, randoCheckId)) {
+            return randoItemId;
+        } else {
+            return RI_JUNK;
+        }
+    }
+
     if (IsItemObtainable(randoItemId, randoCheckId)) {
         switch (randoItemId) {
             case RI_TIME_PROGRESSIVE: {

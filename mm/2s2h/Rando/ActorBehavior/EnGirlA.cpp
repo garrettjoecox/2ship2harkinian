@@ -2,6 +2,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/Rando/MiscBehavior/Traps.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 #include "variables.h"
@@ -70,11 +71,23 @@ void EnGirlA_RandoBuyFunc(PlayState* play, EnGirlA* enGirlA) {
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
     RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z);
     randoSaveCheck.obtained = true;
+    randoSaveCheck.cycleObtained = true;
     Rupees_ChangeBy(-play->msgCtx.unk1206C);
-    if (randoItemId == RI_TRAP) {
-        RollTrapType();
+
+    bool isForYou = Anchor::Instance->roomState.teams.size() < 2 ||
+                    Anchor::Instance->roomState.teams[randoSaveCheck.multiWorldTeamIndex] ==
+                        std::string(CVarGetString("gNetwork.Anchor.TeamId", "default"));
+    Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)enGirlA->actor.world.rot.z);
+    if (isForYou) {
+        if (randoItemId == RI_TRAP) {
+            RollTrapType();
+        }
+        Rando::GiveItem(randoItemId);
+        Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
+    } else {
+        Anchor::Instance->SendPacket_GiveItem(1, randoItemId,
+                                              Anchor::Instance->roomState.teams[randoSaveCheck.multiWorldTeamIndex]);
     }
-    Rando::GiveItem(randoItemId);
 }
 
 void EnGirlA_RandoBuyFanfareFunc(PlayState* play, EnGirlA* enGirlA) {
@@ -294,7 +307,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             return;
         }
 
-        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
         RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId);
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
@@ -325,7 +338,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             return;
         }
 
-        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         // Not using formatting here, to ensure the item name and price stay on one line

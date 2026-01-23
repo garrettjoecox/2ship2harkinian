@@ -377,6 +377,7 @@ typedef struct RandoSaveCheck {
     bool obtained;
     bool skipped;
     u16 price; // Only applicable for shops/merchants
+    s16 multiWorldTeamIndex;
 } RandoSaveCheck;
 
 typedef struct RandoSaveInfo {

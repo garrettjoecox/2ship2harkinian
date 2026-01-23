@@ -573,12 +573,22 @@ void Rando::DrawItem(RandoItemId randoItemId, RandoCheckId randoCheckId, Actor* 
             DrawTycoonWallet();
             break;
         case RI_PROGRESSIVE_LULLABY:
+            Rando::DrawItem(RI_SONG_LULLABY, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_MAGIC:
+            Rando::DrawItem(RI_SINGLE_MAGIC, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_BOW:
+            Rando::DrawItem(RI_BOW, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
+            Rando::DrawItem(RI_BOMB_BAG_20, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_SWORD:
+            Rando::DrawItem(RI_SWORD_KOKIRI, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_WALLET:
-            Rando::DrawItem(Rando::ConvertItem(randoItemId, randoCheckId), randoCheckId, actor);
+            Rando::DrawItem(RI_WALLET_ADULT, randoCheckId, actor);
             break;
         case RI_SOUL_ENEMY_ALIEN:
         case RI_SOUL_ENEMY_ARMOS:

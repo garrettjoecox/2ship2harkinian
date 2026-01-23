@@ -1,6 +1,7 @@
 #ifndef BenJsonConversions_hpp
 #define BenJsonConversions_hpp
 
+#include <libultraship/libultraship.h>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include "build.h"
@@ -8,6 +9,7 @@
 extern "C" {
 #include "z64save.h"
 #include "macros.h"
+#include "z64actor.h"
 }
 
 using json = nlohmann::json;
@@ -35,6 +37,7 @@ inline void to_json(json& j, const RandoSaveCheck& randoSaveCheck) {
         { "shuffled", randoSaveCheck.shuffled },
         { "skipped", randoSaveCheck.skipped },
         { "price", randoSaveCheck.price },
+        { "multiWorldTeamIndex", randoSaveCheck.multiWorldTeamIndex },
     };
 }
 
@@ -46,6 +49,7 @@ inline void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
     j.at("shuffled").get_to(randoSaveCheck.shuffled);
     j.at("skipped").get_to(randoSaveCheck.skipped);
     j.at("price").get_to(randoSaveCheck.price);
+    j.at("multiWorldTeamIndex").get_to(randoSaveCheck.multiWorldTeamIndex);
 }
 
 inline void to_json(json& j, const RandoSaveInfo& rando) {
@@ -276,6 +280,20 @@ inline void from_json(const json& j, SavePlayerData& savePlayerData) {
     j.at("savedSceneId").get_to(savePlayerData.savedSceneId);
 }
 
+inline void from_json(const json& j, Color_RGB8& color) {
+    j.at("r").get_to(color.r);
+    j.at("g").get_to(color.g);
+    j.at("b").get_to(color.b);
+}
+
+inline void to_json(json& j, const Color_RGB8& color) {
+    j = json{
+        {"r", color.r},
+        {"g", color.g},
+        {"b", color.b}
+    };
+}
+
 inline void to_json(json& j, const Vec3s& vec) {
     j = json{
         { "x", vec.x },
@@ -288,6 +306,18 @@ inline void from_json(const json& j, Vec3s& vec) {
     j.at("x").get_to(vec.x);
     j.at("y").get_to(vec.y);
     j.at("z").get_to(vec.z);
+}
+
+inline void to_json(json& j, const PosRot& posRot) {
+    j = json{
+        {"pos", posRot.pos},
+        {"rot", posRot.rot}
+    };
+}
+
+inline void from_json(const json& j, PosRot& posRot) {
+    j.at("pos").get_to(posRot.pos);
+    j.at("rot").get_to(posRot.rot);
 }
 
 inline void to_json(json& j, const HorseData& horseData) {
