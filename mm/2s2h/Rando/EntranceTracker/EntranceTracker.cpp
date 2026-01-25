@@ -195,6 +195,36 @@ bool Rando::EntranceTracker::IsEntranceDiscovered(s32 entranceId) {
     return (gSaveContext.save.shipSaveInfo.rando.discoveredEntrances[byteIndex] & (1 << bitIndex)) != 0;
 }
 
+// List of generic region names that need scene context
+static const std::set<std::string> sGenericRegionNames = {
+    "Entrance", "Main Room", "Maze Room", "Upper", "Lower", "Back", "Front",
+    "Boss Room", "Passage", "Main Room Upper", "Main Room Lower",
+    "Night 1 Boss", "Night 2 Boss", "Higher", "Before Great Bay Coast"
+};
+
+// Get a display name for a region, using scene name as fallback or prefix for generic names
+static std::string GetRegionDisplayName(RandoRegionId regionId) {
+    if (Rando::Logic::Regions.count(regionId) == 0) {
+        return "";
+    }
+
+    const auto& region = Rando::Logic::Regions.at(regionId);
+    std::string name = region.name;
+    std::string sceneName = Ship_GetSceneName(region.sceneId);
+
+    // If name is empty, use scene name
+    if (name.empty()) {
+        return sceneName;
+    }
+
+    // If name is generic, prefix with scene name
+    if (sGenericRegionNames.count(name) > 0) {
+        return sceneName + " - " + name;
+    }
+
+    return name;
+}
+
 // Build the entrance name mapping with better names for specific entrances
 static void BuildEntranceNameMap() {
     sEntranceNames.clear();
@@ -237,12 +267,16 @@ static void BuildEntranceNameMap() {
 
 // Get the source scene for an entrance (where you are when you use it)
 static SceneId GetSourceSceneForEntrance(s32 entrance) {
-    // Use the region data to find where the entrance originates
-    RandoRegionId regionId = Rando::Logic::GetRegionIdFromEntrance(entrance);
-    if (regionId != RR_MAX && Rando::Logic::Regions.count(regionId) > 0) {
-        return Rando::Logic::Regions[regionId].sceneId;
+    // Find which region has this entrance as an EXIT (the source region)
+    // This is the region you're IN when you use this entrance
+    for (const auto& [regionId, region] : Rando::Logic::Regions) {
+        for (const auto& [exitId, regionExit] : region.exits) {
+            if (exitId == entrance) {
+                return region.sceneId;
+            }
+        }
     }
-    // Fallback: the entrance scene itself
+    // Fallback: extract scene from entrance ID (destination scene)
     return GetSceneFromEntrance(entrance);
 }
 
@@ -298,8 +332,9 @@ static void BuildRegionList() {
     sRegionList.clear();
 
     for (const auto& [regionId, region] : Rando::Logic::Regions) {
-        if (region.name != nullptr && strlen(region.name) > 0) {
-            sRegionList.push_back({ regionId, region.name });
+        std::string displayName = GetRegionDisplayName(regionId);
+        if (!displayName.empty()) {
+            sRegionList.push_back({ regionId, displayName });
         }
     }
 
@@ -407,36 +442,66 @@ static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>&
     }
 
     std::string result;
+    std::string fromName = GetRegionDisplayName(from);
+
+    // Track last displayed scene to avoid redundant same-scene entries
+    SceneId lastScene = SCENE_MAX;
+    if (Rando::Logic::Regions.count(from) > 0) {
+        lastScene = Rando::Logic::Regions.at(from).sceneId;
+    }
 
     if (detailed) {
         // Detailed format
-        if (Rando::Logic::Regions.count(from) > 0) {
-            result = "From " + std::string(Rando::Logic::Regions[from].name);
+        if (!fromName.empty()) {
+            result = "From " + fromName;
         }
 
         for (size_t i = 0; i < route.size(); i++) {
             const auto& step = route[i];
-            if (step.entranceUsed != -1) {
+            std::string stepName = GetRegionDisplayName(step.region);
+
+            // Get scene for this step
+            SceneId stepScene = SCENE_MAX;
+            if (Rando::Logic::Regions.count(step.region) > 0) {
+                stepScene = Rando::Logic::Regions.at(step.region).sceneId;
+            }
+
+            // Show entrance used if it's a real exit (not a same-scene connection)
+            if (step.entranceUsed != -1 && !step.description.empty()) {
                 result += "\n  -> Take '" + step.description + "'";
             }
-            if (Rando::Logic::Regions.count(step.region) > 0) {
-                result += "\n  => " + std::string(Rando::Logic::Regions[step.region].name);
+
+            // Only show region if it's a different scene or the final destination
+            if (!stepName.empty() && (stepScene != lastScene || i == route.size() - 1)) {
+                result += "\n  => " + stepName;
+                lastScene = stepScene;
             }
         }
     } else {
-        // Compact format
-        if (Rando::Logic::Regions.count(from) > 0) {
-            result = Rando::Logic::Regions[from].name;
+        // Compact format - skip consecutive same-scene regions
+        if (!fromName.empty()) {
+            result = fromName;
         }
 
-        for (const auto& step : route) {
+        for (size_t i = 0; i < route.size(); i++) {
+            const auto& step = route[i];
+            std::string stepName = GetRegionDisplayName(step.region);
+
+            // Get scene for this step
+            SceneId stepScene = SCENE_MAX;
             if (Rando::Logic::Regions.count(step.region) > 0) {
-                result += " -> " + std::string(Rando::Logic::Regions[step.region].name);
+                stepScene = Rando::Logic::Regions.at(step.region).sceneId;
+            }
+
+            // Only show if different scene or final destination
+            if (!stepName.empty() && (stepScene != lastScene || i == route.size() - 1)) {
+                result += " -> " + stepName;
+                lastScene = stepScene;
             }
         }
     }
 
-    return result;
+    return result.empty() ? "No route found" : result;
 }
 
 namespace Rando {
@@ -587,6 +652,7 @@ void EntranceTrackerWindow::Draw() {
             if (ImGui::BeginCombo("##FromRegion", sRouteFromIndex < (int)sRegionList.size()
                                   ? sRegionList[sRouteFromIndex].second.c_str() : "Select...")) {
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
+                    ImGui::PushID(i);
                     bool selected = (i == sRouteFromIndex);
                     if (ImGui::Selectable(sRegionList[i].second.c_str(), selected)) {
                         sRouteFromIndex = i;
@@ -594,6 +660,7 @@ void EntranceTrackerWindow::Draw() {
                     if (selected) {
                         ImGui::SetItemDefaultFocus();
                     }
+                    ImGui::PopID();
                 }
                 ImGui::EndCombo();
             }
@@ -603,10 +670,29 @@ void EntranceTrackerWindow::Draw() {
             if (UIWidgets::Button("Current", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
                 if (gPlayState) {
                     RandoRegionId currentRegion = Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance);
-                    for (int i = 0; i < (int)sRegionList.size(); i++) {
-                        if (sRegionList[i].first == currentRegion) {
-                            sRouteFromIndex = i;
-                            break;
+                    bool found = false;
+
+                    // First try: find exact region match
+                    if (currentRegion != RR_MAX) {
+                        for (int i = 0; i < (int)sRegionList.size(); i++) {
+                            if (sRegionList[i].first == currentRegion) {
+                                sRouteFromIndex = i;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Fallback: find a region matching the current scene
+                    if (!found) {
+                        SceneId currentScene = static_cast<SceneId>(gPlayState->sceneId);
+                        for (int i = 0; i < (int)sRegionList.size(); i++) {
+                            RandoRegionId regionId = sRegionList[i].first;
+                            if (Rando::Logic::Regions.count(regionId) > 0 &&
+                                Rando::Logic::Regions.at(regionId).sceneId == currentScene) {
+                                sRouteFromIndex = i;
+                                break;
+                            }
                         }
                     }
                 }
@@ -619,6 +705,7 @@ void EntranceTrackerWindow::Draw() {
             if (ImGui::BeginCombo("##ToRegion", sRouteToIndex < (int)sRegionList.size()
                                   ? sRegionList[sRouteToIndex].second.c_str() : "Select...")) {
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
+                    ImGui::PushID(i);
                     bool selected = (i == sRouteToIndex);
                     if (ImGui::Selectable(sRegionList[i].second.c_str(), selected)) {
                         sRouteToIndex = i;
@@ -626,6 +713,7 @@ void EntranceTrackerWindow::Draw() {
                     if (selected) {
                         ImGui::SetItemDefaultFocus();
                     }
+                    ImGui::PopID();
                 }
                 ImGui::EndCombo();
             }
