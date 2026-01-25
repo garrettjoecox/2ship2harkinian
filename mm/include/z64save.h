@@ -388,6 +388,7 @@ typedef struct RandoSaveInfo {
     u16 randoStartingItems[256]; // Max 256 starting items, using u16 in case we add more than 255 items
     s8 foundDungeonKeys[9]; // Tracks the number of dungeon keys found, opposed to the number of keys in the inventory
     u16 foundTriforcePieces;
+    u8 discoveredEntrances[32]; // Bitfield for 256 discovered entrance flags (for entrance tracker)
 } RandoSaveInfo;
 
 // These are values added by 2S2H that we need to be persisted to the save file
