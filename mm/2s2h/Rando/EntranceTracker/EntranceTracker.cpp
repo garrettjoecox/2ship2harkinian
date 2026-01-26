@@ -57,7 +57,6 @@ static bool sEntranceTrackerBtnState = false;
 #define CVAR_NAME_TRACKER_OPACITY "gRando.EntranceTracker.Opacity"
 #define CVAR_NAME_TRACKER_SCALE "gRando.EntranceTracker.Scale"
 #define CVAR_NAME_SPOILER_MODE "gRando.EntranceTracker.SpoilerMode"
-#define CVAR_NAME_ROUTE_DETAIL "gRando.EntranceTracker.RouteDetailMode"
 #define CVAR_NAME_SHOW_SEARCH "gRando.EntranceTracker.ShowSearch"
 
 #define CVAR_SHOW_ENTRANCE_TRACKER CVarGetInteger(CVAR_NAME_SHOW_ENTRANCE_TRACKER, 0)
@@ -66,7 +65,6 @@ static bool sEntranceTrackerBtnState = false;
 #define CVAR_TRACKER_OPACITY CVarGetFloat(CVAR_NAME_TRACKER_OPACITY, 0.5f)
 #define CVAR_TRACKER_SCALE CVarGetFloat(CVAR_NAME_TRACKER_SCALE, 1.0f)
 #define CVAR_SPOILER_MODE CVarGetInteger(CVAR_NAME_SPOILER_MODE, 1) // Default: show all
-#define CVAR_ROUTE_DETAIL CVarGetInteger(CVAR_NAME_ROUTE_DETAIL, 0) // Default: compact
 #define CVAR_SHOW_SEARCH CVarGetInteger(CVAR_NAME_SHOW_SEARCH, 1)
 
 static ImGuiTextFilter sEntranceTrackerFilter;
@@ -99,6 +97,34 @@ static std::map<s32, std::string> sEntranceNames;
 // Helper to extract scene ID from entrance
 static SceneId GetSceneFromEntrance(s32 entrance) {
     return static_cast<SceneId>((entrance >> 9) & 0x7F);
+}
+
+// Cache of all exits that are in entrance shuffle pools
+static std::set<s32> sPoolExits;
+
+// Build the set of exits that are actually in entrance shuffle pools
+static void BuildPoolExitSet() {
+    sPoolExits.clear();
+
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
+        Rando::EntranceShuffle::POOL_INTERIOR,
+        Rando::EntranceShuffle::POOL_DUNGEON,
+        Rando::EntranceShuffle::POOL_OVERWORLD
+    };
+
+    for (auto poolType : pools) {
+        auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
+        for (const auto& pair : entrancePairs) {
+            // Add both the entrance and exit from each pair
+            sPoolExits.insert(pair.entrance);
+            sPoolExits.insert(pair.exit);
+        }
+    }
+}
+
+// Check if an exit is part of any entrance shuffle pool
+static bool IsExitInShufflePool(s32 exitId) {
+    return sPoolExits.count(exitId) > 0;
 }
 
 // Helper to extract spawn number from entrance
@@ -344,13 +370,6 @@ static void BuildEntranceNameMap() {
     sEntranceNames[ENTRANCE(STONE_TOWER, 1)] = "Stone Tower (Inverted Entrance)";
     sEntranceNames[ENTRANCE(STONE_TOWER, 2)] = "Stone Tower (to Temple)";
 
-    // Zora Hall
-    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 0)] = "Zora Hall (Evan's Room)";
-    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 1)] = "Zora Hall (Lulu's Room)";
-    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 2)] = "Zora Hall (Japas' Room)";
-    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 3)] = "Zora Hall (Tijo's Room)";
-    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 5)] = "Zora Hall (Shop)";
-
     // Ghost Hut entrances (from Ikana Canyon)
     sEntranceNames[ENTRANCE(GHOST_HUT, 0)] = "Ghost Hut";
     sEntranceNames[ENTRANCE(GHOST_HUT, 1)] = "Ghost Hut (Alternate)";
@@ -383,6 +402,9 @@ static SceneId GetSourceSceneForEntrancePair(s32 returnEntrance) {
 static void BuildEntranceData() {
     sEntrancesByArea.clear();
     sSortedSceneIds.clear();
+
+    // Build the set of pool exits for route finding
+    BuildPoolExitSet();
 
     if (!Rando::EntranceShuffle::IsEntranceShuffleEnabled()) {
         return;
@@ -427,39 +449,45 @@ static void BuildEntranceData() {
               [](SceneId a, SceneId b) { return betterSceneIndex[a] < betterSceneIndex[b]; });
 }
 
-// Build region list for route finder dropdowns - includes shuffled entrance sources and destinations
-static void BuildRegionList() {
-    sRegionList.clear();
-    std::set<RandoRegionId> shuffleRegions;
-
-    // Collect all regions involved in entrance shuffling (both sources and destinations)
+// Helper: Find which region a shuffled entrance leads to by checking entrance pools
+static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
+    // First try the direct lookup
+    RandoRegionId direct = Rando::Logic::GetRegionIdFromEntrance(shuffledEntrance);
+    if (direct != RR_MAX) {
+        return direct;
+    }
+    
+    // If direct lookup fails, check all entrance pairs to find which original entrance
+    // this shuffled entrance corresponds to, then look up that region
     std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
         Rando::EntranceShuffle::POOL_INTERIOR,
         Rando::EntranceShuffle::POOL_DUNGEON,
         Rando::EntranceShuffle::POOL_OVERWORLD
     };
-
+    
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
         for (const auto& pair : entrancePairs) {
-            // Include destination region
-            s32 destination = pair.entrance;
-            RandoRegionId destRegion = Rando::Logic::GetRegionIdFromEntrance(destination);
-            if (destRegion != RR_MAX) {
-                shuffleRegions.insert(destRegion);
-            }
-            
-            // Include source region (derived from exit entrance)
-            s32 source = pair.exit;
-            RandoRegionId srcRandoRegion = Rando::Logic::GetRegionIdFromEntrance(source);
-            if (srcRandoRegion != RR_MAX) {
-                shuffleRegions.insert(srcRandoRegion);
+            // pair.entrance is the original entrance
+            s32 shuffled = Rando::EntranceShuffle::GetShuffledEntrance(pair.entrance);
+            if (shuffled == shuffledEntrance) {
+                // Found it! The original entrance is pair.entrance
+                // Now look up that region
+                RandoRegionId region = Rando::Logic::GetRegionIdFromEntrance(pair.entrance);
+                if (region != RR_MAX) {
+                    return region;
+                }
             }
         }
     }
+    
+    return RR_MAX;
+}
+static void BuildRegionList() {
+    sRegionList.clear();
 
-    // Build list from all shuffle regions
-    for (RandoRegionId regionId : shuffleRegions) {
+    // Include all regions from the logic system
+    for (const auto& [regionId, region] : Rando::Logic::Regions) {
         std::string displayName = GetRegionDisplayName(regionId);
         if (!displayName.empty()) {
             sRegionList.push_back({ regionId, displayName });
@@ -507,10 +535,23 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
 
         auto& region = Rando::Logic::Regions[current];
 
-        // Check exits (using shuffled entrances)
+        // Check exits - only traverse exits that are in entrance shuffle pools
         for (const auto& [exitId, regionExit] : region.exits) {
+            // Only traverse exits that are part of the entrance shuffle pools
+            // This prevents the BFS from exploring internal logic connections
+            if (!IsExitInShufflePool(exitId)) {
+                continue;
+            }
+
             s32 actualExit = Rando::EntranceShuffle::GetShuffledEntrance(exitId);
-            RandoRegionId targetRegion = Rando::Logic::GetRegionIdFromEntrance(actualExit);
+
+            // Find the region this shuffled entrance leads to
+            RandoRegionId targetRegion = FindRegionFromShuffledEntrance(actualExit);
+
+            // If we can't determine where this exit leads, skip it
+            if (targetRegion == RR_MAX) {
+                continue;
+            }
 
             if (targetRegion == to) {
                 // Found the destination
@@ -537,36 +578,17 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
             }
         }
 
-        // Check connections (same-scene region transitions)
-        for (const auto& [connectedRegion, condition] : region.connections) {
-            if (connectedRegion == to) {
-                result = path;
-                RouteStep step;
-                step.region = to;
-                step.entranceUsed = -1;
-                step.description = "";
-                result.push_back(step);
-                return result;
-            }
-
-            if (visited.find(connectedRegion) == visited.end()) {
-                visited.insert(connectedRegion);
-                auto newPath = path;
-                RouteStep step;
-                step.region = connectedRegion;
-                step.entranceUsed = -1;
-                step.description = "";
-                newPath.push_back(step);
-                queue.push(newPath);
-            }
-        }
+        // Note: We intentionally do NOT traverse region.connections here.
+        // Connections are same-scene internal transitions used for logic, not actual
+        // entrances the player uses. Including them causes garbage routes through
+        // regions like "Moon Deku Trial" that aren't actual navigation steps.
     }
 
     return result; // Empty if no route found
 }
 
-// Format route for display
-static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>& route, bool detailed) {
+// Format route for display (compact format)
+static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>& route) {
     if (route.empty()) {
         return "No route found";
     }
@@ -574,44 +596,14 @@ static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>&
     std::string result;
     std::string fromName = GetRegionDisplayName(from);
 
-    if (detailed) {
-        // Detailed format - show all steps with entrance names
-        if (!fromName.empty()) {
-            result = "From " + fromName;
-        }
+    if (!fromName.empty()) {
+        result = fromName;
+    }
 
-        for (size_t i = 0; i < route.size(); i++) {
-            const auto& step = route[i];
-            std::string stepName = GetRegionDisplayName(step.region);
-
-            // Show entrance used if it's a real exit (not a same-scene connection)
-            if (step.entranceUsed != -1 && !step.description.empty()) {
-                result += "\n  -> Take '" + step.description + "'";
-            }
-
-            // Always show the destination region
-            if (!stepName.empty()) {
-                result += "\n  => " + stepName;
-            }
-        }
-    } else {
-        // Compact format - prioritize showing entrance names over region names
-        if (!fromName.empty()) {
-            result = fromName;
-        }
-
-        for (size_t i = 0; i < route.size(); i++) {
-            const auto& step = route[i];
-            std::string stepName = GetRegionDisplayName(step.region);
-
-            // Prefer showing entrance names when available
-            if (step.entranceUsed != -1 && !step.description.empty()) {
-                // Show the entrance you take to get there
-                result += " -> " + step.description;
-            } else if (!stepName.empty()) {
-                // Fallback to region name for same-scene connections
-                result += " -> " + stepName;
-            }
+    for (const auto& step : route) {
+        // Show the entrance you take to get there
+        if (!step.description.empty()) {
+            result += " -> " + step.description;
         }
     }
 
@@ -890,7 +882,7 @@ void EntranceTrackerWindow::Draw() {
                         // Iterate through all regions to find entrances leading to the destination
                         for (const auto& [regionId, region] : Rando::Logic::Regions) {
                             for (const auto& [exitId, regionExit] : region.exits) {
-                                if (!regionExit.returnEntrance || regionExit.returnEntrance == ONE_WAY_EXIT) continue;
+                                if (regionExit.returnEntrance == ONE_WAY_EXIT) continue;
                                 if (GetSceneFromEntrance(regionExit.returnEntrance) == destScene) {
                                     if (IsEntranceDiscovered(regionExit.returnEntrance)) {
                                         destinationDiscovered = true;
@@ -906,7 +898,7 @@ void EntranceTrackerWindow::Draw() {
                         sRouteResult = "No route could be found";
                     } else {
                         auto route = FindRoute(from, to);
-                        sRouteResult = FormatRoute(from, route, CVAR_ROUTE_DETAIL);
+                        sRouteResult = FormatRoute(from, route);
                     }
                 }
             }
@@ -947,9 +939,6 @@ void EntranceTrackerSettingsWindow::DrawElement() {
         UIWidgets::CVarCheckbox("Show All Entrances (Spoilers)", CVAR_NAME_SPOILER_MODE,
                                 UIWidgets::CheckboxOptions().DefaultValue(true));
         UIWidgets::Tooltip("When disabled, only shows entrances you have discovered by using them.");
-
-        UIWidgets::CVarCheckbox("Detailed Route Display", CVAR_NAME_ROUTE_DETAIL);
-        UIWidgets::Tooltip("When enabled, shows step-by-step instructions instead of compact path.");
 
         UIWidgets::CVarCheckbox("Show Search", CVAR_NAME_SHOW_SEARCH, UIWidgets::CheckboxOptions().DefaultValue(true));
 
