@@ -90,6 +90,8 @@ static int sRouteFromIndex = 0;
 static int sRouteToIndex = 0;
 static std::string sRouteResult = "";
 static std::vector<std::pair<RandoRegionId, std::string>> sRegionList;
+static ImGuiTextFilter sRouteFromFilter;
+static ImGuiTextFilter sRouteToFilter;
 
 // Entrance name mapping - built from scene names with spawn-specific suffixes
 static std::map<s32, std::string> sEntranceNames;
@@ -230,11 +232,11 @@ static void BuildEntranceNameMap() {
     sEntranceNames.clear();
 
     // Add custom names for specific entrances (more descriptive than just scene name)
-    sEntranceNames[ENTRANCE(STOCK_POT_INN, 0)] = "Stock Pot Inn (Main)";
-    sEntranceNames[ENTRANCE(STOCK_POT_INN, 1)] = "Stock Pot Inn (Upstairs)";
-    sEntranceNames[ENTRANCE(CURIOSITY_SHOP, 0)] = "Curiosity Shop (Front)";
-    sEntranceNames[ENTRANCE(CURIOSITY_SHOP, 1)] = "Curiosity Shop (Back)";
-    sEntranceNames[ENTRANCE(RANCH_HOUSE, 0)] = "Romani Ranch House (Main)";
+    sEntranceNames[ENTRANCE(STOCK_POT_INN, 0)] = "Stock Pot Inn (Main Entrance)";
+    sEntranceNames[ENTRANCE(STOCK_POT_INN, 1)] = "Stock Pot Inn (Upper Floor)";
+    sEntranceNames[ENTRANCE(CURIOSITY_SHOP, 0)] = "Curiosity Shop (Front Entrance)";
+    sEntranceNames[ENTRANCE(CURIOSITY_SHOP, 1)] = "Curiosity Shop (Back Entrance)";
+    sEntranceNames[ENTRANCE(RANCH_HOUSE, 0)] = "Romani Ranch House (Main Building)";
     sEntranceNames[ENTRANCE(RANCH_HOUSE, 1)] = "Romani Ranch House (Barn)";
     sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 0)] = "Zora Hall (Evan's Room)";
     sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 1)] = "Zora Hall (Lulu's Room)";
@@ -246,38 +248,135 @@ static void BuildEntranceNameMap() {
     sEntranceNames[ENTRANCE(FAIRY_FOUNTAIN, 2)] = "Great Fairy (Snowhead)";
     sEntranceNames[ENTRANCE(FAIRY_FOUNTAIN, 3)] = "Great Fairy (Great Bay)";
     sEntranceNames[ENTRANCE(FAIRY_FOUNTAIN, 4)] = "Great Fairy (Ikana)";
-    sEntranceNames[ENTRANCE(CLOCK_TOWER_INTERIOR, 1)] = "Clock Tower Interior";
+    sEntranceNames[ENTRANCE(CLOCK_TOWER_INTERIOR, 0)] = "Clock Tower Interior (Main)";
+    sEntranceNames[ENTRANCE(CLOCK_TOWER_INTERIOR, 1)] = "Clock Tower Interior (Upper)";
+
+    // Temple entrances - be specific about which entrance/exit
+    sEntranceNames[ENTRANCE(GREAT_BAY_TEMPLE, 0)] = "Great Bay Temple (Main Entrance)";
+    sEntranceNames[ENTRANCE(GREAT_BAY_TEMPLE, 1)] = "Great Bay Temple (Main Exit)";
+    sEntranceNames[ENTRANCE(WOODFALL_TEMPLE, 0)] = "Woodfall Temple (Main Entrance)";
+    sEntranceNames[ENTRANCE(WOODFALL_TEMPLE, 1)] = "Woodfall Temple (Main Exit)";
+    sEntranceNames[ENTRANCE(SNOWHEAD_TEMPLE, 0)] = "Snowhead Temple (Main Entrance)";
+    sEntranceNames[ENTRANCE(SNOWHEAD_TEMPLE, 1)] = "Snowhead Temple (Main Exit)";
+    sEntranceNames[ENTRANCE(IKANA_CASTLE, 0)] = "Ikana Castle (Main Entrance)";
+    sEntranceNames[ENTRANCE(IKANA_CASTLE, 1)] = "Ikana Castle (Main Exit)";
+    sEntranceNames[ENTRANCE(STONE_TOWER_TEMPLE, 0)] = "Stone Tower Temple (Main Entrance)";
+    sEntranceNames[ENTRANCE(STONE_TOWER_TEMPLE, 1)] = "Stone Tower Temple (Main Exit)";
 
     // Overworld connections - use more descriptive names
-    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 3)] = "East Clock Town (from South)";
-    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 2)] = "South Clock Town (from East)";
-    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 2)] = "West Clock Town (from South)";
-    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 3)] = "South Clock Town (from West)";
-    sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 2)] = "North Clock Town (from South)";
-    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 4)] = "South Clock Town (from North)";
-    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 1)] = "West Clock Town (Swordsman)";
-    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 5)] = "South Clock Town (Swordsman)";
-    sEntranceNames[ENTRANCE(LAUNDRY_POOL, 0)] = "Laundry Pool";
-    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 6)] = "South Clock Town (Laundry)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 0)] = "East Clock Town (to Termina Field)";
     sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 1)] = "East Clock Town (Chest Shop)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 2)] = "East Clock Town (Astral Observatory)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 3)] = "East Clock Town (from South)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 4)] = "East Clock Town (Treasure Chest Shop)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 5)] = "East Clock Town (Great Fairy)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 6)] = "East Clock Town (Honey and Darlings)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 7)] = "East Clock Town (Mayor's Residence)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 8)] = "East Clock Town (Shooting Gallery)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 9)] = "East Clock Town (Stock Pot Inn)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 10)] = "East Clock Town (Stock Pot Inn Upstairs)";
+    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 11)] = "East Clock Town (Milk Bar)";
+    
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 0)] = "South Clock Town (Clock Tower Interior)";
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 2)] = "South Clock Town (from East)";
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 3)] = "South Clock Town (from West)";
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 4)] = "South Clock Town (from North)";
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 5)] = "South Clock Town (Swordsman)";
+    sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 6)] = "South Clock Town (Laundry)";
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 7)] = "South Clock Town (Chest Shop)";
-    sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 1)] = "North Clock Town (Fairy)";
-    sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 5)] = "East Clock Town (Fairy)";
+    
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 0)] = "West Clock Town (to Termina Field)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 1)] = "West Clock Town (to South Lower)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 2)] = "West Clock Town (to South Upper)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 3)] = "West Clock Town (Swordsman)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 4)] = "West Clock Town (Curiosity Shop)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 5)] = "West Clock Town (Trading Post)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 6)] = "West Clock Town (Bomb Shop)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 7)] = "West Clock Town (Post Office)";
+    sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 8)] = "West Clock Town (Lottery Shop)";
+    
+    sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 1)] = "North Clock Town (Great Fairy)";
+    sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 2)] = "North Clock Town (from South)";
+    sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 3)] = "North Clock Town (Great Fairy Fountain)";
+    
+    sEntranceNames[ENTRANCE(LAUNDRY_POOL, 0)] = "Laundry Pool (Entrance)";
+    sEntranceNames[ENTRANCE(LAUNDRY_POOL, 1)] = "Laundry Pool (Back Alley)";
+
+    // Additional interior shops/buildings from Central.cpp
+    sEntranceNames[ENTRANCE(SWORDMANS_SCHOOL, 0)] = "Swordsman's School";
+    sEntranceNames[ENTRANCE(TREASURE_CHEST_SHOP, 0)] = "Treasure Chest Shop";
+    sEntranceNames[ENTRANCE(TOWN_SHOOTING_GALLERY, 0)] = "Shooting Gallery";
+    sEntranceNames[ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0)] = "Deku Playground";
+    sEntranceNames[ENTRANCE(TRADING_POST, 0)] = "Trading Post";
+    sEntranceNames[ENTRANCE(POST_OFFICE, 0)] = "Post Office";
+    sEntranceNames[ENTRANCE(MILK_BAR, 0)] = "Milk Bar";
+    sEntranceNames[ENTRANCE(LOTTERY_SHOP, 0)] = "Lottery Shop";
+    sEntranceNames[ENTRANCE(MAYORS_RESIDENCE, 0)] = "Mayor's Residence";
+    sEntranceNames[ENTRANCE(BOMB_SHOP, 0)] = "Bomb Shop";
+    sEntranceNames[ENTRANCE(HONEY_AND_DARLINGS_SHOP, 0)] = "Honey and Darling's Shop";
+    sEntranceNames[ENTRANCE(ASTRAL_OBSERVATORY, 0)] = "Astral Observatory";
+
+    // Termina Field & Roads
+    sEntranceNames[ENTRANCE(TOURIST_INFORMATION, 0)] = "Tourist Information";
+    sEntranceNames[ENTRANCE(SWAMP_SHOOTING_GALLERY, 0)] = "Swamp Shooting Gallery";
+    sEntranceNames[ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0)] = "Magic Hag's Potion Shop";
+
+    // Milk Road
+    sEntranceNames[ENTRANCE(CUCCO_SHACK, 0)] = "Cucco Shack";
+    sEntranceNames[ENTRANCE(DOGGY_RACETRACK, 0)] = "Doggy Racetrack";
+    sEntranceNames[ENTRANCE(RANCH_HOUSE, 0)] = "Ranch House (Main)";
+    sEntranceNames[ENTRANCE(RANCH_HOUSE, 1)] = "Ranch House (Barn)";
+
+    // Great Bay
+    sEntranceNames[ENTRANCE(FISHERMANS_HUT, 0)] = "Fisherman's Hut";
+    sEntranceNames[ENTRANCE(MARINE_RESEARCH_LAB, 0)] = "Marine Research Lab";
+    sEntranceNames[ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0)] = "Oceanside Spider House";
+    sEntranceNames[ENTRANCE(PINNACLE_ROCK, 0)] = "Pinnacle Rock";
+
+    // Mountain Village
+    sEntranceNames[ENTRANCE(GORON_SHOP, 0)] = "Goron Shop";
+
+    // Swamp
+    sEntranceNames[ENTRANCE(SWAMP_SPIDER_HOUSE, 0)] = "Swamp Spider House";
+
+    // Stone Tower
+    sEntranceNames[ENTRANCE(STONE_TOWER, 0)] = "Stone Tower";
+    sEntranceNames[ENTRANCE(STONE_TOWER, 1)] = "Stone Tower (Inverted Entrance)";
+    sEntranceNames[ENTRANCE(STONE_TOWER, 2)] = "Stone Tower (to Temple)";
+
+    // Zora Hall
+    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 0)] = "Zora Hall (Evan's Room)";
+    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 1)] = "Zora Hall (Lulu's Room)";
+    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 2)] = "Zora Hall (Japas' Room)";
+    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 3)] = "Zora Hall (Tijo's Room)";
+    sEntranceNames[ENTRANCE(ZORA_HALL_ROOMS, 5)] = "Zora Hall (Shop)";
+
+    // Ghost Hut entrances (from Ikana Canyon)
+    sEntranceNames[ENTRANCE(GHOST_HUT, 0)] = "Ghost Hut";
+    sEntranceNames[ENTRANCE(GHOST_HUT, 1)] = "Ghost Hut (Alternate)";
+    sEntranceNames[ENTRANCE(GHOST_HUT, 2)] = "Ghost Hut (Another Route)";
+
+    // Ikana
+    sEntranceNames[ENTRANCE(MUSIC_BOX_HOUSE, 0)] = "Music Box House";
 }
 
-// Get the source scene for an entrance (where you are when you use it)
-static SceneId GetSourceSceneForEntrance(s32 entrance) {
-    // Find which region has this entrance as an EXIT (the source region)
-    // This is the region you're IN when you use this entrance
+// Get the source scene for an entrance pair (where you are when you use the exit)
+static SceneId GetSourceSceneForEntrancePair(s32 returnEntrance) {
+    // returnEntrance is the entrance ID that you return to when exiting a destination
+    // We need to find which region has this as a returnEntrance
+    // The returnEntrance field is in the value of the exits map
+    
     for (const auto& [regionId, region] : Rando::Logic::Regions) {
-        for (const auto& [exitId, regionExit] : region.exits) {
-            if (exitId == entrance) {
+        for (const auto& [_, regionExit] : region.exits) {
+            if (regionExit.returnEntrance == returnEntrance) {
+                // Found it! This region has this return entrance
                 return region.sceneId;
             }
         }
     }
-    // Fallback: extract scene from entrance ID (destination scene)
-    return GetSceneFromEntrance(entrance);
+    
+    // Fallback: try to extract scene from the return entrance ID itself
+    return GetSceneFromEntrance(returnEntrance);
 }
 
 // Build entrance data grouped by source area
@@ -302,9 +401,10 @@ static void BuildEntranceData() {
         for (const auto& pair : entrancePairs) {
             s32 original = pair.entrance;
             s32 shuffled = Rando::EntranceShuffle::GetShuffledEntrance(original);
+            s32 exitId = pair.exit;  // This is the exit from the SOURCE region
 
-            // Get source scene for grouping
-            SceneId sourceScene = GetSourceSceneForEntrance(original);
+            // Get source scene using the exit ID from the source region
+            SceneId sourceScene = GetSourceSceneForEntrancePair(exitId);
 
             EntranceConnection conn;
             conn.originalEntrance = original;
@@ -327,11 +427,39 @@ static void BuildEntranceData() {
               [](SceneId a, SceneId b) { return betterSceneIndex[a] < betterSceneIndex[b]; });
 }
 
-// Build region list for route finder dropdowns
+// Build region list for route finder dropdowns - includes shuffled entrance sources and destinations
 static void BuildRegionList() {
     sRegionList.clear();
+    std::set<RandoRegionId> shuffleRegions;
 
-    for (const auto& [regionId, region] : Rando::Logic::Regions) {
+    // Collect all regions involved in entrance shuffling (both sources and destinations)
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
+        Rando::EntranceShuffle::POOL_INTERIOR,
+        Rando::EntranceShuffle::POOL_DUNGEON,
+        Rando::EntranceShuffle::POOL_OVERWORLD
+    };
+
+    for (auto poolType : pools) {
+        auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
+        for (const auto& pair : entrancePairs) {
+            // Include destination region
+            s32 destination = pair.entrance;
+            RandoRegionId destRegion = Rando::Logic::GetRegionIdFromEntrance(destination);
+            if (destRegion != RR_MAX) {
+                shuffleRegions.insert(destRegion);
+            }
+            
+            // Include source region (derived from exit entrance)
+            s32 source = pair.exit;
+            RandoRegionId srcRandoRegion = Rando::Logic::GetRegionIdFromEntrance(source);
+            if (srcRandoRegion != RR_MAX) {
+                shuffleRegions.insert(srcRandoRegion);
+            }
+        }
+    }
+
+    // Build list from all shuffle regions
+    for (RandoRegionId regionId : shuffleRegions) {
         std::string displayName = GetRegionDisplayName(regionId);
         if (!displayName.empty()) {
             sRegionList.push_back({ regionId, displayName });
@@ -390,7 +518,8 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
                 RouteStep step;
                 step.region = to;
                 step.entranceUsed = exitId;
-                step.description = Rando::EntranceTracker::GetEntranceName(actualExit);
+                // Use the source entrance name (what you use from current location), not the destination
+                step.description = Rando::EntranceTracker::GetEntranceName(exitId);
                 result.push_back(step);
                 return result;
             }
@@ -401,7 +530,8 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
                 RouteStep step;
                 step.region = targetRegion;
                 step.entranceUsed = exitId;
-                step.description = Rando::EntranceTracker::GetEntranceName(actualExit);
+                // Use the source entrance name (what you use from current location), not the destination
+                step.description = Rando::EntranceTracker::GetEntranceName(exitId);
                 newPath.push_back(step);
                 queue.push(newPath);
             }
@@ -444,14 +574,8 @@ static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>&
     std::string result;
     std::string fromName = GetRegionDisplayName(from);
 
-    // Track last displayed scene to avoid redundant same-scene entries
-    SceneId lastScene = SCENE_MAX;
-    if (Rando::Logic::Regions.count(from) > 0) {
-        lastScene = Rando::Logic::Regions.at(from).sceneId;
-    }
-
     if (detailed) {
-        // Detailed format
+        // Detailed format - show all steps with entrance names
         if (!fromName.empty()) {
             result = "From " + fromName;
         }
@@ -460,25 +584,18 @@ static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>&
             const auto& step = route[i];
             std::string stepName = GetRegionDisplayName(step.region);
 
-            // Get scene for this step
-            SceneId stepScene = SCENE_MAX;
-            if (Rando::Logic::Regions.count(step.region) > 0) {
-                stepScene = Rando::Logic::Regions.at(step.region).sceneId;
-            }
-
             // Show entrance used if it's a real exit (not a same-scene connection)
             if (step.entranceUsed != -1 && !step.description.empty()) {
                 result += "\n  -> Take '" + step.description + "'";
             }
 
-            // Only show region if it's a different scene or the final destination
-            if (!stepName.empty() && (stepScene != lastScene || i == route.size() - 1)) {
+            // Always show the destination region
+            if (!stepName.empty()) {
                 result += "\n  => " + stepName;
-                lastScene = stepScene;
             }
         }
     } else {
-        // Compact format - skip consecutive same-scene regions
+        // Compact format - prioritize showing entrance names over region names
         if (!fromName.empty()) {
             result = fromName;
         }
@@ -487,16 +604,13 @@ static std::string FormatRoute(RandoRegionId from, const std::vector<RouteStep>&
             const auto& step = route[i];
             std::string stepName = GetRegionDisplayName(step.region);
 
-            // Get scene for this step
-            SceneId stepScene = SCENE_MAX;
-            if (Rando::Logic::Regions.count(step.region) > 0) {
-                stepScene = Rando::Logic::Regions.at(step.region).sceneId;
-            }
-
-            // Only show if different scene or final destination
-            if (!stepName.empty() && (stepScene != lastScene || i == route.size() - 1)) {
+            // Prefer showing entrance names when available
+            if (step.entranceUsed != -1 && !step.description.empty()) {
+                // Show the entrance you take to get there
+                result += " -> " + step.description;
+            } else if (!stepName.empty()) {
+                // Fallback to region name for same-scene connections
                 result += " -> " + stepName;
-                lastScene = stepScene;
             }
         }
     }
@@ -558,26 +672,26 @@ void EntranceTrackerWindow::Draw() {
         return;
     }
 
-    // Search bar
-    if (CVAR_SHOW_SEARCH) {
-        UIWidgets::PushStyleInput();
-        sEntranceTrackerFilter.Draw("##filter", ImGui::GetContentRegionAvail().x - 40.0f);
-        UIWidgets::PopStyleInput();
-
-        ImGui::SameLine();
-        if (!sEntranceTrackerFilter.IsActive()) {
-            ImGui::Text("Search");
-        } else {
-            if (UIWidgets::Button(ICON_FA_TIMES, UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
-                sEntranceTrackerFilter.Clear();
-            }
-        }
-    }
-
     // Tab bar for Entrances and Route Finder
     if (ImGui::BeginTabBar("EntranceTrackerTabs")) {
         if (ImGui::BeginTabItem("Entrances")) {
             ImGui::BeginChild("EntranceList");
+
+            // Search bar for entrances tab
+            if (CVAR_SHOW_SEARCH) {
+                UIWidgets::PushStyleInput();
+                sEntranceTrackerFilter.Draw("##filter", ImGui::GetContentRegionAvail().x - 40.0f);
+                UIWidgets::PopStyleInput();
+
+                ImGui::SameLine();
+                if (!sEntranceTrackerFilter.IsActive()) {
+                    ImGui::Text("Search");
+                } else {
+                    if (UIWidgets::Button(ICON_FA_TIMES, UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+                        sEntranceTrackerFilter.Clear();
+                    }
+                }
+            }
 
             bool spoilerMode = CVAR_SPOILER_MODE;
 
@@ -618,13 +732,7 @@ void EntranceTrackerWindow::Draw() {
 
                     for (const auto* conn : filtered) {
                         std::string line = conn->originalName + " -> " + conn->shuffledName;
-
-                        // Highlight if this entrance was shuffled (different from original)
-                        if (conn->originalEntrance != conn->shuffledEntrance) {
-                            ImGui::TextColored(UIWidgets::ColorValues.at(UIWidgets::Colors::Yellow), "%s", line.c_str());
-                        } else {
-                            ImGui::Text("%s", line.c_str());
-                        }
+                        ImGui::Text("%s", line.c_str());
                     }
 
                     ImGui::Unindent(20.0f);
@@ -646,12 +754,28 @@ void EntranceTrackerWindow::Draw() {
                 BuildRegionList();
             }
 
-            // From dropdown
+            // From section with search
             ImGui::Text("From:");
             ImGui::SameLine();
+            
+            // Calculate available width for combo
+            float availWidth = ImGui::GetContentRegionAvail().x - 100.0f;
+            
             if (ImGui::BeginCombo("##FromRegion", sRouteFromIndex < (int)sRegionList.size()
-                                  ? sRegionList[sRouteFromIndex].second.c_str() : "Select...")) {
+                                  ? sRegionList[sRouteFromIndex].second.c_str() : "Select...", 
+                                  ImGuiComboFlags_HeightLarge)) {
+                
+                // Search filter for From
+                sRouteFromFilter.Draw("##FromSearch", availWidth);
+                ImGui::Separator();
+                
+                int visibleCount = 0;
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
+                    if (!sRouteFromFilter.PassFilter(sRegionList[i].second.c_str())) {
+                        continue;
+                    }
+                    
+                    visibleCount++;
                     ImGui::PushID(i);
                     bool selected = (i == sRouteFromIndex);
                     if (ImGui::Selectable(sRegionList[i].second.c_str(), selected)) {
@@ -662,6 +786,11 @@ void EntranceTrackerWindow::Draw() {
                     }
                     ImGui::PopID();
                 }
+                
+                if (visibleCount == 0) {
+                    ImGui::TextDisabled("No matches");
+                }
+                
                 ImGui::EndCombo();
             }
 
@@ -699,12 +828,25 @@ void EntranceTrackerWindow::Draw() {
             }
             UIWidgets::Tooltip("Use current location");
 
-            // To dropdown
+            // To section with search
             ImGui::Text("To:");
             ImGui::SameLine();
+            
             if (ImGui::BeginCombo("##ToRegion", sRouteToIndex < (int)sRegionList.size()
-                                  ? sRegionList[sRouteToIndex].second.c_str() : "Select...")) {
+                                  ? sRegionList[sRouteToIndex].second.c_str() : "Select...",
+                                  ImGuiComboFlags_HeightLarge)) {
+                
+                // Search filter for To
+                sRouteToFilter.Draw("##ToSearch", availWidth);
+                ImGui::Separator();
+                
+                int visibleCount = 0;
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
+                    if (!sRouteToFilter.PassFilter(sRegionList[i].second.c_str())) {
+                        continue;
+                    }
+                    
+                    visibleCount++;
                     ImGui::PushID(i);
                     bool selected = (i == sRouteToIndex);
                     if (ImGui::Selectable(sRegionList[i].second.c_str(), selected)) {
@@ -715,16 +857,57 @@ void EntranceTrackerWindow::Draw() {
                     }
                     ImGui::PopID();
                 }
+                
+                if (visibleCount == 0) {
+                    ImGui::TextDisabled("No matches");
+                }
+                
                 ImGui::EndCombo();
             }
+
+            // Swap From/To button
+            ImGui::SameLine();
+            if (UIWidgets::Button(ICON_FA_EXCHANGE, UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+                std::swap(sRouteFromIndex, sRouteToIndex);
+            }
+            UIWidgets::Tooltip("Swap From and To locations");
 
             // Find Route button
             if (UIWidgets::Button("Find Route", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green))) {
                 if (sRouteFromIndex < (int)sRegionList.size() && sRouteToIndex < (int)sRegionList.size()) {
                     RandoRegionId from = sRegionList[sRouteFromIndex].first;
                     RandoRegionId to = sRegionList[sRouteToIndex].first;
-                    auto route = FindRoute(from, to);
-                    sRouteResult = FormatRoute(from, route, CVAR_ROUTE_DETAIL);
+                    
+                    // Check if spoilers are off and destination is undiscovered
+                    bool spoilerMode = CVAR_SPOILER_MODE;
+                    bool destinationDiscovered = true;
+                    
+                    if (!spoilerMode && Rando::Logic::Regions.count(to) > 0) {
+                        // Check if any entrance to this region has been discovered
+                        SceneId destScene = Rando::Logic::Regions.at(to).sceneId;
+                        destinationDiscovered = false;
+                        
+                        // Iterate through all regions to find entrances leading to the destination
+                        for (const auto& [regionId, region] : Rando::Logic::Regions) {
+                            for (const auto& [exitId, regionExit] : region.exits) {
+                                if (!regionExit.returnEntrance || regionExit.returnEntrance == ONE_WAY_EXIT) continue;
+                                if (GetSceneFromEntrance(regionExit.returnEntrance) == destScene) {
+                                    if (IsEntranceDiscovered(regionExit.returnEntrance)) {
+                                        destinationDiscovered = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (destinationDiscovered) break;
+                        }
+                    }
+                    
+                    if (!destinationDiscovered) {
+                        sRouteResult = "No route could be found";
+                    } else {
+                        auto route = FindRoute(from, to);
+                        sRouteResult = FormatRoute(from, route, CVAR_ROUTE_DETAIL);
+                    }
                 }
             }
 
