@@ -58,6 +58,7 @@ static bool sEntranceTrackerBtnState = false;
 #define CVAR_NAME_TRACKER_SCALE "gRando.EntranceTracker.Scale"
 #define CVAR_NAME_SPOILER_MODE "gRando.EntranceTracker.SpoilerMode"
 #define CVAR_NAME_SHOW_SEARCH "gRando.EntranceTracker.ShowSearch"
+#define CVAR_NAME_EXTENDED_ROUTING "gRando.EntranceTracker.ExtendedRouting"
 
 #define CVAR_SHOW_ENTRANCE_TRACKER CVarGetInteger(CVAR_NAME_SHOW_ENTRANCE_TRACKER, 0)
 #define CVAR_VISIBILITY_MODE CVarGetInteger(CVAR_NAME_VISIBILITY_MODE, ENTRANCE_TRACKER_VISIBILITY_MODE_ALWAYS)
@@ -66,6 +67,7 @@ static bool sEntranceTrackerBtnState = false;
 #define CVAR_TRACKER_SCALE CVarGetFloat(CVAR_NAME_TRACKER_SCALE, 1.0f)
 #define CVAR_SPOILER_MODE CVarGetInteger(CVAR_NAME_SPOILER_MODE, 1) // Default: show all
 #define CVAR_SHOW_SEARCH CVarGetInteger(CVAR_NAME_SHOW_SEARCH, 1)
+#define CVAR_EXTENDED_ROUTING CVarGetInteger(CVAR_NAME_EXTENDED_ROUTING, 0)
 
 static ImGuiTextFilter sEntranceTrackerFilter;
 static float trackerScale = 1.0f;
@@ -451,13 +453,13 @@ static void BuildEntranceData() {
 
 // Helper: Find which region a shuffled entrance leads to by checking entrance pools
 static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
-    // First try the direct lookup
+    // First try the direct lookup (for entrances)
     RandoRegionId direct = Rando::Logic::GetRegionIdFromEntrance(shuffledEntrance);
     if (direct != RR_MAX) {
         return direct;
     }
     
-    // If direct lookup fails, check all entrance pairs to find which original entrance
+    // If direct lookup fails, check all entrance pairs to find which original entrance/exit
     // this shuffled entrance corresponds to, then look up that region
     std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
         Rando::EntranceShuffle::POOL_INTERIOR,
@@ -468,15 +470,50 @@ static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
         for (const auto& pair : entrancePairs) {
-            // pair.entrance is the original entrance
-            s32 shuffled = Rando::EntranceShuffle::GetShuffledEntrance(pair.entrance);
-            if (shuffled == shuffledEntrance) {
+            // Check if shuffled entrance matches shuffled version of the original entrance
+            s32 shuffledFromEntrance = Rando::EntranceShuffle::GetShuffledEntrance(pair.entrance);
+            if (shuffledFromEntrance == shuffledEntrance) {
                 // Found it! The original entrance is pair.entrance
                 // Now look up that region
                 RandoRegionId region = Rando::Logic::GetRegionIdFromEntrance(pair.entrance);
                 if (region != RR_MAX) {
                     return region;
                 }
+            }
+            
+            // Also check if shuffled entrance matches shuffled version of the original exit
+            s32 shuffledFromExit = Rando::EntranceShuffle::GetShuffledEntrance(pair.exit);
+            if (shuffledFromExit == shuffledEntrance) {
+                // This is trickier - we have a shuffled exit. Find which region has this exit.
+                // The exit points TO a region, so look for the region that has this as an exit
+                for (const auto& [rid, rdata] : Rando::Logic::Regions) {
+                    for (const auto& [exitId, regionExit] : rdata.exits) {
+                        if (Rando::EntranceShuffle::GetShuffledEntrance(exitId) == shuffledEntrance) {
+                            return rid;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Fallback for extended routing: try to find ANY region that has this entrance/exit
+    // This allows us to trace non-shuffled connections when extended routing is enabled
+    if (CVAR_EXTENDED_ROUTING) {
+        // Try looking for a region with this entrance
+        for (const auto& [rid, rdata] : Rando::Logic::Regions) {
+            for (const auto& [exitId, regionExit] : rdata.exits) {
+                if (exitId == shuffledEntrance || Rando::EntranceShuffle::GetShuffledEntrance(exitId) == shuffledEntrance) {
+                    return rid;
+                }
+            }
+        }
+        
+        // As a last resort, try by scene ID
+        SceneId targetScene = GetSceneFromEntrance(shuffledEntrance);
+        for (const auto& [rid, rdata] : Rando::Logic::Regions) {
+            if (rdata.sceneId == targetScene) {
+                return rid;
             }
         }
     }
@@ -535,11 +572,12 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
 
         auto& region = Rando::Logic::Regions[current];
 
-        // Check exits - only traverse exits that are in entrance shuffle pools
+        // Check exits - only traverse exits that are in entrance shuffle pools (unless extended routing is enabled)
         for (const auto& [exitId, regionExit] : region.exits) {
             // Only traverse exits that are part of the entrance shuffle pools
             // This prevents the BFS from exploring internal logic connections
-            if (!IsExitInShufflePool(exitId)) {
+            // Extended routing bypasses this check for more complete (but messier) routes
+            if (!CVAR_EXTENDED_ROUTING && !IsExitInShufflePool(exitId)) {
                 continue;
             }
 
@@ -548,9 +586,25 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
             // Find the region this shuffled entrance leads to
             RandoRegionId targetRegion = FindRegionFromShuffledEntrance(actualExit);
 
-            // If we can't determine where this exit leads, skip it
+            // If we can't determine where this exit leads:
+            // - Normal mode: skip it
+            // - Extended routing: try scene-based lookup as fallback
             if (targetRegion == RR_MAX) {
-                continue;
+                if (CVAR_EXTENDED_ROUTING) {
+                    // Try to find any region in the target scene
+                    SceneId targetScene = GetSceneFromEntrance(actualExit);
+                    for (const auto& [rid, rdata] : Rando::Logic::Regions) {
+                        if (rdata.sceneId == targetScene) {
+                            targetRegion = rid;
+                            break;
+                        }
+                    }
+                }
+                
+                // Still no region found, skip this exit
+                if (targetRegion == RR_MAX) {
+                    continue;
+                }
             }
 
             if (targetRegion == to) {
@@ -578,10 +632,32 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
             }
         }
 
-        // Note: We intentionally do NOT traverse region.connections here.
-        // Connections are same-scene internal transitions used for logic, not actual
-        // entrances the player uses. Including them causes garbage routes through
-        // regions like "Moon Deku Trial" that aren't actual navigation steps.
+        // In extended routing mode, also allow traversing connections (same-scene transitions)
+        // Normal mode skips these to avoid garbage routes through internal regions
+        if (CVAR_EXTENDED_ROUTING) {
+            for (const auto& [connectedRegion, condition] : region.connections) {
+                if (connectedRegion == to) {
+                    result = path;
+                    RouteStep step;
+                    step.region = to;
+                    step.entranceUsed = -1;
+                    step.description = "(internal transition)";
+                    result.push_back(step);
+                    return result;
+                }
+
+                if (visited.find(connectedRegion) == visited.end()) {
+                    visited.insert(connectedRegion);
+                    auto newPath = path;
+                    RouteStep step;
+                    step.region = connectedRegion;
+                    step.entranceUsed = -1;
+                    step.description = "(internal transition)";
+                    newPath.push_back(step);
+                    queue.push(newPath);
+                }
+            }
+        }
     }
 
     return result; // Empty if no route found
@@ -941,6 +1017,13 @@ void EntranceTrackerSettingsWindow::DrawElement() {
         UIWidgets::Tooltip("When disabled, only shows entrances you have discovered by using them.");
 
         UIWidgets::CVarCheckbox("Show Search", CVAR_NAME_SHOW_SEARCH, UIWidgets::CheckboxOptions().DefaultValue(true));
+
+        UIWidgets::CVarCheckbox("Extended Routing (Experimental)", CVAR_NAME_EXTENDED_ROUTING);
+        UIWidgets::Tooltip(
+            "Enables routing through areas not yet in entrance shuffle pools.\n\n"
+            "Routes may include internal logic regions that don't correspond to "
+            "actual in-game locations. You'll need to use your knowledge of the "
+            "vanilla world layout to interpret these steps.");
 
         ImGui::TableNextColumn();
         ImGui::SeparatorText("Window Settings");
