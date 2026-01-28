@@ -108,11 +108,9 @@ static std::set<s32> sPoolExits;
 static void BuildPoolExitSet() {
     sPoolExits.clear();
 
-    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
-        Rando::EntranceShuffle::POOL_INTERIOR,
-        Rando::EntranceShuffle::POOL_DUNGEON,
-        Rando::EntranceShuffle::POOL_OVERWORLD
-    };
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = { Rando::EntranceShuffle::POOL_INTERIOR,
+                                                                    Rando::EntranceShuffle::POOL_DUNGEON,
+                                                                    Rando::EntranceShuffle::POOL_OVERWORLD };
 
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
@@ -182,11 +180,9 @@ static void BuildEntranceIndexMap() {
     sNextEntranceIndex = 0;
 
     // Add all entrances from the pools to ensure consistent indexing
-    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
-        Rando::EntranceShuffle::POOL_INTERIOR,
-        Rando::EntranceShuffle::POOL_DUNGEON,
-        Rando::EntranceShuffle::POOL_OVERWORLD
-    };
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = { Rando::EntranceShuffle::POOL_INTERIOR,
+                                                                    Rando::EntranceShuffle::POOL_DUNGEON,
+                                                                    Rando::EntranceShuffle::POOL_OVERWORLD };
 
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
@@ -227,9 +223,11 @@ bool Rando::EntranceTracker::IsEntranceDiscovered(s32 entranceId) {
 
 // List of generic region names that need scene context
 static const std::set<std::string> sGenericRegionNames = {
-    "Entrance", "Main Room", "Maze Room", "Upper", "Lower", "Back", "Front",
-    "Boss Room", "Passage", "Main Room Upper", "Main Room Lower",
-    "Night 1 Boss", "Night 2 Boss", "Higher", "Before Great Bay Coast"
+    "Entrance",        "Main Room",       "Maze Room",
+    "Upper",           "Lower",           "Back",
+    "Front",           "Boss Room",       "Passage",
+    "Main Room Upper", "Main Room Lower", "Night 1 Boss",
+    "Night 2 Boss",    "Higher",          "Before Great Bay Coast"
 };
 
 // Get a display name for a region, using scene name as fallback or prefix for generic names
@@ -304,7 +302,7 @@ static void BuildEntranceNameMap() {
     sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 9)] = "East Clock Town (Stock Pot Inn)";
     sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 10)] = "East Clock Town (Stock Pot Inn Upstairs)";
     sEntranceNames[ENTRANCE(EAST_CLOCK_TOWN, 11)] = "East Clock Town (Milk Bar)";
-    
+
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 0)] = "South Clock Town (Clock Tower Interior)";
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 2)] = "South Clock Town (from East)";
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 3)] = "South Clock Town (from West)";
@@ -312,7 +310,7 @@ static void BuildEntranceNameMap() {
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 5)] = "South Clock Town (Swordsman)";
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 6)] = "South Clock Town (Laundry)";
     sEntranceNames[ENTRANCE(SOUTH_CLOCK_TOWN, 7)] = "South Clock Town (Chest Shop)";
-    
+
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 0)] = "West Clock Town (to Termina Field)";
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 1)] = "West Clock Town (to South Lower)";
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 2)] = "West Clock Town (to South Upper)";
@@ -322,11 +320,11 @@ static void BuildEntranceNameMap() {
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 6)] = "West Clock Town (Bomb Shop)";
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 7)] = "West Clock Town (Post Office)";
     sEntranceNames[ENTRANCE(WEST_CLOCK_TOWN, 8)] = "West Clock Town (Lottery Shop)";
-    
+
     sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 1)] = "North Clock Town (Great Fairy)";
     sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 2)] = "North Clock Town (from South)";
     sEntranceNames[ENTRANCE(NORTH_CLOCK_TOWN, 3)] = "North Clock Town (Great Fairy Fountain)";
-    
+
     sEntranceNames[ENTRANCE(LAUNDRY_POOL, 0)] = "Laundry Pool (Entrance)";
     sEntranceNames[ENTRANCE(LAUNDRY_POOL, 1)] = "Laundry Pool (Back Alley)";
 
@@ -386,7 +384,7 @@ static SceneId GetSourceSceneForEntrancePair(s32 returnEntrance) {
     // returnEntrance is the entrance ID that you return to when exiting a destination
     // We need to find which region has this as a returnEntrance
     // The returnEntrance field is in the value of the exits map
-    
+
     for (const auto& [regionId, region] : Rando::Logic::Regions) {
         for (const auto& [_, regionExit] : region.exits) {
             if (regionExit.returnEntrance == returnEntrance) {
@@ -395,7 +393,7 @@ static SceneId GetSourceSceneForEntrancePair(s32 returnEntrance) {
             }
         }
     }
-    
+
     // Fallback: try to extract scene from the return entrance ID itself
     return GetSceneFromEntrance(returnEntrance);
 }
@@ -413,11 +411,9 @@ static void BuildEntranceData() {
     }
 
     // Get all entrance pools and process each
-    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
-        Rando::EntranceShuffle::POOL_INTERIOR,
-        Rando::EntranceShuffle::POOL_DUNGEON,
-        Rando::EntranceShuffle::POOL_OVERWORLD
-    };
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = { Rando::EntranceShuffle::POOL_INTERIOR,
+                                                                    Rando::EntranceShuffle::POOL_DUNGEON,
+                                                                    Rando::EntranceShuffle::POOL_OVERWORLD };
 
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
@@ -425,7 +421,7 @@ static void BuildEntranceData() {
         for (const auto& pair : entrancePairs) {
             s32 original = pair.entrance;
             s32 shuffled = Rando::EntranceShuffle::GetShuffledEntrance(original);
-            s32 exitId = pair.exit;  // This is the exit from the SOURCE region
+            s32 exitId = pair.exit; // This is the exit from the SOURCE region
 
             // Get source scene using the exit ID from the source region
             SceneId sourceScene = GetSourceSceneForEntrancePair(exitId);
@@ -458,15 +454,13 @@ static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
     if (direct != RR_MAX) {
         return direct;
     }
-    
+
     // If direct lookup fails, check all entrance pairs to find which original entrance/exit
     // this shuffled entrance corresponds to, then look up that region
-    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = {
-        Rando::EntranceShuffle::POOL_INTERIOR,
-        Rando::EntranceShuffle::POOL_DUNGEON,
-        Rando::EntranceShuffle::POOL_OVERWORLD
-    };
-    
+    std::vector<Rando::EntranceShuffle::EntrancePoolType> pools = { Rando::EntranceShuffle::POOL_INTERIOR,
+                                                                    Rando::EntranceShuffle::POOL_DUNGEON,
+                                                                    Rando::EntranceShuffle::POOL_OVERWORLD };
+
     for (auto poolType : pools) {
         auto entrancePairs = Rando::EntranceShuffle::GetEntrancePool(poolType);
         for (const auto& pair : entrancePairs) {
@@ -480,7 +474,7 @@ static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
                     return region;
                 }
             }
-            
+
             // Also check if shuffled entrance matches shuffled version of the original exit
             s32 shuffledFromExit = Rando::EntranceShuffle::GetShuffledEntrance(pair.exit);
             if (shuffledFromExit == shuffledEntrance) {
@@ -496,19 +490,20 @@ static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
             }
         }
     }
-    
+
     // Fallback for extended routing: try to find ANY region that has this entrance/exit
     // This allows us to trace non-shuffled connections when extended routing is enabled
     if (CVAR_EXTENDED_ROUTING) {
         // Try looking for a region with this entrance
         for (const auto& [rid, rdata] : Rando::Logic::Regions) {
             for (const auto& [exitId, regionExit] : rdata.exits) {
-                if (exitId == shuffledEntrance || Rando::EntranceShuffle::GetShuffledEntrance(exitId) == shuffledEntrance) {
+                if (exitId == shuffledEntrance ||
+                    Rando::EntranceShuffle::GetShuffledEntrance(exitId) == shuffledEntrance) {
                     return rid;
                 }
             }
         }
-        
+
         // As a last resort, try by scene ID
         SceneId targetScene = GetSceneFromEntrance(shuffledEntrance);
         for (const auto& [rid, rdata] : Rando::Logic::Regions) {
@@ -517,7 +512,7 @@ static RandoRegionId FindRegionFromShuffledEntrance(s32 shuffledEntrance) {
             }
         }
     }
-    
+
     return RR_MAX;
 }
 static void BuildRegionList() {
@@ -532,8 +527,7 @@ static void BuildRegionList() {
     }
 
     // Sort alphabetically
-    std::sort(sRegionList.begin(), sRegionList.end(),
-              [](const auto& a, const auto& b) { return a.second < b.second; });
+    std::sort(sRegionList.begin(), sRegionList.end(), [](const auto& a, const auto& b) { return a.second < b.second; });
 }
 
 // Route finding using BFS
@@ -600,7 +594,7 @@ static std::vector<RouteStep> FindRoute(RandoRegionId from, RandoRegionId to) {
                         }
                     }
                 }
-                
+
                 // Still no region found, skip this exit
                 if (targetRegion == RR_MAX) {
                     continue;
@@ -825,24 +819,26 @@ void EntranceTrackerWindow::Draw() {
             // From section with search
             ImGui::Text("From:");
             ImGui::SameLine();
-            
+
             // Calculate available width for combo
             float availWidth = ImGui::GetContentRegionAvail().x - 100.0f;
-            
-            if (ImGui::BeginCombo("##FromRegion", sRouteFromIndex < (int)sRegionList.size()
-                                  ? sRegionList[sRouteFromIndex].second.c_str() : "Select...", 
+
+            if (ImGui::BeginCombo("##FromRegion",
+                                  sRouteFromIndex < (int)sRegionList.size()
+                                      ? sRegionList[sRouteFromIndex].second.c_str()
+                                      : "Select...",
                                   ImGuiComboFlags_HeightLarge)) {
-                
+
                 // Search filter for From
                 sRouteFromFilter.Draw("##FromSearch", availWidth);
                 ImGui::Separator();
-                
+
                 int visibleCount = 0;
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
                     if (!sRouteFromFilter.PassFilter(sRegionList[i].second.c_str())) {
                         continue;
                     }
-                    
+
                     visibleCount++;
                     ImGui::PushID(i);
                     bool selected = (i == sRouteFromIndex);
@@ -854,11 +850,11 @@ void EntranceTrackerWindow::Draw() {
                     }
                     ImGui::PopID();
                 }
-                
+
                 if (visibleCount == 0) {
                     ImGui::TextDisabled("No matches");
                 }
-                
+
                 ImGui::EndCombo();
             }
 
@@ -899,21 +895,22 @@ void EntranceTrackerWindow::Draw() {
             // To section with search
             ImGui::Text("To:");
             ImGui::SameLine();
-            
-            if (ImGui::BeginCombo("##ToRegion", sRouteToIndex < (int)sRegionList.size()
-                                  ? sRegionList[sRouteToIndex].second.c_str() : "Select...",
+
+            if (ImGui::BeginCombo("##ToRegion",
+                                  sRouteToIndex < (int)sRegionList.size() ? sRegionList[sRouteToIndex].second.c_str()
+                                                                          : "Select...",
                                   ImGuiComboFlags_HeightLarge)) {
-                
+
                 // Search filter for To
                 sRouteToFilter.Draw("##ToSearch", availWidth);
                 ImGui::Separator();
-                
+
                 int visibleCount = 0;
                 for (int i = 0; i < (int)sRegionList.size(); i++) {
                     if (!sRouteToFilter.PassFilter(sRegionList[i].second.c_str())) {
                         continue;
                     }
-                    
+
                     visibleCount++;
                     ImGui::PushID(i);
                     bool selected = (i == sRouteToIndex);
@@ -925,11 +922,11 @@ void EntranceTrackerWindow::Draw() {
                     }
                     ImGui::PopID();
                 }
-                
+
                 if (visibleCount == 0) {
                     ImGui::TextDisabled("No matches");
                 }
-                
+
                 ImGui::EndCombo();
             }
 
@@ -945,20 +942,21 @@ void EntranceTrackerWindow::Draw() {
                 if (sRouteFromIndex < (int)sRegionList.size() && sRouteToIndex < (int)sRegionList.size()) {
                     RandoRegionId from = sRegionList[sRouteFromIndex].first;
                     RandoRegionId to = sRegionList[sRouteToIndex].first;
-                    
+
                     // Check if spoilers are off and destination is undiscovered
                     bool spoilerMode = CVAR_SPOILER_MODE;
                     bool destinationDiscovered = true;
-                    
+
                     if (!spoilerMode && Rando::Logic::Regions.count(to) > 0) {
                         // Check if any entrance to this region has been discovered
                         SceneId destScene = Rando::Logic::Regions.at(to).sceneId;
                         destinationDiscovered = false;
-                        
+
                         // Iterate through all regions to find entrances leading to the destination
                         for (const auto& [regionId, region] : Rando::Logic::Regions) {
                             for (const auto& [exitId, regionExit] : region.exits) {
-                                if (regionExit.returnEntrance == ONE_WAY_EXIT) continue;
+                                if (regionExit.returnEntrance == ONE_WAY_EXIT)
+                                    continue;
                                 if (GetSceneFromEntrance(regionExit.returnEntrance) == destScene) {
                                     if (IsEntranceDiscovered(regionExit.returnEntrance)) {
                                         destinationDiscovered = true;
@@ -966,10 +964,11 @@ void EntranceTrackerWindow::Draw() {
                                     }
                                 }
                             }
-                            if (destinationDiscovered) break;
+                            if (destinationDiscovered)
+                                break;
                         }
                     }
-                    
+
                     if (!destinationDiscovered) {
                         sRouteResult = "No route could be found";
                     } else {
@@ -1019,11 +1018,10 @@ void EntranceTrackerSettingsWindow::DrawElement() {
         UIWidgets::CVarCheckbox("Show Search", CVAR_NAME_SHOW_SEARCH, UIWidgets::CheckboxOptions().DefaultValue(true));
 
         UIWidgets::CVarCheckbox("Extended Routing (Experimental)", CVAR_NAME_EXTENDED_ROUTING);
-        UIWidgets::Tooltip(
-            "Enables routing through areas not yet in entrance shuffle pools.\n\n"
-            "Routes may include internal logic regions that don't correspond to "
-            "actual in-game locations. You'll need to use your knowledge of the "
-            "vanilla world layout to interpret these steps.");
+        UIWidgets::Tooltip("Enables routing through areas not yet in entrance shuffle pools.\n\n"
+                           "Routes may include internal logic regions that don't correspond to "
+                           "actual in-game locations. You'll need to use your knowledge of the "
+                           "vanilla world layout to interpret these steps.");
 
         ImGui::TableNextColumn();
         ImGui::SeparatorText("Window Settings");
