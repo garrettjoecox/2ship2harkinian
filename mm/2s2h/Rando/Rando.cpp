@@ -5,6 +5,7 @@
 #include "Rando/MiscBehavior/ClockShuffle.h"
 #include "Rando/Spoiler/Spoiler.h"
 #include "Rando/CheckTracker/CheckTracker.h"
+#include "Rando/EntranceTracker/EntranceTracker.h"
 #include "2s2h/ShipInit.hpp"
 #include <ship/window/FileDropMgr.h>
 #include <ship/Context.h>
@@ -14,6 +15,7 @@ void OnSaveLoadHandler(s16 fileNum) {
     Rando::MiscBehavior::OnFileLoad();
     Rando::ActorBehavior::OnFileLoad();
     Rando::CheckTracker::OnFileLoad();
+    Rando::EntranceTracker::OnFileLoad();
     Rando::ClockShuffle::OnFileLoad();
 
     // Re-initalizes enhancements that are effected by the save being rando or not
@@ -26,6 +28,7 @@ void Rando::Init() {
     Rando::MiscBehavior::Init();
     Rando::ActorBehavior::Init();
     Rando::CheckTracker::Init();
+    Rando::EntranceTracker::Init();
     Ship::Context::GetInstance()->GetFileDropMgr()->RegisterDropHandler(Rando::Spoiler::HandleFileDropped);
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveLoad>(OnSaveLoadHandler);

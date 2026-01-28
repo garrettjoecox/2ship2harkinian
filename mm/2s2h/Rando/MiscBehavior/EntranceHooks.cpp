@@ -1,6 +1,7 @@
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
 #include "2s2h/Rando/Logic/EntranceShuffle.h"
+#include "2s2h/Rando/EntranceTracker/EntranceTracker.h"
 
 extern "C" {
 #include "functions.h"
@@ -21,6 +22,9 @@ void OnPlayDestroy() {
     // Get the shuffled destination entrance
     s32 originalEntrance = gSaveContext.save.entrance;
     s32 shuffledEntrance = GetShuffledEntrance(originalEntrance);
+
+    // Record discovered entrance for the tracker
+    EntranceTracker::SetEntranceDiscovered(shuffledEntrance);
 
     if (shuffledEntrance != originalEntrance) {
         gSaveContext.save.entrance = shuffledEntrance;

@@ -159,7 +159,8 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MILK_ROAD, (RANDO_EVENTS[RE_COWS_FROM_ALIENS] && IS_NIGHT2()) || FINAL_DAY()),
         },
     };
-    Regions[RR_RANCH_BARN] = RandoRegion{ .sceneId = SCENE_OMOYA,
+    Regions[RR_RANCH_BARN] = RandoRegion{ .name = "Mama's House (Barn)",
+        .sceneId = SCENE_OMOYA,
         .checks = {
             CHECK(RC_ROMANI_RANCH_BARN_COW_LEFT, CAN_PLAY_SONG(EPONA) && (BETWEEN(TIME_NIGHT1_PM_06_00, TIME_NIGHT1_AM_02_30) || RANDO_EVENTS[RE_COWS_FROM_ALIENS])),
             CHECK(RC_ROMANI_RANCH_BARN_COW_MIDDLE, CAN_PLAY_SONG(EPONA) && (BETWEEN(TIME_NIGHT1_PM_06_00, TIME_NIGHT1_AM_02_30) || RANDO_EVENTS[RE_COWS_FROM_ALIENS])),
@@ -173,7 +174,8 @@ static RegisterShipInitFunc initFunc([]() {
             STAY(TIME_NIGHT3_PM_08_00, false),
         },
     };
-    Regions[RR_RANCH_HOUSE] = RandoRegion{ .sceneId = SCENE_OMOYA,
+    Regions[RR_RANCH_HOUSE] = RandoRegion{ .name = "Mama's House (Main)",
+        .sceneId = SCENE_OMOYA,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROMANI_RANCH, 3),                 ENTRANCE(RANCH_HOUSE, 1), true),
         },

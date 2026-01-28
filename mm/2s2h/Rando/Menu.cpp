@@ -2,6 +2,7 @@
 #include "Rando/Spoiler/Spoiler.h"
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "Rando/CheckTracker/CheckTracker.h"
+#include "Rando/EntranceTracker/EntranceTracker.h"
 #include "Rando/MiscBehavior/ClockShuffle.h"
 #include "build.h"
 #include "2s2h/BenGui/BenMenu.h"
@@ -70,6 +71,8 @@ bool isExcludedInitialized = false;
 namespace BenGui {
 extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 extern std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
+extern std::shared_ptr<Rando::EntranceTracker::EntranceTrackerWindow> mEntranceTrackerWindow;
+extern std::shared_ptr<Rando::EntranceTracker::EntranceTrackerSettingsWindow> mEntranceTrackerSettingsWindow;
 extern std::shared_ptr<BenMenu> mBenMenu;
 } // namespace BenGui
 
@@ -1090,6 +1093,12 @@ void Rando::RegisterMenu() {
     mBenMenu->AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
         .CVar("gWindows.CheckTrackerSettings")
         .WindowName("Check Tracker Settings");
+
+    mBenMenu->AddSidebarEntry("Rando", "Entrance Tracker", 1);
+    path.sidebarName = "Entrance Tracker";
+    mBenMenu->AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.EntranceTrackerSettings")
+        .WindowName("Entrance Tracker Settings");
 }
 
 static RegisterMenuInitFunc initFunc(Rando::RegisterMenu);
