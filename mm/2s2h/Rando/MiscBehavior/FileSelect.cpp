@@ -526,11 +526,13 @@ void RegisterShoulds() {
     // Also handles empty slots when Archi is enabled
     REGISTER_VB_SHOULD(VB_FILE_SELECT_CONFIRM_FILE, {
         int fileIndex = va_arg(args, int);
-        bool isArchiFile = isArchi[fileIndex];
         bool archiEnabled = CVarGetInteger("gArchipelago.Enabled", 0);
 
-        // Check if this is an empty slot (no existing save)
-        bool isEmptySlot = !isArchiFile && !isRando[fileIndex];
+        // Use SLOT_OCCUPIED as the authoritative check for whether a file actually exists.
+        // isArchi[]/isRando[] can be stale after a file is deleted (they are only updated
+        // when a save is loaded, not when it is erased).
+        bool isEmptySlot = !SLOT_OCCUPIED(gFileSelectState, fileIndex);
+        bool isArchiFile = !isEmptySlot && isArchi[fileIndex];
 
         // If Archi is enabled and clicking on empty slot, treat it as Archi file creation
         if (archiEnabled && isEmptySlot) {

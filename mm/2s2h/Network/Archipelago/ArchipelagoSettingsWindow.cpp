@@ -26,8 +26,14 @@ void ArchipelagoSettingsWindow::DrawElement() {
 
     ImGui::SeparatorText("Connection info");
 
+    // Connect / Disconnect button + status (match SoH placement)
+    const bool connected = Archipelago::IsConnected();
+    const bool connecting = Archipelago::IsConnecting();
+
     UIWidgets::PushStyleCombobox(THEME_COLOR);
     ImGui::PushStyleColor(ImGuiCol_Border, UIWidgets::ColorValues.at(THEME_COLOR));
+
+    ImGui::BeginDisabled(connected || connecting);
 
     ImGui::Text("Server Address");
     UIWidgets::CVarInputString("##ArchipelagoServerAddress", "gArchipelago.ServerAddress",
@@ -64,15 +70,15 @@ void ArchipelagoSettingsWindow::DrawElement() {
         UIWidgets::PopStyleInput();
     }
 
+    ImGui::EndDisabled();
+
     ImGui::PopStyleColor();
     UIWidgets::PopStyleCombobox();
 
-    // Connect / Disconnect button + status (match SoH placement)
-    const bool connected = Archipelago::IsConnected();
-    const bool connecting = Archipelago::IsConnecting();
-
     if (!connected) {
         if (UIWidgets::Button("Connect", UIWidgets::ButtonOptions().Color(THEME_COLOR).Size(ImVec2(0.0f, 0.0f)))) {
+            CVarSetInteger("gArchipelago.Enabled", 1);
+            CVarSave();
             Archipelago::ConnectFromCvars();
         }
     } else {
