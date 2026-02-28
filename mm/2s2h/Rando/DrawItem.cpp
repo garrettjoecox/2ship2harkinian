@@ -401,7 +401,8 @@ void DrawArchipelagoItem(RandoItemId randoItemId, RandoCheckId randoCheckId, Act
         // If item name matches a local game item, also draw it (smaller and offset)
         RandoItemId localItemId = ArchipelagoBridge::GetLocalItemFromArchipelagoCheck(randoCheckId);
         if (localItemId != RI_NONE && localItemId != RI_UNKNOWN && localItemId != RI_ARCHIPELAGO_JUNK &&
-            localItemId != RI_ARCHIPELAGO_PROGRESSIVE && localItemId != RI_ARCHIPELAGO_USEFUL && localItemId != RI_TRAP) {
+            localItemId != RI_ARCHIPELAGO_PROGRESSIVE && localItemId != RI_ARCHIPELAGO_USEFUL &&
+            localItemId != RI_TRAP) {
             Matrix_Push();
             Matrix_Scale(0.4f, 0.4f, 0.4f, MTXMODE_APPLY);
 

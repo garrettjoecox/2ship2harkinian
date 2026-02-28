@@ -126,13 +126,13 @@ void Rando::MiscBehavior::CheckQueue() {
 
                         // For AP placeholder items (another player's item at this location),
                         // color the item name green and the player name yellow in textboxes.
-                        bool isArchiPlaceholder = (randoItemId == RI_ARCHIPELAGO_PROGRESSIVE ||
-                                                   randoItemId == RI_ARCHIPELAGO_USEFUL ||
-                                                   randoItemId == RI_ARCHIPELAGO_JUNK);
+                        bool isArchiPlaceholder =
+                            (randoItemId == RI_ARCHIPELAGO_PROGRESSIVE || randoItemId == RI_ARCHIPELAGO_USEFUL ||
+                             randoItemId == RI_ARCHIPELAGO_JUNK);
                         if (isArchiPlaceholder) {
                             std::string apPlayerName, apItemName;
-                            ArchipelagoBridge::GetArchipelagoItemComponents(
-                                (RandoCheckId)CUSTOM_ITEM_PARAM, apPlayerName, apItemName);
+                            ArchipelagoBridge::GetArchipelagoItemComponents((RandoCheckId)CUSTOM_ITEM_PARAM,
+                                                                            apPlayerName, apItemName);
                             if (!apPlayerName.empty()) {
                                 message = "%g" + apItemName + "%w for %y" + apPlayerName + "%w";
                             } else {
