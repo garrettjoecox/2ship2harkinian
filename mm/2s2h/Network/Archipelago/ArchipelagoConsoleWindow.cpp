@@ -258,7 +258,6 @@ void ArchipelagoStatusWindow::Draw() {
             break;
     }
 
-    // Get user-configured position and scale
     auto vp = ImGui::GetMainViewport();
     float posX = CVarGetFloat("gArchipelago.StatusIndicator.PosX", 15.0f);
     float posYFromBottom = CVarGetFloat("gArchipelago.StatusIndicator.PosY", 45.0f);
@@ -273,16 +272,31 @@ void ArchipelagoStatusWindow::Draw() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
 
-    // Position: posX from left, posYFromBottom from the bottom edge
-    ImVec2 windowPos = ImVec2(vp->Pos.x + posX, vp->Pos.y + vp->Size.y - posYFromBottom);
-    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+    ImVec2 defaultPos = ImVec2(vp->Pos.x + posX, vp->Pos.y + vp->Size.y - posYFromBottom);
     ImGui::SetNextWindowViewport(vp->ID);
+
+    // On reset, snap back to the saved default; otherwise let ImGui track the dragged position.
+    if (CVarGetInteger("gArchipelago.StatusIndicator.NeedsReset", 0)) {
+        ImGui::SetNextWindowPos(defaultPos, ImGuiCond_Always);
+        CVarSetInteger("gArchipelago.StatusIndicator.NeedsReset", 0);
+    } else {
+        ImGui::SetNextWindowPos(defaultPos, ImGuiCond_FirstUseEver);
+    }
 
     ImGui::Begin("ArchipelagoStatus", nullptr,
                  ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing |
                      ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-                     ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoScrollbar);
+                     ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
+
+    // Persist dragged position back to CVars
+    ImVec2 curPos = ImGui::GetWindowPos();
+    float newPosX = curPos.x - vp->Pos.x;
+    float newPosYFromBottom = (vp->Pos.y + vp->Size.y) - curPos.y;
+    if (fabsf(newPosX - posX) > 0.5f || fabsf(newPosYFromBottom - posYFromBottom) > 0.5f) {
+        CVarSetFloat("gArchipelago.StatusIndicator.PosX", newPosX);
+        CVarSetFloat("gArchipelago.StatusIndicator.PosY", newPosYFromBottom);
+        CVarSave();
+    }
 
     // Draw Archipelago icon
     auto texture = Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(gArchipelagoUsefulIconTex);

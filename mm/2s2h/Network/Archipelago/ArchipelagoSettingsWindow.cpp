@@ -124,61 +124,30 @@ void ArchipelagoSettingsWindow::DrawElement() {
 
     ImGui::SeparatorText("Status Indicator");
 
+    if (UIWidgets::Button("Default", UIWidgets::ButtonOptions().Color(THEME_COLOR).Size(ImVec2(0.0f, 0.0f)))) {
+        CVarSetFloat("gArchipelago.StatusIndicator.PosX", 15.0f);
+        CVarSetFloat("gArchipelago.StatusIndicator.PosY", 45.0f);
+        CVarSetFloat("gArchipelago.StatusIndicator.Scale", 1.0f);
+        CVarSetInteger("gArchipelago.StatusIndicator.Hidden", 0);
+        CVarSetInteger("gArchipelago.StatusIndicator.NeedsReset", 1);
+        CVarSave();
+    }
+    ImGui::SameLine();
+
     UIWidgets::CVarCheckbox("Hidden", "gArchipelago.StatusIndicator.Hidden",
                             UIWidgets::CheckboxOptions()
                                 .Color(THEME_COLOR)
                                 .Tooltip("Hides the Archipelago connection status indicator overlay."));
-    ImGui::SameLine();
 
-    UIWidgets::CVarCheckbox(
-        "Advanced", "gArchipelago.StatusIndicator.Advanced",
-        UIWidgets::CheckboxOptions()
-            .Color(THEME_COLOR)
-            .Tooltip(
-                "Shows advanced options for the Archipelago connection status indicator overlay placement and size."));
-
-    const bool advanced = CVarGetInteger("gArchipelago.StatusIndicator.Advanced", 0) != 0;
-
-    if (advanced) {
-        UIWidgets::CVarSliderFloat("Position X", "gArchipelago.StatusIndicator.PosX",
-                                   UIWidgets::FloatSliderOptions()
-                                       .Color(THEME_COLOR)
-                                       .Min(0.0f)
-                                       .Max(1920.0f)
-                                       .DefaultValue(15.0f)
-                                       .Format("%.0f px")
-                                       .ShowResetButton(false)
-                                       .Tooltip("Horizontal distance from the left edge of the screen."));
-
-        UIWidgets::CVarSliderFloat("Position Y (from bottom)", "gArchipelago.StatusIndicator.PosY",
-                                   UIWidgets::FloatSliderOptions()
-                                       .Color(THEME_COLOR)
-                                       .Min(0.0f)
-                                       .Max(1080.0f)
-                                       .DefaultValue(45.0f)
-                                       .Format("%.0f px")
-                                       .ShowResetButton(false)
-                                       .Tooltip("Distance from the bottom edge of the screen."));
-
-        UIWidgets::CVarSliderFloat("Scale", "gArchipelago.StatusIndicator.Scale",
-                                   UIWidgets::FloatSliderOptions()
-                                       .Color(THEME_COLOR)
-                                       .Min(0.25f)
-                                       .Max(4.0f)
-                                       .DefaultValue(1.0f)
-                                       .Format("%.2fx")
-                                       .ShowResetButton(false)
-                                       .Tooltip("Size multiplier for the status indicator icon and text."));
-
-        if (UIWidgets::Button("Reset to Default",
-                              UIWidgets::ButtonOptions().Color(THEME_COLOR).Size(ImVec2(0.0f, 0.0f)))) {
-            CVarSetFloat("gArchipelago.StatusIndicator.PosX", 15.0f);
-            CVarSetFloat("gArchipelago.StatusIndicator.PosY", 45.0f);
-            CVarSetFloat("gArchipelago.StatusIndicator.Scale", 1.0f);
-            CVarSetInteger("gArchipelago.StatusIndicator.Hidden", 0);
-            CVarSave();
-        }
-    }
+    UIWidgets::CVarSliderFloat("Scale", "gArchipelago.StatusIndicator.Scale",
+                               UIWidgets::FloatSliderOptions()
+                                   .Color(THEME_COLOR)
+                                   .Min(0.25f)
+                                   .Max(4.0f)
+                                   .DefaultValue(1.0f)
+                                   .Format("Scale: %.2fx")
+                                   .LabelPosition(UIWidgets::LabelPosition::None)
+                                   .Tooltip("Size multiplier for the status indicator icon and text."));
 }
 
 void ArchipelagoSettingsWindow::InitElement() {
