@@ -50,6 +50,10 @@ void ApplySlotOptions(const nlohmann::json& slotData);
 // Returns empty string if not an Archipelago item
 std::string GetArchipelagoItemText(RandoCheckId checkId);
 
+// Get the player name and item name separately for an Archipelago check.
+// playerName is empty if the item belongs to the local player.
+void GetArchipelagoItemComponents(RandoCheckId checkId, std::string& playerName, std::string& itemName);
+
 // Get the underlying RandoItemId for an Archipelago item if its name matches a local game item
 // Returns RI_NONE if the item name doesn't match any local items
 RandoItemId GetLocalItemFromArchipelagoCheck(RandoCheckId checkId);

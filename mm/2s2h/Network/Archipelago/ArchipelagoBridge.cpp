@@ -14,6 +14,7 @@
 #include "Rando/Rando.h"
 #include "Rando/StaticData/StaticData.h"
 #include "Rando/Types.h"
+#include "Rando/MiscBehavior/Traps.h"
 #include "2s2h/BenGui/Notification.h"
 #include "CustomMessage/CustomMessage.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
@@ -695,10 +696,9 @@ static void ApplyOneItem(const PendingItem& item) {
                 const APItemMetadata& meta = it->second;
                 RandoItemId randoItemId = meta.randoItemId;
 
-                // Convert the item before displaying/giving (e.g., bombs -> junk if no bomb bag, duplicate masks ->
-                // junk). Only convert actual MM items, not Archipelago placeholder items from other games.
+                // Convert the item for giving purposes (e.g., progressive upgrades, bombs -> junk if no bag).
+                // Only convert actual MM items, not Archipelago placeholder items from other games.
                 RandoItemId convertedItemId = randoItemId;
-                bool wasConverted = false;
                 if (randoItemId != RI_ARCHIPELAGO_PROGRESSIVE && randoItemId != RI_ARCHIPELAGO_USEFUL &&
                     randoItemId != RI_ARCHIPELAGO_JUNK) {
 
@@ -708,30 +708,35 @@ static void ApplyOneItem(const PendingItem& item) {
                     if (convertedItemId == RI_JUNK) {
                         convertedItemId = Rando::CurrentJunkItem(RC_UNKNOWN);
                     }
-
-                    // Track if the item was converted to something different
-                    wasConverted = (convertedItemId != randoItemId);
                 }
 
                 // Build message pieces:
                 // - formattedMessage is for CustomMessage textboxes (supports %g/%w)
                 // - plainMessage is for Notification::Emit (does NOT support %g/%w)
-                // If the item was converted (e.g., to junk), use the converted item's name
-                std::string prefix = wasConverted ? "You found" : "You received";
-                std::string displayItemName = wasConverted
-                                                  ? Rando::StaticData::GetItemName(convertedItemId, false, RC_UNKNOWN)
-                                                  : meta.displayItemName;
+                // Always use the AP display name (e.g. "Progressive Bomb Bag") regardless of
+                // how the item was locally converted, since this item came from the AP server.
+                std::string prefix = "You received";
+                std::string displayItemName = meta.displayItemName;
+
+                bool isTrap = (convertedItemId == RI_TRAP);
+                if (isTrap) {
+                    prefix = "";
+                    displayItemName = GetTrapMessage();
+                    if (CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) >= 2) {
+                        displayItemName = CustomMessage::RemoveColorCodes(displayItemName);
+                    }
+                }
 
                 std::string plainMessage;
-                if (meta.fromOtherPlayer && !wasConverted) {
+                if (meta.fromOtherPlayer && !isTrap) {
                     plainMessage = displayItemName + " from " + meta.playerName;
                 } else {
                     plainMessage = displayItemName;
                 }
 
                 std::string formattedMessage;
-                if (meta.fromOtherPlayer && !wasConverted) {
-                    formattedMessage = "%g" + displayItemName + "%w from " + meta.playerName;
+                if (meta.fromOtherPlayer && !isTrap) {
+                    formattedMessage = "%g" + displayItemName + "%w from %y" + meta.playerName + "%w";
                 } else {
                     formattedMessage = "%g" + displayItemName + "%w";
                 }
@@ -739,7 +744,7 @@ static void ApplyOneItem(const PendingItem& item) {
                 CustomMessage::Entry entry = {
                     .textboxType = 2,
                     .icon = Rando::StaticData::GetIconForZMessage(convertedItemId),
-                    .msg = prefix + " " + formattedMessage + "!",
+                    .msg = (prefix.empty() ? "" : prefix + " ") + formattedMessage + (isTrap ? "" : "!"),
                 };
 
                 // Show message based on cutscene settings
@@ -959,6 +964,17 @@ std::string GetArchipelagoItemText(RandoCheckId checkId) {
         return playerName + "'s " + itemName;
     }
     return "";
+}
+
+void GetArchipelagoItemComponents(RandoCheckId checkId, std::string& playerName, std::string& itemName) {
+    auto it = sArchipelagoItemText.find(checkId);
+    if (it != sArchipelagoItemText.end()) {
+        playerName = it->second.first;
+        itemName = it->second.second;
+    } else {
+        playerName = "";
+        itemName = "";
+    }
 }
 
 RandoItemId GetLocalItemFromArchipelagoCheck(RandoCheckId checkId) {
