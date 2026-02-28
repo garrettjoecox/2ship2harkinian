@@ -129,6 +129,22 @@ static std::string GetCertPath() {
         return p2.string();
     }
 
+    // On Linux, fall back to common system CA bundle locations
+#if defined(__linux__)
+    static const char* sLinuxCaPaths[] = {
+        "/etc/ssl/certs/ca-certificates.crt", // Debian/Ubuntu
+        "/etc/pki/tls/certs/ca-bundle.crt",   // Fedora/RHEL
+        "/etc/ssl/ca-bundle.pem",             // OpenSUSE
+        "/etc/pki/tls/cacert.pem",            // older RHEL
+        nullptr
+    };
+    for (int i = 0; sLinuxCaPaths[i] != nullptr; i++) {
+        if (std::filesystem::exists(sLinuxCaPaths[i])) {
+            return sLinuxCaPaths[i];
+        }
+    }
+#endif
+
     // Fall back to the original (so logs still show what we'd try)
     return p1.string();
 }
