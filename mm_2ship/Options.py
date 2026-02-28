@@ -82,7 +82,6 @@ class ClockShuffleProgressive(Choice):
     option_randomized = 0
     option_ascending = 1
     option_descending = 2
-    option_progressive = 3
     default = 0  # RO_CLOCK_SHUFFLE_RANDOM
 
 
@@ -94,7 +93,7 @@ class ClockShuffle(Toggle):
 class ClockTerminalTime(Range):
     display_name = "Clock Terminal Time"
     range_start = 0
-    range_end = 2359
+    range_end = 359
     default = 0
 
 

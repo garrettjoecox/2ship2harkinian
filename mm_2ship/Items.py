@@ -84,7 +84,7 @@ item_data_table: dict[Items, MM2ShipItemData] = {
     Items.HEART_CONTAINER: MM2ShipItemData(2404, IC.useful, 1),
     Items.HEART_PIECE: MM2ShipItemData(2405, IC.useful, 1),
     Items.HOOKSHOT: MM2ShipItemData(2406, IC.progression, 1),
-   # Items.JUNK: MM2ShipItemData(2407, IC.filler, 1),
+    Items.JUNK: MM2ShipItemData(2407, IC.filler, 1),
     Items.LENS: MM2ShipItemData(2408, IC.progression, 1),
     Items.LETTER_TO_KAFEI: MM2ShipItemData(2409, IC.progression, 1),
     Items.LETTER_TO_MAMA: MM2ShipItemData(2410, IC.progression, 1),

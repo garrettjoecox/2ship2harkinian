@@ -18,6 +18,7 @@ def create_item_pool(world: "MM2ShipWorld") -> None:
     from .Items import Items
     from .Enums import Locations
     from .VanillaItems import vanilla_items
+    from .LocationData import LOCATION_RCTYPE
     from collections import Counter
 
     # Define map and compass items (excluded from pool if starting_maps_and_compasses is ON)
@@ -64,6 +65,11 @@ def create_item_pool(world: "MM2ShipWorld") -> None:
 
             # Skip Ocarina if not shuffled (you start with it instead)
             if not world.options.shuffle_ocarina.value and vanilla_item == Items.OCARINA:
+                continue
+
+            # Skip boss remains if not shuffled — those locations are pre-filled
+            # with locked items and must not also appear in the random pool.
+            if not world.options.shuffle_boss_remains.value and LOCATION_RCTYPE.get(loc_enum.name) == "RCTYPE_REMAINS":
                 continue
 
             world.multiworld.itempool.append(world.create_item(vanilla_item.value))
@@ -114,24 +120,16 @@ def create_item_pool(world: "MM2ShipWorld") -> None:
 
     # Add clock shuffle items if shuffled
     if world.options.clock_shuffle.value:
-        if world.options.clock_shuffle_progressive.value == 3:  # Progressive
-            for _ in range(6):  # 6 progressive time items
-                world.multiworld.itempool.append(world.create_item("Progressive Time"))
-        else:  # Random/Ascending/Descending
-            time_items = [
-                "Time (Day 1)", "Time (Night 1)", "Time (Day 2)",
-                "Time (Night 2)", "Time (Day 3)", "Time (Night 3)",
-            ]
-            for time_item in time_items:
-                world.multiworld.itempool.append(world.create_item(time_item))
+        time_items = [
+            "Time (Day 1)", "Time (Night 1)", "Time (Day 2)",
+            "Time (Night 2)", "Time (Day 3)", "Time (Night 3)",
+        ]
+        for time_item in time_items:
+            world.multiworld.itempool.append(world.create_item(time_item))
 
     # Add swim ability if shuffled
     if world.options.shuffle_swim.value:
         world.multiworld.itempool.append(world.create_item("Ability to Swim"))
-
-    # Add ocarina if shuffled
-    if world.options.shuffle_ocarina.value:
-        world.multiworld.itempool.append(world.create_item("Ocarina of Time"))
 
     # Add ocarina buttons if shuffled
     if world.options.shuffle_ocarina_buttons.value:
@@ -226,6 +224,10 @@ def create_plentiful_and_trap_items(world: "MM2ShipWorld") -> None:
                 continue
             if item.name == "Stone Tower Stray Fairy":
                 continue
+            if item.name == "Heart Container":
+                continue
+            if item.name == "Heart Piece":
+                continue
 
             # Add based on classification
             if item.classification in (IC.progression, IC.useful):
@@ -259,25 +261,6 @@ def get_filler_item(world: "MM2ShipWorld") -> str:
     Choose a filler item name. Prefers rupees and consumables.
     """
     filler_options = [
-        "Green Rupee",
-        "Blue Rupee",
-        "Red Rupee",
-        "Purple Rupee",
-        "Silver Rupee",
-        "Huge Rupee",
-        "10 Arrows",
-        "30 Arrows",
-        "5 Bombs",
-        "10 Bombs",
-        "5 Bombchus",
-        "10 Bombchus",
-        "5 Deku Nuts",
-        "10 Deku Nuts",
-        "5 Deku Sticks",
-        "Deku Stick",
-        "Recovery Heart",
-        "Small Magic Refill",
-        "Large Magic Refill",
-        "literally nothing",
+        "Junk",
     ]
     return world.random.choice(filler_options)

@@ -36,7 +36,7 @@ _RCTYPE_OPTION: dict[str, str] = {
     "RCTYPE_GRASS":       "shuffle_grass_drops",
     "RCTYPE_OWL":         "shuffle_owl_statues",
     "RCTYPE_POT":         "shuffle_pot_drops",
-    "RCTYPE_REMAINS":     "shuffle_boss_remains",
+    # "RCTYPE_REMAINS":     "shuffle_boss_remains", 
     "RCTYPE_SHOP":        "shuffle_shops",
     "RCTYPE_SKULL_TOKEN": "shuffle_gold_skulltulas",
     "RCTYPE_SNOWBALL":    "shuffle_snowball_drops",
@@ -110,6 +110,7 @@ def create_regions_and_locations(world: "MM2ShipWorld") -> None:
     # starting_maps_and_compasses is ON — items are removed from the pool,
     # not the locations.
     from .Locations import location_data_table
+    from .VanillaItems import vanilla_items
     for loc in Locations:
         if not location_should_be_included(world, loc):
             continue
@@ -123,6 +124,13 @@ def create_regions_and_locations(world: "MM2ShipWorld") -> None:
         # Place Victory event item at Victory location
         if loc == Locations.VICTORY:
             loc_obj.place_locked_item(world.create_item("Victory", create_as_event=True))
+
+        # Boss warp locations are always created. When not shuffled, pre-fill
+        # with the vanilla item so the player receives it from the server on check.
+        elif LOCATION_RCTYPE.get(loc.name) == "RCTYPE_REMAINS" and not world.options.shuffle_boss_remains.value:
+            vanilla_item = vanilla_items.get(loc)
+            if vanilla_item is not None:
+                loc_obj.place_locked_item(world.create_item(vanilla_item.value))
 
     if not hasattr(world, "included_locations") or world.included_locations is None:
         world.included_locations = {}
