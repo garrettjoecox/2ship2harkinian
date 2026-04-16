@@ -1456,6 +1456,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Fierce Deity's Mask Anywhere", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.FierceDeitysAnywhere")
         .Options(CheckboxOptions().Tooltip("Allow using Fierce Deity's mask outside of boss rooms."));
+    AddWidget(path, "Giant's Mask Anywhere", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.GiantsMaskAnywhere")
+        .Options(CheckboxOptions().Tooltip("Allow using Giant's Mask outside of Twinmold's Lair."));
     AddWidget(path, "Persistent Bunny Hood", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.PersistentBunnyHood.Enabled")
         .Options(CheckboxOptions().Tooltip(
@@ -1467,6 +1470,7 @@ void BenMenu::AddEnhancements() {
                      .Min(0.0f)
                      .Max(15.5f)
                      .Format("%.1f seconds")
+                     .Step(0.1f)
                      .DefaultValue(15.5f));
     AddWidget(path, "Goron Rolling Ignores Magic", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.GoronRollingIgnoresMagic")

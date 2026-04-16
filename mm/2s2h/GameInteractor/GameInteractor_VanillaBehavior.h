@@ -451,6 +451,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // play->sceneId != SCENE_INISIE_BS
+    // ```
+    // #### `args`
+    // - None
+    VB_DISABLE_GIANTS_MASK,
+
+    // #### `result`
+    // ```c
     // GET_CUR_FORM_BTN_ITEM(i) != ITEM_MASK_ZORA
     // ```
     // ##### Alt: `DPAD_GET_CUR_FORM_BTN_ITEM`
@@ -1835,6 +1843,14 @@ typedef enum {
     // ```
     // #### `args`
     // - None
+    VB_PLAY_GIANTS_MASK_CS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
     VB_PLAY_GORON_CHILD_CRY,
 
     // #### `result`
@@ -2547,6 +2563,22 @@ typedef enum {
     // #### `args`
     // - `*f32` (speed)
     VB_ZTARGET_SPEED_CHECK,
+
+    // #### `result`
+    // ```c
+    // this->actor.depthInWater > 100.0f
+    // ```
+    // #### `args`
+    // - `*f32` (depthThreshold)
+    VB_PLAYER_DIVE_DEPTH_CHECK,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*f32` (climbDelta - hardcoded ledge climb height: 60.0f, 59.0f, or 41.0f)
+    VB_PLAYER_LEDGE_CLIMB_FACTOR,
 } GIVanillaBehavior;
 
 #endif
