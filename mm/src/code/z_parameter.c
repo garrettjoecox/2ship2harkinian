@@ -3388,7 +3388,7 @@ void Interface_UpdateButtonsPart2(PlayState* play) {
                     }
                 } else if (GET_CUR_FORM_BTN_ITEM(i) == ITEM_MASK_GIANT) {
                     // Giant's Mask is equipped
-                    if (play->sceneId != SCENE_INISIE_BS) {
+                    if (GameInteractor_Should(VB_DISABLE_GIANT_MASK, play->sceneId != SCENE_INISIE_BS)) {
                         if (gSaveContext.buttonStatus[i] != BTN_DISABLED) {
                             gSaveContext.buttonStatus[i] = BTN_DISABLED;
                             restoreHudVisibility = true;

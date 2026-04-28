@@ -411,6 +411,23 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // play->sceneId != SCENE_INISIE_BS
+    // ```
+    // #### `args`
+    // - None
+    VB_DISABLE_GIANT_MASK,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (height, may be modified)
+    VB_PLAYER_HEIGHT,
+
+    // #### `result`
+    // ```c
     // GET_CUR_FORM_BTN_ITEM(i) != ITEM_MASK_ZORA
     // ```
     // ##### Alt: `DPAD_GET_CUR_FORM_BTN_ITEM`

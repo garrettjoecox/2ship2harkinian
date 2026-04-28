@@ -1505,23 +1505,32 @@ f32 Player_GetHeight(Player* player) {
         extraHeight = 0.0f;
     }
 
+    f32 height;
     switch (player->transformation) {
         default:
         case PLAYER_FORM_FIERCE_DEITY:
-            return extraHeight + 124.0f;
+            height = extraHeight + 124.0f;
+            break;
 
         case PLAYER_FORM_GORON:
-            return extraHeight + ((player->stateFlags3 & PLAYER_STATE3_1000) ? 34.0f : 80.0f);
+            height = extraHeight + ((player->stateFlags3 & PLAYER_STATE3_1000) ? 34.0f : 80.0f);
+            break;
 
         case PLAYER_FORM_ZORA:
-            return extraHeight + 68.0f;
+            height = extraHeight + 68.0f;
+            break;
 
         case PLAYER_FORM_DEKU:
-            return extraHeight + 36.0f;
+            height = extraHeight + 36.0f;
+            break;
 
         case PLAYER_FORM_HUMAN:
-            return extraHeight + 44.0f;
+            height = extraHeight + 44.0f;
+            break;
     }
+
+    GameInteractor_Should(VB_PLAYER_HEIGHT, true, player, &height);
+    return height;
 }
 
 f32 Player_GetRunSpeedLimit(Player* player) {

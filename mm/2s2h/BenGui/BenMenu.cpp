@@ -1312,6 +1312,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Fierce Deity's Mask Anywhere", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.FierceDeitysAnywhere")
         .Options(CheckboxOptions().Tooltip("Allow using Fierce Deity's mask outside of boss rooms."));
+    AddWidget(path, "Giant's Mask Anywhere", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.GiantsMaskAnywhere")
+        .Options(CheckboxOptions().Tooltip("Allow using Giant's mask in more locations."));
     AddWidget(path, "Persistent Bunny Hood", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.PersistentBunnyHood.Enabled")
         .Options(CheckboxOptions().Tooltip(
