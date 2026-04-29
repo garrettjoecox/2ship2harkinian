@@ -6383,14 +6383,20 @@ s32 Player_ActionHandler_12(Player* this, PlayState* play) {
                 this->stateFlags1 |= PLAYER_STATE1_4;
 
                 if (func_801242B4(this)) {
-                    yDistToLedge -= 60.0f * this->ageProperties->unk_08;
+                    f32 climbDelta = 60.0f;
+                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_swimer_swim_15step_up;
                     this->stateFlags1 &= ~PLAYER_STATE1_8000000;
                 } else if (this->ageProperties->unk_18 <= yDistToLedge) {
-                    yDistToLedge -= 59.0f * this->ageProperties->unk_08;
+                    f32 climbDelta = 59.0f;
+                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_normal_150step_up;
                 } else {
-                    yDistToLedge -= 41.0f * this->ageProperties->unk_08;
+                    f32 climbDelta = 41.0f;
+                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_normal_100step_up;
                 }
 
@@ -13718,8 +13724,12 @@ void func_808475B4(Player* this) {
             sp4 = ((this->actor.velocity.y >= 0.0f) ? 0.0f : this->actor.velocity.y * -0.3f) + var_ft5_4;
         }
 
-        if (this->actor.depthInWater > 100.0f) {
-            this->stateFlags2 |= PLAYER_STATE2_400;
+        {
+            f32 depthThreshold = 100.0f;
+            GameInteractor_Should(VB_PLAYER_DIVE_DEPTH_CHECK, true, &depthThreshold);
+            if (this->actor.depthInWater > depthThreshold) {
+                this->stateFlags2 |= PLAYER_STATE2_400;
+            }
         }
     }
 
@@ -16485,9 +16495,13 @@ void Player_Action_Talk(Player* this, PlayState* play) {
         Player_Action_52(this, play);
     } else if (func_801242B4(this)) {
         Player_Action_54(this, play);
-        if (this->actor.depthInWater > 100.0f) {
-            this->actor.velocity.y = 0.0f;
-            this->actor.gravity = 0.0f;
+        {
+            f32 depthThreshold = 100.0f;
+            GameInteractor_Should(VB_PLAYER_DIVE_DEPTH_CHECK, true, &depthThreshold);
+            if (this->actor.depthInWater > depthThreshold) {
+                this->actor.velocity.y = 0.0f;
+                this->actor.gravity = 0.0f;
+            }
         }
     } else if (!Player_CheckHostileLockOn(this) && PlayerAnimation_Update(play, &this->skelAnime)) {
         if (this->skelAnime.movementFlags != 0) {

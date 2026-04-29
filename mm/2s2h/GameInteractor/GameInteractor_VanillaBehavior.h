@@ -2318,6 +2318,22 @@ typedef enum {
     // #### `args`
     // - `*f32` (speed)
     VB_ZTARGET_SPEED_CHECK,
+
+    // #### `result`
+    // ```c
+    // this->actor.depthInWater > 100.0f
+    // ```
+    // #### `args`
+    // - `*f32` (depthThreshold)
+    VB_PLAYER_DIVE_DEPTH_CHECK,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*f32` (climbDelta — hardcoded ledge climb height: 60.0f, 59.0f, or 41.0f)
+    VB_PLAYER_LEDGE_CLIMB_FACTOR,
 } GIVanillaBehavior;
 
 #endif

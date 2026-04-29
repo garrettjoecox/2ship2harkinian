@@ -1,11 +1,13 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
+#include "2s2h/Enhancements/Camera/CameraUtils.h"
 
 extern "C" {
 #include "variables.h"
 #include "functions.h"
 #include "z64shrink_window.h"
+extern CameraSetting sCameraSettings[];
 }
 
 #define CVAR_NAME "gEnhancements.Masks.GiantsMaskAnywhere"
@@ -47,50 +49,6 @@ static Vec3f sSubCamUp;
 static GmaFlashState sFlashState = GMA_FLASH_NONE;
 static s16 sFlashAlpha = 0;
 
-static void ScaleRegsForGiant() {
-    // Assign Hylian-boot values scaled ×10 (or ÷10) directly.
-    // The vanilla game switches to PLAYER_BOOTS_GIANT (with lower base values
-    // tuned for the boss room) when the mask is equipped. Guard-based multipliers
-    // would scale those reduced values and produce wrong results, so we hardcode
-    // the Hylian-derived targets. Called every frame to counteract any
-    // Player_SetBootData resets (room transitions, water, etc.).
-    REG(19) = 2000;           // Hylian 200  × 10: run acceleration
-    R_DECELERATE_RATE = 8000; // Hylian 800  × 10: idle deceleration
-    R_RUN_SPEED_LIMIT = 5500; // Hylian 550  × 10: max run speed
-    REG(48) = 3700;           // default 370 × 10: backwalk threshold
-    REG(68) = -100;          // Hylian -100 × 10: gravity
-    IREG(66) = 5400;          // Hylian 540  × 10: baby-jump threshold
-    IREG(68) = 125;           // Hylian 125  (not scaled, but BOOTS_GIANT sets 60)
-    REG(32) = 30;             // Hylian 300  / 10: sidewalk anim multiplier
-    REG(36) = 40;             // Hylian 400  / 10: backwalk anim multiplier
-    REG(37) = 80;             // Hylian 800  / 10: walk threshold
-    REG(38) = 40;             // Hylian 400  / 10: walk anim multiplier
-    IREG(69) = 40;            // Hylian 400  / 10: baby-jump speed multiplier
-    MREG(95) = 20;            // Hylian 200  / 10: bow sidewalk anim
-}
-
-static void GiantMask_Reg_Grow() {
-    //REG(27);        // turning circle
-    REG(48) *= 10; // slow backwalk animation threshold
-    REG(19) *= 10;  // run acceleration // deceleration needs hook 806F9FE8
-    // REG(30) /= 10; // base sidewalk animation speed
-    REG(32) /= 10; // sidewalk animation speed multiplier
-    // REG(34) *= 10; // ? unused ?
-    // REG(35) *= 10; // base slow backwalk
-    REG(36) /= 10; // slow backwalk animation speed multiplier
-    REG(37) /= 10; // walk speed threshold
-    REG(38) /= 10; // walk animation speed multiplier
-    // REG(39) *= 10; // base walk animation speed
-    REG(43) *= 10;  // idle deceleration
-    REG(45) *= 10;  // running speed
-    REG(68) *= 10;  // gravity
-    // REG(69) *= 10;  // jump strength
-    IREG(66) *= 10; // baby jump threshold
-    // IREG(67) *= 10; // normal jump speed
-    // IREG(68) *= 10; // baby jump base speed
-    IREG(69) /= 10; // baby jump speed multiplier
-    MREG(95) /= 10; // bow sidewalk animation?
-}
 
 static void ScaleAgeProperties(Player* player, f32 factor) {
     PlayerAgeProperties* props = player->ageProperties;
@@ -117,7 +75,6 @@ static void CutsceneDone(Player* player, PlayState* play) {
     player->stateFlags1 &= ~PLAYER_STATE1_100;
     sPlayerScale = 0.01f;
     Play_DisableMotionBlur();
-    GiantMask_Reg_Grow();
 }
 
 static void HandleCutscene(Player* player, PlayState* play) {
@@ -297,11 +254,6 @@ static void HandleCutscene(Player* player, PlayState* play) {
             break;
     }
 
-    // Scale movement REGs every frame while giant to counteract Player_SetBootData resets.
-    // if (sIsGiant) {
-    //     ScaleRegsForGiant();
-    // }
-
     // Drive subcamera during cutscene.
     if (sCsState != GMA_CS_WAITING && sSubCamId != SUB_CAM_ID_DONE) {
         Vec3f eyeOffset;
@@ -328,14 +280,102 @@ void RegisterGiantsMaskAnywhere() {
     // Allow the Giant's Mask button to be usable outside of Twinmold's Lair.
     COND_VB_SHOULD(VB_DISABLE_GIANT_MASK, CVAR, { *should = false; });
 
-    // Scale the player's effective height so the camera tracks at the correct
-    // height and distance for a giant player. Camera_GetFocalActorHeight calls
-    // Player_GetHeight, and Camera_Normal0 also scales camera distances by it.
+    // Scale the player's effective height so Camera_Normal0 tracks at the right
+    // height/distance. Also feeds into the VB_USE_CUSTOM_CAMERA calculation below.
     COND_VB_SHOULD(VB_PLAYER_HEIGHT, CVAR, {
         Player* playerArg = va_arg(args, Player*);
         f32* heightArg = va_arg(args, f32*);
         if (sIsGiant) {
             *heightArg *= playerArg->actor.scale.y / 0.01f;
+        }
+    });
+
+    // Directly position the main camera while giant and idle so it frames the
+    // full giant-Link body without relying on Camera_Normal0's distance heuristics.
+    // COND_VB_SHOULD(VB_USE_CUSTOM_CAMERA, CVAR, {
+    //     if (sIsGiant && sCsState == GMA_CS_WAITING) {
+    //         Camera* camera = va_arg(args, Camera*);
+    //         s16 funcId = sCameraSettings[camera->setting].cameraModes[camera->mode].funcId;
+    //         if (camera->camId == CAM_ID_MAIN &&
+    //             (funcId == CAM_FUNC_NORMAL0 || funcId == CAM_FUNC_NORMAL1 ||
+    //              funcId == CAM_FUNC_NORMAL3 || funcId == CAM_FUNC_NORMAL4 ||
+    //              funcId == CAM_FUNC_JUMP2   || funcId == CAM_FUNC_JUMP3)) {
+    //             Player* player = GET_PLAYER(gPlayState);
+    //             f32 giantHeight = Player_GetHeight(player);
+    //             Vec3f atTarget;
+    //             atTarget.x = player->actor.world.pos.x;
+    //             atTarget.y = player->actor.world.pos.y + giantHeight * 0.6f;
+    //             atTarget.z = player->actor.world.pos.z;
+    //             VecGeo geo = OLib_Vec3fDiffToVecGeo(&camera->eye, &camera->at);
+    //             geo.r = giantHeight * 2.5f;
+    //             Vec3f eyeTarget = OLib_AddVecGeoToVec3f(&atTarget, &geo);
+    //             Math_ApproachF(&camera->at.x, atTarget.x, 0.3f, 50.0f);
+    //             Math_ApproachF(&camera->at.y, atTarget.y, 0.3f, 50.0f);
+    //             Math_ApproachF(&camera->at.z, atTarget.z, 0.3f, 50.0f);
+    //             Math_ApproachF(&camera->eye.x, eyeTarget.x, 0.3f, 50.0f);
+    //             Math_ApproachF(&camera->eye.y, eyeTarget.y, 0.3f, 50.0f);
+    //             Math_ApproachF(&camera->eye.z, eyeTarget.z, 0.3f, 50.0f);
+    //             camera->dist = giantHeight * 2.5f;
+    //             if (camera->fov > 60.0f) {
+    //                 camera->fov = 60.0f;
+    //             }
+    //             camera->roll = 0;
+    //             *should = false;
+    //         }
+    //     }
+    // });
+
+    COND_VB_SHOULD(VB_SPEED_MODIFIER_WALK, CVAR, {
+        if (sIsGiant) {
+            f32* speedTarget = va_arg(args, f32*);
+            *speedTarget *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_SPEED_MODIFIER_SWIM, CVAR, {
+        if (sIsGiant) {
+            f32* incrStep = va_arg(args, f32*);
+            f32* maxSpeed = va_arg(args, f32*);
+            va_arg(args, f32*); // skip current speed
+            f32* speedTarget = va_arg(args, f32*);
+            *incrStep *= 10.0f;
+            *maxSpeed *= 10.0f;
+            *speedTarget *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_APPLY_AIR_CONTROL, CVAR, {
+        if (sIsGiant) {
+            f32* speedTarget = va_arg(args, f32*);
+            *speedTarget *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_SET_CLIMB_SPEED, CVAR, {
+        if (sIsGiant) {
+            f32* climbSpeed = va_arg(args, f32*);
+            *climbSpeed *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_ZTARGET_SPEED_CHECK, CVAR, {
+        if (sIsGiant) {
+            f32* speed = va_arg(args, f32*);
+            *speed *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_DIVE_DEPTH_CHECK, CVAR, {
+        if (sIsGiant) {
+            f32* threshold = va_arg(args, f32*);
+            *threshold *= 10.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_LEDGE_CLIMB_FACTOR, CVAR, {
+        if (sIsGiant) {
+            f32* delta = va_arg(args, f32*);
+            *delta *= 10.0f;
         }
     });
 
