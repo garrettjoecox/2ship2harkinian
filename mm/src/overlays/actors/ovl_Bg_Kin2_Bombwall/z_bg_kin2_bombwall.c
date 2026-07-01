@@ -61,7 +61,7 @@ s32 BgKin2Bombwall_IsHitFromNearby(BgKin2Bombwall* this, PlayState* play) {
         // Distance check required to only react to sufficiently close explosions.
         if (bombwallCollider != NULL) {
             f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &bombwallCollider->world.pos);
-            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos, bombwallCollider,
+            GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos, bombwallCollider,
                                   &hitDistanceSq);
             if (hitDistanceSq < 6400.0f) {
                 return true;

@@ -1763,8 +1763,8 @@ s32 func_800B7678(PlayState* play, Actor* actor, Vec3f* pos, s32 updBgCheckInfoF
     f32 ledgeWalkOffHeight = -11.0f;
     s32 bgId;
 
-    GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, (Player*)actor, &floorCheckDelta);
-    GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, (Player*)actor, &ledgeWalkOffHeight);
+    GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &floorCheckDelta);
+    GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &ledgeWalkOffHeight);
     pos->y += floorCheckDelta;
 
     actor->floorHeight = BgCheck_EntityRaycastFloor5_2(play, &play->colCtx, &actor->floorPoly, &bgId, actor, pos);

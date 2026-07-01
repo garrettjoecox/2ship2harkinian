@@ -347,7 +347,7 @@ s32 func_80ABCB5C(BgHakuginBombwall* this, PlayState* play) {
             Actor* thisx = &this->dyna.actor;
             f32 hitDistanceSq = Math3D_Vec3fDistSq(&thisx->world.pos, &this->collider.base.ac->world.pos);
 
-            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
+            GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
                                   &hitDistanceSq);
             if (hitDistanceSq < D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
                 SoundSource_PlaySfxAtFixedWorldPos(play, &thisx->world.pos, 60, NA_SE_EV_WALL_BROKEN);
@@ -365,7 +365,7 @@ s32 func_80ABCC00(BgHakuginBombwall* this, PlayState* play) {
                 Actor* thisx = &this->dyna.actor;
                 f32 hitDistanceSq = Math3D_Vec3fDistSq(&thisx->world.pos, &this->collider.base.ac->world.pos);
 
-                GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
+                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
                                       &hitDistanceSq);
                 if (hitDistanceSq < D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
                     SoundSource_PlaySfxAtFixedWorldPos(play, &thisx->world.pos, 50, NA_SE_EV_WALL_BROKEN);

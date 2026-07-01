@@ -1470,7 +1470,6 @@ void BenMenu::AddEnhancements() {
                      .Min(0.0f)
                      .Max(15.5f)
                      .Format("%.1f seconds")
-                     .Step(0.1f)
                      .DefaultValue(15.5f));
     AddWidget(path, "Goron Rolling Ignores Magic", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.GoronRollingIgnoresMagic")

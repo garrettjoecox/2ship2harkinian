@@ -6,6 +6,7 @@ extern "C" {
 #include "functions.h"
 #include "regs.h"
 #include "variables.h"
+#include "overlays/actors/ovl_En_Bigokuta/z_en_bigokuta.h"
 #include "z64shrink_window.h"
 }
 
@@ -80,11 +81,116 @@ static f32 GetSimpleInvertedScaleModifier() {
     return IsGiant() ? 0.1f : 1.0f;
 }
 
-static f32 GetMovementSpeedCap(Player* player) {
-    if (player != nullptr && player->unk_B50 > 0.0f) {
-        return player->unk_B50;
+static f32 GetSmallLedgeJumpVelocityYModifier() {
+    return IsGiant() ? 0.31622776f : 1.0f;
+}
+
+static f32 GetSmallLedgeJumpSpeedXZModifier() {
+    return IsGiant() ? 3.1622777f : 1.0f;
+}
+
+static bool IsBunnyHoodSpeedActive(Player* player) {
+    return player != nullptr &&
+           GameInteractor_Should(VB_CONSIDER_BUNNY_HOOD_EQUIPPED, player->currentMask == PLAYER_MASK_BUNNY, player);
+}
+
+static void UpdateBigOctoDamageFlags(Actor* actor) {
+    EnBigokuta* bigOcto = (EnBigokuta*)actor;
+
+    if (bigOcto == nullptr) {
+        return;
     }
-    return R_RUN_SPEED_LIMIT / 100.0f;
+
+    if (CVAR) {
+        bigOcto->shellCollider.elem.acDmgInfo.dmgFlags &= ~DMG_UNK_0x1E;
+        bigOcto->bodyCollider.elem.acDmgInfo.dmgFlags |= DMG_UNK_0x1E;
+    } else {
+        bigOcto->shellCollider.elem.acDmgInfo.dmgFlags |= DMG_UNK_0x1E;
+        bigOcto->bodyCollider.elem.acDmgInfo.dmgFlags &= ~DMG_UNK_0x1E;
+    }
+}
+
+static bool ApplyCompositeDamageAndEffect(ColliderElement* atElem, Collider* acCol, f32* damage, u32* effect,
+                                          f32* damageMultipliers) {
+    if ((atElem == nullptr) || (acCol == nullptr) || (acCol->actor == nullptr) || (damage == nullptr) ||
+        (effect == nullptr) || (damageMultipliers == nullptr) ||
+        (acCol->actor->colChkInfo.damageTable == nullptr)) {
+        return false;
+    }
+
+    u32 dmgFlags = atElem->atDmgInfo.dmgFlags;
+    if (!(dmgFlags & DMG_UNK_0x1E)) {
+        return false;
+    }
+
+    DamageTable* damageTable = acCol->actor->colChkInfo.damageTable;
+    f32 highestDamage = 0.0f;
+    u32 selectedEffect = 0;
+    s32 selectedIndex = -1;
+    u8 highPriorityEffect = 0xFF;
+
+    if (acCol->actor->id == ACTOR_EN_BSB) {
+        highPriorityEffect = 0xD;
+    }
+
+    for (s32 i = 0; i < ARRAY_COUNT(damageTable->attack); i++) {
+        if (dmgFlags & (1u << i)) {
+            u8 attack = damageTable->attack[i];
+            u8 attackMultiplier = attack & 0xF;
+            u8 attackEffect = (attack >> 4) & 0xF;
+            f32 candidateDamage = *damage;
+            bool shouldApply;
+
+            if (attackMultiplier == 0) {
+                continue;
+            }
+
+            if (GameInteractor_Should(VB_DAMAGE_MULTIPLIER, true, i, damageTable, &candidateDamage,
+                                      damageMultipliers)) {
+                candidateDamage *= damageMultipliers[attackMultiplier];
+            }
+
+            shouldApply = (candidateDamage > highestDamage) ||
+                          ((candidateDamage == highestDamage) && (selectedEffect == 0));
+
+            if (highPriorityEffect != 0xFF) {
+                if ((selectedEffect != highPriorityEffect) && (attackEffect == highPriorityEffect)) {
+                    shouldApply = true;
+                } else if ((selectedEffect == highPriorityEffect) && (attackEffect != highPriorityEffect)) {
+                    shouldApply = false;
+                }
+            }
+
+            if (shouldApply) {
+                highestDamage = candidateDamage;
+                selectedEffect = attackEffect;
+                selectedIndex = i;
+            }
+        }
+    }
+
+    *damage = highestDamage;
+    *effect = selectedEffect;
+
+    if (selectedIndex >= 0) {
+        GameInteractor_Should(VB_DAMAGE_EFFECT, true, selectedIndex, damageTable, effect, acCol->actor);
+    }
+
+    return true;
+}
+
+static f32 GetMovementSpeedCap(Player* player) {
+    f32 speedCap = R_RUN_SPEED_LIMIT / 100.0f;
+
+    if (player != nullptr && player->unk_B50 > 0.0f) {
+        speedCap = player->unk_B50;
+    }
+
+    if (IsBunnyHoodSpeedActive(player)) {
+        speedCap *= 1.5f;
+    }
+
+    return speedCap;
 }
 
 static f32 GetHeightScaleModifier() {
@@ -595,8 +701,8 @@ static void RegisterGiantsMaskAnywhere() {
     });
 
     COND_ID_HOOK(ShouldActorUpdate, ACTOR_PLAYER, CVAR, BeforePlayerUpdate);
-
-    COND_VB_SHOULD(VB_DISABLE_GIANTS_MASK, CVAR, { *should = false; });
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_BIGOKUTA, true, UpdateBigOctoDamageFlags);
+    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_BIGOKUTA, true, UpdateBigOctoDamageFlags);
 
     COND_VB_SHOULD(VB_ITEM_BE_RESTRICTED, CVAR, {
         ItemId* itemId = va_arg(args, ItemId*);
@@ -608,40 +714,7 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
-    COND_VB_SHOULD(VB_GIANTS_MASK_TRANSFORMATION_STATE, CVAR, {
-        Player* player = va_arg(args, Player*);
-        PlayState* play = va_arg(args, PlayState*);
-        u32* stateFlags1 = va_arg(args, u32*);
-
-        if ((stateFlags1 != nullptr) && IsFeatureScene(play) && (player != nullptr)) {
-            *stateFlags1 |= PLAYER_STATE1_10000000;
-        }
-    });
-
-    COND_VB_SHOULD(VB_GIANTS_MASK_CLEAR_ON_LOAD, true, {
-        Player* player = va_arg(args, Player*);
-        PlayState* play = va_arg(args, PlayState*);
-
-        if (!CVAR || !IsFeatureScene(play) || ShouldResetForRespawn()) {
-            MarkReset();
-            SetIsGiant(false);
-            sPlayerScale = 0.01f;
-            sNextScaleFactor = 10.0f;
-            return;
-        }
-
-        SetIsGiant(true);
-        sPlayerScale = 0.1f;
-        sNextScaleFactor = 0.1f;
-        SetGiantsMaskMagicConsumeTimer();
-        gSaveContext.magicState = MAGIC_STATE_CONSUME_GIANTS_MASK;
-        if (player != nullptr) {
-            player->currentMask = PLAYER_MASK_GIANT;
-        }
-        *should = false;
-    });
-
-    COND_VB_SHOULD(VB_GIANTS_MASK_CEILING_CHECK_HEIGHT, CVAR, {
+    COND_VB_SHOULD(VB_PLAYER_MASK_CEILING_CHECK_HEIGHT, CVAR, {
         va_arg(args, Player*);
         PlayerItemAction itemAction = *va_arg(args, PlayerItemAction*);
         f32* ceilingCheckHeight = va_arg(args, f32*);
@@ -651,7 +724,7 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
-    COND_VB_SHOULD(VB_GIANTS_MASK_AUTO_REMOVE, CVAR, {
+    COND_VB_SHOULD(VB_GIANT_MASK_AUTO_REMOVE, CVAR, {
         Player* player = va_arg(args, Player*);
         if (ShouldApplyIdleGiantBehavior(player) && (player->stateFlags1 & PLAYER_STATE1_8000000)) {
             *should = false;
@@ -688,6 +761,20 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
+    COND_VB_SHOULD(VB_DAMAGE_AND_EFFECT, CVAR, {
+        va_arg(args, Collider*);
+        ColliderElement* atElem = va_arg(args, ColliderElement*);
+        Collider* acCol = va_arg(args, Collider*);
+        va_arg(args, ColliderElement*);
+        f32* damage = va_arg(args, f32*);
+        u32* effect = va_arg(args, u32*);
+        f32* damageMultipliers = va_arg(args, f32*);
+
+        if (ApplyCompositeDamageAndEffect(atElem, acCol, damage, effect, damageMultipliers)) {
+            *should = false;
+        }
+    });
+
     COND_VB_SHOULD(VB_PLAYER_GET_HEIGHT, CVAR, {
         Player* player = va_arg(args, Player*);
         f32* height = va_arg(args, f32*);
@@ -714,6 +801,15 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
+    COND_VB_SHOULD(VB_PLAYER_CAN_LOCK_ON, CVAR, {
+        Player* player = va_arg(args, Player*);
+        va_arg(args, Actor*);
+
+        if (ShouldApplyIdleGiantBehavior(player)) {
+            *should = true;
+        }
+    });
+
     COND_VB_SHOULD(VB_PLAYER_SHOULD_BE_KNOCKED_OVER, CVAR, {
         va_arg(args, PlayState*);
         Player* player = va_arg(args, Player*);
@@ -733,7 +829,7 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
-    COND_VB_SHOULD(VB_GIANTS_MASK_HIT_DISTANCE, CVAR, {
+    COND_VB_SHOULD(VB_COLLIDER_HIT_DISTANCE, CVAR, {
         va_arg(args, Vec3f*);
         Actor* hittingActor = va_arg(args, Actor*);
         f32* hitDistanceSq = va_arg(args, f32*);
@@ -744,16 +840,7 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
-    COND_VB_SHOULD(VB_GIANTS_MASK_JUMPSLASH_VELOCITY, CVAR, {
-        Player* player = va_arg(args, Player*);
-        f32* linearVelocity = va_arg(args, f32*);
-
-        if (ShouldApplyIdleGiantBehavior(player) && (linearVelocity != nullptr)) {
-            *linearVelocity *= GetSimpleScaleModifier();
-        }
-    });
-
-    COND_VB_SHOULD(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, CVAR, {
+    COND_VB_SHOULD(VB_PLAYER_SCALE_VALUE, CVAR, {
         Player* player = va_arg(args, Player*);
         f32* value = va_arg(args, f32*);
 
@@ -762,12 +849,27 @@ static void RegisterGiantsMaskAnywhere() {
         }
     });
 
-    COND_VB_SHOULD(VB_GIANTS_MASK_INVERT_PLAYER_VALUE, CVAR, {
+    COND_VB_SHOULD(VB_PLAYER_INVERT_SCALE_VALUE, CVAR, {
         Player* player = va_arg(args, Player*);
         f32* value = va_arg(args, f32*);
 
         if (ShouldApplyIdleGiantBehavior(player) && (value != nullptr)) {
             *value *= GetSimpleInvertedScaleModifier();
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_SMALL_LEDGE_JUMP_SPEED, CVAR, {
+        Player* player = va_arg(args, Player*);
+        f32* velocityY = va_arg(args, f32*);
+        f32* speedXZ = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player)) {
+            if (velocityY != nullptr) {
+                *velocityY *= GetSmallLedgeJumpVelocityYModifier();
+            }
+            if (speedXZ != nullptr) {
+                *speedXZ *= GetSmallLedgeJumpSpeedXZModifier();
+            }
         }
     });
 
@@ -822,30 +924,6 @@ static void RegisterGiantsMaskAnywhere() {
         if (ShouldApplyIdleGiantBehavior(player) && (speedTarget != nullptr)) {
             *speedTarget *= GetSimpleScaleModifier();
             *speedTarget = CLAMP_MAX(*speedTarget, GetMovementSpeedCap(player));
-        }
-    });
-
-    COND_VB_SHOULD(VB_ZTARGET_SPEED_CHECK, CVAR, {
-        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
-        f32* speed = va_arg(args, f32*);
-
-        if (ShouldApplyIdleGiantBehavior(player) && (speed != nullptr)) {
-            *speed *= GetSimpleScaleModifier();
-            *speed = CLAMP_MAX(*speed, GetMovementSpeedCap(player));
-        }
-    });
-
-    COND_VB_SHOULD(VB_PLAYER_DIVE_DEPTH_CHECK, CVAR, {
-        if (IsGiant() && sCsState == GMA_CS_IDLE) {
-            f32* depthThreshold = va_arg(args, f32*);
-            *depthThreshold *= GetSimpleScaleModifier();
-        }
-    });
-
-    COND_VB_SHOULD(VB_PLAYER_LEDGE_CLIMB_FACTOR, CVAR, {
-        if (IsGiant() && sCsState == GMA_CS_IDLE) {
-            f32* climbDelta = va_arg(args, f32*);
-            *climbDelta *= GetSimpleScaleModifier();
         }
     });
 }

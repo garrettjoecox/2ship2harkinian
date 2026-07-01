@@ -379,13 +379,13 @@ void EnMThunder_Spin_Attack(EnMThunder* this, PlayState* play) {
         f32 minScaleStep = 0.0f;
         f32 colliderHeight = 200.0f;
 
-        GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, player, &scaleTarget);
-        GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, player, &scaleStep);
-        GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, player, &minScaleStep);
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, player, &scaleTarget);
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, player, &scaleStep);
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, player, &minScaleStep);
         Math_SmoothStepToF(&this->actor.scale.x, scaleTarget, 0.6f, scaleStep, minScaleStep);
         Actor_SetScale(&this->actor, this->actor.scale.x);
         this->collider.dim.radius = this->actor.scale.x * 30.0f;
-        GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, player, &colliderHeight);
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, player, &colliderHeight);
         this->collider.dim.height = colliderHeight;
         Collider_UpdateCylinder(&this->actor, &this->collider);
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);

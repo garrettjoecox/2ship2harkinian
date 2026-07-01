@@ -68,7 +68,7 @@ s32 func_80BD5E00(BgHakaBombwall* this) {
     if (this->collider.base.acFlags & AC_HIT) {
         if (this->collider.base.ac != NULL) {
             f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos);
-            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos,
+            GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos,
                                   this->collider.base.ac, &hitDistanceSq);
             if (hitDistanceSq < SQ(80.0f)) {
                 return true;

@@ -505,8 +505,7 @@ bool LifeMeter_IsCritical(void) {
         criticalThreshold = 0x2C;
     }
 
-    if ((gSaveContext.save.saveInfo.playerData.health < gSaveContext.save.saveInfo.playerData.healthCapacity) &&
-        (criticalThreshold >= gSaveContext.save.saveInfo.playerData.health) &&
+    if ((criticalThreshold >= gSaveContext.save.saveInfo.playerData.health) &&
         (gSaveContext.save.saveInfo.playerData.health > 0)) {
         return true;
     }

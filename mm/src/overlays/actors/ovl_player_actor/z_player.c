@@ -79,18 +79,13 @@ void func_808484F0(Player* this);
 
 void func_80838A20(PlayState* play, Player* this);
 
-static f32 Player_ApplyGiantsMaskScale(Player* this, f32 value) {
-    GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, this, &value);
+static f32 Player_ApplyScale(Player* this, f32 value) {
+    GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, this, &value);
     return value;
 }
 
-static f32 Player_ApplyGiantsMaskInvertedScale(Player* this, f32 value) {
-    GameInteractor_Should(VB_GIANTS_MASK_INVERT_PLAYER_VALUE, true, this, &value);
-    return value;
-}
-
-static f32 Player_ApplyGiantsMaskJumpslashVelocity(Player* this, f32 value) {
-    GameInteractor_Should(VB_GIANTS_MASK_JUMPSLASH_VELOCITY, true, this, &value);
+static f32 Player_ApplyInvertedScale(Player* this, f32 value) {
+    GameInteractor_Should(VB_PLAYER_INVERT_SCALE_VALUE, true, this, &value);
     return value;
 }
 
@@ -2896,7 +2891,7 @@ void Player_ResetCylinder(Player* this) {
     this->cylinder.elem.atDmgInfo.dmgFlags = 0;
     this->cylinder.elem.acDmgInfo.dmgFlags = 0xF7CFFFFF;
     this->cylinder.elem.atElemFlags = ATELEM_NONE | ATELEM_SFX_NORMAL;
-    this->cylinder.dim.radius = Player_ApplyGiantsMaskScale(this, 12.0f);
+    this->cylinder.dim.radius = Player_ApplyScale(this, 12.0f);
 }
 
 /**
@@ -2926,7 +2921,7 @@ void Player_SetCylinderForAttack(Player* this, u32 dmgFlags, s32 damage, s32 rad
 
     this->cylinder.elem.elemMaterial = ELEM_MATERIAL_UNK2;
     this->cylinder.elem.atElemFlags = ATELEM_ON | ATELEM_NEAREST | ATELEM_SFX_NORMAL;
-    this->cylinder.dim.radius = Player_ApplyGiantsMaskScale(this, radius);
+    this->cylinder.dim.radius = Player_ApplyScale(this, radius);
     this->cylinder.elem.atDmgInfo.dmgFlags = dmgFlags;
     this->cylinder.elem.atDmgInfo.damage = damage;
 
@@ -3903,7 +3898,7 @@ void Player_ProcessItemButtons(Player* this, PlayState* play) {
                 return;
             }
 
-            if (GameInteractor_Should(VB_GIANTS_MASK_AUTO_REMOVE,
+            if (GameInteractor_Should(VB_GIANT_MASK_AUTO_REMOVE,
                                       (this->currentMask == PLAYER_MASK_GIANT) &&
                                           (gSaveContext.save.saveInfo.playerData.magic == 0),
                                       this)) {
@@ -4673,7 +4668,7 @@ void Player_UseItem(PlayState* play, Player* this, ItemId item) {
                                                       : itemAction - PLAYER_IA_MASK_FIERCE_DEITY;
 
                 f32 ceilingCheckHeight = sPlayerAgeProperties[playerForm].ceilingCheckHeight;
-                GameInteractor_Should(VB_GIANTS_MASK_CEILING_CHECK_HEIGHT, true, this, &itemAction,
+                GameInteractor_Should(VB_PLAYER_MASK_CEILING_CHECK_HEIGHT, true, this, &itemAction,
                                       &ceilingCheckHeight);
 
                 if (((this->currentMask != PLAYER_MASK_GIANT) && (itemAction == PLAYER_IA_MASK_GIANT) &&
@@ -5122,7 +5117,9 @@ void Player_UpdateZTargeting(Player* this, PlayState* play) {
 
                 this->stateFlags1 |= PLAYER_STATE1_Z_TARGETING;
 
-                if ((this->currentMask != PLAYER_MASK_GIANT) && (nextLockOnActor != NULL) &&
+                if (GameInteractor_Should(VB_PLAYER_CAN_LOCK_ON, this->currentMask != PLAYER_MASK_GIANT, this,
+                                          nextLockOnActor) &&
+                    (nextLockOnActor != NULL) &&
                     !(nextLockOnActor->flags & ACTOR_FLAG_LOCK_ON_DISABLED) &&
                     !(this->stateFlags3 & (PLAYER_STATE3_200 | PLAYER_STATE3_2000))) {
 
@@ -6335,7 +6332,7 @@ s32 func_80834600(Player* this, PlayState* play) {
 }
 
 void func_80834CD0(Player* this, f32 arg1, u16 sfxId) {
-    this->actor.velocity.y = Player_ApplyGiantsMaskScale(this, arg1) * sWaterSpeedFactor;
+    this->actor.velocity.y = Player_ApplyScale(this, arg1) * sWaterSpeedFactor;
     this->actor.bgCheckFlags &= ~BGCHECKFLAG_GROUND;
 
     if (sfxId != NA_SE_NONE) {
@@ -6372,7 +6369,7 @@ s32 Player_ActionHandler_12(Player* this, PlayState* play) {
         if (func_801242B4(this)) {
             f32 depth = (this->transformation == PLAYER_FORM_FIERCE_DEITY) ? 80.0f : 50.0f;
 
-            depth = Player_ApplyGiantsMaskScale(this, depth);
+            depth = Player_ApplyScale(this, depth);
             if (this->actor.depthInWater < depth) {
                 if ((this->ledgeClimbType <= PLAYER_LEDGE_CLIMB_1) ||
                     (this->ageProperties->unk_10 < this->yDistToLedge)) {
@@ -6419,23 +6416,23 @@ s32 Player_ActionHandler_12(Player* this, PlayState* play) {
 
                 if (func_801242B4(this)) {
                     f32 climbDelta = 60.0f;
-                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    climbDelta = Player_ApplyScale(this, climbDelta);
                     yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_swimer_swim_15step_up;
                     this->stateFlags1 &= ~PLAYER_STATE1_8000000;
                 } else if (this->ageProperties->unk_18 <= yDistToLedge) {
                     f32 climbDelta = 59.0f;
-                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    climbDelta = Player_ApplyScale(this, climbDelta);
                     yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_normal_150step_up;
                 } else {
                     f32 climbDelta = 41.0f;
-                    GameInteractor_Should(VB_PLAYER_LEDGE_CLIMB_FACTOR, true, &climbDelta);
+                    climbDelta = Player_ApplyScale(this, climbDelta);
                     yDistToLedge -= climbDelta * this->ageProperties->unk_08;
                     anim = &gPlayerAnim_link_normal_100step_up;
                 }
 
-                this->unk_ABC -= yDistToLedge * Player_ApplyGiantsMaskInvertedScale(this, 100.0f);
+                this->unk_ABC -= yDistToLedge * Player_ApplyInvertedScale(this, 100.0f);
 
                 this->actor.world.pos.x -= var_fv1 * wallPolyNormalX;
                 this->actor.world.pos.y += this->yDistToLedge + 10.0f;
@@ -6463,9 +6460,11 @@ s32 Player_ActionHandler_12(Player* this, PlayState* play) {
     } else if ((this->actor.bgCheckFlags & BGCHECKFLAG_GROUND) && (this->ledgeClimbType == PLAYER_LEDGE_CLIMB_1) &&
                (this->ledgeClimbDelayTimer >= 3)) {
         f32 temp = (this->yDistToLedge * 0.08f) + 5.5f;
+        f32 speedXZ = 2.5f;
 
+        GameInteractor_Should(VB_PLAYER_SMALL_LEDGE_JUMP_SPEED, true, this, &temp, &speedXZ);
         func_80834DB8(this, &gPlayerAnim_link_normal_jump, temp, play);
-        this->speedXZ = 2.5f;
+        this->speedXZ = speedXZ;
         return true;
     }
 
@@ -7827,21 +7826,10 @@ void func_808388B8(PlayState* play, Player* this, PlayerTransformation playerFor
     Actor_DeactivateLens(play);
 }
 
-static u32 Player_GetGiantsMaskTransformationState(PlayState* play, Player* this) {
-    u32 stateFlags1 = PLAYER_STATE1_20000000;
-
-    if (GameInteractor_Should(VB_PLAY_GIANTS_MASK_CS, true)) {
-        stateFlags1 |= PLAYER_STATE1_100;
-    }
-    GameInteractor_Should(VB_GIANTS_MASK_TRANSFORMATION_STATE, true, this, play, &stateFlags1);
-
-    return stateFlags1;
-}
-
 void func_808389BC(PlayState* play, Player* this) {
     Player_SetAction_PreserveItemAction(play, this, Player_Action_89, 0);
     Player_Anim_PlayOnceMorphAdjusted(play, this, &gPlayerAnim_cl_setmask);
-    this->stateFlags1 |= Player_GetGiantsMaskTransformationState(play, this);
+    this->stateFlags1 |= (PLAYER_STATE1_100 | PLAYER_STATE1_20000000);
     func_8082DAD4(this);
 }
 
@@ -7849,7 +7837,7 @@ void func_80838A20(PlayState* play, Player* this) {
     Player_SetAction_PreserveItemAction(play, this, Player_Action_90, 0);
     Player_Anim_PlayOnceAdjusted(play, this, &gPlayerAnim_cl_maskoff);
     this->currentMask = PLAYER_MASK_NONE;
-    this->stateFlags1 |= Player_GetGiantsMaskTransformationState(play, this);
+    this->stateFlags1 |= (PLAYER_STATE1_100 | PLAYER_STATE1_20000000);
     func_8082DAD4(this);
     Magic_Reset(play);
 }
@@ -8296,8 +8284,8 @@ void func_808395F0(PlayState* play, Player* this, PlayerMeleeWeaponAnimation mel
         yVelocity *= 0.9f;
     }
 
-    yVelocity = Player_ApplyGiantsMaskScale(this, yVelocity);
-    linearVelocity = Player_ApplyGiantsMaskJumpslashVelocity(this, linearVelocity);
+    yVelocity = Player_ApplyScale(this, yVelocity);
+    linearVelocity = Player_ApplyScale(this, linearVelocity);
 
     func_80833864(play, this, meleeWeaponAnim);
     Player_SetAction(play, this, Player_Action_29, 0);
@@ -8365,7 +8353,6 @@ void func_80839860(Player* this, PlayState* play, s32 controlStickDirection) {
     if (controlStickDirection == PLAYER_STICK_DIR_BACKWARD) {}
 
     func_80834D50(play, this, D_8085C2A4[controlStickDirection].unk_0, speed, NA_SE_VO_LI_SWORD_N);
-
     this->av2.actionVar2 = 1;
     this->av1.actionVar1 = controlStickDirection;
 
@@ -8373,10 +8360,10 @@ void func_80839860(Player* this, PlayState* play, s32 controlStickDirection) {
 
     if (!(controlStickDirection & 1)) {
         // forwards, backwards, or none
-        this->speedXZ = Player_ApplyGiantsMaskScale(this, 6.0f);
+        this->speedXZ = Player_ApplyScale(this, 6.0f);
     } else {
         // left or right
-        this->speedXZ = Player_ApplyGiantsMaskScale(this, 8.5f);
+        this->speedXZ = Player_ApplyScale(this, 8.5f);
     }
 
     this->stateFlags2 |= PLAYER_STATE2_80000;
@@ -9215,7 +9202,7 @@ void func_8083BF54(PlayState* play, Player* this) {
     s32 temp_v0;
     s32 var_a2;
 
-    this->actor.terminalVelocity = Player_ApplyGiantsMaskScale(this, -20.0f);
+    this->actor.terminalVelocity = Player_ApplyScale(this, -20.0f);
     this->actor.gravity = REG(68) / 100.0f;
 
     var_a2 = false;
@@ -9407,7 +9394,7 @@ void func_8083C85C(Player* this) {
 }
 
 void func_8083C8E8(Player* this, PlayState* play) {
-    f32 limbVelocity = Player_ApplyGiantsMaskInvertedScale(this, this->speedXZ);
+    f32 limbVelocity = Player_ApplyInvertedScale(this, this->speedXZ);
 
     if (!func_800B7128(this) && !func_8082EF20(this) && ((limbVelocity > 5.0f) || (D_80862B3C != 0.0f))) {
         s16 temp1;
@@ -9440,7 +9427,7 @@ void func_8083CB04(Player* this, f32 arg1, s16 arg2, f32 arg3, f32 arg4, s16 arg
 }
 
 void func_8083CB58(Player* this, f32 arg1, s16 arg2) {
-    func_8083CB04(this, arg1, arg2, REG(19) / 100.0f, Player_ApplyGiantsMaskScale(this, 1.5f), REG(27));
+    func_8083CB04(this, arg1, arg2, REG(19) / 100.0f, Player_ApplyScale(this, 1.5f), REG(27));
 }
 
 s32 func_8083CBC4(Player* this, f32 arg1, s16 arg2, f32 arg3, f32 arg4, f32 arg5, s16 arg6) {
@@ -11165,9 +11152,7 @@ void Player_StartMode_Door(PlayState* play, Player* this) {
 
 void Player_StartMode_Grotto(PlayState* play, Player* this) {
     func_80834DB8(this, &gPlayerAnim_link_normal_jump, 12.0f, play);
-    if (this->currentMask == PLAYER_MASK_GIANT) {
-        this->actor.velocity.y = 12.0f * sWaterSpeedFactor;
-    }
+    this->actor.velocity.y = Player_ApplyInvertedScale(this, this->actor.velocity.y);
     Player_SetAction(play, this, Player_Action_ExitGrotto, 0);
     this->stateFlags1 |= PLAYER_STATE1_20000000;
     this->fallStartHeight = this->actor.world.pos.y;
@@ -11351,8 +11336,7 @@ void Player_Init(Actor* thisx, PlayState* play) {
     } else {
         this->transformation = GET_PLAYER_FORM;
         if (this->transformation == PLAYER_FORM_HUMAN) {
-            if (GameInteractor_Should(VB_GIANTS_MASK_CLEAR_ON_LOAD, gSaveContext.save.equippedMask == PLAYER_MASK_GIANT,
-                                      this, play)) {
+            if (gSaveContext.save.equippedMask == PLAYER_MASK_GIANT) {
                 gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
             }
             this->currentMask = gSaveContext.save.equippedMask;
@@ -11885,7 +11869,7 @@ void Player_ProcessSceneCollision(PlayState* play, Player* this) {
 
     wallCheckRadius = this->ageProperties->wallCheckRadius;
     ceilingCheckHeight = this->ageProperties->ceilingCheckHeight;
-    wallCollisionHeight = Player_ApplyGiantsMaskScale(this, 268 * 0.1f);
+    wallCollisionHeight = Player_ApplyScale(this, 268 * 0.1f);
 
     if (this->stateFlags1 & (PLAYER_STATE1_20000000 | PLAYER_STATE1_80000000)) {
         if ((!(this->stateFlags1 & PLAYER_STATE1_DEAD) && !(this->stateFlags2 & PLAYER_STATE2_4000) &&
@@ -11983,8 +11967,8 @@ void Player_ProcessSceneCollision(PlayState* play, Player* this) {
         s16 yawDiff;
         s32 pad;
 
-        sInteractWallCheckOffset.y = 178.0f * 0.1f;
-        sInteractWallCheckOffset.z = this->ageProperties->wallCheckRadius + 10.0f;
+        sInteractWallCheckOffset.y = Player_ApplyScale(this, 178.0f * 0.1f);
+        sInteractWallCheckOffset.z = this->ageProperties->wallCheckRadius + Player_ApplyScale(this, 10.0f);
 
         if (Player_PosVsWallLineTest(play, this, &sInteractWallCheckOffset, &wallPoly, &wallBgId,
                                      &sInteractWallCheckResult)) {
@@ -13784,7 +13768,7 @@ void func_808475B4(Player* this) {
 
         {
             f32 depthThreshold = 100.0f;
-            GameInteractor_Should(VB_PLAYER_DIVE_DEPTH_CHECK, true, &depthThreshold);
+            depthThreshold = Player_ApplyScale(this, depthThreshold);
             if (this->actor.depthInWater > depthThreshold) {
                 this->stateFlags2 |= PLAYER_STATE2_400;
             }
@@ -14947,14 +14931,14 @@ void Player_Action_5(Player* this, PlayState* play) {
     temp_v0_3 = yawTarget - this->yaw;
     var_v1 = ABS_ALT(temp_v0_3);
     if (var_v1 > 0x4000) {
-        if (Math_StepToF(&this->speedXZ, 0.0f, Player_ApplyGiantsMaskScale(this, 1.5f))) {
+        if (Math_StepToF(&this->speedXZ, 0.0f, Player_ApplyScale(this, 1.5f))) {
             this->yaw = yawTarget;
         }
     } else {
         f32 actionSpeedTarget = speedTarget * 0.4f;
         GameInteractor_Should(VB_SPEED_MODIFIER_WALK, true, &actionSpeedTarget);
-        Math_AsymStepToF(&this->speedXZ, actionSpeedTarget, Player_ApplyGiantsMaskScale(this, 1.5f),
-                         Player_ApplyGiantsMaskScale(this, 1.5f));
+        Math_AsymStepToF(&this->speedXZ, actionSpeedTarget, Player_ApplyScale(this, 1.5f),
+                         Player_ApplyScale(this, 1.5f));
         Math_ScaledStepToS(&this->yaw, yawTarget, var_v1 * 0.1f);
     }
 }
@@ -14992,8 +14976,8 @@ void Player_Action_6(Player* this, PlayState* play) {
         f32 actionSpeedTarget = speedTarget * 1.5f;
 
         GameInteractor_Should(VB_SPEED_MODIFIER_WALK, true, &actionSpeedTarget);
-        Math_AsymStepToF(&this->speedXZ, actionSpeedTarget, Player_ApplyGiantsMaskScale(this, 1.5f),
-                         Player_ApplyGiantsMaskScale(this, 2.0f));
+        Math_AsymStepToF(&this->speedXZ, actionSpeedTarget, Player_ApplyScale(this, 1.5f),
+                         Player_ApplyScale(this, 2.0f));
         Math_ScaledStepToS(&this->yaw, yawTarget, sp2A * 0.1f);
         if ((speedTarget == 0.0f) && (this->speedXZ == 0.0f)) {
             func_8083692C(this, play);
@@ -15085,14 +15069,14 @@ void Player_Action_9(Player* this, PlayState* play) {
         temp_v0 = yawTarget - this->yaw;
         var_v1 = ABS_ALT(temp_v0);
         if (var_v1 > 0x4000) {
-            if (Math_StepToF(&this->speedXZ, 0.0f, Player_ApplyGiantsMaskScale(this, 3.0f))) {
+            if (Math_StepToF(&this->speedXZ, 0.0f, Player_ApplyScale(this, 3.0f))) {
                 this->yaw = yawTarget;
             }
         } else {
             speedTarget *= 0.9f;
             GameInteractor_Should(VB_SPEED_MODIFIER_WALK, true, &speedTarget);
-            Math_AsymStepToF(&this->speedXZ, speedTarget, Player_ApplyGiantsMaskScale(this, 2.0f),
-                             Player_ApplyGiantsMaskScale(this, 3.0f));
+            Math_AsymStepToF(&this->speedXZ, speedTarget, Player_ApplyScale(this, 2.0f),
+                             Player_ApplyScale(this, 3.0f));
             Math_ScaledStepToS(&this->yaw, yawTarget, var_v1 * 0.1f);
         }
     }
@@ -15635,7 +15619,7 @@ void Player_Action_25(Player* this, PlayState* play) {
     Actor* heldActor;
 
     if (Player_CheckHostileLockOn(this)) {
-        this->actor.gravity = -1.2f;
+        this->actor.gravity = Player_ApplyScale(this, -1.2f);
     }
 
     if (!(this->actor.bgCheckFlags & BGCHECKFLAG_GROUND)) {
@@ -15704,14 +15688,14 @@ void Player_Action_25(Player* this, PlayState* play) {
                     (this->speedXZ > 0.0f)) {
                     if ((this->transformation != PLAYER_FORM_GORON) &&
                         ((this->transformation != PLAYER_FORM_DEKU) || (this->remainingHopsCounter != 0))) {
-                        if ((this->yDistToLedge >= Player_ApplyGiantsMaskScale(this, 150.0f)) &&
+                        if ((this->yDistToLedge >= Player_ApplyScale(this, 150.0f)) &&
                             (this->controlStickDirections[this->controlStickDataIndex] == PLAYER_STICK_DIR_FORWARD)) {
                             if (func_8083D860(this, play)) {
                                 func_8084C124(play, this);
                             }
                         } else if ((this->ledgeClimbType >= PLAYER_LEDGE_CLIMB_2) &&
                                    ((this->yDistToLedge <
-                                     (Player_ApplyGiantsMaskScale(this, 150.0f) * this->ageProperties->unk_08)) &&
+                                     (Player_ApplyScale(this, 150.0f) * this->ageProperties->unk_08)) &&
                                     (((this->actor.world.pos.y - this->actor.floorHeight) + this->yDistToLedge)) >
                                         (70.0f * this->ageProperties->unk_08))) {
                             AnimTaskQueue_DisableTransformTasksForGroup(play);
@@ -15777,7 +15761,7 @@ void Player_Action_26(Player* this, PlayState* play) {
     if (this->av2.actionVar2 != 0) {
         PlayerActionInterruptResult interruptResult;
 
-        Math_StepToF(&this->speedXZ, 0.0f, 2.0f);
+        Math_StepToF(&this->speedXZ, 0.0f, Player_ApplyScale(this, 2.0f));
 
         interruptResult = Player_TryActionInterrupt(play, this, &this->skelAnime, 5.0f);
 
@@ -15867,9 +15851,9 @@ void Player_Action_29(Player* this, PlayState* play) {
     this->stateFlags2 |= PLAYER_STATE2_20;
 
     if (this->transformation == PLAYER_FORM_ZORA) {
-        this->actor.gravity = Player_ApplyGiantsMaskScale(this, -0.8f);
+        this->actor.gravity = Player_ApplyScale(this, -0.8f);
     } else {
-        this->actor.gravity = Player_ApplyGiantsMaskScale(this, -1.2f);
+        this->actor.gravity = Player_ApplyScale(this, -1.2f);
     }
 
     PlayerAnimation_Update(play, &this->skelAnime);
@@ -16058,9 +16042,9 @@ void Player_Action_33(Player* this, PlayState* play) {
     if (BEN_ANIM_EQUAL(this->skelAnime.animation, gPlayerAnim_link_normal_250jump_start)) {
         this->speedXZ = 1.0f;
         if (PlayerAnimation_OnFrame(&this->skelAnime, 8.0f)) {
-            f32 speed = Player_ApplyGiantsMaskInvertedScale(this, this->yDistToLedge);
+            f32 speed = Player_ApplyInvertedScale(this, this->yDistToLedge);
 
-            speed = CLAMP_MAX(speed, Player_ApplyGiantsMaskInvertedScale(this, this->ageProperties->unk_0C));
+            speed = CLAMP_MAX(speed, Player_ApplyInvertedScale(this, this->ageProperties->unk_0C));
             if (this->stateFlags1 & PLAYER_STATE1_8000000) {
                 speed *= 0.085f;
             } else {
@@ -16567,7 +16551,7 @@ void Player_Action_Talk(Player* this, PlayState* play) {
         Player_Action_54(this, play);
         {
             f32 depthThreshold = 100.0f;
-            GameInteractor_Should(VB_PLAYER_DIVE_DEPTH_CHECK, true, &depthThreshold);
+            depthThreshold = Player_ApplyScale(this, depthThreshold);
             if (this->actor.depthInWater > depthThreshold) {
                 this->actor.velocity.y = 0.0f;
                 this->actor.gravity = 0.0f;
@@ -16857,8 +16841,8 @@ void Player_Action_50(Player* this, PlayState* play) {
     }
 
     if (this->av2.actionVar2 >= 0) {
-        f32 climbCheckHeight = Player_ApplyGiantsMaskScale(this, 268 * 0.1f);
-        f32 climbCheckXZ = Player_ApplyGiantsMaskScale(this, 50.0f);
+        f32 climbCheckHeight = Player_ApplyScale(this, 268 * 0.1f);
+        f32 climbCheckXZ = Player_ApplyScale(this, 50.0f);
 
         if ((this->actor.wallPoly != NULL) && (this->actor.wallBgId != BGCHECK_SCENE)) {
             dyna = DynaPoly_GetActor(&play->colCtx, this->actor.wallBgId);

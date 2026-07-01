@@ -320,7 +320,7 @@ s32 func_80A54A0C(ObjHugebombiwa* this) {
         sp20.z = this->actor.world.pos.z;
         if (ac != NULL) {
             f32 hitDistanceSq = Math3D_Vec3fDistSq(&sp20, &ac->world.pos);
-            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &sp20, ac, &hitDistanceSq);
+            GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &sp20, ac, &hitDistanceSq);
             if (hitDistanceSq < D_80A55D74[params]) {
                 return true;
             }
