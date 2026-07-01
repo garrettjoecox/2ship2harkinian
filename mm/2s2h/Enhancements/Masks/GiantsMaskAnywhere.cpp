@@ -279,7 +279,9 @@ static void StopCutscene(PlayState* play) {
         Play_DisableMotionBlur();
     }
 
-    R_PLAY_FILL_SCREEN_ON = false;
+    if (play != nullptr) {
+        R_PLAY_FILL_SCREEN_ON = false;
+    }
     sFlashState = GMA_FLASH_NOT_STARTED;
     sFlashAlpha = 0;
 }
