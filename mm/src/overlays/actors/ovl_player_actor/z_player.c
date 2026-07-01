@@ -5119,8 +5119,7 @@ void Player_UpdateZTargeting(Player* this, PlayState* play) {
 
                 if (GameInteractor_Should(VB_PLAYER_CAN_LOCK_ON, this->currentMask != PLAYER_MASK_GIANT, this,
                                           nextLockOnActor) &&
-                    (nextLockOnActor != NULL) &&
-                    !(nextLockOnActor->flags & ACTOR_FLAG_LOCK_ON_DISABLED) &&
+                    (nextLockOnActor != NULL) && !(nextLockOnActor->flags & ACTOR_FLAG_LOCK_ON_DISABLED) &&
                     !(this->stateFlags3 & (PLAYER_STATE3_200 | PLAYER_STATE3_2000))) {
 
                     // Tatl hovers over the current lock-on actor, so `nextLockOnActor` and `focusActor`
@@ -15075,8 +15074,7 @@ void Player_Action_9(Player* this, PlayState* play) {
         } else {
             speedTarget *= 0.9f;
             GameInteractor_Should(VB_SPEED_MODIFIER_WALK, true, &speedTarget);
-            Math_AsymStepToF(&this->speedXZ, speedTarget, Player_ApplyScale(this, 2.0f),
-                             Player_ApplyScale(this, 3.0f));
+            Math_AsymStepToF(&this->speedXZ, speedTarget, Player_ApplyScale(this, 2.0f), Player_ApplyScale(this, 3.0f));
             Math_ScaledStepToS(&this->yaw, yawTarget, var_v1 * 0.1f);
         }
     }
@@ -16853,7 +16851,8 @@ void Player_Action_50(Player* this, PlayState* play) {
             }
         }
 
-        Actor_UpdateBgCheckInfo(play, &this->actor, climbCheckHeight, 6.0f, this->ageProperties->ceilingCheckHeight + 15.0f,
+        Actor_UpdateBgCheckInfo(play, &this->actor, climbCheckHeight, 6.0f,
+                                this->ageProperties->ceilingCheckHeight + 15.0f,
                                 UPDBGCHECKINFO_FLAG_1 | UPDBGCHECKINFO_FLAG_2 | UPDBGCHECKINFO_FLAG_4);
         func_8083DD1C(play, this, climbCheckHeight, this->ageProperties->unk_3C, climbCheckXZ, -20.0f);
     }
