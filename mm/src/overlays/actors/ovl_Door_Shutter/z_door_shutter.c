@@ -294,7 +294,8 @@ s32 func_808A0E28(DoorShutter* this, PlayState* play) {
         ShutterInfo* shutterInfo = &D_808A21B0[this->unk_164];
         f32 temp_f0 = func_808A0D90(play, this, 0.0f, shutterInfo->unk_0A, shutterInfo->unk_0B);
 
-        if (GameInteractor_Should(VB_BE_NEAR_DOOR, fabsf(temp_f0) < 50.0f, &temp_f0)) {
+        if (GameInteractor_Should(VB_BE_NEAR_DOOR, fabsf(temp_f0) < 50.0f, &temp_f0) &&
+            GameInteractor_Should(VB_PLAYER_CAN_USE_DOOR, true, &this->slidingDoor.dyna.actor, &temp_f0)) {
             s16 temp_v0_2 = BINANG_SUB(player->actor.shape.rot.y, this->slidingDoor.dyna.actor.shape.rot.y);
 
             if (temp_f0 > 0.0f) {

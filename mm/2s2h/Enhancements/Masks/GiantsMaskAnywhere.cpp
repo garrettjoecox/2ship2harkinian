@@ -1,21 +1,17 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
-#include "2s2h/Enhancements/Camera/CameraUtils.h"
 
 extern "C" {
-#include "variables.h"
 #include "functions.h"
+#include "regs.h"
+#include "variables.h"
 #include "z64shrink_window.h"
-extern CameraSetting sCameraSettings[];
-extern f32 Camera_ScaledStepToCeilF(f32 target, f32 cur, f32 stepScale, f32 minDiff);
-extern s16 Camera_ScaledStepToCeilS(s16 target, s16 cur, f32 stepScale, s16 minDiff);
 }
 
 #define CVAR_NAME "gEnhancements.Masks.GiantsMaskAnywhere"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
-// Cutscene state machine (matches Boss_02's GIANTS_MASK_CS_STATE enum)
 typedef enum {
     GMA_CS_IDLE = 0,
     GMA_CS_MASK_ON = 1,
@@ -23,9 +19,9 @@ typedef enum {
     GMA_CS_MASK_OFF = 10,
     GMA_CS_MASK_OFF_SKIPPED = 11,
     GMA_CS_DONE = 20,
+    GMA_CS_POST = 21,
 } GmaCsState;
 
-// Flash effect state (matches Boss_02's GIANTS_MASK_CS_FLASH_STATE enum)
 typedef enum {
     GMA_FLASH_NOT_STARTED = 0,
     GMA_FLASH_STARTED = 1,
@@ -33,27 +29,77 @@ typedef enum {
     GMA_FLASH_DECREASE_ALPHA = 3,
 } GmaFlashState;
 
-// State machine variables
 static GmaCsState sCsState = GMA_CS_IDLE;
+static GmaFlashState sFlashState = GMA_FLASH_NOT_STARTED;
 static u32 sCsTimer = 0;
 static s16 sSubCamId = SUB_CAM_ID_DONE;
 static f32 sPlayerScale = 0.01f;
+static f32 sNextScaleFactor = 10.0f;
 static f32 sSubCamDistZ = 60.0f;
 static f32 sSubCamEyeOffsetY = 10.0f;
 static f32 sSubCamAtOffsetY = 23.0f;
 static f32 sSubCamAtOffsetTargetY = 273.0f;
 static f32 sSubCamUpRotZScale = 0.0f;
 static f32 sSubCamAtVel = 0.0f;
-static GmaFlashState sFlashState = GMA_FLASH_NOT_STARTED;
 static s16 sFlashAlpha = 0;
-static bool sIsGiant = false;
-static bool sCanSkipOn = false;
-static bool sCanSkipOff = false;
-static bool sTransformPending = false;
-static bool sIsEquipping = false;
+static bool sTransformingToGiant = false;
+static bool sHasSeenGrowCutscene = false;
+static bool sHasSeenShrinkCutscene = false;
+static bool sResetMarked = false;
+static bool sPlayerWasDead = false;
 
-// Scale ageProperties float fields by 10x for giant mode (matching MMR's GiantMask_FormProperties_Grow).
-// Skips shadowScale (0x04) and unk_08 (animation scale factor).
+static bool IsGiant() {
+    return gSaveContext.save.shipSaveInfo.giantsMaskAnywhereIsGiant != 0;
+}
+
+static void SetIsGiant(bool isGiant) {
+    gSaveContext.save.shipSaveInfo.giantsMaskAnywhereIsGiant = isGiant ? 1 : 0;
+}
+
+static bool IsTwinmoldSceneId(s16 sceneId) {
+    return sceneId == SCENE_INISIE_BS;
+}
+
+static bool IsFeatureScene(PlayState* play) {
+    return play != nullptr && !IsTwinmoldSceneId(play->sceneId);
+}
+
+static bool ShouldResetForRespawn() {
+    return gSaveContext.respawnFlag == -5 || gSaveContext.respawnFlag == 1 || gSaveContext.respawnFlag == -7;
+}
+
+static void SetGiantsMaskMagicConsumeTimer() {
+    R_MAGIC_CONSUME_TIMER_GIANTS_MASK = KREG(14) + 20;
+}
+
+static f32 GetSimpleScaleModifier() {
+    return IsGiant() ? 10.0f : 1.0f;
+}
+
+static f32 GetSimpleInvertedScaleModifier() {
+    return IsGiant() ? 0.1f : 1.0f;
+}
+
+static f32 GetMovementSpeedCap(Player* player) {
+    if (player != nullptr && player->unk_B50 > 0.0f) {
+        return player->unk_B50;
+    }
+    return R_RUN_SPEED_LIMIT / 100.0f;
+}
+
+static f32 GetHeightScaleModifier() {
+    return sPlayerScale * 100.0f;
+}
+
+static bool ShouldApplyGiantScale(Player* player) {
+    return CVAR && IsFeatureScene(gPlayState) && player != nullptr && player->actor.id == ACTOR_PLAYER &&
+           (IsGiant() || sCsState != GMA_CS_IDLE);
+}
+
+static bool ShouldApplyIdleGiantBehavior(Player* player) {
+    return ShouldApplyGiantScale(player) && IsGiant() && sCsState == GMA_CS_IDLE;
+}
+
 static void GrowAgeProperties(PlayerAgeProperties* props) {
     props->ceilingCheckHeight *= 10.0f;
     props->unk_0C *= 10.0f;
@@ -88,56 +134,117 @@ static void ShrinkAgeProperties(PlayerAgeProperties* props) {
     props->unk_40 *= 0.1f;
 }
 
-// Giant scale factor for physics (10x when giant, 1x normal)
-static f32 GetGiantScaleModifier() {
-    return sIsGiant ? 10.0f : 1.0f;
+static bool AgePropertiesAreGiant(PlayerAgeProperties* props) {
+    return props != nullptr && props->ceilingCheckHeight >= 200.0f;
 }
 
-// Restore giant-scaled physics state back to normal
-static void CleanupGiantState() {
-    if (sIsGiant && gPlayState != nullptr) {
-        Player* player = GET_PLAYER(gPlayState);
-        if (player != nullptr) {
-            if (player->ageProperties->ceilingCheckHeight >= 200.0f) {
-                ShrinkAgeProperties(player->ageProperties);
-            }
-            player->actor.flags &= ~ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
-            Actor_SetScale(&player->actor, 0.01f);
-        }
+static void GrowRegs() {
+    REG(48) *= 10;
+    REG(19) *= 10;
+    REG(32) /= 10;
+    REG(36) /= 10;
+    REG(37) /= 10;
+    REG(38) /= 10;
+    REG(43) *= 10;
+    REG(45) *= 10;
+    REG(68) *= 10;
+    IREG(66) *= 10;
+    IREG(69) /= 10;
+    MREG(95) /= 10;
+}
+
+static void ClearSavedGiantMask() {
+    if (gSaveContext.save.equippedMask == PLAYER_MASK_GIANT) {
+        gSaveContext.save.equippedMask = PLAYER_MASK_NONE;
     }
 }
 
-static void ResetState() {
-    CleanupGiantState();
+static void StopCutscene(PlayState* play) {
+    if (play != nullptr && sSubCamId != SUB_CAM_ID_DONE) {
+        func_80169AFC(play, sSubCamId, 0);
+        sSubCamId = SUB_CAM_ID_DONE;
+    }
 
+    if (play != nullptr && sCsState != GMA_CS_IDLE) {
+        Cutscene_StopManual(play, &play->csCtx);
+        Play_DisableMotionBlur();
+    }
+
+    R_PLAY_FILL_SCREEN_ON = false;
+    sFlashState = GMA_FLASH_NOT_STARTED;
+    sFlashAlpha = 0;
+}
+
+static void ClearCutsceneState(PlayState* play) {
+    StopCutscene(play);
     sCsState = GMA_CS_IDLE;
     sCsTimer = 0;
     sSubCamId = SUB_CAM_ID_DONE;
-    sPlayerScale = 0.01f;
     sSubCamDistZ = 60.0f;
     sSubCamEyeOffsetY = 10.0f;
     sSubCamAtOffsetY = 23.0f;
     sSubCamAtOffsetTargetY = 273.0f;
     sSubCamUpRotZScale = 0.0f;
     sSubCamAtVel = 0.0f;
-    sFlashState = GMA_FLASH_NOT_STARTED;
-    sFlashAlpha = 0;
-    R_PLAY_FILL_SCREEN_ON = false;
-    sIsGiant = false;
-    sCanSkipOn = false;
-    sCanSkipOff = false;
-    sTransformPending = false;
-    sIsEquipping = false;
+    sTransformingToGiant = false;
 }
 
-static void StartCutscene(PlayState* play, bool equipping) {
-    Player* player = GET_PLAYER(play);
+static void ResetPlayerGiantState(Player* player, bool clearMask) {
+    if (player == nullptr) {
+        return;
+    }
 
-    sCsState = equipping ? GMA_CS_MASK_ON : GMA_CS_MASK_OFF;
+    if (AgePropertiesAreGiant(player->ageProperties)) {
+        ShrinkAgeProperties(player->ageProperties);
+    }
+
+    player->actor.flags &= ~ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
+    Actor_SetScale(&player->actor, 0.01f);
+
+    if (clearMask) {
+        if (player->currentMask == PLAYER_MASK_GIANT) {
+            player->currentMask = PLAYER_MASK_NONE;
+        }
+        ClearSavedGiantMask();
+
+        if (player->currentBoots == PLAYER_BOOTS_GIANT) {
+            player->currentBoots = PLAYER_BOOTS_HYLIAN;
+            player->prevBoots = PLAYER_BOOTS_HYLIAN;
+            if (gPlayState != nullptr) {
+                func_80123140(gPlayState, player);
+                Magic_Reset(gPlayState);
+            }
+        }
+    }
+}
+
+static void MarkReset() {
+    sResetMarked = true;
+}
+
+static void TryReset(Player* player) {
+    if (!sResetMarked) {
+        return;
+    }
+
+    SetIsGiant(false);
+    sPlayerScale = 0.01f;
+    sNextScaleFactor = 10.0f;
+    ClearCutsceneState(gPlayState);
+    ResetPlayerGiantState(player, true);
+    sResetMarked = false;
+}
+
+static void StartCutscene(PlayState* play, Player* player, bool transformingToGiant) {
+    sTransformingToGiant = transformingToGiant;
+    sCsState = transformingToGiant ? GMA_CS_MASK_ON : GMA_CS_MASK_OFF;
     sCsTimer = 0;
     sSubCamAtVel = 0.0f;
     sSubCamUpRotZScale = 0.0f;
-    sTransformPending = false;
+    sFlashState = GMA_FLASH_NOT_STARTED;
+    sFlashAlpha = 0;
+    sPlayerScale = transformingToGiant ? 0.01f : 0.1f;
+    sNextScaleFactor = transformingToGiant ? 10.0f : 0.1f;
 
     Cutscene_StartManual(play, &play->csCtx);
     sSubCamId = Play_CreateSubCamera(play);
@@ -145,25 +252,21 @@ static void StartCutscene(PlayState* play, bool equipping) {
     Play_ChangeCameraStatus(play, sSubCamId, CAM_STATUS_ACTIVE);
     Play_EnableMotionBlur(150);
 
-    // Compute camera offsets proportional to player height (matching MMR)
     f32 playerHeight = Player_GetHeight(player);
-
-    if (equipping) {
+    if (transformingToGiant) {
         sSubCamEyeOffsetY = 10.0f;
         sSubCamDistZ = 60.0f;
         sSubCamAtOffsetY = playerHeight * 0.53f;
         sSubCamAtOffsetTargetY = playerHeight * 6.2f;
-        sPlayerScale = 0.01f;
     } else {
         sSubCamEyeOffsetY = 10.0f;
         sSubCamDistZ = 200.0f;
         sSubCamAtOffsetY = playerHeight * 0.62f;
         sSubCamAtOffsetTargetY = playerHeight * 0.053f;
-        sPlayerScale = 0.1f;
     }
 }
 
-static void UpdateFlash(PlayState* play) {
+static void UpdateFlash() {
     s16 alpha;
 
     switch (sFlashState) {
@@ -179,14 +282,14 @@ static void UpdateFlash(PlayState* play) {
             R_PLAY_FILL_SCREEN_ALPHA = 0;
             sFlashState = GMA_FLASH_INCREASE_ALPHA;
             Audio_PlaySfx(NA_SE_SY_TRANSFORM_MASK_FLASH);
-            // fallthrough
+            [[fallthrough]];
+
         case GMA_FLASH_INCREASE_ALPHA:
             sFlashAlpha += 40;
             if (sFlashAlpha >= 400) {
                 sFlashState = GMA_FLASH_DECREASE_ALPHA;
             }
-            alpha = sFlashAlpha;
-            alpha = CLAMP_MAX(alpha, 255);
+            alpha = CLAMP_MAX(sFlashAlpha, 255);
             R_PLAY_FILL_SCREEN_ALPHA = alpha;
             break;
 
@@ -197,8 +300,7 @@ static void UpdateFlash(PlayState* play) {
                 sFlashState = GMA_FLASH_NOT_STARTED;
                 R_PLAY_FILL_SCREEN_ON = false;
             } else {
-                alpha = sFlashAlpha;
-                alpha = CLAMP_MAX(alpha, 255);
+                alpha = CLAMP_MAX(sFlashAlpha, 255);
                 R_PLAY_FILL_SCREEN_ALPHA = alpha;
             }
             break;
@@ -210,62 +312,55 @@ static void UpdateSubCamera(PlayState* play, Player* player) {
     Vec3f subCamEye;
     Vec3f subCamAt;
     Vec3f subCamUp;
-    f32 subCamUpRotZ;
 
-    if (sCsState != GMA_CS_IDLE && sSubCamId != SUB_CAM_ID_DONE) {
-        Matrix_RotateYS(player->actor.shape.rot.y, MTXMODE_NEW);
-        Matrix_MultVecZ(sSubCamDistZ, &subCamEyeOffset);
-
-        subCamEye.x = player->actor.world.pos.x + subCamEyeOffset.x;
-        subCamEye.y = player->actor.world.pos.y + subCamEyeOffset.y + sSubCamEyeOffsetY;
-        subCamEye.z = player->actor.world.pos.z + subCamEyeOffset.z;
-
-        subCamAt.x = player->actor.world.pos.x;
-        subCamAt.y = player->actor.world.pos.y + sSubCamAtOffsetY;
-        subCamAt.z = player->actor.world.pos.z;
-
-        subCamUpRotZ = Math_SinS(sCsTimer * 1512) * sSubCamUpRotZScale;
-        Matrix_RotateZF(subCamUpRotZ, MTXMODE_APPLY);
-        Matrix_MultVecY(1.0f, &subCamUp);
-
-        Play_SetCameraAtEyeUp(play, sSubCamId, &subCamAt, &subCamEye, &subCamUp);
-        ShrinkWindow_Letterbox_SetSizeTarget(27);
+    if (sSubCamId == SUB_CAM_ID_DONE) {
+        return;
     }
+
+    Matrix_RotateYS(player->actor.shape.rot.y, MTXMODE_NEW);
+    Matrix_MultVecZ(sSubCamDistZ, &subCamEyeOffset);
+
+    subCamEye.x = player->actor.world.pos.x + subCamEyeOffset.x;
+    subCamEye.y = player->actor.world.pos.y + subCamEyeOffset.y + sSubCamEyeOffsetY;
+    subCamEye.z = player->actor.world.pos.z + subCamEyeOffset.z;
+
+    subCamAt.x = player->actor.world.pos.x;
+    subCamAt.y = player->actor.world.pos.y + sSubCamAtOffsetY;
+    subCamAt.z = player->actor.world.pos.z;
+
+    Matrix_RotateZF(Math_SinS(sCsTimer * 1512) * sSubCamUpRotZScale, MTXMODE_APPLY);
+    Matrix_MultVecY(1.0f, &subCamUp);
+
+    Play_SetCameraAtEyeUp(play, sSubCamId, &subCamAt, &subCamEye, &subCamUp);
+    ShrinkWindow_Letterbox_SetSizeTarget(27);
 }
 
-static void FinishCutscene(PlayState* play, Player* player, bool wasEquipping) {
+static void FinishCutscene(PlayState* play, Player* player) {
     player->stateFlags1 &= ~PLAYER_STATE1_100;
+    player->meleeWeaponState = PLAYER_MELEE_WEAPON_STATE_0;
 
-    if (sSubCamId != SUB_CAM_ID_DONE) {
-        func_80169AFC(play, sSubCamId, 0);
-        sSubCamId = SUB_CAM_ID_DONE;
-    }
+    StopCutscene(play);
 
-    Cutscene_StopManual(play, &play->csCtx);
-    Play_DisableMotionBlur();
-
-    if (wasEquipping) {
-        sPlayerScale = 0.1f;
-        sIsGiant = true;
-    } else {
-        sPlayerScale = 0.01f;
-        sIsGiant = false;
-    }
-
-    sCsState = GMA_CS_IDLE;
+    SetIsGiant(sTransformingToGiant);
+    sPlayerScale = sTransformingToGiant ? 0.1f : 0.01f;
+    sNextScaleFactor = sTransformingToGiant ? 0.1f : 10.0f;
+    sCsState = GMA_CS_POST;
+    sCsTimer = 0;
 }
 
 static void UpdateCutscene(PlayState* play, Player* player) {
-    bool goDone = false;
+    bool done = false;
+    static constexpr u16 skipButtons = BTN_A | BTN_B | BTN_CUP | BTN_CDOWN | BTN_CLEFT | BTN_CRIGHT;
 
     sCsTimer++;
+    if (sSubCamId != SUB_CAM_ID_DONE) {
+        CutsceneManager_ClearNextCutscenes();
+    }
 
     switch (sCsState) {
         case GMA_CS_MASK_ON:
-            // Skip check
-            if ((sCsTimer < 80) && sCanSkipOn &&
-                CHECK_BTN_ANY(CONTROLLER1(&play->state)->press.button,
-                              BTN_A | BTN_B | BTN_CUP | BTN_CDOWN | BTN_CLEFT | BTN_CRIGHT | BTN_DPAD_EQUIP)) {
+            if (sCsTimer < 80 && sHasSeenGrowCutscene &&
+                CHECK_BTN_ANY(CONTROLLER1(&play->state)->press.button, skipButtons)) {
                 sCsState = GMA_CS_MASK_ON_SKIPPED;
                 sFlashState = GMA_FLASH_STARTED;
                 sCsTimer = 0;
@@ -273,21 +368,17 @@ static void UpdateCutscene(PlayState* play, Player* player) {
             }
 
             if (sCsTimer >= 50) {
-                if (sCsTimer == 60) {
+                if (sCsTimer == (u32)(BREG(43) + 60)) {
                     Audio_PlaySfx(NA_SE_PL_TRANSFORM_GIANT);
                 }
-
-                // Camera pulls back, player grows
                 Math_ApproachF(&sSubCamDistZ, 200.0f, 0.1f, sSubCamAtVel * 640.0f);
                 Math_ApproachF(&sSubCamAtOffsetY, sSubCamAtOffsetTargetY, 0.1f, sSubCamAtVel * 150.0f);
                 Math_ApproachF(&sPlayerScale, 0.1f, 0.2f, sSubCamAtVel * 0.1f);
                 Math_ApproachF(&sSubCamAtVel, 1.0f, 1.0f, 0.001f);
             } else {
-                // Camera approaches player
                 Math_ApproachF(&sSubCamDistZ, 30.0f, 0.1f, 1.0f);
             }
 
-            // Camera roll
             if (sCsTimer > 50) {
                 Math_ApproachZeroF(&sSubCamUpRotZScale, 1.0f, 0.06f);
             } else {
@@ -299,294 +390,463 @@ static void UpdateCutscene(PlayState* play, Player* player) {
             }
 
             if (sCsTimer > 120) {
-                sCanSkipOn = true;
-                goDone = true;
+                sHasSeenGrowCutscene = true;
+                done = true;
             }
             break;
 
         case GMA_CS_MASK_ON_SKIPPED:
-            // Snap scale to final value during skip
             Math_ApproachF(&sPlayerScale, 0.1f, 0.5f, 0.05f);
-            if (sCsTimer >= 8) {
-                goDone = true;
-            }
+            done = sCsTimer >= 8;
             break;
 
         case GMA_CS_MASK_OFF:
-            // Skip check
-            if ((sCsTimer < 30) && sCanSkipOff &&
-                CHECK_BTN_ANY(CONTROLLER1(&play->state)->press.button,
-                              BTN_A | BTN_B | BTN_CUP | BTN_CDOWN | BTN_CLEFT | BTN_CRIGHT | BTN_DPAD_EQUIP)) {
+            if (sCsTimer < 30 && sHasSeenShrinkCutscene &&
+                CHECK_BTN_ANY(CONTROLLER1(&play->state)->press.button, skipButtons)) {
                 sCsState = GMA_CS_MASK_OFF_SKIPPED;
                 sFlashState = GMA_FLASH_STARTED;
                 sCsTimer = 0;
                 break;
             }
 
-            if (sCsTimer != 0) {
-                if (sCsTimer == 10) {
-                    Audio_PlaySfx(NA_SE_PL_TRANSFORM_NORAML);
-                }
-
-                // Camera approaches, player shrinks
-                Math_ApproachF(&sSubCamDistZ, 60.0f, 0.1f, sSubCamAtVel * 640.0f);
-                Math_ApproachF(&sSubCamAtOffsetY, sSubCamAtOffsetTargetY, 0.1f, sSubCamAtVel * 150.0f);
-                Math_ApproachF(&sPlayerScale, 0.01f, 0.1f, 0.003f);
-                Math_ApproachF(&sSubCamAtVel, 2.0f, 1.0f, 0.01f);
+            if (sCsTimer == (u32)(BREG(44) + 10)) {
+                Audio_PlaySfx(NA_SE_PL_TRANSFORM_NORAML);
             }
+
+            Math_ApproachF(&sSubCamDistZ, 60.0f, 0.1f, sSubCamAtVel * 640.0f);
+            Math_ApproachF(&sSubCamAtOffsetY, sSubCamAtOffsetTargetY, 0.1f, sSubCamAtVel * 150.0f);
+            Math_ApproachF(&sPlayerScale, 0.01f, 0.1f, 0.003f);
+            Math_ApproachF(&sSubCamAtVel, 2.0f, 1.0f, 0.01f);
 
             if (sCsTimer == 42) {
                 sFlashState = GMA_FLASH_STARTED;
             }
 
             if (sCsTimer > 50) {
-                sCanSkipOff = true;
-                goDone = true;
+                sHasSeenShrinkCutscene = true;
+                done = true;
             }
             break;
 
         case GMA_CS_MASK_OFF_SKIPPED:
-            // Snap scale to final value during skip
             Math_ApproachF(&sPlayerScale, 0.01f, 0.5f, 0.005f);
-            if (sCsTimer >= 8) {
-                goDone = true;
-            }
+            done = sCsTimer >= 8;
             break;
 
         default:
             break;
     }
 
-    if (goDone) {
-        bool wasEquipping = (sCsState == GMA_CS_MASK_ON || sCsState == GMA_CS_MASK_ON_SKIPPED);
-        FinishCutscene(play, player, wasEquipping);
+    if (done) {
+        FinishCutscene(play, player);
+    } else {
+        f32 scale = sPlayerScale;
+        if (player->transformation == PLAYER_FORM_FIERCE_DEITY) {
+            scale *= 1.5f;
+        }
+        Actor_SetScale(&player->actor, scale);
+        UpdateSubCamera(play, player);
+    }
+}
+
+static void MaintainGiantState(PlayState* play, Player* player) {
+    if (sCsState == GMA_CS_POST) {
+        if (IsGiant()) {
+            if (!AgePropertiesAreGiant(player->ageProperties)) {
+                GrowAgeProperties(player->ageProperties);
+            }
+            if (REG(68) > -200) {
+                GrowRegs();
+            }
+        } else {
+            ResetPlayerGiantState(player, false);
+        }
+        sCsState = GMA_CS_IDLE;
+        return;
     }
 
-    // Apply scale every frame during cutscene (with Fierce Deity multiplier)
-    f32 scale = sPlayerScale;
+    if (sCsState != GMA_CS_IDLE) {
+        return;
+    }
+
+    if (!IsGiant()) {
+        ResetPlayerGiantState(player, false);
+        return;
+    }
+
+    if (player->transformation != PLAYER_FORM_HUMAN) {
+        MarkReset();
+        TryReset(player);
+        return;
+    }
+
+    player->currentMask = PLAYER_MASK_GIANT;
+    gSaveContext.save.equippedMask = PLAYER_MASK_GIANT;
+
+    if (player->currentBoots != PLAYER_BOOTS_GIANT) {
+        SetGiantsMaskMagicConsumeTimer();
+        Magic_Consume(play, 0, MAGIC_CONSUME_GIANTS_MASK);
+        player->currentBoots = PLAYER_BOOTS_GIANT;
+        player->prevBoots = PLAYER_BOOTS_GIANT;
+        func_80123140(play, player);
+    }
+
+    if (!AgePropertiesAreGiant(player->ageProperties)) {
+        GrowAgeProperties(player->ageProperties);
+    }
+    if (REG(68) > -200) {
+        GrowRegs();
+    }
+
+    player->actor.flags |= ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
+
+    f32 scale = 0.1f;
     if (player->transformation == PLAYER_FORM_FIERCE_DEITY) {
         scale *= 1.5f;
     }
     Actor_SetScale(&player->actor, scale);
-
-    // Update sub-camera
-    UpdateSubCamera(play, player);
+    sPlayerScale = 0.1f;
+    sNextScaleFactor = 0.1f;
 }
 
-void RegisterGiantsMaskAnywhere() {
-    // Cleanup if CVar is being disabled while giant
-    if (!CVAR && sIsGiant && gPlayState != nullptr) {
-        ResetState();
+static void BeforePlayerUpdate(Actor* actor, bool*) {
+    Player* player = (Player*)actor;
+    PlayState* play = gPlayState;
+
+    if (!CVAR || !IsFeatureScene(play) || ShouldResetForRespawn()) {
+        MarkReset();
+        TryReset(player);
+        return;
     }
 
-    // Enable the Giant's Mask button outside Twinmold's Lair
+    if ((player->stateFlags1 & PLAYER_STATE1_100) && sCsState == GMA_CS_IDLE) {
+        StartCutscene(play, player, !IsGiant());
+    }
+
+    if (sCsState != GMA_CS_IDLE) {
+        UpdateCutscene(play, player);
+    }
+
+    UpdateFlash();
+    MaintainGiantState(play, player);
+}
+
+static void ResetForSceneState(s16 sceneId) {
+    ClearCutsceneState(gPlayState);
+
+    if (!CVAR || IsTwinmoldSceneId(sceneId) || ShouldResetForRespawn()) {
+        MarkReset();
+        SetIsGiant(false);
+        ClearSavedGiantMask();
+        sPlayerScale = 0.01f;
+        sNextScaleFactor = 10.0f;
+        return;
+    }
+
+    sPlayerScale = IsGiant() ? 0.1f : 0.01f;
+    sNextScaleFactor = IsGiant() ? 0.1f : 10.0f;
+}
+
+static void RegisterGiantsMaskAnywhere() {
+    if (!CVAR) {
+        MarkReset();
+        TryReset(gPlayState != nullptr ? GET_PLAYER(gPlayState) : nullptr);
+    }
+
+    COND_HOOK(OnSceneInit, true, [](s8 sceneId, s8) { ResetForSceneState(sceneId); });
+
+    COND_HOOK(OnSaveLoad, true, [](s16) {
+        if (!CVAR) {
+            SetIsGiant(false);
+            ClearSavedGiantMask();
+        }
+        sPlayerScale = IsGiant() ? 0.1f : 0.01f;
+        sNextScaleFactor = IsGiant() ? 0.1f : 10.0f;
+    });
+
+    COND_HOOK(BeforeMoonCrash, CVAR, []() {
+        MarkReset();
+        SetIsGiant(false);
+        ClearSavedGiantMask();
+    });
+
+    COND_HOOK(AfterEndOfCycleSave, CVAR, []() {
+        MarkReset();
+        SetIsGiant(false);
+        ClearSavedGiantMask();
+    });
+
+    COND_HOOK(OnGameStateUpdate, CVAR, []() {
+        if (gPlayState == nullptr) {
+            return;
+        }
+
+        Player* player = GET_PLAYER(gPlayState);
+        if (player == nullptr) {
+            return;
+        }
+
+        bool playerIsDead = player->stateFlags1 & PLAYER_STATE1_DEAD;
+        if (playerIsDead && !sPlayerWasDead) {
+            MarkReset();
+            TryReset(player);
+        }
+        sPlayerWasDead = playerIsDead;
+    });
+
+    COND_ID_HOOK(ShouldActorUpdate, ACTOR_PLAYER, CVAR, BeforePlayerUpdate);
+
     COND_VB_SHOULD(VB_DISABLE_GIANTS_MASK, CVAR, { *should = false; });
 
-    // Detect when a Giant's Mask transformation starts
-    // Does NOT modify *should — the vanilla PLAYER_STATE1_100 flag is still set
-    COND_VB_SHOULD(VB_PLAY_GIANTS_MASK_CS, CVAR, {
-        Player* player = GET_PLAYER(gPlayState);
-        sTransformPending = true;
-        sIsEquipping = (player->currentMask == PLAYER_MASK_GIANT);
-    });
+    COND_VB_SHOULD(VB_ITEM_BE_RESTRICTED, CVAR, {
+        ItemId* itemId = va_arg(args, ItemId*);
+        Player* player = gPlayState != nullptr ? GET_PLAYER(gPlayState) : nullptr;
 
-    // Per-frame update — runs cutscene state machine and maintains giant scale/physics
-    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, CVAR, [](Actor* actor) {
-        Player* player = (Player*)actor;
-        PlayState* play = gPlayState;
-
-        // In Twinmold's Lair, Boss_02 handles the transformation cutscene
-        if (play->sceneId == SCENE_INISIE_BS) {
-            if (sIsGiant || sCsState != GMA_CS_IDLE) {
-                ResetState();
-            }
-            return;
-        }
-
-        // Start cutscene when VB hook signals a transformation
-        if (sTransformPending && sCsState == GMA_CS_IDLE) {
-            StartCutscene(play, sIsEquipping);
-        }
-        sTransformPending = false;
-
-        // Run cutscene state machine
-        if (sCsState != GMA_CS_IDLE) {
-            UpdateCutscene(play, player);
-        }
-
-        // Run flash effect independently of cutscene state
-        if (sFlashState != GMA_FLASH_NOT_STARTED) {
-            UpdateFlash(play);
-        }
-
-        // Per-frame giant mode maintenance (outside of cutscene)
-        if (sIsGiant && sCsState == GMA_CS_IDLE) {
-            // Scale ageProperties if not already scaled (threshold guard)
-            if (player->ageProperties->ceilingCheckHeight < 200.0f) {
-                GrowAgeProperties(player->ageProperties);
-                player->actor.flags |= ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
-            }
-
-            // Apply giant scale (with Fierce Deity multiplier)
-            f32 scale = 0.1f;
-            if (player->transformation == PLAYER_FORM_FIERCE_DEITY) {
-                scale *= 1.5f;
-            }
-            Actor_SetScale(&player->actor, scale);
-        } else if (!sIsGiant && sCsState == GMA_CS_IDLE) {
-            // Restore ageProperties if still scaled (e.g. after mask removal)
-            if (player->ageProperties->ceilingCheckHeight >= 200.0f) {
-                ShrinkAgeProperties(player->ageProperties);
-            }
-            player->actor.flags &= ~ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
-        }
-
-        // Detect mask removal from scene change (game auto-clears Giant's Mask)
-        if (sIsGiant && player->currentMask != PLAYER_MASK_GIANT && sCsState == GMA_CS_IDLE) {
-            sIsGiant = false;
-            if (player->ageProperties->ceilingCheckHeight >= 200.0f) {
-                ShrinkAgeProperties(player->ageProperties);
-            }
-            player->actor.flags &= ~ACTOR_FLAG_CAN_PRESS_HEAVY_SWITCHES;
-            Actor_SetScale(&player->actor, 0.01f);
+        if ((itemId != nullptr) && (*itemId == ITEM_MASK_GIANT) && IsFeatureScene(gPlayState) && (player != nullptr) &&
+            (player->transformation == PLAYER_FORM_HUMAN)) {
+            *should = false;
         }
     });
 
-    // Override camera for giant Link (VB_USE_CUSTOM_CAMERA pattern from FreeLook.cpp)
-    COND_VB_SHOULD(VB_USE_CUSTOM_CAMERA, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
+    COND_VB_SHOULD(VB_GIANTS_MASK_TRANSFORMATION_STATE, CVAR, {
+        Player* player = va_arg(args, Player*);
+        PlayState* play = va_arg(args, PlayState*);
+        u32* stateFlags1 = va_arg(args, u32*);
+
+        if ((stateFlags1 != nullptr) && IsFeatureScene(play) && (player != nullptr)) {
+            *stateFlags1 |= PLAYER_STATE1_10000000;
+        }
+    });
+
+    COND_VB_SHOULD(VB_GIANTS_MASK_CLEAR_ON_LOAD, true, {
+        Player* player = va_arg(args, Player*);
+        PlayState* play = va_arg(args, PlayState*);
+
+        if (!CVAR || !IsFeatureScene(play) || ShouldResetForRespawn()) {
+            MarkReset();
+            SetIsGiant(false);
+            sPlayerScale = 0.01f;
+            sNextScaleFactor = 10.0f;
             return;
         }
 
-        Camera* camera = va_arg(args, Camera*);
-        PlayState* play = gPlayState;
-
-        if (play == nullptr || play->sceneId == SCENE_INISIE_BS) {
-            return;
+        SetIsGiant(true);
+        sPlayerScale = 0.1f;
+        sNextScaleFactor = 0.1f;
+        SetGiantsMaskMagicConsumeTimer();
+        gSaveContext.magicState = MAGIC_STATE_CONSUME_GIANTS_MASK;
+        if (player != nullptr) {
+            player->currentMask = PLAYER_MASK_GIANT;
         }
-
-        if (camera != Play_GetCamera(play, CAM_ID_MAIN)) {
-            return;
-        }
-
-        // Only override normal gameplay camera modes (match FreeLook pattern)
-        switch (sCameraSettings[camera->setting].cameraModes[camera->mode].funcId) {
-            case CAM_FUNC_NORMAL0:
-            case CAM_FUNC_NORMAL1:
-            case CAM_FUNC_NORMAL3:
-            case CAM_FUNC_NORMAL4:
-            case CAM_FUNC_JUMP2:
-            case CAM_FUNC_JUMP3:
-                break;
-            default:
-                return;
-        }
-
-        Player* player = GET_PLAYER(play);
-        f32 scaleFactor = sPlayerScale / 0.01f; // 10.0f when giant
-        f32 giantHeight = Player_GetHeight(player) * scaleFactor;
-
-        // Compute look-at target: giant Link's upper body
-        Vec3f atTarget;
-        atTarget.x = player->actor.world.pos.x;
-        atTarget.y = player->actor.world.pos.y + giantHeight * 0.6f;
-        atTarget.z = player->actor.world.pos.z;
-
-        // Use current camera yaw/pitch to preserve user-controlled rotation
-        VecGeo eyeDir = OLib_Vec3fDiffToVecGeo(&camera->at, &camera->eye);
-
-        // Compute eye position at proportional distance behind player
-        VecGeo eyeOffset;
-        eyeOffset.yaw = eyeDir.yaw;
-        eyeOffset.pitch = eyeDir.pitch;
-        eyeOffset.r = giantHeight * 2.5f;
-
-        Vec3f eyeTarget = OLib_AddVecGeoToVec3f(&atTarget, &eyeOffset);
-
-        // Smooth approach to targets for non-jarring transitions
-        Math_ApproachF(&camera->at.x, atTarget.x, 0.3f, 50.0f);
-        Math_ApproachF(&camera->at.y, atTarget.y, 0.3f, 50.0f);
-        Math_ApproachF(&camera->at.z, atTarget.z, 0.3f, 50.0f);
-
-        Math_ApproachF(&camera->eye.x, eyeTarget.x, 0.3f, 50.0f);
-        Math_ApproachF(&camera->eye.y, eyeTarget.y, 0.3f, 50.0f);
-        Math_ApproachF(&camera->eye.z, eyeTarget.z, 0.3f, 50.0f);
-
-        camera->eyeNext = camera->eye;
-        camera->dist = eyeOffset.r;
-        camera->fov = Camera_ScaledStepToCeilF(60.0f, camera->fov, camera->fovUpdateRate, 0.1f);
-        camera->roll = Camera_ScaledStepToCeilS(0, camera->roll, 0.5f, 5);
-
         *should = false;
     });
 
-    // Scale walking speed for giant mode
-    COND_VB_SHOULD(VB_SPEED_MODIFIER_WALK, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
+    COND_VB_SHOULD(VB_GIANTS_MASK_CEILING_CHECK_HEIGHT, CVAR, {
+        va_arg(args, Player*);
+        PlayerItemAction itemAction = *va_arg(args, PlayerItemAction*);
+        f32* ceilingCheckHeight = va_arg(args, f32*);
+
+        if (itemAction == PLAYER_IA_MASK_GIANT) {
+            *ceilingCheckHeight *= sNextScaleFactor;
         }
-        f32* speedTarget = va_arg(args, f32*);
-        *speedTarget *= GetGiantScaleModifier();
     });
 
-    // Scale swimming speed for giant mode
-    COND_VB_SHOULD(VB_SPEED_MODIFIER_SWIM, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
+    COND_VB_SHOULD(VB_GIANTS_MASK_AUTO_REMOVE, CVAR, {
+        Player* player = va_arg(args, Player*);
+        if (ShouldApplyIdleGiantBehavior(player) && (player->stateFlags1 & PLAYER_STATE1_8000000)) {
+            *should = false;
         }
+    });
+
+    COND_VB_SHOULD(VB_USE_ITEM_CONSIDER_ITEM_ACTION, CVAR, {
+        PlayerItemAction itemAction = *va_arg(args, PlayerItemAction*);
+        Player* player = GET_PLAYER(gPlayState);
+
+        if (itemAction == PLAYER_IA_MASK_GIANT && player != nullptr && player->transformation == PLAYER_FORM_HUMAN &&
+            IsGiant()) {
+            *should = true;
+        }
+    });
+
+    COND_VB_SHOULD(VB_DISABLE_ITEM_UNDERWATER, CVAR, {
+        s32 item = va_arg(args, s32);
+        Player* player = GET_PLAYER(gPlayState);
+
+        if (item == ITEM_MASK_GIANT && player != nullptr && player->transformation == PLAYER_FORM_HUMAN && IsGiant() &&
+            Player_GetEnvironmentalHazard(gPlayState) > PLAYER_ENV_HAZARD_UNDERWATER_FLOOR) {
+            *should = false;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_MELEE_WEAPON_DAMAGE, CVAR, {
+        Player* player = va_arg(args, Player*);
+        u32* dmgFlags = va_arg(args, u32*);
+        va_arg(args, s32*);
+
+        if (ShouldApplyIdleGiantBehavior(player)) {
+            *dmgFlags = DMG_POWDER_KEG | DMG_EXPLOSIVES | DMG_GORON_PUNCH | DMG_UNK_0x1E;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_GET_HEIGHT, CVAR, {
+        Player* player = va_arg(args, Player*);
+        f32* height = va_arg(args, f32*);
+
+        if (ShouldApplyGiantScale(player)) {
+            *height *= GetHeightScaleModifier();
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_CAN_USE_DOOR, CVAR, {
+        va_arg(args, Actor*);
+        va_arg(args, f32*);
+
+        if (IsGiant() && IsFeatureScene(gPlayState)) {
+            *should = false;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_CAN_BE_GRABBED, CVAR, {
+        Player* player = va_arg(args, Player*);
+
+        if (ShouldApplyIdleGiantBehavior(player)) {
+            *should = false;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PLAYER_SHOULD_BE_KNOCKED_OVER, CVAR, {
+        va_arg(args, PlayState*);
+        Player* player = va_arg(args, Player*);
+        va_arg(args, s32);
+
+        if (ShouldApplyGiantScale(player) && IsGiant()) {
+            *should = false;
+        }
+    });
+
+    COND_VB_SHOULD(VB_GYORG_STOP_CATCHING_PLAYER, CVAR, {
+        va_arg(args, Actor*);
+        Player* player = va_arg(args, Player*);
+
+        if (ShouldApplyIdleGiantBehavior(player)) {
+            *should = true;
+        }
+    });
+
+    COND_VB_SHOULD(VB_GIANTS_MASK_HIT_DISTANCE, CVAR, {
+        va_arg(args, Vec3f*);
+        Actor* hittingActor = va_arg(args, Actor*);
+        f32* hitDistanceSq = va_arg(args, f32*);
+
+        if ((hittingActor != nullptr) && ShouldApplyIdleGiantBehavior((Player*)hittingActor) &&
+            (hitDistanceSq != nullptr)) {
+            *hitDistanceSq = 0.0f;
+        }
+    });
+
+    COND_VB_SHOULD(VB_GIANTS_MASK_JUMPSLASH_VELOCITY, CVAR, {
+        Player* player = va_arg(args, Player*);
+        f32* linearVelocity = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player) && (linearVelocity != nullptr)) {
+            *linearVelocity *= GetSimpleScaleModifier();
+        }
+    });
+
+    COND_VB_SHOULD(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, CVAR, {
+        Player* player = va_arg(args, Player*);
+        f32* value = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player) && (value != nullptr)) {
+            *value *= GetSimpleScaleModifier();
+        }
+    });
+
+    COND_VB_SHOULD(VB_GIANTS_MASK_INVERT_PLAYER_VALUE, CVAR, {
+        Player* player = va_arg(args, Player*);
+        f32* value = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player) && (value != nullptr)) {
+            *value *= GetSimpleInvertedScaleModifier();
+        }
+    });
+
+    COND_VB_SHOULD(VB_SPEED_MODIFIER_WALK, CVAR, {
+        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
+        f32* speedTarget = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player) && (speedTarget != nullptr)) {
+            *speedTarget *= GetSimpleScaleModifier();
+            *speedTarget = CLAMP_MAX(*speedTarget, GetMovementSpeedCap(player));
+        }
+    });
+
+    COND_VB_SHOULD(VB_SPEED_MODIFIER_SWIM, CVAR, {
+        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
         f32* incrStep = va_arg(args, f32*);
         f32* maxSpeed = va_arg(args, f32*);
         f32* speed = va_arg(args, f32*);
         f32* speedTarget = va_arg(args, f32*);
-        f32 mod = GetGiantScaleModifier();
-        *maxSpeed *= mod;
-        Math_AsymStepToF(speed, *speedTarget * 0.8f * mod, *incrStep, (fabsf(*speed) * 0.02f) + 0.05f);
-        *should = false;
+
+        (void)incrStep;
+        (void)speed;
+
+        if (ShouldApplyIdleGiantBehavior(player) && (maxSpeed != nullptr) && (speedTarget != nullptr)) {
+            *speedTarget *= GetSimpleScaleModifier();
+            *speedTarget = CLAMP_MAX(*speedTarget, *maxSpeed / 0.8f);
+        }
     });
 
-    // Scale climbing speed for giant mode
+    COND_VB_SHOULD(VB_CLAMP_ANIMATION_SPEED, CVAR, {
+        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
+        f32* animationSpeed = va_arg(args, f32*);
+
+        if (ShouldApplyIdleGiantBehavior(player) && (animationSpeed != nullptr)) {
+            *animationSpeed *= GetSimpleInvertedScaleModifier();
+            *animationSpeed = CLAMP(*animationSpeed, 1.0f, 2.5f);
+            *should = false;
+        }
+    });
+
     COND_VB_SHOULD(VB_SET_CLIMB_SPEED, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
+        if (IsGiant() && sCsState == GMA_CS_IDLE) {
+            f32* direction = va_arg(args, f32*);
+            *direction *= GetSimpleScaleModifier();
         }
-        f32* direction = va_arg(args, f32*);
-        *direction *= GetGiantScaleModifier();
     });
 
-    // Scale air control for giant mode
     COND_VB_SHOULD(VB_APPLY_AIR_CONTROL, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
-        }
+        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
         f32* speedTarget = va_arg(args, f32*);
-        *speedTarget *= GetGiantScaleModifier();
+
+        if (ShouldApplyIdleGiantBehavior(player) && (speedTarget != nullptr)) {
+            *speedTarget *= GetSimpleScaleModifier();
+            *speedTarget = CLAMP_MAX(*speedTarget, GetMovementSpeedCap(player));
+        }
     });
 
-    // Scale Z-target speed for giant mode
     COND_VB_SHOULD(VB_ZTARGET_SPEED_CHECK, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
-        }
+        Player* player = (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
         f32* speed = va_arg(args, f32*);
-        *speed *= GetGiantScaleModifier();
+
+        if (ShouldApplyIdleGiantBehavior(player) && (speed != nullptr)) {
+            *speed *= GetSimpleScaleModifier();
+            *speed = CLAMP_MAX(*speed, GetMovementSpeedCap(player));
+        }
     });
 
-    // Scale dive depth threshold for giant mode (fixes infinite resurface loop)
     COND_VB_SHOULD(VB_PLAYER_DIVE_DEPTH_CHECK, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
+        if (IsGiant() && sCsState == GMA_CS_IDLE) {
+            f32* depthThreshold = va_arg(args, f32*);
+            *depthThreshold *= GetSimpleScaleModifier();
         }
-        f32* depthThreshold = va_arg(args, f32*);
-        *depthThreshold *= GetGiantScaleModifier();
     });
 
-    // Scale ledge climb height deltas for giant mode
     COND_VB_SHOULD(VB_PLAYER_LEDGE_CLIMB_FACTOR, CVAR, {
-        if (!sIsGiant || sCsState != GMA_CS_IDLE) {
-            return;
+        if (IsGiant() && sCsState == GMA_CS_IDLE) {
+            f32* climbDelta = va_arg(args, f32*);
+            *climbDelta *= GetSimpleScaleModifier();
         }
-        f32* climbDelta = va_arg(args, f32*);
-        *climbDelta *= GetGiantScaleModifier();
     });
 }
 

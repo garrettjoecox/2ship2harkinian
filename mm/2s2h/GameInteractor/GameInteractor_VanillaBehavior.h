@@ -2579,6 +2579,139 @@ typedef enum {
     // #### `args`
     // - `*f32` (climbDelta - hardcoded ledge climb height: 60.0f, 59.0f, or 41.0f)
     VB_PLAYER_LEDGE_CLIMB_FACTOR,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*PlayState`
+    // - `*u32` (stateFlags1)
+    VB_GIANTS_MASK_TRANSFORMATION_STATE,
+
+    // #### `result`
+    // ```c
+    // gSaveContext.save.equippedMask == PLAYER_MASK_GIANT
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*PlayState`
+    VB_GIANTS_MASK_CLEAR_ON_LOAD,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*PlayerItemAction`
+    // - `*f32` (ceilingCheckHeight)
+    VB_GIANTS_MASK_CEILING_CHECK_HEIGHT,
+
+    // #### `result`
+    // ```c
+    // (this->currentMask == PLAYER_MASK_GIANT) && (gSaveContext.save.saveInfo.playerData.magic == 0)
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_GIANTS_MASK_AUTO_REMOVE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*u32` (dmgFlags)
+    // - `*s32` (damage)
+    VB_PLAYER_MELEE_WEAPON_DAMAGE,
+
+    // #### `result`
+    // ```c
+    // computed Player height
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (height)
+    VB_PLAYER_GET_HEIGHT,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Actor` (door)
+    // - `*f32` (player z position relative to door)
+    VB_PLAYER_CAN_USE_DOOR,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_PLAYER_CAN_BE_GRABBED,
+
+    // #### `result`
+    // ```c
+    // (damageEffect == 1) || (damageEffect == 2) ||
+    //     !(this->actor.bgCheckFlags & BGCHECKFLAG_GROUND) ||
+    //     (this->stateFlags1 & (PLAYER_STATE1_4 | PLAYER_STATE1_2000 | PLAYER_STATE1_4000 | PLAYER_STATE1_200000))
+    // ```
+    // #### `args`
+    // - `*PlayState`
+    // - `*Player`
+    // - `s32` (damageEffect)
+    VB_PLAYER_SHOULD_BE_KNOCKED_OVER,
+
+    // #### `result`
+    // ```c
+    // ((player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
+    //  (player->actor.shape.feetPos[FOOT_LEFT].y >= WATER_HEIGHT + 8.0f)) ||
+    //     (this->workTimer[WORK_TIMER_CURRENT_ACTION] == 0)
+    // ```
+    // #### `args`
+    // - `*Actor` (Gyorg)
+    // - `*Player`
+    VB_GYORG_STOP_CATCHING_PLAYER,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Vec3f` (position)
+    // - `*Actor` (hittingActor)
+    // - `*f32` (hitDistanceSq)
+    VB_GIANTS_MASK_HIT_DISTANCE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (linearVelocity)
+    VB_GIANTS_MASK_JUMPSLASH_VELOCITY,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (value)
+    VB_GIANTS_MASK_SCALE_PLAYER_VALUE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (value)
+    VB_GIANTS_MASK_INVERT_PLAYER_VALUE,
 } GIVanillaBehavior;
 
 #endif

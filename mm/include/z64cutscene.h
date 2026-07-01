@@ -830,6 +830,7 @@ u8 Cutscene_IsPlaying(struct PlayState* play);
 void CutsceneManager_Init(struct PlayState* play, ActorCutscene* cutsceneList, s16 numEntries);
 void CutsceneManager_StoreCamera(Camera* camera);
 void CutsceneManager_ClearWaiting(void);
+void CutsceneManager_ClearNextCutscenes(void);
 s16 CutsceneManager_Update(void);
 void CutsceneManager_Queue(s16 csId);
 s16 CutsceneManager_IsNext(s16 csId);

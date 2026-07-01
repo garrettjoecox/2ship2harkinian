@@ -8,6 +8,7 @@
 #include "z64quake.h"
 #include "z64rumble.h"
 #include "objects/object_bombiwa/object_bombiwa.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED)
@@ -318,7 +319,9 @@ s32 func_80A54A0C(ObjHugebombiwa* this) {
         sp20.y = this->actor.world.pos.y + 50.0f;
         sp20.z = this->actor.world.pos.z;
         if (ac != NULL) {
-            if (Math3D_Vec3fDistSq(&sp20, &ac->world.pos) < D_80A55D74[params]) {
+            f32 hitDistanceSq = Math3D_Vec3fDistSq(&sp20, &ac->world.pos);
+            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &sp20, ac, &hitDistanceSq);
+            if (hitDistanceSq < D_80A55D74[params]) {
                 return true;
             }
         }

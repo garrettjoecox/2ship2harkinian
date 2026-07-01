@@ -6,6 +6,7 @@
 
 #include "z_bg_haka_bombwall.h"
 #include "objects/object_haka_obj/object_haka_obj.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS 0x00000000
 
@@ -65,9 +66,13 @@ static InitChainEntry sInitChain[] = {
 
 s32 func_80BD5E00(BgHakaBombwall* this) {
     if (this->collider.base.acFlags & AC_HIT) {
-        if ((this->collider.base.ac != NULL) &&
-            (Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos) < SQ(80.0f))) {
-            return true;
+        if (this->collider.base.ac != NULL) {
+            f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos);
+            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos,
+                                  this->collider.base.ac, &hitDistanceSq);
+            if (hitDistanceSq < SQ(80.0f)) {
+                return true;
+            }
         }
     }
     return false;

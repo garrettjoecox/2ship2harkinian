@@ -405,6 +405,7 @@ typedef struct ShipSaveInfo {
     char commitHash[8];
     RandoSaveInfo rando;
     u8 bombArrowsEquipped;
+    u8 giantsMaskAnywhereIsGiant;
 } ShipSaveInfo;
 // #endregion
 

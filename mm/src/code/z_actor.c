@@ -1498,6 +1498,7 @@ void Actor_SetControlStickData(PlayState* play, Input* input, f32 controlStickMa
 
 f32 Player_GetHeight(Player* player) {
     f32 extraHeight;
+    f32 height;
 
     if (player->stateFlags1 & PLAYER_STATE1_800000) {
         extraHeight = 32.0f;
@@ -1508,20 +1509,28 @@ f32 Player_GetHeight(Player* player) {
     switch (player->transformation) {
         default:
         case PLAYER_FORM_FIERCE_DEITY:
-            return extraHeight + 124.0f;
+            height = extraHeight + 124.0f;
+            break;
 
         case PLAYER_FORM_GORON:
-            return extraHeight + ((player->stateFlags3 & PLAYER_STATE3_1000) ? 34.0f : 80.0f);
+            height = extraHeight + ((player->stateFlags3 & PLAYER_STATE3_1000) ? 34.0f : 80.0f);
+            break;
 
         case PLAYER_FORM_ZORA:
-            return extraHeight + 68.0f;
+            height = extraHeight + 68.0f;
+            break;
 
         case PLAYER_FORM_DEKU:
-            return extraHeight + 36.0f;
+            height = extraHeight + 36.0f;
+            break;
 
         case PLAYER_FORM_HUMAN:
-            return extraHeight + 44.0f;
+            height = extraHeight + 44.0f;
+            break;
     }
+
+    GameInteractor_Should(VB_PLAYER_GET_HEIGHT, true, player, &height);
+    return height;
 }
 
 f32 Player_GetRunSpeedLimit(Player* player) {
@@ -1750,9 +1759,13 @@ s32 func_800B761C(Actor* actor, f32 arg1, s32 updBgCheckInfoFlags) {
 
 s32 func_800B7678(PlayState* play, Actor* actor, Vec3f* pos, s32 updBgCheckInfoFlags) {
     f32 distToFloor;
+    f32 floorCheckDelta = (updBgCheckInfoFlags & UPDBGCHECKINFO_FLAG_800) ? 10.0f : 50.0f;
+    f32 ledgeWalkOffHeight = -11.0f;
     s32 bgId;
 
-    pos->y += (updBgCheckInfoFlags & UPDBGCHECKINFO_FLAG_800) ? 10.0f : 50.0f;
+    GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, (Player*)actor, &floorCheckDelta);
+    GameInteractor_Should(VB_GIANTS_MASK_SCALE_PLAYER_VALUE, true, (Player*)actor, &ledgeWalkOffHeight);
+    pos->y += floorCheckDelta;
 
     actor->floorHeight = BgCheck_EntityRaycastFloor5_2(play, &play->colCtx, &actor->floorPoly, &bgId, actor, pos);
     actor->bgCheckFlags &= ~(BGCHECKFLAG_GROUND_TOUCH | BGCHECKFLAG_GROUND_LEAVE | BGCHECKFLAG_GROUND_STRICT);
@@ -1764,7 +1777,7 @@ s32 func_800B7678(PlayState* play, Actor* actor, Vec3f* pos, s32 updBgCheckInfoF
     actor->floorBgId = bgId;
     if ((distToFloor >= 0.0f) ||
         (((actor->bgCheckFlags & BGCHECKFLAG_GROUND)) && !(actor->bgCheckFlags & BGCHECKFLAG_PLAYER_800) &&
-         (distToFloor >= -11.0f) && (actor->velocity.y < 0.0f))) {
+         (distToFloor >= ledgeWalkOffHeight) && (actor->velocity.y < 0.0f))) {
         actor->bgCheckFlags |= BGCHECKFLAG_GROUND_STRICT;
 
         if (actor->bgCheckFlags & BGCHECKFLAG_CEILING) {

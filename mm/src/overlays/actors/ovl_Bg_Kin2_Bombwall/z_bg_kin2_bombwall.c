@@ -5,6 +5,7 @@
  */
 #include "z_bg_kin2_bombwall.h"
 #include "objects/object_kin2_obj/object_kin2_obj.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UCODE_POINT_LIGHT_ENABLED)
 
@@ -58,9 +59,13 @@ s32 BgKin2Bombwall_IsHitFromNearby(BgKin2Bombwall* this, PlayState* play) {
     if (this->collider.base.acFlags & AC_HIT) {
         bombwallCollider = this->collider.base.ac;
         // Distance check required to only react to sufficiently close explosions.
-        if ((bombwallCollider != NULL) &&
-            (Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &bombwallCollider->world.pos) < 6400.0f)) {
-            return true;
+        if (bombwallCollider != NULL) {
+            f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &bombwallCollider->world.pos);
+            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos, bombwallCollider,
+                                  &hitDistanceSq);
+            if (hitDistanceSq < 6400.0f) {
+                return true;
+            }
         }
     }
     return false;

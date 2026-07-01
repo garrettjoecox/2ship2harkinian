@@ -64,6 +64,63 @@ f32 CollisionCheck_GetDamageAndEffectOnElementAC(Collider* atCol, ColliderElemen
     if (acCol->actor->colChkInfo.damageTable != NULL) {
         dmgFlags = atElem->atDmgInfo.dmgFlags;
 
+        if (dmgFlags & DMG_UNK_0x1E) {
+            DamageTable* damageTable = acCol->actor->colChkInfo.damageTable;
+            f32 highestDamage = 0.0f;
+            u32 selectedEffect = 0;
+            s32 selectedIndex = -1;
+            u8 highPriorityEffect = 0xFF;
+
+            if (acCol->actor->id == ACTOR_EN_BSB) {
+                highPriorityEffect = 0xD;
+            }
+
+            for (i = 0; i < ARRAY_COUNT(damageTable->attack); i++) {
+                if (dmgFlags & (1u << i)) {
+                    u8 attack = damageTable->attack[i];
+                    u8 attackMultiplier = attack & 0xF;
+                    u8 attackEffect = (attack >> 4) & 0xF;
+                    f32 candidateDamage = damage;
+                    bool shouldApply;
+
+                    if (attackMultiplier == 0) {
+                        continue;
+                    }
+
+                    if (GameInteractor_Should(VB_DAMAGE_MULTIPLIER, true, i, damageTable, &candidateDamage,
+                                              sDamageMultipliers)) {
+                        candidateDamage *= sDamageMultipliers[attackMultiplier];
+                    }
+
+                    shouldApply = (candidateDamage > highestDamage) ||
+                                  ((candidateDamage == highestDamage) && (selectedEffect == 0));
+
+                    if (highPriorityEffect != 0xFF) {
+                        if ((selectedEffect != highPriorityEffect) && (attackEffect == highPriorityEffect)) {
+                            shouldApply = true;
+                        } else if ((selectedEffect == highPriorityEffect) && (attackEffect != highPriorityEffect)) {
+                            shouldApply = false;
+                        }
+                    }
+
+                    if (shouldApply) {
+                        highestDamage = candidateDamage;
+                        selectedEffect = attackEffect;
+                        selectedIndex = i;
+                    }
+                }
+            }
+
+            damage = highestDamage;
+            *effect = selectedEffect;
+
+            if (selectedIndex >= 0) {
+                GameInteractor_Should(VB_DAMAGE_EFFECT, true, selectedIndex, damageTable, effect, acCol->actor);
+            }
+
+            return damage;
+        }
+
         for (i = 0; i < ARRAY_COUNT(acCol->actor->colChkInfo.damageTable->attack); i++) {
             if (dmgFlags == 1) {
                 break;

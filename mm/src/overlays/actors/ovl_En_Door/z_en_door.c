@@ -718,9 +718,12 @@ void EnDoor_Idle(EnDoor* this, PlayState* play) {
 
         // Check if player is near this door and looking at it
         Actor_WorldToActorCoords(&this->knobDoor.dyna.actor, &playerPosRelToDoor, &player->actor.world.pos);
-        if (sDoorIsMilkBarMember ||
-            ((fabsf(playerPosRelToDoor.y) < 20.0f) && (fabsf(playerPosRelToDoor.x) < 20.0f) &&
-             GameInteractor_Should(VB_BE_NEAR_DOOR, fabsf(playerPosRelToDoor.z) < 50.0f, &playerPosRelToDoor.z))) {
+        if (GameInteractor_Should(VB_PLAYER_CAN_USE_DOOR,
+                                  sDoorIsMilkBarMember ||
+                                      ((fabsf(playerPosRelToDoor.y) < 20.0f) && (fabsf(playerPosRelToDoor.x) < 20.0f) &&
+                                       GameInteractor_Should(VB_BE_NEAR_DOOR, fabsf(playerPosRelToDoor.z) < 50.0f,
+                                                             &playerPosRelToDoor.z)),
+                                  &this->knobDoor.dyna.actor, &playerPosRelToDoor.z)) {
             s16 yawDiff = player->actor.shape.rot.y - this->knobDoor.dyna.actor.shape.rot.y;
 
             if (playerPosRelToDoor.z > 0.0f) {

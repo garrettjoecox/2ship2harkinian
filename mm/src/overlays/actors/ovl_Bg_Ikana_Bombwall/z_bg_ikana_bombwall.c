@@ -6,6 +6,7 @@
 
 #include "z_bg_ikana_bombwall.h"
 #include "objects/object_ikana_obj/object_ikana_obj.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_UCODE_POINT_LIGHT_ENABLED)
 
@@ -270,9 +271,13 @@ void BgIkanaBombwall_Destroy(Actor* thisx, PlayState* play) {
 
 s32 func_80BD4E44(BgIkanaBombwall* this) {
     if (this->collider.base.acFlags & AC_HIT) {
-        if ((this->collider.base.ac != NULL) &&
-            (Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos) < SQ(75.0f))) {
-            return true;
+        if (this->collider.base.ac != NULL) {
+            f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos);
+            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos,
+                                  this->collider.base.ac, &hitDistanceSq);
+            if (hitDistanceSq < SQ(75.0f)) {
+                return true;
+            }
         }
     }
     return false;
@@ -280,9 +285,13 @@ s32 func_80BD4E44(BgIkanaBombwall* this) {
 
 s32 func_80BD4EAC(BgIkanaBombwall* this) {
     if (this->collider.base.acFlags & AC_HIT) {
-        if ((this->collider.base.ac != NULL) &&
-            (Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos) < SQ(80.0f))) {
-            return true;
+        if (this->collider.base.ac != NULL) {
+            f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &this->collider.base.ac->world.pos);
+            GameInteractor_Should(VB_GIANTS_MASK_HIT_DISTANCE, true, &this->dyna.actor.world.pos,
+                                  this->collider.base.ac, &hitDistanceSq);
+            if (hitDistanceSq < SQ(80.0f)) {
+                return true;
+            }
         }
     }
     return false;

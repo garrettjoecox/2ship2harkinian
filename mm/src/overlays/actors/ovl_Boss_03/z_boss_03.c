@@ -781,9 +781,11 @@ void Boss03_CatchPlayer(Boss03* this, PlayState* play) {
 
     // If either (Player is standing on ground && Player is above water) or (WORK_TIMER_CURRENT_ACTION timer runs out)
     // then stop trying to catch Player
-    if (((player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
-         (player->actor.shape.feetPos[FOOT_LEFT].y >= WATER_HEIGHT + 8.0f)) ||
-        (this->workTimer[WORK_TIMER_CURRENT_ACTION] == 0)) {
+    if (GameInteractor_Should(VB_GYORG_STOP_CATCHING_PLAYER,
+                              ((player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
+                               (player->actor.shape.feetPos[FOOT_LEFT].y >= WATER_HEIGHT + 8.0f)) ||
+                                  (this->workTimer[WORK_TIMER_CURRENT_ACTION] == 0),
+                              &this->actor, player)) {
         if (&this->actor == player->actor.parent) {
             player->av2.actionVar2 = 101;
             player->actor.parent = NULL;
