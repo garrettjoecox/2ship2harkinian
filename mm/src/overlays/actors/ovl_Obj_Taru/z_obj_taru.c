@@ -253,17 +253,11 @@ s32 func_80B9BF7C(ObjTaru* this) {
         if (ac != NULL) {
             if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 0x80000000) {
                 phi_a3 = false;
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos, ac,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(160.0f)) {
+                if (Actor_ColliderHitDistSq(&this->dyna.actor.world.pos, ac) < SQ(160.0f)) {
                     phi_a3 = true;
                 }
             } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 8) {
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos, ac,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(100.0f)) {
+                if (Actor_ColliderHitDistSq(&this->dyna.actor.world.pos, ac) < SQ(100.0f)) {
                     phi_a3 = true;
                 }
             } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 0x500) {

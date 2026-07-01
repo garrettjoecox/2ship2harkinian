@@ -311,6 +311,16 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Vec3f` (position)
+    // - `*Actor` (hittingActor)
+    // - `*f32` (hitDistanceSq)
+    VB_COLLIDER_HIT_DISTANCE,
+
+    // #### `result`
+    // ```c
     // this->currentMask == PLAYER_MASK_BUNNY
     // ```
     // #### `args`
@@ -824,6 +834,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // (this->currentMask == PLAYER_MASK_GIANT) && (gSaveContext.save.saveInfo.playerData.magic == 0)
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_GIANT_MASK_AUTO_REMOVE,
+
+    // #### `result`
+    // ```c
     // false
     // ```
     // #### `args`
@@ -1141,6 +1159,17 @@ typedef enum {
     // #### `args`
     // - `*BgDyYoseizo` (unused)
     VB_GREAT_FAIRY_GIVE_DOUBLE_DEFENSE_HEARTS,
+
+    // #### `result`
+    // ```c
+    // ((player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
+    //  (player->actor.shape.feetPos[FOOT_LEFT].y >= WATER_HEIGHT + 8.0f)) ||
+    //     (this->workTimer[WORK_TIMER_CURRENT_ACTION] == 0)
+    // ```
+    // #### `args`
+    // - `*Actor` (Gyorg)
+    // - `*Player`
+    VB_GYORG_STOP_CATCHING_PLAYER,
 
     // #### `result`
     // ```c
@@ -1924,8 +1953,103 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `*Player`
+    VB_PLAYER_CAN_BE_GRABBED,
+
+    // #### `result`
+    // ```c
+    // this->currentMask != PLAYER_MASK_GIANT
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*Actor` (nextLockOnActor)
+    VB_PLAYER_CAN_LOCK_ON,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Actor` (door)
+    // - `*f32` (player z position relative to door)
+    VB_PLAYER_CAN_USE_DOOR,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `*Actor`
     VB_PLAYER_CUTSCENE_ACTION,
+
+    // #### `result`
+    // ```c
+    // computed Player height
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (height)
+    VB_PLAYER_GET_HEIGHT,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (value)
+    VB_PLAYER_INVERT_SCALE_VALUE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*PlayerItemAction`
+    // - `*f32` (ceilingCheckHeight)
+    VB_PLAYER_MASK_CEILING_CHECK_HEIGHT,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*u32` (dmgFlags)
+    // - `*s32` (damage)
+    VB_PLAYER_MELEE_WEAPON_DAMAGE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (value)
+    VB_PLAYER_SCALE_VALUE,
+
+    // #### `result`
+    // ```c
+    // (damageEffect == 1) || (damageEffect == 2) ||
+    //     !(this->actor.bgCheckFlags & BGCHECKFLAG_GROUND) ||
+    //     (this->stateFlags1 & (PLAYER_STATE1_4 | PLAYER_STATE1_2000 | PLAYER_STATE1_4000 | PLAYER_STATE1_200000))
+    // ```
+    // #### `args`
+    // - `*PlayState`
+    // - `*Player`
+    // - `s32` (damageEffect)
+    VB_PLAYER_SHOULD_BE_KNOCKED_OVER,
+
+    // #### `result`
+    // ```c
+    // (this->yDistToLedge * 0.08f) + 5.5f
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` (velocityY)
+    // - `*f32` (speedXZ)
+    VB_PLAYER_SMALL_LEDGE_JUMP_SPEED,
 
     // #### `result`
     // ```c
@@ -2561,130 +2685,6 @@ typedef enum {
     // #### `args`
     // - `*f32` (speed)
     VB_ZTARGET_SPEED_CHECK,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*PlayerItemAction`
-    // - `*f32` (ceilingCheckHeight)
-    VB_PLAYER_MASK_CEILING_CHECK_HEIGHT,
-
-    // #### `result`
-    // ```c
-    // (this->currentMask == PLAYER_MASK_GIANT) && (gSaveContext.save.saveInfo.playerData.magic == 0)
-    // ```
-    // #### `args`
-    // - `*Player`
-    VB_GIANT_MASK_AUTO_REMOVE,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*u32` (dmgFlags)
-    // - `*s32` (damage)
-    VB_PLAYER_MELEE_WEAPON_DAMAGE,
-
-    // #### `result`
-    // ```c
-    // computed Player height
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*f32` (height)
-    VB_PLAYER_GET_HEIGHT,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Actor` (door)
-    // - `*f32` (player z position relative to door)
-    VB_PLAYER_CAN_USE_DOOR,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Player`
-    VB_PLAYER_CAN_BE_GRABBED,
-
-    // #### `result`
-    // ```c
-    // this->currentMask != PLAYER_MASK_GIANT
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*Actor` (nextLockOnActor)
-    VB_PLAYER_CAN_LOCK_ON,
-
-    // #### `result`
-    // ```c
-    // (damageEffect == 1) || (damageEffect == 2) ||
-    //     !(this->actor.bgCheckFlags & BGCHECKFLAG_GROUND) ||
-    //     (this->stateFlags1 & (PLAYER_STATE1_4 | PLAYER_STATE1_2000 | PLAYER_STATE1_4000 | PLAYER_STATE1_200000))
-    // ```
-    // #### `args`
-    // - `*PlayState`
-    // - `*Player`
-    // - `s32` (damageEffect)
-    VB_PLAYER_SHOULD_BE_KNOCKED_OVER,
-
-    // #### `result`
-    // ```c
-    // ((player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
-    //  (player->actor.shape.feetPos[FOOT_LEFT].y >= WATER_HEIGHT + 8.0f)) ||
-    //     (this->workTimer[WORK_TIMER_CURRENT_ACTION] == 0)
-    // ```
-    // #### `args`
-    // - `*Actor` (Gyorg)
-    // - `*Player`
-    VB_GYORG_STOP_CATCHING_PLAYER,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Vec3f` (position)
-    // - `*Actor` (hittingActor)
-    // - `*f32` (hitDistanceSq)
-    VB_COLLIDER_HIT_DISTANCE,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*f32` (value)
-    VB_PLAYER_SCALE_VALUE,
-
-    // #### `result`
-    // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*f32` (value)
-    VB_PLAYER_INVERT_SCALE_VALUE,
-
-    // #### `result`
-    // ```c
-    // (this->yDistToLedge * 0.08f) + 5.5f
-    // ```
-    // #### `args`
-    // - `*Player`
-    // - `*f32` (velocityY)
-    // - `*f32` (speedXZ)
-    VB_PLAYER_SMALL_LEDGE_JUMP_SPEED,
 } GIVanillaBehavior;
 
 #endif

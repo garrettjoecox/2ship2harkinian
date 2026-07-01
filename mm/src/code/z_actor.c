@@ -1450,6 +1450,13 @@ f32 Actor_WorldDistXZToPoint(Actor* actor, Vec3f* refPoint) {
     return Math_Vec3f_DistXZ(&actor->world.pos, refPoint);
 }
 
+f32 Actor_ColliderHitDistSq(Vec3f* hitPos, Actor* hitActor) {
+    f32 hitDistSq = Math3D_Vec3fDistSq(hitPos, &hitActor->world.pos);
+
+    GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, hitPos, hitActor, &hitDistSq);
+    return hitDistSq;
+}
+
 /**
  * Find the offset of a point from an actor in that actor's own coordinates (origin at the actor's
  * world.pos, z-axis is facing angle, i.e. shape.rot.y)
@@ -1763,8 +1770,10 @@ s32 func_800B7678(PlayState* play, Actor* actor, Vec3f* pos, s32 updBgCheckInfoF
     f32 ledgeWalkOffHeight = -11.0f;
     s32 bgId;
 
-    GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &floorCheckDelta);
-    GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &ledgeWalkOffHeight);
+    if (actor->id == ACTOR_PLAYER) {
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &floorCheckDelta);
+        GameInteractor_Should(VB_PLAYER_SCALE_VALUE, true, (Player*)actor, &ledgeWalkOffHeight);
+    }
     pos->y += floorCheckDelta;
 
     actor->floorHeight = BgCheck_EntityRaycastFloor5_2(play, &play->colCtx, &actor->floorPoly, &bgId, actor, pos);

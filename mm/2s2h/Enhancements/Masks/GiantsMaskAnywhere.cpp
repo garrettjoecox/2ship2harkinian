@@ -113,8 +113,7 @@ static void UpdateBigOctoDamageFlags(Actor* actor) {
 static bool ApplyCompositeDamageAndEffect(ColliderElement* atElem, Collider* acCol, f32* damage, u32* effect,
                                           f32* damageMultipliers) {
     if ((atElem == nullptr) || (acCol == nullptr) || (acCol->actor == nullptr) || (damage == nullptr) ||
-        (effect == nullptr) || (damageMultipliers == nullptr) ||
-        (acCol->actor->colChkInfo.damageTable == nullptr)) {
+        (effect == nullptr) || (damageMultipliers == nullptr) || (acCol->actor->colChkInfo.damageTable == nullptr)) {
         return false;
     }
 
@@ -150,8 +149,8 @@ static bool ApplyCompositeDamageAndEffect(ColliderElement* atElem, Collider* acC
                 candidateDamage *= damageMultipliers[attackMultiplier];
             }
 
-            shouldApply = (candidateDamage > highestDamage) ||
-                          ((candidateDamage == highestDamage) && (selectedEffect == 0));
+            shouldApply =
+                (candidateDamage > highestDamage) || ((candidateDamage == highestDamage) && (selectedEffect == 0));
 
             if (highPriorityEffect != 0xFF) {
                 if ((selectedEffect != highPriorityEffect) && (attackEffect == highPriorityEffect)) {
@@ -204,6 +203,10 @@ static bool ShouldApplyGiantScale(Player* player) {
 
 static bool ShouldApplyIdleGiantBehavior(Player* player) {
     return ShouldApplyGiantScale(player) && IsGiant() && sCsState == GMA_CS_IDLE;
+}
+
+static Player* GetPlayerActor(Actor* actor) {
+    return (actor != nullptr && actor->id == ACTOR_PLAYER) ? (Player*)actor : nullptr;
 }
 
 static void GrowAgeProperties(PlayerAgeProperties* props) {
@@ -833,9 +836,9 @@ static void RegisterGiantsMaskAnywhere() {
         va_arg(args, Vec3f*);
         Actor* hittingActor = va_arg(args, Actor*);
         f32* hitDistanceSq = va_arg(args, f32*);
+        Player* player = GetPlayerActor(hittingActor);
 
-        if ((hittingActor != nullptr) && ShouldApplyIdleGiantBehavior((Player*)hittingActor) &&
-            (hitDistanceSq != nullptr)) {
+        if (ShouldApplyIdleGiantBehavior(player) && (hitDistanceSq != nullptr)) {
             *hitDistanceSq = 0.0f;
         }
     });

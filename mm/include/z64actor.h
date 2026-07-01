@@ -878,6 +878,7 @@ f32 Actor_WorldDistXYZToActor(Actor* actorA, Actor* actorB);
 f32 Actor_WorldDistXYZToPoint(Actor* actor, Vec3f* refPoint);
 f32 Actor_WorldDistXZToActor(Actor* actorA, Actor* actorB);
 f32 Actor_WorldDistXZToPoint(Actor* actor, Vec3f* refPoint);
+f32 Actor_ColliderHitDistSq(Vec3f* hitPos, Actor* hitActor);
 void Actor_WorldToActorCoords(Actor* actor, Vec3f* offset, Vec3f* point);
 f32 Actor_HeightDiff(Actor* actor1, Actor* actor2);
 void Actor_SetControlStickData(struct PlayState* play, Input* input, f32 controlStickMagnitude, s16 controlStickAngle);

@@ -190,18 +190,12 @@ s32 ObjKibako2_ShouldBreak(ObjKibako2* this) {
         if (ac != NULL) {
             if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & (1 << 31)) {
                 // Powder Keg
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos, ac,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(160.0f)) {
+                if (Actor_ColliderHitDistSq(&this->dyna.actor.world.pos, ac) < SQ(160.0f)) {
                     shouldBreak = true;
                 }
             } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & (1 << 3)) {
                 // Explosives
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->dyna.actor.world.pos, ac,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(100.0f)) {
+                if (Actor_ColliderHitDistSq(&this->dyna.actor.world.pos, ac) < SQ(100.0f)) {
                     shouldBreak = true;
                 }
             } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & (1 << 8 | 1 << 10)) {

@@ -6,7 +6,6 @@
 
 #include "z_bg_hakugin_bombwall.h"
 #include "objects/object_hakugin_obj/object_hakugin_obj.h"
-#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS 0x00000000
 
@@ -345,11 +344,9 @@ s32 func_80ABCB5C(BgHakuginBombwall* this, PlayState* play) {
     if (this->collider.base.acFlags & AC_HIT) {
         if (this->collider.base.ac != NULL) {
             Actor* thisx = &this->dyna.actor;
-            f32 hitDistanceSq = Math3D_Vec3fDistSq(&thisx->world.pos, &this->collider.base.ac->world.pos);
 
-            GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
-                                  &hitDistanceSq);
-            if (hitDistanceSq < D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
+            if (Actor_ColliderHitDistSq(&thisx->world.pos, this->collider.base.ac) <
+                D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
                 SoundSource_PlaySfxAtFixedWorldPos(play, &thisx->world.pos, 60, NA_SE_EV_WALL_BROKEN);
                 return true;
             }
@@ -363,11 +360,9 @@ s32 func_80ABCC00(BgHakuginBombwall* this, PlayState* play) {
         if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 8) {
             if (this->collider.base.ac != NULL) {
                 Actor* thisx = &this->dyna.actor;
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&thisx->world.pos, &this->collider.base.ac->world.pos);
 
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &thisx->world.pos, this->collider.base.ac,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
+                if (Actor_ColliderHitDistSq(&thisx->world.pos, this->collider.base.ac) <
+                    D_80ABCFC0[BGHAKUGIN_BOMBWALL_100(thisx)].unk_1C) {
                     SoundSource_PlaySfxAtFixedWorldPos(play, &thisx->world.pos, 50, NA_SE_EV_WALL_BROKEN);
                     return true;
                 }

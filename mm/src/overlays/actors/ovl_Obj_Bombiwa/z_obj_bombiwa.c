@@ -7,7 +7,6 @@
 #include "z_obj_bombiwa.h"
 #include "objects/object_bombiwa/object_bombiwa.h"
 
-#include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipUtils.h"
 
 #define FLAGS 0x00000000
@@ -114,17 +113,13 @@ s32 func_809393B0(Actor* thisx) {
 
         if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 0x80000000) {
             if (ac != NULL) {
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->actor.world.pos, ac, &hitDistanceSq);
-                if (hitDistanceSq < SQ(150.0f)) {
+                if (Actor_ColliderHitDistSq(&this->actor.world.pos, ac) < SQ(150.0f)) {
                     return true;
                 }
             }
         } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 8) {
             if (ac != NULL) {
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->actor.world.pos, &ac->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->actor.world.pos, ac, &hitDistanceSq);
-                if (hitDistanceSq < SQ(95.0f)) {
+                if (Actor_ColliderHitDistSq(&this->actor.world.pos, ac) < SQ(95.0f)) {
                     return true;
                 }
             }
@@ -143,17 +138,11 @@ s32 func_80939470(Actor* thisx) {
 
         if (temp_v0 != NULL) {
             if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 0x80000000) {
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->actor.world.pos, &temp_v0->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->actor.world.pos, temp_v0,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(175.0f)) {
+                if (Actor_ColliderHitDistSq(&this->actor.world.pos, temp_v0) < SQ(175.0f)) {
                     return true;
                 }
             } else if (this->collider.elem.acHitElem->atDmgInfo.dmgFlags & 8) {
-                f32 hitDistanceSq = Math3D_Vec3fDistSq(&this->actor.world.pos, &temp_v0->world.pos);
-                GameInteractor_Should(VB_COLLIDER_HIT_DISTANCE, true, &this->actor.world.pos, temp_v0,
-                                      &hitDistanceSq);
-                if (hitDistanceSq < SQ(115.0f)) {
+                if (Actor_ColliderHitDistSq(&this->actor.world.pos, temp_v0) < SQ(115.0f)) {
                     return true;
                 }
             }
