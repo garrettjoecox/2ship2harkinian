@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+uuid
 *.zip
 *.otr
 *.o2r

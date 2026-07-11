@@ -7,6 +7,54 @@ concurrency:
   cancel-in-progress: true
 jobs:
 
+  package-apworld:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout Archipelago Fork
+      uses: actions/checkout@v4
+      with:
+        repository: garrettjoecox/Archipelago
+        ref: 2ship-apworld
+        sparse-checkout: |
+          worlds/mm_2ship
+          worlds/Files.py
+    - name: Package APWorld
+      run: |
+        python3 - <<'EOF'
+        import json, zipfile, os
+
+        world_dir = "worlds/mm_2ship"
+        apworld_path = "mm_2ship.apworld"
+
+        with open(os.path.join(world_dir, "archipelago.json"), "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+
+        import re
+        with open("worlds/Files.py", "r", encoding="utf-8") as f:
+            container_version = int(re.search(r"^container_version:\s*int\s*=\s*(\d+)", f.read(), re.MULTILINE).group(1))
+
+        manifest["compatible_version"] = container_version
+        manifest["version"] = container_version
+
+        with zipfile.ZipFile(apworld_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+            for root, dirs, files in os.walk(world_dir):
+                dirs[:] = [d for d in dirs if d != "__pycache__"]
+                for file in files:
+                    if file.endswith(".pyc"):
+                        continue
+                    full_path = os.path.join(root, file)
+                    arc_path = os.path.join("mm_2ship", os.path.relpath(full_path, world_dir))
+                    if file == "archipelago.json":
+                        zf.writestr(arc_path, json.dumps(manifest))
+                    else:
+                        zf.write(full_path, arc_path)
+        EOF
+    - name: Upload APWorld
+      uses: actions/upload-artifact@v4
+      with:
+        name: mm_2ship.apworld
+        path: mm_2ship.apworld
+
   generate-2ship-otr:
     runs-on: ubuntu-22.04
     steps:
@@ -102,7 +150,7 @@ jobs:
       env:
         CCACHE_SLOPPINESS: pch_defines,time_macros
       run: |
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_C_FLAGS="-Xclang -fno-pch-timestamp" -DCMAKE_CXX_FLAGS="-Xclang -fno-pch-timestamp"
+        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DBUILD_ARCHIPELAGO=ON -DCMAKE_C_FLAGS="-Xclang -fno-pch-timestamp" -DCMAKE_CXX_FLAGS="-Xclang -fno-pch-timestamp"
         cmake --build build-cmake -j
         (cd build-cmake && cpack)
 
@@ -207,7 +255,7 @@ jobs:
     - name: Build 2Ship
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release
+        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_ARCHIPELAGO=ON
         cmake --build build-cmake --config Release -j3
         (cd build-cmake && cpack -G External)
 
@@ -274,7 +322,7 @@ jobs:
         VCPKG_ROOT: ${{github.workspace}}/vcpkg
       run: |
         set $env:PATH="$env:USERPROFILE/.cargo/bin;$env:PATH"
-        cmake -S . -B build-windows -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        cmake -S . -B build-windows -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DBUILD_ARCHIPELAGO=ON
         cmake --build build-windows --config Release --parallel 10
 
         (cd build-windows && cpack)
