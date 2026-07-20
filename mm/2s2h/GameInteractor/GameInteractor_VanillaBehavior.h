@@ -1466,6 +1466,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `*f32` (height)
+    VB_MODIFY_CAMERA_FOCAL_HEIGHT,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - None
     VB_MINIMAP_TOGGLE,
 
@@ -1542,6 +1550,15 @@ typedef enum {
     // #### `args`
     // - `*EnKakasi`
     VB_NEED_SCARECROW_SONG,
+
+    // #### `result`
+    // ```c
+    // (player->stateFlags3 & PLAYER_STATE3_1) || !(player->actor.scale.y >= 0.0f) ||
+    // (player->stateFlags1 & PLAYER_STATE1_DEAD) || play->soaringCsOrSoTCsPlaying
+    // ```
+    // #### `args`
+    // - None
+    VB_NOT_ADJUST_PLAYER_LEGS,
 
     // #### `result`
     // ```c
