@@ -67,6 +67,10 @@ void GameInteractor_ExecuteAfterEndOfCycleSave() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterEndOfCycleSave>();
 }
 
+void GameInteractor_ExecuteAfterOwlSave() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterOwlSave>();
+}
+
 void GameInteractor_ExecuteBeforeMoonCrash() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeMoonCrash>();
 }
@@ -92,6 +96,10 @@ void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSceneInit>(sceneId, spawnNum);
     GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnSceneInit>(sceneId, sceneId, spawnNum);
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnSceneInit>(sceneId, spawnNum);
+}
+
+void GameInteractor_ExecuteOnSceneSpawnActors() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSceneSpawnActors>();
 }
 
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum) {
@@ -199,6 +207,10 @@ void GameInteractor_ExecuteOnBossDefeated(s16 actorId) {
     GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnBossDefeated>(actorId, actorId);
     GameInteractor::Instance->ExecuteHooksForPtr<GameInteractor::OnBossDefeated>((uintptr_t)actorId, actorId);
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnBossDefeated>(actorId);
+}
+
+void GameInteractor_ExecuteOnPlayerSfx(u16 sfxId) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerSfx>(sfxId);
 }
 
 void GameInteractor_ExecuteOnSceneFlagSet(s16 sceneId, FlagType flagType, u32 flag) {

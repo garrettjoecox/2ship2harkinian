@@ -8,6 +8,7 @@
 #include "2s2h/ShipUtils.h"
 #include "2s2h/GameInteractor/Actions/Actions.h"
 #include "Traps.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 #include "variables.h"
@@ -97,10 +98,12 @@ void Rando::MiscBehavior::CheckQueue() {
                                       });
                                   }
                               }
-                              Rando::GiveItem(randoItemId);
                               randoSaveCheck.cycleObtained = true;
                               randoSaveCheck.obtained = true;
                               randoSaveCheck.eligible = false;
+                              Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)CUSTOM_ITEM_PARAM);
+                              Rando::GiveItem(randoItemId);
+                              Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
                               CUSTOM_ITEM_PARAM = randoItemId;
                           },
                       .drawItem =
