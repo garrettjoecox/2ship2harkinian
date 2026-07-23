@@ -143,9 +143,12 @@ void Network::ReceiveFromServer() {
 }
 
 void Network::HandleCompletePacket(std::string payload) {
-    SPDLOG_TRACE("[Network] Received json:\n{}", payload);
     try {
         nlohmann::json jsonPayload = nlohmann::json::parse(payload);
+        if (!jsonPayload.contains("quiet")) {
+            SPDLOG_TRACE("[Network] Received json:\n{}", jsonPayload.dump());
+        }
+
         std::lock_guard<std::mutex> lock(incomingPacketQueueMutex);
         incomingPacketQueue.push(jsonPayload);
     } catch (const std::exception& e) {
