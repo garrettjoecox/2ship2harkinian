@@ -485,3 +485,6 @@ static const ALIGN_ASSET(2) char gGiGreatBayKeyEmblemDL[] = dgGiGreatBayKeyEmble
 
 #define dgGiStoneTowerKeyEmblemDL "__OTR__objects/object_gi_key/gGiStoneTowerKeyEmblemDL"
 static const ALIGN_ASSET(2) char gGiStoneTowerKeyEmblemDL[] = dgGiStoneTowerKeyEmblemDL;
+
+#define dgTitleScreenCustomSubtitleTex "__OTR__objects/object_mag/gTitleScreenCustomSubtitleTex"
+static const ALIGN_ASSET(2) char gTitleScreenCustomSubtitleTex[] = dgTitleScreenCustomSubtitleTex;

@@ -42,6 +42,7 @@ void Anchor::SendPacket_PlayerUpdate() {
     payload["entrance"] = gSaveContext.save.entrance;
     payload["roomIndex"] = gPlayState->roomCtx.curRoom.num;
     payload["transformation"] = player->transformation;
+    payload["scale"] = player->actor.scale.x;
     payload["posRot"]["pos"] = player->actor.world.pos;
     payload["posRot"]["rot"] = player->actor.shape.rot;
     payload["jointTable"] = player->jointTableBuffer;
@@ -84,6 +85,7 @@ void Anchor::HandlePacket_PlayerUpdate(nlohmann::json payload) {
         client.sceneId = payload.value("sceneId", (s16)SCENE_MAX);
         client.entrance = payload.value("entrance", (s32)0);
         client.transformation = payload.value("transformation", (uint8_t)PLAYER_FORM_HUMAN);
+        client.scale = payload.value("scale", 0.01f);
         client.posRot = payload.value("posRot", PosRot{});
         std::vector<u8> jointTableVec = payload.value("jointTable", std::vector<u8>{});
         std::vector<u8> upperJointTableVec = payload.value("upperJointTable", std::vector<u8>{});

@@ -35,6 +35,7 @@ typedef struct {
 
     // Only available in PLAYER_UPDATE packets
     uint8_t transformation;
+    float scale = 0.01f;
     PosRot posRot;
     u8 jointTable[159];
     u8 upperJointTable[159];

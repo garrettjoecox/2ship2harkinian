@@ -562,12 +562,13 @@ void func_80937FC8(ObjBean* this, PlayState* play) {
     } else if (this->unk_1E4 == 1) {
         this->unk_1DF = 16;
         func_809381B0(this);
-    } else if (GameInteractor_Should( // 2S2H [Enhancement] Let a bean be watered by other meansVB_BEAN_PLANT_BE_WATERED,
-                                     ((this->collider.base.acFlags & AC_HIT) && (this->collider.base.ac != NULL) &&
-                                      (this->collider.base.ac->id == ACTOR_OBJ_AQUA)) ||
-                                         ((this->unk_1FF != 0) && (this->unk_1FE & 4) &&
-                                          (this->dyna.actor.xzDistToPlayer < 300.0f) && func_800FE9B4(play)),
-                                     this)) {
+    } else if (GameInteractor_Should( // 2S2H [Enhancement] Let a bean be watered by other
+                                      // meansVB_BEAN_PLANT_BE_WATERED,
+                   ((this->collider.base.acFlags & AC_HIT) && (this->collider.base.ac != NULL) &&
+                    (this->collider.base.ac->id == ACTOR_OBJ_AQUA)) ||
+                       ((this->unk_1FF != 0) && (this->unk_1FE & 4) && (this->dyna.actor.xzDistToPlayer < 300.0f) &&
+                        func_800FE9B4(play)),
+                   this)) {
         func_809375C8(this, play);
         Flags_SetSwitch(play, OBJBEAN_GET_SWITCH_FLAG_2(&this->dyna.actor, 1));
         this->unk_1E4 = 6;

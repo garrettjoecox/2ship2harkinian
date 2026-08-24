@@ -77,6 +77,7 @@ void DummyPlayer_Init(Actor* actor, PlayState* play) {
     player->csId = CS_ID_NONE;
     player->transformation = client.transformation;
     player->ageProperties = &sPlayerAgeProperties[player->transformation];
+    Actor_SetScale(&player->actor, client.scale);
     player->heldItemAction = PLAYER_IA_NONE;
     player->heldItemId = ITEM_OCARINA_OF_TIME;
 
@@ -128,6 +129,7 @@ void DummyPlayer_Update(Actor* actor, PlayState* play) {
     actor->shape.shadowAlpha = 255;
     Math_Vec3s_Copy(&actor->shape.rot, &client.posRot.rot);
     Math_Vec3f_Copy(&actor->world.pos, &client.posRot.pos);
+    Actor_SetScale(actor, client.scale);
     memcpy(&player->jointTableBuffer, &client.jointTable, 159);
     memcpy(&player->jointTableUpperBuffer, &client.upperJointTable, 159);
     player->maskObjectLoadState = 0;

@@ -6,6 +6,7 @@
 
 #include "z_en_mag.h"
 #include "objects/object_mag/object_mag.h"
+#include "2s2h_assets.h"
 #include "BenPort.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
@@ -669,10 +670,13 @@ void EnMag_DrawCharTexture(Gfx** gfxP, TexturePtr texture, s32 rectLeft, s32 rec
 #define ZELDA_TEX_CENTER_X 177
 #define ZELDA_TEX_CENTER_Y 105
 
-#define SUBTITLE_TEX_WIDTH 104
-#define SUBTITLE_TEX_HEIGHT 16
-#define SUBTITLE_TEX_LEFT 151
-#define SUBTITLE_TEX_TOP 124
+// 2S2H [Port] The vanilla subtitle was a 104x16 i8 pair (glyphs + a dilated blob behind them) drawn at (151, 124).
+// It is replaced by a single full-colour rgba32 texture, so the width/height must match the dimensions of
+// gTitleScreenCustomSubtitleTex; the wider texture is centred under the Zelda logo rather than beside the mask.
+#define SUBTITLE_TEX_WIDTH 208
+#define SUBTITLE_TEX_HEIGHT 32
+#define SUBTITLE_TEX_CENTER_X 177
+#define SUBTITLE_TEX_CENTER_Y 146
 
 #define THE_LEGEND_OF_TEX_WIDTH 72
 #define THE_LEGEND_OF_TEX_HEIGHT 8
@@ -805,40 +809,18 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
         }
     }
 
+    // 2S2H [Port] Custom rgba32 subtitle. It carries its own colour and its own shadow, so the vanilla i8 glyph/blob
+    // pair and their prim/env tinting are gone; prim only supplies the fade-in alpha.
     if (this->subtitleAlpha != 0) {
         Gfx_SetupDL39_Ptr(&gfx);
 
         gDPSetAlphaCompare(gfx++, G_AC_NONE);
         gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetPrimColor(gfx++, 0, 0, 255, 255, 255, this->subtitleAlpha);
 
-        if (this->mainTitleAlpha < 100) {
-            gDPSetRenderMode(gfx++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
-        } else {
-            gDPSetRenderMode(gfx++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-        }
-
-        gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, this->subtitleAlpha);
-        gDPSetEnvColor(gfx++, 100, 0, 100, 255);
-
-        EnMag_DrawTextureI8(&gfx, gTitleScreenMajorasMaskSubtitleMaskTex, SUBTITLE_TEX_WIDTH, SUBTITLE_TEX_HEIGHT,
-                            SUBTITLE_TEX_LEFT, SUBTITLE_TEX_TOP);
+        EnMag_DrawImageRGBA32(&gfx, SUBTITLE_TEX_CENTER_X, SUBTITLE_TEX_CENTER_Y, gTitleScreenCustomSubtitleTex,
+                              SUBTITLE_TEX_WIDTH, SUBTITLE_TEX_HEIGHT);
     }
-
-    Gfx_SetupDL39_Ptr(&gfx);
-
-    gDPSetAlphaCompare(gfx++, G_AC_NONE);
-    gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-
-    if (this->mainTitleAlpha < 100) {
-        gDPSetRenderMode(gfx++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
-    } else {
-        gDPSetRenderMode(gfx++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-    }
-
-    gDPSetPrimColor(gfx++, 0, 120, 208, 102, 222, this->subtitleAlpha);
-
-    EnMag_DrawTextureI8(&gfx, gTitleScreenMajorasMaskSubtitleTex, SUBTITLE_TEX_WIDTH, SUBTITLE_TEX_HEIGHT,
-                        SUBTITLE_TEX_LEFT, SUBTITLE_TEX_TOP);
 
     Gfx_SetupDL39_Ptr(&gfx);
 
