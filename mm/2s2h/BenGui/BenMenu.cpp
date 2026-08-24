@@ -1444,6 +1444,12 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Fast Transformation", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.FastTransformation")
         .Options(CheckboxOptions().Tooltip("Removes the delay when using transformation masks."));
+    AddWidget(path, "Transformation Cutscene for All Masks", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.AllMasksCutscene")
+        .Options(CheckboxOptions().Tooltip(
+            "Every mask gets the full transformation cutscene when you put it on, not just the four that "
+            "change your form. Taking a mask off stays instant, and masks equipped in midair skip the "
+            "cutscene the same way transformations do."));
     AddWidget(path, "3DS Style Mask Equipping", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.3DSMaskEquip")
         .Options(CheckboxOptions().Tooltip("Allows equipping masks while in other forms, returning you to human form "
@@ -1482,6 +1488,21 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Masks.GoronRollingSpikesRequireShield")
         .Options(CheckboxOptions().Tooltip("Goron rolling will only use spikes if the Shield button is pressed, "
                                            "similar to Zora Link's swimming magic shield."));
+    AddWidget(path, "Silly Mask Effects", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Circus Leader's Mask Waters Beans", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.CircusLeaderWatersBeans")
+        .Options(CheckboxOptions().Tooltip(
+            "Standing near a planted magic bean while wearing the Circus Leader's Mask makes it sprout, "
+            "no spring water or rain needed."));
+    AddWidget(path, "All-Night Mask Shrinks Link", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.AllNightShrinksLink")
+        .Options(CheckboxOptions().Tooltip("Link is drawn tiny while the All-Night Mask is on. Collision is "
+                                           "unchanged, so this is purely cosmetic."));
+    AddWidget(path, "Couple's Mask Freezes the World", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Masks.CouplesMaskFreezesWorld")
+        .Options(CheckboxOptions().Tooltip(
+            "While wearing the Couple's Mask, press L to stop every actor except Link, leaving you free to "
+            "walk around a frozen world. Press L again to start it back up."));
 
     // Song Enhancements
     path.column = SECTION_COLUMN_2;

@@ -130,6 +130,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // hit by spring water, or planted and standing in the rain
+    // ```
+    // #### `args`
+    // - `*ObjBean`
+    VB_BEAN_PLANT_BE_WATERED,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`
@@ -1494,6 +1502,17 @@ typedef enum {
     // #### `args`
     // - None
     VB_MAGIC_SPIN_ATTACK_CHECK_FORM,
+
+    // Whether the mask transformation cutscene should swap Player over to a new form once the screen has
+    // filled with white. Returning false leaves Player as they are, and requires the listener to take over
+    // and move Player out of `Player_Action_86` itself.
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_MASK_TRANSFORMATION_SWAP_FORM,
 
     // #### `result`
     // ```c

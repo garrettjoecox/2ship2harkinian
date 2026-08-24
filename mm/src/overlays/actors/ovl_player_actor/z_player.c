@@ -19162,16 +19162,20 @@ void Player_Action_86(Player* this, PlayState* play) {
         R_PLAY_FILL_SCREEN_ALPHA += R_PLAY_FILL_SCREEN_ON;
         if (R_PLAY_FILL_SCREEN_ALPHA > 255) {
             R_PLAY_FILL_SCREEN_ALPHA = 255;
-            this->actor.update = func_8012301C;
-            this->actor.draw = NULL;
             this->av1.actionVar1 = 0;
             Play_DisableMotionBlurPriority();
-            //! @bug When taking off a transformation mask, PLAYER_FORM_HUMAN will index OOB leading
-            // to the next value causing WEEKEVENT_REG 16 being set with 0x0A which sets two flags at once
-            // WEEKEVENTREG_16_02 and WEEKEVENTREG_16_08
-            // WEEKEVENTREG_16_02 corresponds to showing a text ID from the Gorman Brothers on the 3rd day
-            // if the player has saved the farm, so this bug would prevent that text from displaying
-            SET_WEEKEVENTREG(D_8085D908[GET_PLAYER_FORM]);
+            // 2S2H [Enhancement] An enhancement can run this cutscene without an actual form change, in
+            // which case it takes over here and moves Player out of this action itself
+            if (GameInteractor_Should(VB_MASK_TRANSFORMATION_SWAP_FORM, true, this)) {
+                this->actor.update = func_8012301C;
+                this->actor.draw = NULL;
+                //! @bug When taking off a transformation mask, PLAYER_FORM_HUMAN will index OOB leading
+                // to the next value causing WEEKEVENT_REG 16 being set with 0x0A which sets two flags at once
+                // WEEKEVENTREG_16_02 and WEEKEVENTREG_16_08
+                // WEEKEVENTREG_16_02 corresponds to showing a text ID from the Gorman Brothers on the 3rd day
+                // if the player has saved the farm, so this bug would prevent that text from displaying
+                SET_WEEKEVENTREG(D_8085D908[GET_PLAYER_FORM]);
+            }
         }
     } else if ((this->av1.actionVar1++ > ((this->transformation == PLAYER_FORM_HUMAN) ? 0x53 : 0x37)) ||
                ((this->av1.actionVar1 >= 5) &&
