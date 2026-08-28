@@ -3,6 +3,7 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/BenPort.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 /**
  * UPDATE_DUNGEON_ITEMS
@@ -12,7 +13,7 @@
  */
 
 void Anchor::SendPacket_UpdateDungeonItems() {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -29,7 +30,7 @@ void Anchor::SendPacket_UpdateDungeonItems() {
 }
 
 void Anchor::HandlePacket_UpdateDungeonItems(nlohmann::json payload) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

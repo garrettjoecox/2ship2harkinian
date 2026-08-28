@@ -405,6 +405,9 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             gSaveContext.save.shipSaveInfo.rando.sariaHintsAvailable++;
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_ARCHIPELAGO_PROGRESSIVE:
+        case RI_ARCHIPELAGO_USEFUL:
+        case RI_ARCHIPELAGO_JUNK:
         case RI_JUNK:
         case RI_NONE:
             break;

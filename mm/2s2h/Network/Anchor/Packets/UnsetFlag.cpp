@@ -3,6 +3,7 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/BenPort.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 /**
  * UNSET_FLAG
@@ -11,7 +12,7 @@
  */
 
 void Anchor::SendPacket_UnsetFlag(s16 sceneId, s16 flagType, s16 flag) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -27,7 +28,7 @@ void Anchor::SendPacket_UnsetFlag(s16 sceneId, s16 flagType, s16 flag) {
 }
 
 void Anchor::HandlePacket_UnsetFlag(nlohmann::json payload) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

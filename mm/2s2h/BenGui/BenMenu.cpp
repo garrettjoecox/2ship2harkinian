@@ -1255,8 +1255,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "New File Setup Steps", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.NewFileSetup")
         .Options(CheckboxOptions()
-                     .Tooltip("After picking an empty file, asks whether it should be a randomizer file and lets "
-                              "you apply one of your loaded presets before entering a name.")
+                     .Tooltip("After picking an empty file, asks whether it should be a vanilla, randomizer or "
+                              "Archipelago file and lets you apply one of your loaded presets before entering "
+                              "a name.")
                      .DefaultValue(true));
     AddWidget(path, "Persistent Owl Saves", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PersistentOwlSaves")

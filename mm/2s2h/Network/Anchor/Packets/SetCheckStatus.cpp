@@ -3,6 +3,7 @@
 #include <libultraship/libultraship.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/BenJsonConversions.hpp"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 /**
  * SET_CHECK_STATUS
@@ -11,7 +12,7 @@
  */
 
 void Anchor::SendPacket_SetCheckStatus(RandoCheckId randoCheckId) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -26,7 +27,7 @@ void Anchor::SendPacket_SetCheckStatus(RandoCheckId randoCheckId) {
 }
 
 void Anchor::HandlePacket_SetCheckStatus(nlohmann::json payload) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

@@ -1,6 +1,7 @@
 #include "ActorBehavior.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/ObjectExtension/ObjectExtension.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
 
 extern "C" {
 #include "variables.h"
@@ -28,6 +29,13 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_list opti
             *should = false;
             break;
     }
+}
+
+std::string Rando::ActorBehavior::ShopChoiceRow(const std::string& itemName, const std::string& price) {
+    std::string suffix = " " + price + " Rupees";
+    float nameWidth = CustomMessage::MAX_THREE_CHOICE_WIDTH - CustomMessage::MeasureWidth(suffix);
+
+    return "\x02" + CustomMessage::TruncateToWidth(itemName, nameWidth) + "\x01" + suffix;
 }
 
 RandoCheckId Rando::ActorBehavior::GetObjectRandoCheckId(void* object) {

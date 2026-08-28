@@ -1,4 +1,5 @@
 #include "ActorBehavior.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/Rando/MiscBehavior/Traps.h"
@@ -76,18 +77,28 @@ s32 EnGirlA_RandoCanBuyFunc(PlayState* play, EnGirlA* enGirlA) {
 
 void EnGirlA_RandoBuyFunc(PlayState* play, EnGirlA* enGirlA) {
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
-    RandoCheckId randoCheckId = (RandoCheckId)enGirlA->actor.world.rot.z;
-    RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId);
-    randoSaveCheck.obtained = randoSaveCheck.cycleObtained = true;
+    RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z);
+
+    // Deduct rupees
     Rupees_ChangeBy(-play->msgCtx.unk1206C);
-    Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)enGirlA->actor.world.rot.z);
-    if (randoItemId == RI_TRAP) {
-        RollTrapType();
-    } else if (randoItemId == RI_JUNK) {
-        randoItemId = Rando::CurrentJunkItem(randoCheckId);
+
+    if (IS_ARCHI && Archipelago::Instance->IsConnected() &&
+        !randoSaveCheck.obtained) { // For AP, let AP handle the first time give
+        Archipelago::Instance->SendLocationCheck((RandoCheckId)enGirlA->actor.world.rot.z);
+        randoSaveCheck.cycleObtained = true;
+        randoSaveCheck.obtained = true;
+    } else { // Otherwise, give immediately
+        randoSaveCheck.cycleObtained = true;
+        randoSaveCheck.obtained = true;
+        Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)enGirlA->actor.world.rot.z);
+
+        if (randoItemId == RI_TRAP) {
+            RollTrapType();
+        }
+
+        Rando::GiveItem(randoItemId);
+        Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
     }
-    Rando::GiveItem(randoItemId);
-    Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
 }
 
 void EnGirlA_RandoBuyFanfareFunc(PlayState* play, EnGirlA* enGirlA) {
@@ -309,13 +320,13 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId);
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        // Not using formatting here, to ensure the item name and price stay on one line
+        // Formatting by hand so the flavor text keeps a line of its own, but the name and price
+        // still have to be wrapped since Archipelago item names can be wider than the textbox
         entry.autoFormat = false;
-        entry.msg = "\x01{{itemName}}: {{rupees}} Rupees\x11\x00";
+        std::string title = Rando::StaticData::GetItemName(randoItemId, false, randoCheckId) + ": " +
+                            std::to_string(randoSaveCheck.price) + " Rupees";
+        entry.msg = "\x01" + CustomMessage::WrapToWidth(title, CustomMessage::MAX_TEXTBOX_WIDTH, 3) + "\x11";
         entry.msg += '\x00';
-        CustomMessage::Replace(&entry.msg, "{{itemName}}",
-                               Rando::StaticData::GetItemName(randoItemId, false, randoCheckId));
-        CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(randoSaveCheck.price));
 
         if (!CanBePurchased(randoSaveCheck, randoCheckId)) {
             entry.msg += "Out of Stock";
@@ -339,14 +350,14 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        // Not using formatting here, to ensure the item name and price stay on one line
+        // Formatting by hand so the two choices keep a line each.
         entry.autoFormat = false;
         entry.firstItemCost = randoSaveCheck.price;
-        entry.msg = "\x01{{itemName}}: {{rupees}} Rupees\x02\x11\xC2I'll buy it\x11No thanks\xBF";
-        CustomMessage::Replace(&entry.msg, "{{itemName}}",
-                               Rando::StaticData::GetItemName(
-                                   Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId), false, randoCheckId));
-        CustomMessage::Replace(&entry.msg, "{{rupees}}", std::to_string(randoSaveCheck.price));
+        std::string title = Rando::StaticData::GetItemName(Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId),
+                                                           false, randoCheckId) +
+                            ": " + std::to_string(randoSaveCheck.price) + " Rupees";
+        entry.msg = "\x01" + CustomMessage::WrapToWidth(title, CustomMessage::MAX_TEXTBOX_WIDTH, 2) +
+                    "\x02\x11\xC2I'll buy it\x11No thanks\xBF";
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
@@ -363,16 +374,15 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-        // Not using formatting here, to ensure the item name and price stay on one line
+        // Formatting by hand so the excuse below keeps a line of its own
         entry.autoFormat = false;
         entry.firstItemCost = randoSaveCheck.price;
-        entry.msg = "\x01{{itemName}}: {{itemPrice}} Rupees\x11\x00";
+        std::string title = Rando::StaticData::GetItemName(Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId),
+                                                           false, randoCheckId) +
+                            ": " + std::to_string(randoSaveCheck.price) + " Rupees";
+        entry.msg = "\x01" + CustomMessage::WrapToWidth(title, CustomMessage::MAX_TEXTBOX_WIDTH, 3) + "\x11";
         entry.msg += '\x00';
         entry.msg += "I need a mushroom to make this.\x1A";
-        CustomMessage::Replace(&entry.msg, "{{itemName}}",
-                               Rando::StaticData::GetItemName(
-                                   Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId), false, randoCheckId));
-        CustomMessage::Replace(&entry.msg, "{{itemPrice}}", std::to_string(randoSaveCheck.price));
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });

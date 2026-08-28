@@ -162,6 +162,9 @@ static const ALIGN_ASSET(2) char gFileSelVanillaTex[] = dgFileSelVanillaTex;
 #define dgFileSelRandomizerTex "__OTR__misc/title_static/gFileSelRandomizerTex"
 static const ALIGN_ASSET(2) char gFileSelRandomizerTex[] = dgFileSelRandomizerTex;
 
+#define dgFileSelArchiTex "__OTR__misc/title_static/gFileSelArchiTex"
+static const ALIGN_ASSET(2) char gFileSelArchiTex[] = dgFileSelArchiTex;
+
 #define dgFileSelArrowLeftTex "__OTR__misc/title_static/gFileSelArrowLeftTex"
 static const ALIGN_ASSET(2) char gFileSelArrowLeftTex[] = dgFileSelArrowLeftTex;
 

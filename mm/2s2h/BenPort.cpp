@@ -44,6 +44,7 @@
 
 #include "2s2h/Network/Sail/Sail.h"
 #include "2s2h/Network/Anchor/Anchor.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 #include <libultraship/libultraship.h>
 #include <libultraship/controller/controldeck/ControlDeck.h>
@@ -119,6 +120,7 @@ GameInteractor* GameInteractor::Instance;
 AudioCollection* AudioCollection::Instance;
 Sail* Sail::Instance;
 Anchor* Anchor::Instance;
+Archipelago* Archipelago::Instance;
 
 extern "C" char** cameraStrings;
 bool prevAltAssets = false;
@@ -974,7 +976,7 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     AudioCollection::Instance = new AudioCollection();
     Sail::Instance = new Sail();
     Anchor::Instance = new Anchor();
-
+    Archipelago::Instance = new Archipelago();
     LoadGuiTextures();
     ModMenu_LoadArchives();
     BenGui::SetupGuiElements();
@@ -1027,6 +1029,7 @@ extern "C" void DeinitOTR() {
     GameInteractor::Instance->CancelAllActions();
     Sail::Instance->Disable();
     Anchor::Instance->Disable();
+    Archipelago::Instance->Disable();
     SDLNet_Quit();
 
     // Destroying gui here because we have shared ptrs to LUS objects which output to SPDLOG which is destroyed before

@@ -1,5 +1,6 @@
 #include "Rando.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 #include "Rando/ActorBehavior/ActorBehavior.h"
 #include "Rando/MiscBehavior/MiscBehavior.h"
 #include "Rando/MiscBehavior/ClockShuffle.h"
@@ -39,6 +40,19 @@ RandoCheckId Rando::FindItemPlacement(RandoItemId randoItemId) {
     }
 
     return RC_UNKNOWN;
+}
+
+std::string Rando::GetItemLocationForHint(RandoItemId randoItemId, bool exact) {
+    RandoCheckId randoCheckId = FindItemPlacement(randoItemId);
+
+    if (randoCheckId == RC_UNKNOWN && IS_ARCHI) {
+        auto foreignItemLocations = Archipelago::Instance->GetForeignItemLocations(randoItemId);
+        if (!foreignItemLocations.empty()) {
+            return foreignItemLocations.front().hintText;
+        }
+    }
+
+    return StaticData::GetLocationNameForHint(randoCheckId, exact);
 }
 
 std::vector<RandoCheckId> Rando::FindMultiItemPlacement(RandoItemId randoItemId) {

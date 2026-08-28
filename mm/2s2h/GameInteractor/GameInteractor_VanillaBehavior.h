@@ -557,6 +557,16 @@ typedef enum {
     // - `s16` (file index)
     VB_DRAW_FILE_SELECT_SMALL_EXTRA_INFO_BOX,
 
+    // Check if file can be loaded when confirming file selection.
+    // Return false to prevent loading the file.
+    // #### `result`
+    // ```c
+    // true (allow loading)
+    // ```
+    // #### `args`
+    // - `s16` (file index)
+    VB_FILE_SELECT_CONFIRM_FILE,
+
     // #### `result`
     // ```c
     // true

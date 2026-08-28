@@ -5,6 +5,7 @@
 #include "2s2h/BenGui/Notification.h"
 #include "2s2h/BenPort.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 extern "C" {
 #include "functions.h"
@@ -17,7 +18,7 @@ extern s16 D_801CFF94[250];
  */
 
 void Anchor::SendPacket_GiveItem(u16 modId, s16 getItemId, std::string targetTeamId) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -32,7 +33,7 @@ void Anchor::SendPacket_GiveItem(u16 modId, s16 getItemId, std::string targetTea
 }
 
 void Anchor::HandlePacket_GiveItem(nlohmann::json payload) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

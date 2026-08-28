@@ -2,6 +2,7 @@
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
 #include "2s2h/BenPort.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 /**
  * REQUEST_TEAM_STATE
@@ -17,7 +18,7 @@
  */
 
 void Anchor::SendPacket_RequestTeamState() {
-    if (!roomState.syncItemsAndFlags) {
+    if (!roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -29,7 +30,7 @@ void Anchor::SendPacket_RequestTeamState() {
 }
 
 void Anchor::HandlePacket_RequestTeamState(nlohmann::json payload) {
-    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

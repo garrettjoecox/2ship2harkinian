@@ -16,6 +16,8 @@ void SetObjectRandoCheckId(const void* object, RandoCheckId rc);
 void SpawnWonderItemSparkle(Vec3f* pos);
 void DrawWonderItemSparkle(Actor* actor, PlayState* play);
 
+std::string ShopChoiceRow(const std::string& itemName, const std::string& price);
+
 void InitDmChar01Behavior();
 void InitDmChar05Behavior();
 void InitDmChar08Behavior();

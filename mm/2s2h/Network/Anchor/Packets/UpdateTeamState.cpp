@@ -8,6 +8,7 @@
 #include "2s2h/Rando/CheckTracker/CheckTracker.h"
 #include "2s2h/Rando/ActorBehavior/ActorBehavior.h"
 #include "2s2h/ShipInit.hpp"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 extern "C" {
 #include "variables.h"
@@ -28,7 +29,7 @@ extern PlayState* gPlayState;
  */
 
 void Anchor::SendPacket_UpdateTeamState(std::string targetTeamId) {
-    if (!roomState.syncItemsAndFlags) {
+    if (!roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 
@@ -71,7 +72,7 @@ void Anchor::SendPacket_ClearTeamState(std::string teamId) {
 }
 
 void Anchor::HandlePacket_UpdateTeamState(nlohmann::json payload) {
-    if (!roomState.syncItemsAndFlags) {
+    if (!roomState.syncItemsAndFlags || IS_ARCHI) {
         return;
     }
 

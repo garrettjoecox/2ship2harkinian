@@ -526,6 +526,11 @@ GIActionAvailability GameInteractor::CanProcessActions() {
         return GI_AVAILABILITY_NOT_YET;
     }
 
+    // EVENTINF_41 is boat tour
+    if ((gSaveContext.minigameStatus == MINIGAME_STATUS_ACTIVE) || CHECK_EVENTINF(EVENTINF_41)) {
+        return GI_AVAILABILITY_NOT_YET;
+    }
+
     return GI_AVAILABILITY_READY;
 }
 

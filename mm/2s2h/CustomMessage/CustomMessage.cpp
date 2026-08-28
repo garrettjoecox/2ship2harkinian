@@ -54,8 +54,104 @@ void CustomMessage::ReplaceColorChars(std::string* msg) {
     CustomMessage::Replace(msg, "%p", "\x06");
 }
 
+// Primarily for processing text from external sources (ap)
+std::string CustomMessage::Sanitize(const std::string& text) {
+    std::string result;
+
+    for (char c : text) {
+        uint8_t byte = (uint8_t)c;
+
+        // Keep word boundaries rather than running the surrounding words together
+        if ((byte == '\t') || (byte == '\n') || (byte == '\r')) {
+            result += ' ';
+        } else if ((byte >= 0x20) && (byte <= 0x7E)) {
+            result += (char)byte;
+        }
+    }
+
+    return result;
+}
+
+static float CharWidth(char c) {
+    uint8_t character = (uint8_t)c;
+
+    if (character < 0x20 || character >= 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
+        return 0.0f;
+    }
+
+    return sNESFontWidths[character - 0x20];
+}
+
+float CustomMessage::MeasureWidth(const std::string& text) {
+    float width = 0.0f;
+
+    for (char c : text) {
+        width += CharWidth(c);
+    }
+
+    return width;
+}
+
+std::string CustomMessage::TruncateToWidth(const std::string& text, float maxWidth) {
+    if (MeasureWidth(text) <= maxWidth) {
+        return text;
+    }
+
+    const std::string ellipsis = "...";
+    float budget = maxWidth - MeasureWidth(ellipsis);
+    float width = 0.0f;
+    size_t end = 0;
+
+    while (end < text.size() && (width + CharWidth(text[end])) <= budget) {
+        width += CharWidth(text[end]);
+        end++;
+    }
+
+    // Don't leave a dangling space in front of the ellipsis
+    while (end > 0 && text[end - 1] == ' ') {
+        end--;
+    }
+
+    return text.substr(0, end) + ellipsis;
+}
+
+std::string CustomMessage::WrapToWidth(const std::string& text, float maxWidth, int maxLines) {
+    std::string result;
+    std::string remaining = text;
+
+    for (int line = 1; line < maxLines && MeasureWidth(remaining) > maxWidth; line++) {
+        float width = 0.0f;
+        size_t lastSpaceIndex = std::string::npos;
+        size_t breakIndex = 0;
+
+        for (size_t i = 0; i < remaining.size(); i++) {
+            if ((width + CharWidth(remaining[i])) > maxWidth) {
+                break;
+            }
+            width += CharWidth(remaining[i]);
+            if (remaining[i] == ' ') {
+                lastSpaceIndex = i;
+            }
+            breakIndex = i + 1;
+        }
+
+        if (lastSpaceIndex != std::string::npos) {
+            // Break at the last space that fit, dropping the space itself
+            result += remaining.substr(0, lastSpaceIndex);
+            remaining = remaining.substr(lastSpaceIndex + 1);
+        } else {
+            // A single word wider than a line, break it mid-word rather than overflow
+            result += remaining.substr(0, breakIndex);
+            remaining = remaining.substr(breakIndex);
+        }
+
+        result += '\x11';
+    }
+
+    return result + CustomMessage::TruncateToWidth(remaining, maxWidth);
+}
+
 void CustomMessage::AddLineBreaks(std::string* msg) {
-    const float MAX_TEXTBOX_WIDTH = 300.0f;
     const int MAX_LINES_PER_PAGE = 4;
 
     float currentLineWidth = 0.0f;
@@ -87,10 +183,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
         }
 
         // Calculate width for printable characters
-        float charWidth = 0.0f;
-        if ((uint8_t)currentChar >= 0x20 && (uint8_t)currentChar < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
-            charWidth = sNESFontWidths[(uint8_t)currentChar - 0x20];
-        }
+        float charWidth = CharWidth(currentChar);
 
         // Check if adding this character would exceed width
         if (currentLineWidth + charWidth > MAX_TEXTBOX_WIDTH) {
@@ -101,10 +194,7 @@ void CustomMessage::AddLineBreaks(std::string* msg) {
                 // Recalculate width from after the space to current position
                 currentLineWidth = 0.0f;
                 for (size_t j = lastSpaceIndex + 1; j < i; ++j) {
-                    char c = (*msg)[j];
-                    if ((uint8_t)c >= 0x20 && (uint8_t)c < 0x20 + ARRAY_COUNTU(sNESFontWidths)) {
-                        currentLineWidth += sNESFontWidths[(uint8_t)c - 0x20];
-                    }
+                    currentLineWidth += CharWidth((*msg)[j]);
                 }
                 // Add current character's width
                 currentLineWidth += charWidth;

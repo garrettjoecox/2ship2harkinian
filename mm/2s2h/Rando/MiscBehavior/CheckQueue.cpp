@@ -9,6 +9,7 @@
 #include "2s2h/GameInteractor/Actions/Actions.h"
 #include "Traps.h"
 #include "2s2h/Network/Anchor/Anchor.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 extern "C" {
 #include "variables.h"
@@ -37,6 +38,18 @@ void Rando::MiscBehavior::CheckQueue() {
         auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
         if (randoSaveCheck.eligible) {
+            // If we're in archi and this is is not an AP item, and it's the first time we collect it,
+            // let the AP queue handle the give (Archipelago::ProcessItemQueue)
+            if (IS_ARCHI && Archipelago::Instance->IsConnected()) {
+                if (!Archipelago::IsAPItem(randoSaveCheck.randoItemId) && !randoSaveCheck.obtained) {
+                    randoSaveCheck.cycleObtained = true;
+                    randoSaveCheck.obtained = true;
+                    randoSaveCheck.eligible = false;
+                    Archipelago::Instance->SendLocationCheck(randoCheckId);
+                    return;
+                }
+            }
+
             queued = true;
 
             GameInteractor::Instance->Queue(
@@ -71,11 +84,6 @@ void Rando::MiscBehavior::CheckQueue() {
                                   RollTrapType();
                                   prefix = "";
                                   message = GetTrapMessage();
-                                  // We need to remove the Color Codes if the player is skipping Item Get Cutscenes as
-                                  // the Notification Emit doesnt support it.
-                                  if (CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) >= 2) {
-                                      message = CustomMessage::RemoveColorCodes(message);
-                                  }
                               }
 
                               CustomMessage::Entry entry = {
@@ -90,7 +98,9 @@ void Rando::MiscBehavior::CheckQueue() {
                               } else if (Rando::StaticData::ShouldShowGetItemCutscene(randoItemId)) {
                                   CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                               } else {
-                                  if (Rando::StaticData::Items[randoItemId].randoItemType != RITYPE_JUNK) {
+                                  if (Rando::StaticData::Items[randoItemId].randoItemType != RITYPE_JUNK ||
+                                      Archipelago::IsAPItem(randoItemId)) {
+                                      message = CustomMessage::RemoveColorCodes(message);
                                       Notification::Emit({
                                           .itemIcon = Rando::StaticData::GetIconTexturePath(randoItemId),
                                           .message = prefix,
@@ -104,28 +114,34 @@ void Rando::MiscBehavior::CheckQueue() {
                               Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)CUSTOM_ITEM_PARAM);
                               Rando::GiveItem(randoItemId);
                               Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
+                              if (Archipelago::IsAPItem(randoItemId)) {
+                                  Archipelago::Instance->SendLocationCheck((RandoCheckId)CUSTOM_ITEM_PARAM);
+                                  actor->home.pos.z = CUSTOM_ITEM_PARAM;
+                              }
                               CUSTOM_ITEM_PARAM = randoItemId;
                           },
                       .drawItem =
                           [](Actor* actor, PlayState* play) {
-                              RandoItemId randoItemId;
+                              RandoItemId randoItemId = RI_UNKNOWN;
+                              RandoCheckId randoCheckId = RC_UNKNOWN;
 
-                              // If the item has been given, the CUSTOM_ITEM_PARAM is set to the RI, prior to that it's
-                              // the RC
+                              // Before the action is called, the CUSTOM_ITEM_PARAM is set to the RC, after it's the RI
+                              // For AP, we preserve the original RC on pos.z
                               if (CUSTOM_ITEM_FLAGS & CustomItem::CALLED_ACTION) {
-                                  if ((RandoItemId)CUSTOM_ITEM_PARAM == RI_TRAP) {
+                                  randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
+                                  if (randoItemId == RI_TRAP) {
                                       randoItemId = RI_MAX_TRAP;
-                                  } else {
-                                      randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
+                                  } else if (Archipelago::IsAPItem(randoItemId)) {
+                                      randoCheckId = (RandoCheckId)actor->home.pos.z;
                                   }
                               } else {
-                                  auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                                  randoItemId =
-                                      Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
+                                  randoCheckId = (RandoCheckId)CUSTOM_ITEM_PARAM;
+                                  auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+                                  randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId);
                               }
 
                               Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                              Rando::DrawItem(randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM, actor);
+                              Rando::DrawItem(randoItemId, randoCheckId, actor);
                           } })
                     // Delivered or dropped, this is the one place the latch comes off.
                     .OnComplete([](GIActionStatus status) { queued = false; }));

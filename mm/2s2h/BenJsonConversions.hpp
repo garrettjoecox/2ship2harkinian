@@ -48,6 +48,46 @@ inline void from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
     j.at("price").get_to(randoSaveCheck.price);
 }
 
+inline void to_json(json& j, const ArchiSaveInfo& archi) {
+    j = json{
+        { "magic", archi.magic },
+        { "version", archi.version },
+        { "flags", archi.flags },
+        { "serverHost", std::string(archi.serverHost) },
+        { "slotName", std::string(archi.slotName) },
+        { "team", archi.team },
+        { "slot", archi.slot },
+        { "sessionId", archi.sessionId },
+        { "seed", archi.seed },
+        { "lastSyncMs", archi.lastSyncMs },
+        { "receivedItemCount", archi.receivedItemCount },
+        { "checkedLocationCount", archi.checkedLocationCount },
+        { "startingItemsGranted", archi.startingItemsGranted },
+    };
+}
+
+inline void from_json(const json& j, ArchiSaveInfo& archi) {
+    archi.magic = j.value("magic", 0u);
+    archi.version = j.value("version", static_cast<uint16_t>(0));
+    archi.flags = j.value("flags", static_cast<uint16_t>(0));
+
+    std::string serverHost = j.value("serverHost", "");
+    std::string slotName = j.value("slotName", "");
+    strncpy(archi.serverHost, serverHost.c_str(), sizeof(archi.serverHost) - 1);
+    archi.serverHost[sizeof(archi.serverHost) - 1] = '\0';
+    strncpy(archi.slotName, slotName.c_str(), sizeof(archi.slotName) - 1);
+    archi.slotName[sizeof(archi.slotName) - 1] = '\0';
+
+    archi.team = j.value("team", 0u);
+    archi.slot = j.value("slot", 0u);
+    archi.sessionId = j.value("sessionId", 0ull);
+    archi.seed = j.value("seed", 0u);
+    archi.lastSyncMs = j.value("lastSyncMs", 0u);
+    archi.receivedItemCount = j.value("receivedItemCount", 0u);
+    archi.checkedLocationCount = j.value("checkedLocationCount", 0u);
+    archi.startingItemsGranted = j.value("startingItemsGranted", static_cast<uint8_t>(0));
+}
+
 inline void to_json(json& j, const RandoSaveInfo& rando) {
     j = json{
         { "randoInf", rando.randoInf },
@@ -60,7 +100,11 @@ inline void to_json(json& j, const RandoSaveInfo& rando) {
         { "foundTriforcePieces", rando.foundTriforcePieces },
         { "sariaHintsAvailable", rando.sariaHintsAvailable },
         { "sariaPriorityItems", rando.sariaPriorityItems },
+        { "isArchiSave", rando.isArchiSave },
     };
+    if (rando.isArchiSave) {
+        j["archipelago"] = rando.archipelago;
+    }
 }
 
 inline void from_json(const json& j, RandoSaveInfo& rando) {
@@ -74,6 +118,10 @@ inline void from_json(const json& j, RandoSaveInfo& rando) {
     j.at("foundTriforcePieces").get_to(rando.foundTriforcePieces);
     j.at("sariaHintsAvailable").get_to(rando.sariaHintsAvailable);
     j.at("sariaPriorityItems").get_to(rando.sariaPriorityItems);
+    j.at("isArchiSave").get_to(rando.isArchiSave);
+    if (rando.isArchiSave) {
+        j.at("archipelago").get_to(rando.archipelago);
+    }
 }
 
 inline void to_json(json& j, const Vec3f& vec) {
