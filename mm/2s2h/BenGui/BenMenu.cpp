@@ -1333,6 +1333,13 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Cycle.TingleAlwaysInClockTown")
         .Options(CheckboxOptions().Tooltip("Tingle will always appear in North Clock Town, not just during the day."));
 
+    AddWidget(path, "Hardware", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Steam Machine Health LED Bar", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Hardware.SteamMachineHealthLedBar")
+        .Options(CheckboxOptions().Tooltip(
+            "On a Steam Machine, fills the front LED bar with red proportional to your current health. "
+            "Has no effect on other hardware."));
+
     //// Graphics Enhancements
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", "Graphics", 3);
