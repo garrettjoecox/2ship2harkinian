@@ -195,9 +195,11 @@ void EnJs_PromptForDialog(EnJs* enJs, PlayState* play) {
 }
 
 void Rando::ActorBehavior::InitEnJsBehavior() {
+    bool shouldOverrideTrialsAccess = IS_RANDO && RANDO_SAVE_OPTIONS[RO_ACCESS_TRIALS] != RO_ACCESS_TRIALS_VANILLA;
+
     COND_VB_SHOULD(VB_JS_CONSIDER_ELIGIBLE_FOR_DEITY, IS_RANDO, { *should = false; });
 
-    COND_VB_SHOULD(VB_JS_OVERRIDE_MASK_CHECK, IS_RANDO, {
+    COND_VB_SHOULD(VB_JS_OVERRIDE_MASK_CHECK, shouldOverrideTrialsAccess, {
         s32* jsType = va_arg(args, s32*);
         bool* result = va_arg(args, bool*);
 
@@ -236,8 +238,8 @@ void Rando::ActorBehavior::InitEnJsBehavior() {
         }
     });
 
-    COND_ID_HOOK(OnOpenText, 0x2215, IS_RANDO, OverrideSubJsText);
-    COND_ID_HOOK(OnOpenText, 0x2216, IS_RANDO, OverrideSubJsText);
+    COND_ID_HOOK(OnOpenText, 0x2215, shouldOverrideTrialsAccess, OverrideSubJsText);
+    COND_ID_HOOK(OnOpenText, 0x2216, shouldOverrideTrialsAccess, OverrideSubJsText);
     COND_ID_HOOK(OnOpenText, 0x21FC, IS_RANDO, OverrideMainJsText);
     COND_ID_HOOK(OnOpenText, 0x21FE, IS_RANDO, OverrideMainJsText);
     COND_ID_HOOK(OnOpenText, 0x21FD, IS_RANDO, OverrideMainJsText);

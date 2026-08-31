@@ -1749,6 +1749,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // player->stateFlags3 & PLAYER_STATE3_10000000
+    // ```
+    // #### `args`
+    // - `*EnOwl`
+    VB_OWL_DESPAWN_FEATHER,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`

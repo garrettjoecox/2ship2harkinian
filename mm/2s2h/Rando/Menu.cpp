@@ -33,6 +33,7 @@ std::unordered_map<int32_t, const char*> accessDungeonOptions = {
 };
 
 std::unordered_map<int32_t, const char*> accessTrialsOptions = {
+    { RO_ACCESS_TRIALS_VANILLA, "Vanilla" },
     { RO_ACCESS_TRIALS_20_MASKS, "2-6-12-20 Masks" },
     { RO_ACCESS_TRIALS_REMAINS, "Requires Associated Remains" },
     { RO_ACCESS_TRIALS_FORMS, "Requires Associated Transformation" },
@@ -652,6 +653,13 @@ static void DrawLogicConditionsTab() {
                        "Requires Only Song - Requires only the correct song.\n\n"
                        "Open - Dungeons will be open with no requirements.");
     UIWidgets::CVarCombobox("Trials Access", Rando::StaticData::Options[RO_ACCESS_TRIALS].cvar, &accessTrialsOptions);
+    UIWidgets::Tooltip("Moon trial access requirements:\n\n"
+                       "Vanilla - Masks are handed over as in the original game: 1, 2, 3 and 4 masks to get in.\n\n"
+                       "2-6-12-20 Masks - Each child sequentially requires that many masks in your inventory.\n\n"
+                       "Requires Associated Remains - Each child requires the remains of the boss they represent.\n\n"
+                       "Requires Associated Transformation - Each child requires the form their trial is built "
+                       "around, and the Link Trial is always open.\n\n"
+                       "Open - The trials have no requirements.");
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoLogicColumn2", ImVec2(columnWidth, 0));
@@ -1651,6 +1659,9 @@ static void DrawHintsTab() {
         CheckboxOptions({ { .tooltip = "Gossip stones will offer a hint for a scaling rupee cost. This cost ranges "
                                        "from 10-250 rupees depending on how many checks are remaining in your seed. "
                                        "The hint will guaranteed be a check you have not obtained yet." } }));
+    CVarCheckbox("Moon Gossip Stones", Rando::StaticData::Options[RO_HINTS_MOON_GOSSIP_STONES].cvar,
+                 CheckboxOptions({ { .tooltip = "The gossip stones inside the Moon trials each hint the location of "
+                                                "the mask they describe in vanilla" } }));
     CVarCheckbox(
         "Boss Remains", Rando::StaticData::Options[RO_HINTS_BOSS_REMAINS].cvar,
         CheckboxOptions(

@@ -379,6 +379,16 @@ void BenMenu::AddSettings() {
             "Allows controller navigation of the 2Ship menu (Settings, Enhancements,...)\nCAUTION: "
             "This will disable game inputs while the menu is visible.\n\nD-pad to move between "
             "items, A to select, B to move up in scope."));
+    AddWidget(path, "Allow background inputs", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ALLOW_BACKGROUND_INPUTS)
+        .Callback([](WidgetInfo& info) {
+            SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS,
+                        CVarGetInteger(CVAR_ALLOW_BACKGROUND_INPUTS, 1) ? "1" : "0");
+        })
+        .Options(CheckboxOptions()
+                     .Tooltip("Allows controller inputs to be picked up by the game even when the game window isn't "
+                              "the focused window.")
+                     .DefaultValue(true));
     AddWidget(path, "Cursor Always Visible", WIDGET_CVAR_CHECKBOX)
         .CVar("gSettings.CursorVisibility")
         .Callback([](WidgetInfo& info) {
@@ -1003,6 +1013,14 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "No Clip", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.NoClip")
         .Options(CheckboxOptions().Tooltip("Allows Link to phase through collision."));
+    if (gPlayState != NULL && gPlayState->sceneId == SCENE_INISIE_R || gPlayState->sceneId == SCENE_INISIE_N) {
+            if (UIWidgets::Button("Flip Stone Tower")) {
+                Player* player = GET_PLAYER(gPlayState);
+                Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_OBJ_WTURN, player->actor.world.pos.x,
+                            player->actor.world.pos.y, player->actor.world.pos.z, player->actor.world.rot.x,
+                            player->actor.world.rot.y, player->actor.world.rot.z, 0);
+            }
+        }
     AddWidget(path, "Unbreakable Razor Sword", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.UnbreakableRazorSword")
         .Options(CheckboxOptions().Tooltip("Allows to Razor Sword to be used indefinitely without dulling its blade."));
