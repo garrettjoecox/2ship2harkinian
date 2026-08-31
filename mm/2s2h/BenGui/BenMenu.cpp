@@ -1013,6 +1013,14 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "No Clip", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.NoClip")
         .Options(CheckboxOptions().Tooltip("Allows Link to phase through collision."));
+    if (gPlayState != NULL && gPlayState->sceneId == SCENE_INISIE_R || gPlayState->sceneId == SCENE_INISIE_N) {
+            if (UIWidgets::Button("Flip Stone Tower")) {
+                Player* player = GET_PLAYER(gPlayState);
+                Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_OBJ_WTURN, player->actor.world.pos.x,
+                            player->actor.world.pos.y, player->actor.world.pos.z, player->actor.world.rot.x,
+                            player->actor.world.rot.y, player->actor.world.rot.z, 0);
+            }
+        }
     AddWidget(path, "Unbreakable Razor Sword", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.UnbreakableRazorSword")
         .Options(CheckboxOptions().Tooltip("Allows to Razor Sword to be used indefinitely without dulling its blade."));
