@@ -4,6 +4,7 @@
 
 extern "C" {
 #include "variables.h"
+#include "assets/objects/gameplay_keep/gameplay_keep.h"
 #include "overlays/actors/ovl_Obj_Bean/z_obj_bean.h"
 
 // Starts the mask transformation cutscene (Player_Action_86) from Player's current form.
@@ -12,6 +13,10 @@ void func_808388B8(PlayState* play, Player* player, PlayerTransformation playerF
 // reloading the Player actor.
 void Player_Action_87(Player* player, PlayState* play);
 s32 Player_SetAction(PlayState* play, Player* player, PlayerActionFunc actionFunc, s32 arg3);
+void Player_SetAction_PreserveItemAction(PlayState* play, Player* player, PlayerActionFunc actionFunc, s32 arg3);
+void Player_Anim_PlayOnceAdjusted(PlayState* play, Player* player, PlayerAnimationHeader* anim);
+void func_8082DAD4(Player* player);
+void func_8085B384(Player* player, PlayState* play);
 }
 
 #define CVAR_CUTSCENE_NAME "gEnhancements.Masks.AllMasksCutscene"
@@ -35,6 +40,16 @@ static bool IsRegularMask(PlayerMask mask) {
     return (mask >= PLAYER_MASK_TRUTH) && (mask <= PLAYER_MASK_SCENTS);
 }
 
+/**
+ * The masks Player_PostLimbDrawGameplay special-cases at PLAYER_LIMB_HEAD, because their display lists read a
+ * segment that only the matching Player_Draw*Mask helper sets up (0x09 for Blast, 0x0B for Bunny and Great
+ * Fairy, 0x08 for Circus Leader, and an animated material for Couple's).
+ */
+static bool MaskNeedsOwnDrawSetup(PlayerMask mask) {
+    return (mask == PLAYER_MASK_COUPLE) || (mask == PLAYER_MASK_CIRCUS_LEADER) || (mask == PLAYER_MASK_BLAST) ||
+           (mask == PLAYER_MASK_BUNNY) || (mask == PLAYER_MASK_GREAT_FAIRY);
+}
+
 static Player* GetPlayer() {
     return (gPlayState != nullptr) ? GET_PLAYER(gPlayState) : nullptr;
 }
@@ -42,10 +57,10 @@ static Player* GetPlayer() {
 // #region All masks play the transformation cutscene
 
 /**
- * Mirrors the bail-out at the top of Player_ActionHandler_13, so a mask only earns a cutscene in the states
- * vanilla is willing to start one from. Anywhere else the mask just goes on instantly, as it always has.
+ * Mirrors the bail-out at the top of Player_ActionHandler_13, so a mask only earns an animation in the states
+ * vanilla is willing to start one from. Anywhere else it goes on and off instantly, as it always has.
  */
-static bool PlayerCanStartMaskCutscene(Player* player) {
+static bool PlayerCanStartMaskAnimation(Player* player) {
     if ((player == nullptr) || (gPlayState == nullptr)) {
         return false;
     }
@@ -91,6 +106,31 @@ static void EndMaskCutscene(Player* player) {
     player->unk_B10[5] = 3.0f;
 }
 
+/**
+ * Plays gPlayerAnim_cl_maskoff out and hands control back. func_80128640 draws prevMask in Player's hand for
+ * the whole of that animation, which is the part vanilla only ever shows when a transformation ends.
+ */
+extern "C" void MaskEffects_MaskOffAction(Player* player, PlayState* play) {
+    player->stateFlags2 |= PLAYER_STATE2_40;
+
+    if (PlayerAnimation_Update(play, &player->skelAnime)) {
+        player->prevMask = PLAYER_MASK_NONE;
+        func_8085B384(player, play);
+    }
+}
+
+/**
+ * Mirrors func_80838A20 minus the Giant's Mask magic reset. Player_UseItem has already cleared currentMask
+ * and moved the mask that came off into prevMask, which is exactly what the in-hand draw wants.
+ */
+static void StartMaskOffAnimation(Player* player) {
+    Player_SetAction_PreserveItemAction(gPlayState, player, MaskEffects_MaskOffAction, 0);
+    Player_Anim_PlayOnceAdjusted(gPlayState, player, (PlayerAnimationHeader*)&gPlayerAnim_cl_maskoff);
+    // Player_SetAction clears this, so it has to follow
+    player->stateFlags1 |= PLAYER_STATE1_20000000;
+    func_8082DAD4(player);
+}
+
 static void UpdateMaskCutscene(Player* player) {
     PlayerMask currentMask = static_cast<PlayerMask>(player->currentMask);
 
@@ -104,11 +144,20 @@ static void UpdateMaskCutscene(Player* player) {
         return;
     }
 
+    PlayerMask previousMask = sTrackedMask;
     sTrackedMask = currentMask;
 
-    // Only putting a mask on earns the cutscene; taking one off stays instant
-    if (IsRegularMask(currentMask) && PlayerCanStartMaskCutscene(player)) {
+    if (!PlayerCanStartMaskAnimation(player)) {
+        return;
+    }
+
+    if (IsRegularMask(currentMask)) {
         StartMaskCutscene(player);
+    } else if ((currentMask == PLAYER_MASK_NONE) && IsRegularMask(previousMask) &&
+               !MaskNeedsOwnDrawSetup(previousMask)) {
+        // The take-off animation is nothing but Link holding the mask, so skip it for the masks the in-hand
+        // draw has to refuse rather than mime pulling off something invisible
+        StartMaskOffAnimation(player);
     }
 }
 
@@ -203,6 +252,19 @@ void RegisterMaskEffects() {
         if (sMaskCutsceneActive && (player != nullptr)) {
             *should = false;
             EndMaskCutscene(player);
+        }
+    });
+
+    // Vanilla only ever holds a transformation mask up, so the in-hand draw has never had to set up the
+    // per-mask segments. Refuse the ones that need them rather than let the display list read a stale
+    // segment -- on Blast Mask that is segment 0x09, a display list pointer, and the interpreter walks off
+    // into whatever happens to be there.
+    COND_VB_SHOULD(VB_DRAW_MASK_IN_HAND, CVAR_CUTSCENE, {
+        va_arg(args, Player*); // player
+        PlayerMask mask = static_cast<PlayerMask>(va_arg(args, s32));
+
+        if (IsRegularMask(mask) && MaskNeedsOwnDrawSetup(mask)) {
+            *should = false;
         }
     });
 

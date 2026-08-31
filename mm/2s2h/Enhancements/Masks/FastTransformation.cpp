@@ -17,8 +17,16 @@ void TransitionFade_SetColor(void* thisx, u32 color);
 
 void RegisterFastTransformation() {
     COND_VB_SHOULD(VB_PREVENT_MASK_TRANSFORMATION_CS, CVAR, {
-        *should = true;
         Player* player = GET_PLAYER(gPlayState);
+
+        // Only step in when the cutscene is actually changing form. Another enhancement can run this same
+        // cutscene over a regular mask with no form change behind it, and the reload below would tear the
+        // Player actor down mid-equip and strip the mask right back off.
+        if ((player == NULL) || (GET_PLAYER_FORM == player->transformation)) {
+            return;
+        }
+
+        *should = true;
 
         // This was mostly copied directly from func_8012301C within z_player_lib.c
         s16 objectId = gPlayerFormObjectIds[GET_PLAYER_FORM];

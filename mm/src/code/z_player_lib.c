@@ -3707,7 +3707,9 @@ s32 func_80128640(PlayState* play, Player* player, Gfx* dlist) {
             mask = player->currentMask;
         }
 
-        if (func_80127438(play, player, mask)) {
+        // 2S2H [Enhancement] Only segment 0x0A is set up here, so a mask needing a segment of its own can
+        // be refused rather than drawn against a stale one
+        if (func_80127438(play, player, mask) && GameInteractor_Should(VB_DRAW_MASK_IN_HAND, true, player, mask)) {
             OPEN_DISPS(play->state.gfxCtx);
 
             Matrix_Push();

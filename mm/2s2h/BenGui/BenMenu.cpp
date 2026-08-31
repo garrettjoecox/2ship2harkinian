@@ -1447,9 +1447,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Transformation Cutscene for All Masks", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.AllMasksCutscene")
         .Options(CheckboxOptions().Tooltip(
-            "Every mask gets the full transformation cutscene when you put it on, not just the four that "
-            "change your form. Taking a mask off stays instant, and masks equipped in midair skip the "
-            "cutscene the same way transformations do."));
+            "Every mask gets the full transformation cutscene when you put it on, and Link's take-off "
+            "animation when you remove it, not just the four that change your form. Masks equipped in "
+            "midair skip the cutscene the same way transformations do."));
     AddWidget(path, "3DS Style Mask Equipping", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Masks.3DSMaskEquip")
         .Options(CheckboxOptions().Tooltip("Allows equipping masks while in other forms, returning you to human form "

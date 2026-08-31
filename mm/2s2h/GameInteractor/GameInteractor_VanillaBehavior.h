@@ -625,6 +625,18 @@ typedef enum {
     // - `*Actor` (unused)
     VB_DRAW_ITEM_FROM_SOB1,
 
+    // Whether the mask Player is holding up should be drawn in his hand during the mask-donning animation.
+    // Only the shared mask object segment is set up at this point, so a mask whose display list also needs a
+    // segment of its own (the ones Player_DrawGameplayFirstPerson special-cases) cannot be drawn here.
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `s32` (PlayerMask being drawn)
+    VB_DRAW_MASK_IN_HAND,
+
     // #### `result`
     // ```c
     // (play->sceneId != SCENE_LOST_WOODS) || (gSaveContext.sceneLayer != 1)
