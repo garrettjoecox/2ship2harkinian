@@ -1013,6 +1013,18 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "No Clip", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.NoClip")
         .Options(CheckboxOptions().Tooltip("Allows Link to phase through collision."));
+    AddWidget(path, "Flip Stone Tower", WIDGET_BUTTON)
+        .Options(ButtonOptions().Tooltip("Flips Stone Tower Temple, as if the Elegy of Emptiness switch was hit."))
+        .Callback([](WidgetInfo& info) {
+            Player* player = GET_PLAYER(gPlayState);
+            Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_OBJ_WTURN, player->actor.world.pos.x,
+                        player->actor.world.pos.y, player->actor.world.pos.z, player->actor.world.rot.x,
+                        player->actor.world.rot.y, player->actor.world.rot.z, 0);
+        })
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = gPlayState == NULL ||
+                            (gPlayState->sceneId != SCENE_INISIE_N && gPlayState->sceneId != SCENE_INISIE_R);
+        });
     AddWidget(path, "Unbreakable Razor Sword", WIDGET_CVAR_CHECKBOX)
         .CVar("gCheats.UnbreakableRazorSword")
         .Options(CheckboxOptions().Tooltip("Allows to Razor Sword to be used indefinitely without dulling its blade."));
