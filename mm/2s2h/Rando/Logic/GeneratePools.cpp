@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include "Rando/MiscBehavior/ClockShuffle.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 
 extern "C" {
@@ -13,7 +14,7 @@ namespace Logic {
 
 void GeneratePools(RandoSaveInfo& saveInfo, std::vector<RandoCheckId>& checkPool, std::vector<RandoItemId>& itemPool) {
     std::vector<RandoItemId> startingItems = Rando::GetStartingItemsFromSave(saveInfo);
-    std::vector<RandoItemId> computedStartingItems = Rando::GetComputedStartingItems(saveInfo);
+    std::vector<RandoItemId> computedStartingItems = Rando::GetComputedStartingItems(saveInfo, IS_ARCHI);
     startingItems.insert(startingItems.end(), computedStartingItems.begin(), computedStartingItems.end());
 
     std::vector<RandoCheckId> excludedChecks = Rando::GetExcludedChecksFromConfig();

@@ -1,6 +1,8 @@
 #ifndef RANDO_H
 #define RANDO_H
 
+#include <nlohmann/json_fwd.hpp>
+
 #include "StaticData/StaticData.h"
 #include "Types.h"
 #include "variables.h"
@@ -21,9 +23,10 @@ RandoItemId CurrentTrapItem(RandoCheckId randoCheckId = RC_UNKNOWN);
 bool IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
 RandoItemId ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
 RandoCheckId FindItemPlacement(RandoItemId randoItemId);
+std::string GetItemLocationForHint(RandoItemId randoItemId, bool exact);
 void RegisterMenu();
 
-std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo);
+std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo, bool isArchi);
 void GrantStartingItems();
 std::vector<RandoItemId> GetStartingItemsFromSpoiler(nlohmann::json& spoiler);
 void SetStartingItemsInSpoiler(nlohmann::json& spoiler, std::vector<RandoItemId>& startingItems);

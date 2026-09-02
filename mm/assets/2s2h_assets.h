@@ -162,11 +162,17 @@ static const ALIGN_ASSET(2) char gFileSelVanillaTex[] = dgFileSelVanillaTex;
 #define dgFileSelRandomizerTex "__OTR__misc/title_static/gFileSelRandomizerTex"
 static const ALIGN_ASSET(2) char gFileSelRandomizerTex[] = dgFileSelRandomizerTex;
 
+#define dgFileSelArchiTex "__OTR__misc/title_static/gFileSelArchiTex"
+static const ALIGN_ASSET(2) char gFileSelArchiTex[] = dgFileSelArchiTex;
+
 #define dgFileSelArrowLeftTex "__OTR__misc/title_static/gFileSelArrowLeftTex"
 static const ALIGN_ASSET(2) char gFileSelArrowLeftTex[] = dgFileSelArrowLeftTex;
 
 #define dgFileSelArrowRightTex "__OTR__misc/title_static/gFileSelArrowRightTex"
 static const ALIGN_ASSET(2) char gFileSelArrowRightTex[] = dgFileSelArrowRightTex;
+
+#define dgFileSelArchiIconTex "__OTR__misc/title_static/gFileSelArchiIconTex"
+static const ALIGN_ASSET(2) char gFileSelArchiIconTex[] = dgFileSelArchiIconTex;
 
 #define dgBoxChestCornerHealthTex "__OTR__objects/object_box/gBoxChestCornerHealthTex"
 static const ALIGN_ASSET(2) char gBoxChestCornerHealthTex[] = dgBoxChestCornerHealthTex;
@@ -485,3 +491,22 @@ static const ALIGN_ASSET(2) char gGiGreatBayKeyEmblemDL[] = dgGiGreatBayKeyEmble
 
 #define dgGiStoneTowerKeyEmblemDL "__OTR__objects/object_gi_key/gGiStoneTowerKeyEmblemDL"
 static const ALIGN_ASSET(2) char gGiStoneTowerKeyEmblemDL[] = dgGiStoneTowerKeyEmblemDL;
+
+// Archipelago Icons
+#define dgArchipelagoProgressiveIconTex "__OTR__textures/parameter_static/gArchipelagoProgressive"
+static const ALIGN_ASSET(2) char gArchipelagoProgressiveIconTex[] = dgArchipelagoProgressiveIconTex;
+
+#define dgArchipelagoUsefulIconTex "__OTR__textures/parameter_static/gArchipelagoUseful"
+static const ALIGN_ASSET(2) char gArchipelagoUsefulIconTex[] = dgArchipelagoUsefulIconTex;
+
+#define dgArchipelagoJunkIconTex "__OTR__textures/parameter_static/gArchipelagoJunk"
+static const ALIGN_ASSET(2) char gArchipelagoJunkIconTex[] = dgArchipelagoJunkIconTex;
+
+#define dgArchipelagoProgressiveDL "__OTR__objects/object_archipelago_item/gArchipelagoProgressiveDL"
+static const ALIGN_ASSET(2) char gArchipelagoProgressiveDL[] = dgArchipelagoProgressiveDL;
+
+#define dgArchipelagoItemDL "__OTR__objects/object_archipelago_item/gArchipelagoItemDL"
+static const ALIGN_ASSET(2) char gArchipelagoItemDL[] = dgArchipelagoItemDL;
+
+#define dgArchipelagoJunkDL "__OTR__objects/object_archipelago_item/gArchipelagoJunkDL"
+static const ALIGN_ASSET(2) char gArchipelagoJunkDL[] = dgArchipelagoJunkDL;

@@ -1255,8 +1255,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "New File Setup Steps", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.NewFileSetup")
         .Options(CheckboxOptions()
-                     .Tooltip("After picking an empty file, asks whether it should be a randomizer file and lets "
-                              "you apply one of your loaded presets before entering a name.")
+                     .Tooltip("After picking an empty file, asks whether it should be a vanilla, randomizer or "
+                              "Archipelago file and lets you apply one of your loaded presets before entering "
+                              "a name.")
                      .DefaultValue(true));
     AddWidget(path, "Persistent Owl Saves", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PersistentOwlSaves")
@@ -2196,6 +2197,14 @@ void BenMenu::AddDevTools() {
         .Options(ButtonOptions().Tooltip(
             "Enables the Gfx Debugger window, allowing you to input commands, type help for some examples."))
         .WindowName("Gfx Debugger");
+
+    path = { "Dev Tools", "Action Debugger", SECTION_COLUMN_1 };
+    AddSidebarEntry("Dev Tools", "Action Debugger", 1);
+    AddWidget(path, "Popout Action Debugger", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.ActionDebugger")
+        .Options(ButtonOptions().Tooltip("Enables the Action Debugger window, for firing any registered "
+                                         "GameInteractor action and watching the queue handle it."))
+        .WindowName("Action Debugger");
 
     path = { "Dev Tools", "Hook Debugger", SECTION_COLUMN_1 };
     AddSidebarEntry("Dev Tools", "Hook Debugger", 1);

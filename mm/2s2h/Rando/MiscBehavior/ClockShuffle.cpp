@@ -189,6 +189,10 @@ static bool CheckSkippedTime(u8* day, u16* time) {
         return false;
     }
 
+    if (Rando::ClockItems::GetAllOwnedHalfDaysMask() == 0) {
+        return false;
+    }
+
     // Terminal state is always accessible regardless of Night 3 ownership
     if (IsInTerminalRange(*day, *time)) {
         return false;
@@ -377,8 +381,13 @@ static void ProcessClockShuffleMessage(u16* textId, bool* loadFromMessageTable, 
 // Called at OnFileLoad and OnPlayDestroy. Validates time at cycle start or when a day telop
 // transition is pending (respawnFlag -4). Jumps to first owned half-day if needed.
 static void EnforceOwnedTime() {
+    if (Rando::ClockItems::GetAllOwnedHalfDaysMask() == 0) {
+        return;
+    }
+
     bool isCycleStart =
-        (gSaveContext.save.day == 0 || (gSaveContext.save.day == 1 && gSaveContext.save.time == CLOCK_TIME(6, 0)));
+        (gPlayState == NULL) &&
+        (gSaveContext.save.day == 0 || ((gSaveContext.save.day == 1) && (gSaveContext.save.time == CLOCK_TIME(6, 0))));
     bool isPendingDayTelop = (CHECK_EVENTINF(EVENTINF_TRIGGER_DAYTELOP) && gSaveContext.respawnFlag == -4);
 
     if (!isCycleStart && !isPendingDayTelop) {

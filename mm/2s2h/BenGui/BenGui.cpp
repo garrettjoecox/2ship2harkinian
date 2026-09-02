@@ -29,6 +29,7 @@
 #include "Enhancements/Trackers/TimeSplits/TimesplitsSettings.h"
 #include "BenMenu.h"
 #include "BenMenuBar.h"
+#include "DeveloperTools/ActionDebugger.h"
 #include "DeveloperTools/HookDebugger.h"
 #include "DeveloperTools/SaveEditor.h"
 #include "DeveloperTools/ActorViewer.h"
@@ -36,6 +37,10 @@
 #include "DeveloperTools/EventLog.h"
 #include "DeveloperTools/DLViewer.h"
 #include "DeveloperTools/MessageViewer.h"
+#include "2s2h/Network/Anchor/Anchor.h"
+
+#include "Network/Archipelago/ArchipelagoConsoleWindow.h"
+#include "Network/Archipelago/ArchipelagoStatusWindow.h"
 
 namespace BenGui {
 // MARK: - Delegates
@@ -47,6 +52,7 @@ std::shared_ptr<Ship::GuiWindow> mStatsWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
 std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
 
+std::shared_ptr<ActionDebuggerWindow> mActionDebuggerWindow;
 std::shared_ptr<HookDebuggerWindow> mHookDebuggerWindow;
 std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
 std::shared_ptr<HudEditorWindow> mHudEditorWindow;
@@ -70,6 +76,9 @@ std::shared_ptr<TimesplitsSettingsWindow> mTimesplitsSettingsWindow;
 std::shared_ptr<InputViewer> mInputViewer;
 std::shared_ptr<InputViewerSettingsWindow> mInputViewerSettings;
 std::shared_ptr<BenModalWindow> mModalWindow;
+std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
+std::shared_ptr<ArchipelagoConsoleWindow> mArchipelagoConsoleWindow;
+std::shared_ptr<ArchipelagoStatusWindow> mArchipelagoStatusWindow;
 
 UIWidgets::Colors GetMenuThemeColor() {
     return mBenMenu->GetMenuThemeColor();
@@ -111,6 +120,10 @@ void SetupGuiElements() {
     if (mInputEditorWindow == nullptr) {
         SPDLOG_ERROR("Could not find input editor window");
     }
+
+    mActionDebuggerWindow =
+        std::make_shared<ActionDebuggerWindow>("gWindows.ActionDebugger", "Action Debugger", ImVec2(560, 680));
+    gui->AddGuiWindow(mActionDebuggerWindow);
 
     mHookDebuggerWindow =
         std::make_shared<HookDebuggerWindow>("gWindows.HookDebugger", "Hook Debugger", ImVec2(480, 600));
@@ -182,6 +195,17 @@ void SetupGuiElements() {
     mInputViewerSettings = std::make_shared<InputViewerSettingsWindow>("gWindows.InputViewerSettings",
                                                                        "Input Viewer Settings", ImVec2(500, 525));
     gui->AddGuiWindow(mInputViewerSettings);
+
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>("gWindows.AnchorRoom", "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
+    mArchipelagoConsoleWindow = std::make_shared<ArchipelagoConsoleWindow>("gWindows.ArchipelagoConsole",
+                                                                           "Archipelago Console", ImVec2(520, 600));
+    gui->AddGuiWindow(mArchipelagoConsoleWindow);
+
+    mArchipelagoStatusWindow =
+        std::make_shared<ArchipelagoStatusWindow>("gWindows.ArchipelagoStatus", "Archipelago Status");
+    gui->AddGuiWindow(mArchipelagoStatusWindow);
+    mArchipelagoStatusWindow->Show();
 }
 
 void Destroy() {
@@ -201,6 +225,7 @@ void Destroy() {
     mRandoCheckTrackerWindow = nullptr;
     mRandoCheckTrackerSettingsWindow = nullptr;
 
+    mActionDebuggerWindow = nullptr;
     mHookDebuggerWindow = nullptr;
     mSaveEditorWindow = nullptr;
     mHudEditorWindow = nullptr;
@@ -214,6 +239,8 @@ void Destroy() {
     mItemTrackerSettingsWindow = nullptr;
     mInputViewer = nullptr;
     mInputViewerSettings = nullptr;
+    mAnchorRoomWindow = nullptr;
+    mArchipelagoConsoleWindow = nullptr;
 }
 
 void RegisterPopup(std::string title, std::string message, std::string button1, std::string button2,
