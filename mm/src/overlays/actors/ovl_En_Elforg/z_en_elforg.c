@@ -538,8 +538,11 @@ Actor* EnElforg_GetHoldingEnemy(EnElforg* this, PlayState* play) {
     Actor* enemy;
 
     for (enemy = play->actorCtx.actorLists[ACTORCAT_ENEMY].first; enemy != NULL; enemy = enemy->next) {
-        if ((enemy->home.pos.x == this->actor.home.pos.x) && (enemy->home.pos.y == this->actor.home.pos.y) &&
-            (enemy->home.pos.z == this->actor.home.pos.z)) {
+        if (GameInteractor_Should(VB_STRAY_FAIRY_IS_HELD_BY_ENEMY,
+                                  (enemy->home.pos.x == this->actor.home.pos.x) &&
+                                      (enemy->home.pos.y == this->actor.home.pos.y) &&
+                                      (enemy->home.pos.z == this->actor.home.pos.z),
+                                  &this->actor, enemy)) {
             return enemy;
         }
     }

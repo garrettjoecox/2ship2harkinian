@@ -1,4 +1,5 @@
 #include <libultraship/bridge/consolevariablebridge.h>
+#include "2s2h/Enhancements/Modes/EnemyRando.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
 
@@ -112,7 +113,7 @@ void RegisterSkipEnemyIntros() {
                  [](Actor* actor, bool* should) { SET_EVENTINF(EVENTINF_INTRO_CS_WATCHED_WART); });
 
     // Big Poe (Beneath the Well)
-    COND_ID_HOOK(OnActorInit, ACTOR_EN_BIGPO, CVAR, [](Actor* actor) {
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_BIGPO, CVAR || (ENEMY_RANDO_MODE != ENEMY_RANDO_OFF), [](Actor* actor) {
         // Only do for the well Big Poe. The Dampe one has a brief cutscene where Dampe flees.
         if (actor->params == BIG_POE_TYPE_REGULAR) {
             EnBigpo* enBigpo = (EnBigpo*)actor;
@@ -403,6 +404,6 @@ void RegisterSkipEnemyCutscenes() {
     });
 }
 
-static RegisterShipInitFunc introsInitFunc(RegisterSkipEnemyIntros, { CVAR_NAME });
+static RegisterShipInitFunc introsInitFunc(RegisterSkipEnemyIntros, { CVAR_NAME, CVAR_ENEMY_RANDO_MODE });
 static RegisterShipInitFunc bossWarpInitFunc(RegisterSkipBossWarpCutscenes, { CVAR_NAME });
 static RegisterShipInitFunc enemyCsInitFunc(RegisterSkipEnemyCutscenes, { CVAR_NAME });

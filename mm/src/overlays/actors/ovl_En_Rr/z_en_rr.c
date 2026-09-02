@@ -6,6 +6,7 @@
 
 #include "z_en_rr.h"
 #include "z64rumble.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "objects/object_rr/object_rr.h"
 #include "2s2h/BenGui/CosmeticEditor.h"
@@ -306,8 +307,10 @@ void func_808FA4F4(EnRr* this, PlayState* play) {
         this->unk_210 = 0.0f;
         this->unk_20C = 0x800;
 
-        if (((this->unk_1E2 == 0) && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)) &&
-            (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_HERO)) {
+        if (GameInteractor_Should(VB_LIKE_LIKE_STEAL_SHIELD,
+                                  ((this->unk_1E2 == 0) && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN)) &&
+                                      (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_HERO),
+                                  this)) {
             sp34 = true;
             this->unk_1E2 = Inventory_DeleteEquipment(play, EQUIP_VALUE_SHIELD_HERO);
         } else {

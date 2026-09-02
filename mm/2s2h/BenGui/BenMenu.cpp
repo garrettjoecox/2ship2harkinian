@@ -6,6 +6,7 @@
 #include "DeveloperTools/SaveEditor.h"
 #include "DeveloperTools/CollisionViewer.h"
 #include "2s2h/Enhancements/Enhancements.h"
+#include "2s2h/Enhancements/Modes/EnemyRando.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/PresetManager/PresetManager.h"
 #include "HudEditor.h"
@@ -196,6 +197,12 @@ static const std::vector<const char*> mirroredWorldModes = {
     "Dungeons (All)",           // MIRRORED_WORLD_DUNGEONS_ALL
     "Dungeons Random",          // MIRRORED_WORLD_DUNGEONS_RANDOM
     "Dungeons Random (Seeded)", // MIRRORED_WORLD_DUNGEONS_RANDOM_SEEDED
+};
+
+static const std::vector<const char*> enemyRandoModes = {
+    "Off",             // ENEMY_RANDO_OFF
+    "Random",          // ENEMY_RANDO_RANDOM
+    "Random (Seeded)", // ENEMY_RANDO_RANDOM_SEEDED
 };
 
 static const std::unordered_map<int32_t, const char*> damageMultiplierOptions = {
@@ -1831,6 +1838,19 @@ void BenMenu::AddEnhancements() {
                 .Min(0)
                 .Max(60)
                 .DefaultValue(60));
+    AddWidget(path, "Enemy Rando", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENEMY_RANDO_MODE)
+        .Options(ComboboxOptions()
+                     .DefaultIndex(ENEMY_RANDO_OFF)
+                     .Tooltip("Replaces each enemy with a random enemy as it spawns.\n\n"
+                              " - Random: A different pick every time the spot is loaded.\n"
+                              " - Random (Seeded): Deterministic based on the current randomizer seed/file, so "
+                              "revisiting the same spot gives the same enemy.")
+                     .ComboVec(&enemyRandoModes));
+    AddWidget(path, "Enemy Rando Pool", WIDGET_CUSTOM)
+        .PreFunc([](WidgetInfo& info) { info.isHidden = ENEMY_RANDO_MODE == ENEMY_RANDO_OFF; })
+        .CustomFunction([](WidgetInfo& info) { EnemyRando_DrawPoolSelector(); })
+        .HideInSearch(true);
 
     path.column = SECTION_COLUMN_2;
     AddWidget(path, "Minigames", WIDGET_SEPARATOR_TEXT);
@@ -1984,6 +2004,9 @@ void BenMenu::AddEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal "
             "other items."));
+    AddWidget(path, "Disable Like Like Shield Steal", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.DifficultyOptions.DisableLikeLikeShieldSteal")
+        .Options(CheckboxOptions().Tooltip("Prevents Like Likes from eating your Hero's Shield."));
     AddWidget(path, "No Heart Drops", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.DifficultyOptions.NoHeartDrops")
         .Options(CheckboxOptions().Tooltip("Prevents spawning of any hearts or fairies."));

@@ -80,4 +80,10 @@ enum MirroredWorldModeOptions {
     MIRRORED_WORLD_DUNGEONS_RANDOM_SEEDED,
 };
 
+enum EnemyRandoModeOptions {
+    ENEMY_RANDO_OFF,
+    ENEMY_RANDO_RANDOM,
+    ENEMY_RANDO_RANDOM_SEEDED,
+};
+
 #endif // ENHANCEMENTS_H
