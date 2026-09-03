@@ -25,20 +25,17 @@ void OnOpenShopText(u16* textId, bool* loadFromMessageTable) {
     auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
     entry.autoFormat = false;
 
-    entry.msg = "\x02\xC3{item1}\x01 {price1} Rupees\x11"
-                "\x02{item2}\x01 {price2} Rupees\x11"
-                "\x02No thanks";
-
-    CustomMessage::Replace(
-        &entry.msg, "{item1}",
+    entry.msg = "\xC3";
+    entry.msg += Rando::ActorBehavior::ShopChoiceRow(
         Rando::StaticData::GetItemName(Rando::ConvertItem(RANDO_SAVE_CHECKS[randoCheckId1].randoItemId, randoCheckId1),
-                                       false, randoCheckId1));
-    CustomMessage::Replace(
-        &entry.msg, "{item2}",
+                                       false, randoCheckId1),
+        std::to_string(RANDO_SAVE_CHECKS[randoCheckId1].price));
+    entry.msg += "\x11";
+    entry.msg += Rando::ActorBehavior::ShopChoiceRow(
         Rando::StaticData::GetItemName(Rando::ConvertItem(RANDO_SAVE_CHECKS[randoCheckId2].randoItemId, randoCheckId2),
-                                       false, randoCheckId2));
-    CustomMessage::Replace(&entry.msg, "{price1}", std::to_string(RANDO_SAVE_CHECKS[randoCheckId1].price));
-    CustomMessage::Replace(&entry.msg, "{price2}", std::to_string(RANDO_SAVE_CHECKS[randoCheckId2].price));
+                                       false, randoCheckId2),
+        std::to_string(RANDO_SAVE_CHECKS[randoCheckId2].price));
+    entry.msg += "\x11\x02No thanks";
     CustomMessage::EnsureMessageEnd(&entry.msg);
     CustomMessage::LoadCustomMessageIntoFont(entry);
     *loadFromMessageTable = false;

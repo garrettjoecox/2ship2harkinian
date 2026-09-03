@@ -5,6 +5,7 @@
  */
 
 #include "z_en_bigpo.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "objects/object_bigpo/object_bigpo.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
@@ -947,7 +948,9 @@ void EnBigpo_FireCounting(EnBigpo* this, PlayState* play) {
     }
 
     if (activatedFireCount == ARRAY_COUNT(this->fires)) { // all fires found
-        EnBigpo_SetupSpawnCutscene(this);
+        if (GameInteractor_Should(VB_BIG_POE_APPEAR_AFTER_FLAME_HUNT, true, this)) {
+            EnBigpo_SetupSpawnCutscene(this);
+        }
     }
 }
 

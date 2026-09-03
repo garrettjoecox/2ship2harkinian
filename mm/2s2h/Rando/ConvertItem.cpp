@@ -1,6 +1,7 @@
 #include "Rando/Rando.h"
 #include "Rando/ActorBehavior/Souls.h"
 #include "Rando/MiscBehavior/ClockShuffle.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 #include "2s2h/ShipUtils.h"
 #include "2s2h/ShipInit.hpp"
 #include <cassert>
@@ -126,14 +127,20 @@ void RefreshObtainableJunkItems() {
     }
 }
 
+static bool CanDisguiseTrap(const RandoSaveCheck& saveCheck) {
+    if (Archipelago::IsAPItem(saveCheck.randoItemId)) {
+        return false;
+    }
+    RandoItemType itemType = Rando::StaticData::Items[saveCheck.randoItemId].randoItemType;
+    return itemType == RITYPE_MAJOR || itemType == RITYPE_MASK;
+}
+
 void RefreshObtainableTrapItems() {
     obtainableTrapItems.clear();
 
     for (auto& [randoCheckId, _] : Rando::StaticData::Checks) {
         RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (saveCheck.shuffled && !saveCheck.obtained &&
-            (Rando::StaticData::Items[saveCheck.randoItemId].randoItemType == RITYPE_MAJOR ||
-             Rando::StaticData::Items[saveCheck.randoItemId].randoItemType == RITYPE_MASK)) {
+        if (saveCheck.shuffled && !saveCheck.obtained && CanDisguiseTrap(saveCheck)) {
             obtainableTrapItems.push_back(saveCheck.randoItemId);
         }
     }
@@ -151,17 +158,23 @@ static RegisterShipInitFunc refreshInitFunc(
         if (IS_RANDO) {
             for (auto& [randoCheckId, _] : Rando::StaticData::Checks) {
                 RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                if (saveCheck.shuffled &&
-                    (Rando::StaticData::Items[saveCheck.randoItemId].randoItemType == RITYPE_MAJOR ||
-                     Rando::StaticData::Items[saveCheck.randoItemId].randoItemType == RITYPE_MASK)) {
+                if (saveCheck.shuffled && CanDisguiseTrap(saveCheck)) {
                     allTrapItems.push_back(saveCheck.randoItemId);
                 }
             }
+
+            RefreshObtainableJunkItems();
+            RefreshObtainableTrapItems();
         }
     },
     { "IS_RANDO" });
 
 RandoItemId Rando::CurrentJunkItem(RandoCheckId randoCheckId) {
+    // Safety check: if no junk items are obtainable, return green rupee as fallback
+    if (obtainableJunkItems.empty()) {
+        return RI_RUPEE_GREEN;
+    }
+
     if (CVarGetInteger("gRando.JunkItems", 0) == 0) {
         Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + randoCheckId +
                          (gPlayState->gameplayFrames / 30));
@@ -340,6 +353,9 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         case RI_GS_TOKEN_SWAMP:
         case RI_GS_TOKEN_OCEAN:
         case RI_TRIFORCE_PIECE:
+        case RI_ARCHIPELAGO_JUNK:
+        case RI_ARCHIPELAGO_PROGRESSIVE:
+        case RI_ARCHIPELAGO_USEFUL:
             if (hasObtainedCheck) {
                 return false;
             }
@@ -610,6 +626,8 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                 return false;
             }
             return true;
+        case RI_OCARINA:
+            return INV_CONTENT(ITEM_OCARINA_OF_TIME) != ITEM_OCARINA_OF_TIME;
         case RI_OCARINA_BUTTON_A:
         case RI_OCARINA_BUTTON_C_DOWN:
         case RI_OCARINA_BUTTON_C_LEFT:

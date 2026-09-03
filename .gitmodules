@@ -7,3 +7,18 @@
 [submodule "ZAPDTR"]
 	path = ZAPDTR
 	url = https://github.com/HarbourMasters/ZAPDTR.git
+[submodule "subprojects/wswrap"]
+	path = subprojects/wswrap
+	url = https://github.com/black-sliver/wswrap.git
+[submodule "subprojects/apclientpp"]
+	path = subprojects/apclientpp
+	url = https://github.com/black-sliver/apclientpp.git
+[submodule "subprojects/websocketpp"]
+	path = subprojects/websocketpp
+	url = https://github.com/zaphoyd/websocketpp.git
+[submodule "subprojects/asio"]
+	path = subprojects/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "subprojects/valijson"]
+	path = subprojects/valijson
+	url = https://github.com/tristanpenman/valijson

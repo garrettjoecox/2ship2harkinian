@@ -1,9 +1,20 @@
 #ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <Windows.h>
-#include <winuser.h>
+#include <commdlg.h> // GetOpenFileNameA, CommDlgExtendedError
+#include <cderr.h>   // FNERR_* / CDERR_* codes
 #include <shlwapi.h>
+
+#pragma comment(lib, "Comdlg32.lib")
 #pragma comment(lib, "Shlwapi.lib")
 #endif
+
 #include "Extract.h"
 #include "portable-file-dialogs.h"
 #include <ship/utils/binarytools/BitConverter.h>

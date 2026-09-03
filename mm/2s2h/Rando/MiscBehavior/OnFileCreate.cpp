@@ -18,7 +18,48 @@ extern "C" {
 // Very primitive randomizer implementation, when a save is created, if rando is enabled
 // we set the save type to rando and shuffle all checks and persist the results to the save
 void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
-    if (CVarGetInteger("gRando.Enabled", 0)) {
+    if (CVarGetInteger("gArchipelago.Enabled", 0)) {
+        gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
+        memset(&gSaveContext.save.shipSaveInfo.rando, 0, sizeof(gSaveContext.save.shipSaveInfo.rando));
+        gSaveContext.save.shipSaveInfo.rando.isArchiSave = true;
+
+        auto& archi = gSaveContext.save.shipSaveInfo.rando.archipelago;
+        archi.magic = ARCHI_SAVE_MAGIC;
+        archi.version = ARCHI_SAVE_VERSION;
+
+        archi.serverHost[0] = '\0';
+
+        // Save the current slot name if available
+        const char* currentSlotName = CVarGetString("gArchipelago.Slot", "");
+        if (currentSlotName[0] != '\0') {
+            strncpy(archi.slotName, currentSlotName, 31);
+            archi.slotName[31] = '\0'; // Ensure null termination
+        } else {
+            archi.slotName[0] = '\0';
+        }
+
+        archi.receivedItemCount = 0;
+        archi.checkedLocationCount = 0;
+
+        gSaveContext.save.entrance = ENTRANCE(SOUTH_CLOCK_TOWN, 0);
+        gSaveContext.save.cutsceneIndex = 0;
+        gSaveContext.save.hasTatl = true;
+        gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
+        gSaveContext.save.saveInfo.playerData.threeDayResetCount = 1;
+        gSaveContext.save.isFirstCycle = true;
+        SET_WEEKEVENTREG(WEEKEVENTREG_59_04);                                                  // Tatl
+        SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
+        gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
+
+        // Remove Sword & Shield (will be obtained through randomizer)
+        SET_EQUIP_VALUE(EQUIP_TYPE_SWORD, EQUIP_VALUE_SWORD_NONE);
+        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = ITEM_NONE;
+        SET_EQUIP_VALUE(EQUIP_TYPE_SHIELD, EQUIP_VALUE_SHIELD_NONE);
+
+        // NOTE: We do NOT mark all checks as shuffled here.
+        // Checks are only marked as shuffled when they appear in location_info from the server
+        return;
+    } else if (CVarGetInteger("gRando.Enabled", 0)) {
         gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
         // Zero out the rando struct
         memset(&gSaveContext.save.shipSaveInfo.rando, 0, sizeof(gSaveContext.save.shipSaveInfo.rando));

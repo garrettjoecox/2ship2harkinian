@@ -185,6 +185,14 @@ typedef enum {
     VB_BE_NEAR_DOOR,
 
     // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnBigpo` (the summoned Big Poe whose flames have all been found)
+    VB_BIG_POE_APPEAR_AFTER_FLAME_HUNT,
+
+    // #### `result`
     // ##### In `func_80A25D28`, for `*ObjIceblock`:
     // ```c
     // this->unk_26E[sp30] >= 11
@@ -556,6 +564,16 @@ typedef enum {
     // #### `args`
     // - `s16` (file index)
     VB_DRAW_FILE_SELECT_SMALL_EXTRA_INFO_BOX,
+
+    // Check if file can be loaded when confirming file selection.
+    // Return false to prevent loading the file.
+    // #### `result`
+    // ```c
+    // true (allow loading)
+    // ```
+    // #### `args`
+    // - `s16` (file index)
+    VB_FILE_SELECT_CONFIRM_FILE,
 
     // #### `result`
     // ```c
@@ -1397,6 +1415,15 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // (this->unk_1E2 == 0) && (GET_PLAYER_FORM == PLAYER_FORM_HUMAN) &&
+    // (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_HERO)
+    // ```
+    // #### `args`
+    // - `*EnRr`
+    VB_LIKE_LIKE_STEAL_SHIELD,
+
+    // #### `result`
+    // ```c
     // play->actorCtx.actorLists[ACTORCAT_EXPLOSIVES].length >= 3
     // ```
     // #### `args`
@@ -1460,6 +1487,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_MEET_MOON_REQUIREMENTS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*f32` (height)
+    VB_MODIFY_CAMERA_FOCAL_HEIGHT,
 
     // #### `result`
     // ```c
@@ -1542,6 +1577,15 @@ typedef enum {
     // #### `args`
     // - `*EnKakasi`
     VB_NEED_SCARECROW_SONG,
+
+    // #### `result`
+    // ```c
+    // (player->stateFlags3 & PLAYER_STATE3_1) || !(player->actor.scale.y >= 0.0f) ||
+    // (player->stateFlags1 & PLAYER_STATE1_DEAD) || play->soaringCsOrSoTCsPlaying
+    // ```
+    // #### `args`
+    // - None
+    VB_NOT_ADJUST_PLAYER_LEGS,
 
     // #### `result`
     // ```c
@@ -2024,6 +2068,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // !(this->flags & EN_RD_FLAG_CANNOT_FREEZE_PLAYER)
+    // ```
+    // #### `args`
+    // - `*EnRd`
+    VB_REDEAD_FREEZE_PLAYER,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`
@@ -2355,6 +2407,16 @@ typedef enum {
     // #### `args`
     // - None
     VB_STONE_HEISHI_SET_ACTION,
+
+    // #### `result`
+    // ```c
+    // (enemy->home.pos.x == fairy->home.pos.x) && (enemy->home.pos.y == fairy->home.pos.y) &&
+    //     (enemy->home.pos.z == fairy->home.pos.z)
+    // ```
+    // #### `args`
+    // - `*Actor` (the Stray Fairy looking for its host)
+    // - `*Actor` (the enemy being considered)
+    VB_STRAY_FAIRY_IS_HELD_BY_ENEMY,
 
     // #### `result`
     // ```c

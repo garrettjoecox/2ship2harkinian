@@ -586,7 +586,20 @@ static void DrawGeneralTab() {
     ImGui::PopStyleColor();
 
     ImGui::SeparatorText("Seed Generation");
+
+    // Check if Archipelago is enabled
+    bool archipelagoEnabled = CVarGetInteger("gArchipelago.Enabled", 0);
+
+    if (archipelagoEnabled) {
+        ImGui::BeginDisabled();
+    }
+
     UIWidgets::CVarCheckbox("Enable Rando (Randomizes new files upon creation)", "gRando.Enabled");
+
+    if (archipelagoEnabled) {
+        ImGui::EndDisabled();
+        ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Disabled because Archipelago is enabled");
+    }
 
     if (UIWidgets::CVarCombobox("Seed", "gRando.SpoilerFileIndex", Rando::Spoiler::spoilerOptions)) {
         Rando::Spoiler::SelectSpoiler(CVarGetInteger("gRando.SpoilerFileIndex", 0));
