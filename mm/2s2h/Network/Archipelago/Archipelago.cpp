@@ -90,6 +90,12 @@ static std::string GetCertPath() {
         return p2.string();
     }
 
+#if defined(__APPLE__)
+    if (std::filesystem::exists("/etc/ssl/cert.pem")) {
+        return "/etc/ssl/cert.pem";
+    }
+#endif
+
     // On Linux, fall back to common system CA bundle locations
 #if defined(__linux__)
     static const char* sLinuxCaPaths[] = { "/etc/ssl/certs/ca-certificates.crt", // Debian/Ubuntu
