@@ -285,14 +285,12 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
         }
 
         RandoItemId randoItemId = Rando::StaticData::GetItemIdFromVanillaItemId(ITEM_MASK_TRUTH + enGs->unk_195 - 1);
-        RandoCheckId randoCheckId = Rando::FindItemPlacement(randoItemId);
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg = "They say %g{{item}}%w is hidden %y{{location}}%w...";
 
         CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::GetItemName(randoItemId));
-        CustomMessage::Replace(&entry.msg, "{{location}}",
-                               Rando::StaticData::GetLocationNameForHint(randoCheckId, false));
+        CustomMessage::Replace(&entry.msg, "{{location}}", Rando::GetItemLocationForHint(randoItemId, false));
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;

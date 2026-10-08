@@ -3,6 +3,7 @@
 #include "2s2h/ShipUtils.h"
 #include <libultraship/libultraship.h>
 #include <libultraship/bridge/consolevariablebridge.h>
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 // Starting items is a dynamically sized list of strings, so we can't store it with the other options because it can't
 // fit in a CVar. We have to store it in various places
@@ -12,7 +13,7 @@
 
 namespace Rando {
 
-std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo) {
+std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo, bool isArchi) {
     std::vector<RandoItemId> startingItems;
 
     if (randoSaveInfo.randoSaveOptions[RO_STARTING_MAPS_AND_COMPASSES]) {
@@ -81,8 +82,29 @@ std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo) 
         startingItems.push_back(RI_SONG_INVERTED_TIME);
     }
 
+    // Grant starting equipment if not shuffled
+    if (isArchi) {
+        if (randoSaveInfo.randoSaveOptions[RO_SHUFFLE_SONG_TIME] != RO_GENERIC_YES) {
+            startingItems.push_back(RI_SONG_TIME);
+        }
+        if (randoSaveInfo.randoSaveOptions[RO_SHUFFLE_SWORD] != RO_GENERIC_YES) {
+            startingItems.push_back(RI_PROGRESSIVE_SWORD);
+        }
+        if (randoSaveInfo.randoSaveOptions[RO_SHUFFLE_SHIELD] != RO_GENERIC_YES) {
+            startingItems.push_back(RI_SHIELD_HERO);
+        }
+        if (randoSaveInfo.randoSaveOptions[RO_SHUFFLE_OCARINA] != RO_GENERIC_YES) {
+            startingItems.push_back(RI_OCARINA);
+        }
+        if (randoSaveInfo.randoSaveOptions[RO_STARTING_BUNNY_HOOD]) {
+            startingItems.push_back(RI_MASK_BUNNY);
+        }
+    }
+
     // When shuffling time, if the player did not choose any starting time items, we need to give them at least one.
-    if (randoSaveInfo.randoSaveOptions[RO_CLOCK_SHUFFLE] == RO_GENERIC_YES) {
+    // Archipelago saves are excluded: the AP world always precollects a starting time item and the server delivers
+    // it through the item pipeline, so granting one here would add a second half-day the logic doesn't model.
+    if (!isArchi && randoSaveInfo.randoSaveOptions[RO_CLOCK_SHUFFLE] == RO_GENERIC_YES) {
         auto configuredStartedItems = Rando::GetStartingItemsFromSave(randoSaveInfo);
         bool hasTimeItem = false;
         for (RandoItemId randoItemId : configuredStartedItems) {
@@ -107,7 +129,7 @@ std::vector<RandoItemId> GetComputedStartingItems(RandoSaveInfo& randoSaveInfo) 
 void GrantStartingItems() {
     std::vector<RandoItemId> startingItems = Rando::GetStartingItemsFromSave(gSaveContext.save.shipSaveInfo.rando);
     std::vector<RandoItemId> computedStartingItems =
-        Rando::GetComputedStartingItems(gSaveContext.save.shipSaveInfo.rando);
+        Rando::GetComputedStartingItems(gSaveContext.save.shipSaveInfo.rando, IS_ARCHI);
     startingItems.insert(startingItems.end(), computedStartingItems.begin(), computedStartingItems.end());
 
     for (RandoItemId startingItem : startingItems) {

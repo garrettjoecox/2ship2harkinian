@@ -2,6 +2,7 @@
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/ShipInit.hpp"
 #include "2s2h/Rando/DrawFuncs.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 #include "2s2h_assets.h"
 #include "2s2h/BenGui/CosmeticEditor.h"
 
@@ -387,7 +388,7 @@ void DrawTriforcePiece(RandoItemId randoItemId) {
         gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gTriforcePieceCompletedDL);
     } else {
         if (randoItemId == RI_TRIFORCE_PIECE_PREVIOUS) {
-            gSPDisplayList(POLY_XLU_DISP++, (Gfx*)triforcePieceModels[(currentTriforcePieces - 1) % 3]);
+            gSPDisplayList(POLY_XLU_DISP++, (Gfx*)triforcePieceModels[(currentTriforcePieces + 2) % 3]);
         } else {
             gSPDisplayList(POLY_XLU_DISP++, (Gfx*)triforcePieceModels[currentTriforcePieces % 3]);
         }
@@ -422,6 +423,49 @@ void DrawOcarinaButtonItem(RandoItemId randoItemId, Actor* actor) {
 
     MATRIX_FINALIZE_AND_LOAD(POLY_OPA_DISP++, gPlayState->state.gfxCtx);
     gSPDisplayList(POLY_OPA_DISP++, (Gfx*)ocarinaButtonModel[randoItemId - RI_OCARINA_BUTTON_A]);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
+void DrawArchipelagoItem(RandoItemId randoItemId, RandoCheckId randoCheckId, Actor* actor) {
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+    Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
+    Matrix_Push();
+
+    Matrix_Scale(0.05f, 0.05f, 0.05f, MTXMODE_APPLY);
+
+    MATRIX_FINALIZE_AND_LOAD(POLY_OPA_DISP++, gPlayState->state.gfxCtx);
+    switch (randoItemId) {
+        case RI_ARCHIPELAGO_PROGRESSIVE:
+            gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gArchipelagoProgressiveDL);
+            break;
+        case RI_ARCHIPELAGO_USEFUL:
+            gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gArchipelagoItemDL);
+            break;
+        case RI_ARCHIPELAGO_JUNK:
+            gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gArchipelagoJunkDL);
+            break;
+        default:
+            break;
+    }
+    Matrix_Pop();
+
+    if (Archipelago::Instance->checkInfo.contains(randoCheckId) &&
+        Archipelago::Instance->IsCheckForSameGame(randoCheckId)) {
+        // If item name matches a 2ship item, also draw it (smaller and offset)
+        RandoItemId localItemId =
+            Archipelago::Instance->GetRandoItemIdFromNetworkItem(Archipelago::Instance->checkInfo[randoCheckId]);
+        if (localItemId != RI_NONE && localItemId != RI_UNKNOWN && !Archipelago::IsAPItem(localItemId) &&
+            localItemId != RI_TRAP) {
+            Matrix_Push();
+            Matrix_Scale(0.4f, 0.4f, 0.4f, MTXMODE_APPLY);
+
+            // Recursively draw the local item
+            Rando::DrawItem(localItemId, randoCheckId, actor);
+
+            Matrix_Pop();
+        }
+    }
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
@@ -624,13 +668,25 @@ void Rando::DrawItem(RandoItemId randoItemId, RandoCheckId randoCheckId, Actor* 
         case RI_WALLET_TYCOON:
             DrawTycoonWallet();
             break;
+        // Progressive items for the player are converted before they make it here, so if it's
+        // still a progressive item at this point it's for another player, render the base item
         case RI_PROGRESSIVE_LULLABY:
+            Rando::DrawItem(RI_SONG_LULLABY, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_MAGIC:
+            Rando::DrawItem(RI_SINGLE_MAGIC, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_BOW:
+            Rando::DrawItem(RI_BOW, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
+            Rando::DrawItem(RI_BOMB_BAG_20, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_SWORD:
+            Rando::DrawItem(RI_SWORD_KOKIRI, randoCheckId, actor);
+            break;
         case RI_PROGRESSIVE_WALLET:
-            Rando::DrawItem(Rando::ConvertItem(randoItemId, randoCheckId), randoCheckId, actor);
+            Rando::DrawItem(RI_WALLET_ADULT, randoCheckId, actor);
             break;
         case RI_SOUL_ENEMY_ALIEN:
         case RI_SOUL_ENEMY_ARMOS:
@@ -724,6 +780,11 @@ void Rando::DrawItem(RandoItemId randoItemId, RandoCheckId randoCheckId, Actor* 
         case RI_OCARINA_BUTTON_C_RIGHT:
         case RI_OCARINA_BUTTON_C_UP:
             DrawOcarinaButtonItem(randoItemId, actor);
+            break;
+        case RI_ARCHIPELAGO_JUNK:
+        case RI_ARCHIPELAGO_PROGRESSIVE:
+        case RI_ARCHIPELAGO_USEFUL:
+            DrawArchipelagoItem(randoItemId, randoCheckId, actor);
             break;
         case RI_NONE:
         case RI_UNKNOWN:

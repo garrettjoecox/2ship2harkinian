@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+uuid
 *.zip
 *.otr
 *.o2r
@@ -14,6 +17,7 @@ shipofharkinian.json
 imgui.ini
 saves/*
 randomizer/*
+archipelago/*
 mods/*
 2S2HTimeSplitData.json
 

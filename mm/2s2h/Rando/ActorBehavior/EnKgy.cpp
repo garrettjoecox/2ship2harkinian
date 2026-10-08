@@ -115,9 +115,7 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
     COND_ID_HOOK(OnOpenText, 0xc49, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg = "Huh? You say that gold dust can be found %r{location}%w?\x19";
-        RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_BOTTLE_GOLD_DUST);
-        CustomMessage::Replace(&entry.msg, "{location}",
-                               Rando::StaticData::GetLocationNameForHint(randoCheckId, false));
+        CustomMessage::Replace(&entry.msg, "{location}", Rando::GetItemLocationForHint(RI_BOTTLE_GOLD_DUST, false));
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
@@ -128,12 +126,10 @@ void Rando::ActorBehavior::InitEnKgyBehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg = "Gold dust can be found %p{location}%w.\x10";
         entry.msg += "Bring me that, and my %r{itemName}%w is all yours.\xE0";
-        RandoCheckId randoCheckId = Rando::FindItemPlacement(RI_BOTTLE_GOLD_DUST);
         CustomMessage::Replace(
             &entry.msg, "{itemName}",
             Rando::StaticData::Items[RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD].randoItemId].name);
-        CustomMessage::Replace(&entry.msg, "{location}",
-                               Rando::StaticData::GetLocationNameForHint(randoCheckId, false));
+        CustomMessage::Replace(&entry.msg, "{location}", Rando::GetItemLocationForHint(RI_BOTTLE_GOLD_DUST, false));
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;

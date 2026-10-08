@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR)
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 project(2ship LANGUAGES C CXX)
+
+option(BUILD_ARCHIPELAGO "Build Archipelago support" OFF)
+
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -113,6 +116,11 @@ endif()
 
 list(FILTER ship__ EXCLUDE REGEX "2s2h/Extractor/*")
 
+option(SKIP_NETWORKING "Skip networking support (Sail remote control), avoiding the SDL2_net 2.2.0 dependency" OFF)
+if (SKIP_NETWORKING)
+    list(FILTER ship__ EXCLUDE REGEX "2s2h/Network/*")
+endif()
+
 if(NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
     file(GLOB_RECURSE ship__Extractor RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
         "2s2h/Extractor/*.c"
@@ -184,6 +192,12 @@ endif()
 
 set(ROOT_NAMESPACE 2s2h)
 
+if (MSVC)
+    # Archipelago.cpp gets huge and can exceed COFF section limits
+    target_compile_options(${PROJECT_NAME} PRIVATE /bigobj)
+endif()
+
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	set_target_properties(${PROJECT_NAME} PROPERTIES
 		VS_GLOBAL_KEYWORD "Win32Proj"
@@ -223,8 +237,8 @@ endif()
 find_package(SDL2)
 set(SDL2-INCLUDE ${SDL2_INCLUDE_DIRS})
 
-if (BUILD_CROWD_CONTROL)
-    find_package(SDL2_net)
+if (NOT SKIP_NETWORKING)
+    find_package(SDL2_net 2.2.0 REQUIRED)
     set(SDL2-NET-INCLUDE ${SDL_NET_INCLUDE_DIRS})
 endif()
 
@@ -243,6 +257,34 @@ target_include_directories(${PROJECT_NAME} PRIVATE assets
 	.
 )
 
+# --- Archipelago (apclientpp + wswrap) ---
+# All four dependencies are header-only at the pinned submodule commits.
+if (BUILD_ARCHIPELAGO AND NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        "${CMAKE_SOURCE_DIR}/subprojects/apclientpp"
+        "${CMAKE_SOURCE_DIR}/subprojects/wswrap/include"
+        "${CMAKE_SOURCE_DIR}/subprojects/asio/asio/include"
+        "${CMAKE_SOURCE_DIR}/subprojects/websocketpp"
+        "${CMAKE_SOURCE_DIR}/subprojects/valijson/include"
+        "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
+    )
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        ASIO_STANDALONE
+        $<$<PLATFORM_ID:Windows>:ASIO_NO_WIN32_LEAN_AND_MEAN>
+        $<$<PLATFORM_ID:Windows>:WIN32_LEAN_AND_MEAN>
+        $<$<PLATFORM_ID:Windows>:NOMINMAX>
+        $<$<PLATFORM_ID:Windows>:_WIN32_WINNT=0x0601>
+    )
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set_source_files_properties(2s2h/Network/Archipelago/Archipelago.cpp PROPERTIES
+            COMPILE_FLAGS "-std=gnu++17"
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    endif()
+endif()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE
 		"$<$<CONFIG:Debug>:"
@@ -253,9 +295,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		"$<$<CONFIG:Release>:"
 			"NDEBUG;"
 		">"
-           #"$<$<BOOL:${BUILD_CROWD_CONTROL}>:ENABLE_CROWD_CONTROL>"
 		"INCLUDE_GAME_PRINTF;"
-           #"ENABLE_CROWD_CONTROL;"
 		"F3DEX_GBI_2"
 		"UNICODE;"
 		"_UNICODE"
@@ -289,7 +329,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU|Clang|AppleClang")
 			"NDEBUG;"
 		">"
         "F3DEX_GBI_2;"
-		# "$<$<BOOL:${BUILD_CROWD_CONTROL}>:ENABLE_CROWD_CONTROL>"
 		"_CONSOLE;"
 		"_CRT_SECURE_NO_WARNINGS;"
 		"ENABLE_OPENGL;"
@@ -560,7 +599,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		"glu32;"
 		"SDL2::SDL2;"
 		"SDL2::SDL2main;"
-        #"$<$<BOOL:${BUILD_CROWD_CONTROL}>:SDL2_net::SDL2_net-static>"
+        "$<$<NOT:$<BOOL:${SKIP_NETWORKING}>>:SDL2_net::SDL2_net-static>"
 		"glfw;"
 		"winmm;"
 		"imm32;"
@@ -613,11 +652,30 @@ else()
         "Opus::opus"
         "Opusfile::Opusfile"
 		SDL2::SDL2
- #       "$<$<BOOL:${BUILD_CROWD_CONTROL}>:SDL2_net::SDL2_net>"
+        "$<$<NOT:$<BOOL:${SKIP_NETWORKING}>>:SDL2_net::SDL2_net>"
 		${CMAKE_DL_LIBS}
 		Threads::Threads
 	)
 
+endif()
+
+# --- Archipelago (apclientpp + wswrap) link deps ---
+if (BUILD_ARCHIPELAGO AND NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
+    find_package(OpenSSL REQUIRED)
+    find_package(ZLIB REQUIRED)
+
+    list(APPEND ADDITIONAL_LIBRARY_DEPENDENCIES
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ZLIB::ZLIB
+    )
+
+    if (WIN32)
+        list(APPEND ADDITIONAL_LIBRARY_DEPENDENCIES
+            ws2_32
+            crypt32
+        )
+    endif()
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|NintendoSwitch|CafeOS")

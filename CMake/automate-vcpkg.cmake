@@ -139,10 +139,8 @@ macro(_install_or_update_vcpkg)
         set(VCPKG_BOOTSTRAP ${VCPKG_ROOT}/bootstrap-vcpkg.sh)
     endif()
 
-    if(NOT EXISTS ${VCPKG_EXEC})
-        message("Bootstrapping vcpkg in ${VCPKG_ROOT}")
-        execute_process(COMMAND ${VCPKG_BOOTSTRAP} WORKING_DIRECTORY ${VCPKG_ROOT})
-    endif()
+    message("Bootstrapping vcpkg in ${VCPKG_ROOT}")
+    execute_process(COMMAND ${VCPKG_BOOTSTRAP} WORKING_DIRECTORY ${VCPKG_ROOT})
 
     if(NOT EXISTS ${VCPKG_EXEC})
         message(FATAL_ERROR "***** FATAL ERROR: Could not bootstrap vcpkg *****")

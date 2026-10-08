@@ -92,7 +92,7 @@ extern u16 sOwlWarpEntrancesForMods[OWL_WARP_MAX - 1] = {
 };
 
 // These textures are not in existing lists that we iterate over.
-std::array<const char*, 33> miscellaneousTextures = {
+std::array<const char*, 36> miscellaneousTextures = {
     gArcheryScoreIconTex,
     gBarrelTrackerIcon,
     gChestTrackerIcon,
@@ -126,6 +126,9 @@ std::array<const char*, 33> miscellaneousTextures = {
     gOcarinaCRightTex,
     gOcarinaCUpTex,
     gShootingGalleryOctorokCrossTex,
+    gArchipelagoProgressiveIconTex,
+    gArchipelagoUsefulIconTex,
+    gArchipelagoJunkIconTex,
 };
 
 std::array<const char*, 11> digitList = { gCounterDigit0Tex, gCounterDigit1Tex, gCounterDigit2Tex, gCounterDigit3Tex,
@@ -426,6 +429,10 @@ std::string GetActorCategoryName(u8 category) {
         return actorCategoryNames[category];
     }
     return "Unknown";
+}
+
+bool IsStringEmpty(const std::string& str) {
+    return str.find_first_not_of(' ') == std::string::npos;
 }
 
 extern "C" {

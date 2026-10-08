@@ -16,6 +16,11 @@ extern "C" {
 #include <string>
 
 namespace CustomMessage {
+
+constexpr float MAX_TEXTBOX_WIDTH = 300.0f;
+constexpr float MAX_TWO_CHOICE_WIDTH = MAX_TEXTBOX_WIDTH - (10.0f / 0.75f);
+constexpr float MAX_THREE_CHOICE_WIDTH = MAX_TEXTBOX_WIDTH - (22.0f / 0.75f);
+
 struct Entry {
     uint8_t textboxType = 0;
     uint8_t textboxYPos = 0;
@@ -35,6 +40,10 @@ void SetActiveCustomMessage(std::string msg, Entry options = {});
 std::string RemoveColorCodes(const std::string& input);
 void Replace(std::string* msg, const std::string& placeholder, const std::string& value);
 void AddLineBreaks(std::string* msg);
+float MeasureWidth(const std::string& text);
+std::string TruncateToWidth(const std::string& text, float maxWidth);
+std::string WrapToWidth(const std::string& text, float maxWidth, int maxLines);
+std::string Sanitize(const std::string& text);
 void ReplaceColorChars(std::string* msg);
 void EnsureMessageEnd(std::string* msg);
 Entry LoadVanillaMessageTableEntry(u16 textId);

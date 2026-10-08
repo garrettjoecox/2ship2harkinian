@@ -1,4 +1,5 @@
 #include "MiscBehavior.h"
+#include "2s2h/Network/Archipelago/Archipelago.h"
 
 extern "C" {
 #include <variables.h>
@@ -70,6 +71,12 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
         saveContextCopy.save.saveInfo.inventory.items[SLOT_TRADE_KEY_MAMA];
     gSaveContext.save.saveInfo.inventory.items[SLOT_TRADE_COUPLE] =
         saveContextCopy.save.saveInfo.inventory.items[SLOT_TRADE_COUPLE];
+
+    // For Archipelago saves, preserve ArchiSaveInfo data across cycle resets
+    // This includes receivedItemCount, checkedLocations, and connection info
+    if (IS_ARCHI) {
+        gSaveContext.save.shipSaveInfo.rando.archipelago = saveContextCopy.save.shipSaveInfo.rando.archipelago;
+    }
 
     // Unset any flags used for checks, whether or not they get the item or junk is determined on our end instead.
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {

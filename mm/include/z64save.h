@@ -369,6 +369,28 @@ typedef enum {
     SAVETYPE_RANDO,
 } SaveType;
 
+// #region 2S2H [Archipelago]
+#define ARCHI_SAVE_MAGIC 0x41524348u /* 'ARCH' */
+#define ARCHI_SAVE_VERSION 1
+
+typedef struct ArchiSaveInfo {
+    u32 magic;
+    u16 version;
+    u16 flags;
+    char serverHost[64];
+    char slotName[32];
+    u32 team;
+    u32 slot;
+    u64 sessionId;
+    u32 seed;
+    u32 lastSyncMs;
+    u32 receivedItemCount;
+    u32 checkedLocationCount;
+    u8 startingItemsGranted;
+} ArchiSaveInfo;
+// #endregion
+
+
 typedef struct RandoSaveCheck {
     RandoItemId randoItemId;
     bool shuffled;
@@ -390,6 +412,8 @@ typedef struct RandoSaveInfo {
     u16 foundTriforcePieces;
     u8 sariaHintsAvailable;
     u16 sariaPriorityItems[16];
+    bool isArchiSave;
+    ArchiSaveInfo archipelago;
 } RandoSaveInfo;
 
 // These are values added by 2S2H that we need to be persisted to the save file
